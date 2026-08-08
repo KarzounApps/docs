@@ -1,0 +1,19 @@
+---
+title: "Partner onboarding"
+description: "Steps to onboard as a Karzoun partner, from sandbox to production."
+---
+
+## Overview
+
+1. **Apply** — contact Karzoun partnerships team
+2. **Sandbox tenant** — receive a dev subdomain and API access
+3. **OAuth / embedded flow** — implement install and token exchange per platform (Salla, Zid, etc.)
+4. **Go live** — custom domain and production credentials
+
+## Embedded app pattern
+
+- Host authenticates user on partner platform
+- Redirect to Karzoun with signed JWT or exchange code
+- Karzoun provisions tenant subdomain under partner org
+
+See partner settings in the Karzoun UI for API keys, webhook URLs, and branding.

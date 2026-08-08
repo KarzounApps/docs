@@ -1,0 +1,155 @@
+---
+title: "GitHub"
+description: "Bearer-token developer platform MiniApp example with header-based events and HMAC verification."
+---
+
+A developer platform with bearer token auth, header-based composite events, HMAC verification, 12 actions, and 20 triggers.
+
+```javascript
+const githubMiniApp = {
+  ns: "github",
+  name: "github",
+  type: "github",
+  title: "GitHub",
+  label: "GitHub",
+  description: "Automate GitHub workflows: issues, PRs, deployments, and more.",
+  shortDescription: "GitHub issues, PRs, CI/CD automation",
+  status: "public",
+  version: "1.0.0",
+  category: "developer",
+  icon: "https://cdn.karzoun.com/miniapps/github/icon.svg",
+  logo: "https://cdn.karzoun.com/miniapps/github/logo.svg",
+  docsUrl: "https://docs.github.com/en/rest",
+
+  auth: {
+    type: "bearer_token",
+    sensitiveKeys: ["accessToken", "webhookSecret"],
+    config: { accessToken: "", webhookSecret: "" },
+    userDetails: {
+      url: "https://api.github.com/user",
+      method: "GET",
+      headers: {
+        Authorization: "Bearer [[accessToken]]",
+        Accept: "application/vnd.github+json",
+      },
+      bodyType: "json",
+      body: {},
+      mapping: { uid: "$.id", name: "$.login" },
+    },
+  },
+
+  source: {
+    rpc_repos_list: {
+      url: "https://api.github.com/user/repos?per_page=100&sort=updated",
+      method: "GET",
+      headers: {
+        Authorization: "Bearer [[accessToken]]",
+        Accept: "application/vnd.github+json",
+      },
+      valueField: "full_name",
+      labelField: "full_name",
+    },
+  },
+
+  triggers: [
+    {
+      type: "miniapps:github",
+      event: "push.received",
+      icon: "git-branch",
+      label: "Push Received",
+      description: "Code pushed to a branch",
+      isCustom: false,
+      img: "automation3.svg",
+    },
+    {
+      type: "miniapps:github",
+      event: "pull_request.opened",
+      icon: "git-pull-request",
+      label: "PR Opened",
+      description: "Pull request opened",
+      isCustom: false,
+      img: "automation3.svg",
+    },
+    {
+      type: "miniapps:github",
+      event: "issue.opened",
+      icon: "ticket",
+      label: "Issue Opened",
+      description: "New issue created",
+      isCustom: false,
+      img: "automation3.svg",
+    },
+    // ... more triggers
+  ],
+
+  actions: [
+    {
+      name: "createIssue",
+      title: "Create Issue",
+      description: "Create a new GitHub issue",
+      renderStrategy: "auto",
+      parameters: {
+        type: "object",
+        required: ["repository", "title"],
+        properties: {
+          repository: {
+            type: "string",
+            title: "Repository",
+            "x-source": "rpc_repos_list",
+            "x-fallback": "input",
+          },
+          title: { type: "string", title: "Title" },
+          body: { type: "string", title: "Description" },
+          labels: { type: "array", title: "Labels" },
+          assignees: { type: "array", title: "Assignees" },
+        },
+      },
+      requests: [
+        {
+          url: "https://api.github.com/repos/{{repository}}/issues",
+          method: "POST",
+          headers: {
+            Authorization: "Bearer [[accessToken]]",
+            Accept: "application/vnd.github+json",
+            "Content-Type": "application/json",
+          },
+          bodyType: "json",
+          body: {
+            title: "{{title}}",
+            body: "{{body}}",
+            labels: "{{labels}}",
+            assignees: "{{assignees}}",
+          },
+          mapping: {
+            issueNumber: "$.number",
+            issueUrl: "$.html_url",
+            issueId: "$.id",
+          },
+        },
+      ],
+    },
+  ],
+
+  // Webhook: header + body composite event
+  webhook: {
+    eventExtraction: {
+      source: "header",
+      path: "X-GitHub-Event",
+      compositeStrategy: {
+        parts: [
+          { source: "header", path: "X-GitHub-Event" },
+          { source: "body", path: "$.action" },
+        ],
+        separator: ".",
+      },
+    },
+    transactionId: { paths: ["$.delivery"], fallback: "generate" },
+    verification: {
+      type: "hmac-sha256",
+      headerName: "X-Hub-Signature-256",
+      secretKey: "webhookSecret", // Resolves from credentials (per-repo secret)
+    },
+    response: { statusCode: 200, body: { ok: true } },
+  },
+};
+```

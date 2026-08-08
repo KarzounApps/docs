@@ -1,0 +1,59 @@
+---
+title: "Troubleshooting"
+description: "Fix common Karzoun MCP connection, permission, and size errors."
+---
+
+## MCP server won't start (stdio)
+
+| Symptom                     | Fix                                                            |
+| ------------------------------ | ------------------------------------------------------------------ |
+| `Missing KARZOUN_API_URL`   | Set GraphQL URL in MCP config `env`                          |
+| `Missing KARZOUN_APP_TOKEN` | Create app token in **Developer → Apps**                     |
+| `npx` hangs or fails        | Ensure Node 18+; try `npx -y @karzounchat/mcp-server@latest` |
+| Server shows red in Cursor  | Open **Settings → MCP** → view logs; fix env typos           |
+
+Restart the MCP server after every config change.
+
+## Tools list is empty
+
+- Confirm the server status is **connected** (green) in Cursor MCP settings
+- Check `KARZOUN_MCP_TOOL_PREFIX` — an overly narrow prefix may filter out all tools
+- Update package: `npx -y @karzounchat/mcp-server@latest`
+
+## Tool returns permission error
+
+- App user group may not include the operation — edit scopes in **Developer → Apps**
+- Token expired or revoked — create a new app token
+- Test the same operation in the [Playground](https://karzoun.chat/developer/playground)
+
+## Response exceeds size limit
+
+```json
+{ "error": "Response exceeds 524288 bytes. Narrow your query parameters..." }
+```
+
+- Reduce `perPage`
+- Add `searchValue` or filters
+- Raise cap only if needed: `KARZOUN_MCP_MAX_RESPONSE_BYTES=1048576`
+
+## Hosted /mcp errors
+
+| HTTP / JSON-RPC                      | Meaning                                                               |
+| --------------------------------------- | -------------------------------------------------------------------------- |
+| `401 Missing x-app-token`            | Send `x-app-token` on every request                                 |
+| `400 invalid or missing MCP session` | Call `initialize` first; pass `mcp-session-id` header on follow-ups |
+| Connection drops                     | Sessions are in-memory; re-initialize after gateway restarts        |
+
+See [Hosted MCP](/mcp-server/setup/hosted) for the full handshake.
+
+## Agent ignores Karzoun tools
+
+- Explicitly ask: _"Use Karzoun MCP tools to …"_
+- Add [agent patterns](/mcp-server/guides/agent-patterns) to project rules
+- Verify tools appear in Cursor's MCP tool list for the session
+
+## Still stuck?
+
+1. Verify GraphQL with curl ([quickstart](/developers/getting-started/quickstart))
+2. Compare tool name in [catalog](/mcp-server/tools/catalog) with what the agent called
+3. Contact support with app id (not the raw token), tool name, and redacted error message

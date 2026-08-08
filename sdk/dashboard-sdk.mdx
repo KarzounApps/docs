@@ -1,0 +1,41 @@
+---
+title: "Dashboard SDK"
+description: "Build inbox dashboard panel apps with the Karzoun Dashboard SDK."
+---
+
+`@karzoun/dashboard-sdk` — lightweight SDK for **dashboard panel apps** inside the Karzoun inbox iframe.
+
+## Install
+
+```bash
+npm install @karzoun/dashboard-sdk
+```
+
+## Quick start
+
+```typescript
+import { createDashboard } from "@karzoun/dashboard-sdk";
+
+const dashboard = createDashboard({
+  miniappId: "YOUR_MINIAPP_ID",
+});
+
+dashboard.onContext((ctx) => {
+  console.log("Customer:", ctx.customer);
+});
+
+await dashboard.executeAction("listOrders", { limit: 10 });
+```
+
+## Prerequisites
+
+1. Install and configure a **MiniApp** with valid credentials (Settings → MiniApps)
+2. Create a **Dashboard App** pointing to your hosted iframe URL (Settings → Dashboard Apps)
+
+## Features
+
+- Receive conversation and customer context from the host
+- Execute authenticated actions via MiniApp (credentials never exposed to iframe)
+- Trigger host UI: toasts, notes, tags, navigation
+
+See the package README under `v4UI/dashboard-sdk` in the Karzoun monorepo for API reference, postMessage protocol, and examples.

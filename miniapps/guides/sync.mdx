@@ -1,0 +1,156 @@
+---
+title: "Sync"
+description: "Bulk import and realtime commerce sync for e-commerce MiniApps."
+---
+
+E-commerce and catalog MiniApps use the top-level `sync` block for **bulk import** (initial and scheduled sync) and **realtime webhook handlers** that share the same field-mapping vocabulary.
+
+Use `sync` when your integration must keep orders, customers, products, or carts aligned between an external platform and Karzoun — not just fire automation triggers.
+
+<Info>
+  **See also**
+
+  - [Webhooks](/miniapps/guides/webhooks) — Event extraction, verification, and `customerExtraction`
+  - [Salla example](/miniapps/examples/salla) — Full OAuth + webhook + sync pattern
+  - [E-commerce overview](/miniapps/guides/ecommerce) — When to use sync vs triggers-only
+</Info>
+
+## Structure
+
+```javascript
+sync: {
+  baseUrl: 'https://api.example.com/v2',
+  // Same auth styles as actions — Bearer, Basic ([[user]]:[[pass]]), or custom headers
+  headers: {
+    Authorization: 'Bearer [[accessToken]]',
+    'Content-Type': 'application/json',
+  },
+  syncConfiguration: {
+    enabled: true,
+    batchSize: 200,
+    rateLimitPerSecond: 10,
+    timeout: 30000,
+  },
+  resources: {
+    products: { /* ... */ },
+    customers: { /* ... */ },
+    orders: { /* ... */ },
+  },
+  webhooks: {
+    handlers: {
+      'order.created': { /* same mapping style as resources */ },
+    },
+  },
+},
+```
+
+| Block                 | Purpose                                                                    |
+| --------------------- | ------------------------------------------------------------------------- |
+| `baseUrl` + `headers` | Shared prefix for all sync HTTP calls (supports `[[accessToken]]`)        |
+| `syncConfiguration`   | Batch size, rate limits, timeouts for bulk jobs                           |
+| `resources.*`         | Paginated list/detail endpoints + `apiMapping` into Karzoun content types |
+| `webhooks.handlers`   | Realtime create/update mappings keyed by event name                       |
+
+## Resource definition
+
+Each key under `resources` defines one importable entity:
+
+```javascript
+products: {
+  name: 'products',
+  displayName: 'Products',
+  description: 'Sync products from your platform',
+  contentType: 'core:product',
+  expandDetails: true,
+  endpoints: {
+    list: { url: '/products', method: 'GET' },
+    details: { url: '/products/{id}', method: 'GET' },
+  },
+  pagination: {
+    paramName: 'per_page',
+    defaultLimit: 60,
+    maxLimit: 1000,
+  },
+  responseMapping: {
+    dataProperty: 'data',
+    totalProperty: 'pagination.total',
+  },
+  apiMapping: {
+    name: 'name',
+    code: { path: 'id', transform: 'toString' },
+    unitPrice: { paths: ['price.amount', 'regular_price.amount'], transform: 'coalesce' },
+    // ...
+  },
+  icon: 'package',
+},
+```
+
+| Field               | Description                                                                          |
+| ------------------- | ------------------------------------------------------------------------------------- |
+| `contentType`       | Target Karzoun entity (`core:product`, `core:customer`, `ecommerce:orders`, …)      |
+| `endpoints.list`    | Paginated collection fetch                                                            |
+| `endpoints.details` | Optional per-record enrichment when `expandDetails: true`                            |
+| `apiMapping`        | Field mapping rules (paths, transforms, literals) — same schema as webhook handlers  |
+
+### Mapping transforms
+
+Common transforms used in `apiMapping`:
+
+| Transform        | Use                                                                        |
+| ------------------ | ----------------------------------------------------------------------------- |
+| `toString`       | Coerce IDs to strings                                                       |
+| `toNumberOrNull` | Numeric fields with null fallback                                          |
+| `coalesce`       | First non-empty path in `paths` array                                      |
+| `compute` + `fn` | Platform-specific helpers (document custom `fn` names in your submission) |
+| `mapItems`       | Line items in orders/carts                                                 |
+| `joinCodes`      | Discount/coupon code arrays                                                |
+
+## Webhook handlers under sync
+
+Realtime events use `sync.webhooks.handlers` (preferred over legacy `webhook.ecommerce`):
+
+```javascript
+sync: {
+  // ... resources ...
+  webhooks: {
+    handlers: {
+      'order.created': {
+        recordType: 'order',
+        operation: 'create',
+        mapping: {
+          code: '$.data.id',
+          orderNumber: '$.data.reference_id',
+          status: '$.data.status.name',
+          totalAmount: '$.data.amounts.total.amount',
+          items: { path: '$.data.items', transform: 'mapItems' },
+        },
+      },
+      'order.status.updated': {
+        recordType: 'order',
+        operation: 'update',
+        mapping: {
+          code: '$.data.id',
+          status: '$.data.status.name',
+        },
+      },
+    },
+  },
+},
+```
+
+Pair every handler event with a matching [trigger](/miniapps/guides/triggers) so automations can react after sync processing.
+
+## Bulk sync lifecycle
+
+1. Tenant installs MiniApp and completes OAuth / API key setup.
+2. Karzoun runs enabled `resources` according to `syncConfiguration`.
+3. Ongoing changes arrive via provider webhooks → `sync.webhooks.handlers`.
+4. Rate limits and batch sizes protect both your API and Karzoun workers.
+
+## Submission checklist
+
+- [ ] List + detail endpoints tested with sandbox credentials
+- [ ] `apiMapping` covers required fields for each `contentType`
+- [ ] Webhook handler events match `triggers[].event` strings exactly
+- [ ] Pagination `responseMapping` matches your provider's JSON shape
+- [ ] Sample payloads included in your [submission package](/miniapps/guides/submission)

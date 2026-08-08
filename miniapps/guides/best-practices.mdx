@@ -1,0 +1,47 @@
+---
+title: "Best practices"
+description: "Security, quality, and submission guidance for MiniApp builders."
+---
+
+## Authentication
+
+- Always list secrets in `sensitiveKeys` — they are never sent to the browser
+- Use OAuth 2.0 with `auto_refresh: true` when your provider issues refresh tokens
+- Store webhook signing secrets in credentials or `auth.config` and reference via `secretKey`
+- Document which values tenants must provide vs Karzoun-managed OAuth client IDs
+
+## Actions
+
+- Use `renderStrategy: 'auto'` so forms generate from `parameters` JSON Schema
+- Use RPC sources (`x-source`) for IDs users should not paste manually
+- Always set `x-fallback: 'input'` when RPC sources may fail
+- Chain requests when later steps need IDs from earlier responses
+- Use array `mapping` on intermediate requests, object `mapping` on the final response
+
+## Triggers
+
+- Match the **exact event string** your webhook extraction produces
+- Write clear `label` and `description` text for the Automation Builder
+- Use [Lucide](https://lucide.dev/icons) icon names for `icon`
+
+## Webhooks
+
+- Require HMAC verification in production (`hmac-sha256` when supported)
+- Set `transactionId` to deduplicate provider retries
+- Respond with `response.statusCode: 200` and a minimal body — Karzoun acknowledges quickly
+
+## E-commerce
+
+- Use [sync](/miniapps/guides/sync) for bulk import and realtime handlers
+- Align `sync.webhooks.handlers` keys with `triggers[].event`
+- Use `joinCodes` for discount arrays and `mapItems` for line items
+- Use `customerExtraction.overrides` when customer JSON differs per event
+
+## Security & submission
+
+- Do not embed tenant production secrets in submitted JSON
+- Document sandbox test accounts for reviewers
+- Keep `docsUrl` pointed at your integration guide for end users
+- Bump `version` on every approved change
+
+Rate limiting (30 requests / 60 seconds per user per app) is enforced on action execution automatically.

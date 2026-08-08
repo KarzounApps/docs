@@ -1,0 +1,113 @@
+---
+title: "Agent patterns"
+description: "Reliable prompts and workflows for agents using Karzoun MCP tools."
+---
+
+MCP gives agents **hands** on your Karzoun data. These patterns help you get reliable results without repeating yourself in every chat.
+
+<Tip title="Screenshot placeholder">
+  _Coming soon: screenshot of an agent listing customers and applying tags via Karzoun MCP tools._
+</Tip>
+
+For **hosted** connections (Claude.ai, Manus, remote Cursor), see [AI app connectors](/mcp-server/setup/ai-connectors) — same tools, different client config.
+
+## Ground the agent first
+
+Add a short system or project instruction so the model knows Karzoun tools exist:
+
+```text
+You have Karzoun MCP tools for CRM and workspace data.
+- Prefer read tools (customers, tags, customerDetail) before mutations.
+- Use page: 1, perPage: 10 for list queries unless I ask for more.
+- Confirm destructive actions (customersRemove, tagsRemove) before calling.
+```
+
+Point the agent at this docs site for operation names: [tool catalog](/mcp-server/tools/catalog).
+
+## Pattern: Lookup before action
+
+| Step | Tool                           | Why                                       |
+| ---- | -------------------------------- | -------------------------------------------- |
+| 1    | `customers` with `searchValue` | Find the right record                     |
+| 2    | `customerDetail` with `_id`    | Full context (tags, owner, custom fields) |
+| 3    | `customersEdit` or `tagsTag`   | Mutate with confidence                    |
+
+**Example prompt:** _"Find customer with email alice@example.com, show their tags, then add tag VIP if missing."_
+
+## Pattern: Safe exploration
+
+Start read-only with a tool prefix:
+
+```json
+"KARZOUN_MCP_TOOL_PREFIX": "customer"
+```
+
+Or instruct: _"Only use query tools for the next five messages."_
+
+Use `currentUser` to verify the token works and see which workspace identity the app runs as.
+
+## Pattern: Paginated lists
+
+Agents often fetch unbounded lists and hit the **512 KB response cap**.
+
+**Good prompt:** _"List the first 5 customers created this month using page 1 and perPage 5."_
+
+**Tool args example:**
+
+```json
+{ "page": 1, "perPage": 5 }
+```
+
+See [pagination](/developers/guides/pagination) for `pagination.totalCount` and `hasNextPage`.
+
+## Pattern: CRM hygiene
+
+| Goal           | Tools                                                            |
+| -------------- | -------------------------------------------------------------------- |
+| Dedupe check   | `customers` + `searchValue`, then `customerDetail` on candidates |
+| Merge          | `customersMerge` (confirm with user first)                       |
+| Tag campaigns  | `tags` → `tagsTag` on customer ids                               |
+| Product lookup | `products` → `productDetail`                                     |
+
+## Pattern: Webhook inspection
+
+For integration debugging (not provider webhooks):
+
+1. `webhooks` — list subscriptions
+2. `webhookDetail` — inspect config
+3. `webhookDeliveryLogs` — see failures and HTTP status codes
+
+Pair with the [webhooks guide](/developers/guides/webhooks) for tenant outbound events.
+
+## Pattern: Hosted backend agent
+
+For server-side workers calling `/mcp`:
+
+1. Store `KARZOUN_APP_TOKEN` in secrets manager
+2. `initialize` → capture `mcp-session-id`
+3. `tools/call` in a loop with explicit tool names
+4. Log GraphQL errors from tool responses
+
+Do not expose the session or token to end users. Details: [Hosted MCP](/mcp-server/setup/hosted).
+
+## Anti-patterns
+
+| Avoid                                | Do instead                                           |
+| ---------------------------------------- | --------------------------------------------------------- |
+| "Do everything with Karzoun" (vague) | Name tools or outcomes: "list open tags"             |
+| Huge `perPage` on first call         | Start with 5–20 rows                                 |
+| Mutations without confirmation       | Ask agent to propose, then execute                   |
+| Embedding tokens in Cursor rules     | Keep tokens in MCP `env` or server secrets           |
+| Using MCP in frontend JavaScript     | GraphQL from backend, or hosted MCP server-side only |
+
+## Custom rules in Cursor
+
+Optional `.cursor/rules/karzoun-mcp.mdc`:
+
+```markdown
+# Karzoun MCP
+
+- Use Karzoun tools for live CRM data; do not invent customer ids.
+- After mutations, summarize what changed and link to relevant record ids.
+- On permission errors, tell the user to check Developer → Apps scopes.
+```

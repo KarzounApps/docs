@@ -1,0 +1,85 @@
+---
+title: "Cursor setup (stdio)"
+description: "Run Karzoun MCP locally so Cursor's agent can call your workspace GraphQL API as tools."
+---
+
+Run Karzoun MCP locally so Cursor's agent can call your workspace GraphQL API as tools.
+
+<Tip title="Video walkthrough">
+  **Coming soon:** _Installing Karzoun MCP in Cursor_ — from app token to first `tags` query. _(Video embed placeholder)_
+</Tip>
+
+## Before you start
+
+- [App token](/developers/getting-started/authentication) from **Developer → Apps**
+- GraphQL URL: `https://{subdomain}.api.karzoun.chat/graphql`
+
+## Configure MCP
+
+<Steps>
+  <Step title="Open MCP settings">
+    **Cursor Settings → MCP → Add new global MCP server**
+
+    Or edit `~/.cursor/mcp.json` directly.
+  </Step>
+
+  <Step title="Add the Karzoun server">
+    ```json
+    {
+      "mcpServers": {
+        "karzoun": {
+          "command": "npx",
+          "args": ["-y", "@karzounchat/mcp-server"],
+          "env": {
+            "KARZOUN_API_URL": "https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql",
+            "KARZOUN_APP_TOKEN": "YOUR_APP_TOKEN"
+          }
+        }
+      }
+    }
+    ```
+
+    Replace `YOUR_SUBDOMAIN` and paste the JWT from `appsAdd` (shown once).
+
+    <Warning title="Keep tokens out of git">
+      Do not commit `mcp.json` if it contains real tokens. Use env vars or Cursor's secret storage where available.
+    </Warning>
+  </Step>
+
+  <Step title="Optional: limit tools">
+    For faster startup and smaller context, expose only CRM tools:
+
+    ```json
+    "env": {
+      "KARZOUN_API_URL": "https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql",
+      "KARZOUN_APP_TOKEN": "YOUR_APP_TOKEN",
+      "KARZOUN_MCP_TOOL_PREFIX": "customers"
+    }
+    ```
+  </Step>
+
+  <Step title="Restart and verify">
+    1. **Cursor Settings → MCP** — toggle the server off/on or click refresh
+    2. Status should show **connected** with a tool count (~75 without prefix)
+    3. In chat: _"Use Karzoun to run currentUser"_
+
+    Expected: JSON profile for the app's workspace user.
+  </Step>
+</Steps>
+
+## In-app setup page
+
+Karzoun also provides a guided flow at **Developer → MCP setup** in the web app (`/developer/mcp-setup`) with copy-ready config snippets.
+
+## Project-level config
+
+For team repos, add `.cursor/mcp.json` (same schema) so everyone uses the same server name — each developer still supplies their own token via local env if preferred.
+
+For teams that prefer not to run `npx`, use [hosted MCP](/mcp-server/setup/hosted) or [AI app connectors](/mcp-server/setup/ai-connectors) (Claude.ai, Manus, ChatGPT, remote Cursor).
+
+## Next steps
+
+- [AI app connectors](/mcp-server/setup/ai-connectors) — Cloud AI apps (Claude, Manus, ChatGPT)
+- [Agent patterns](/mcp-server/guides/agent-patterns) — Prompts that work
+- [How it works](/mcp-server/guides/how-it-works) — Tool ↔ GraphQL mapping
+- [Troubleshooting](/mcp-server/guides/troubleshooting) — If the server stays red

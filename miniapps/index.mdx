@@ -1,0 +1,52 @@
+---
+title: "MiniApps"
+description: "Build JSON-driven integrations for the Karzoun Marketplace — auth, actions, triggers, and webhooks."
+---
+
+MiniApps are JSON integration definitions for the Karzoun Marketplace. You author the document, test against your provider's API, and [submit for review](/miniapps/guides/submission). Karzoun hosts approved definitions — tenants install from Marketplace and connect their accounts.
+
+<Info>
+  **Not self-hosted** — You do not deploy databases or seed scripts on Karzoun infrastructure. External developers deliver a definition + assets; Karzoun registers it after QA approval.
+</Info>
+
+## Start here
+
+| Guide                                                    | Description                             |
+| --------------------------------------------------------- | ---------------------------------------- |
+| [Quickstart](/miniapps/getting-started/quickstart)         | Minimal bearer-token MiniApp            |
+| [Architecture](/miniapps/architecture)                     | Platform flow and components            |
+| [Document schema](/miniapps/reference/document-schema)     | Required JSON fields                    |
+| [Submit for review](/miniapps/guides/submission)           | Submission package and approval process |
+
+## Core concepts
+
+| Guide                                                     | Description                                    |
+| ----------------------------------------------------------- | ------------------------------------------------ |
+| [Authentication](/miniapps/guides/authentication)            | Bearer tokens, OAuth 2.0, registration         |
+| [Actions](/miniapps/guides/actions)                          | Requests, App Functions, parameters, chaining  |
+| [Dynamic data sources](/miniapps/guides/dynamic-data-sources) | RPC dropdowns                                  |
+| [Triggers](/miniapps/guides/triggers)                        | Automation trigger nodes                       |
+| [Webhooks](/miniapps/guides/webhooks)                        | Inbound provider events                        |
+| [Sync](/miniapps/guides/sync)                                | Bulk import and commerce handlers              |
+| [E-commerce](/miniapps/guides/ecommerce)                     | Storefront integration overview                |
+
+## Publish
+
+| Guide                                              | Description                    |
+| ----------------------------------------------------- | --------------------------------- |
+| [Marketplace listing](/miniapps/guides/marketplace)   | Metadata, icons, copy          |
+| [Examples](/miniapps/examples)                        | Dropbox, Slack, GitHub, Salla   |
+
+## Reference
+
+| Guide                                              | Description            |
+| ----------------------------------------------------- | ------------------------- |
+| [API reference](/miniapps/reference/api-reference)    | REST + GraphQL surface  |
+| [Best practices](/miniapps/guides/best-practices)     | Security and quality    |
+| [Troubleshooting](/miniapps/guides/troubleshooting)   | Common builder issues   |
+
+## Related
+
+- [Partners program](/partners) — Whitelabel and embedded commerce
+- [Tenant webhooks](/developers/guides/webhooks) — Outbound workspace events (separate from MiniApp inbound webhooks)
+- [Dashboard SDK](/sdk/dashboard-sdk) — Inbox iframe panels that call `executeMiniAppAction`

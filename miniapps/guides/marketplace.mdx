@@ -1,0 +1,63 @@
+---
+title: "Marketplace listing"
+description: "Metadata, icons, and copy that control your MiniApp's Marketplace listing."
+---
+
+Your MiniApp appears in the Karzoun Marketplace. These fields control how it's displayed:
+
+```javascript
+{
+  title: 'My Service',                                    // Main heading
+  label: 'My Service',                                    // Badge/tag label
+  shortDescription: 'Automate workflows with My Service', // Subtitle
+  description: `
+Connect **My Service** to Karzoun to:
+
+- Automatically create tasks from incoming orders
+- Send notifications when customer actions happen
+- Sync data bi-directionally
+
+## Setup Instructions
+
+1. Create an API key in My Service settings
+2. Install this app from the Marketplace
+3. Paste your API key and click Connect
+
+## Supported Events
+
+| Event              | Description                    |
+| ------------------ | ------------------------------ |
+| order.created      | A new order is placed          |
+| customer.updated   | Customer profile is updated    |
+  `,
+  icon: 'https://cdn.example.com/icon.svg',              // App icon (SVG recommended)
+  logo: 'https://cdn.example.com/logo.svg',              // Full logo
+  docsUrl: 'https://docs.example.com/karzoun-integration',// External docs link
+  youtubeId: 'dQw4w9WgXcQ',                              // Tutorial video (optional)
+  category: 'ecommerce',                                  // Filter category
+  status: 'private',                                       // Karzoun sets 'public' after approval
+  version: '1.0.0',                                       // Semantic version
+}
+```
+
+## Asset checklist
+
+| Asset         | Requirement                                        |
+| ------------- | ------------------------------------------------------ |
+| `icon`        | HTTPS URL, SVG or PNG, square, readable at 32×32     |
+| `logo`        | HTTPS URL, horizontal logo for detail page            |
+| `docsUrl`     | Your setup guide for end users (not Karzoun docs)     |
+| `description` | Markdown with setup steps and event table             |
+| `youtubeId`   | Optional walkthrough video                             |
+
+Host icons and logos on infrastructure you control.
+
+## Before submission
+
+- [ ] `shortDescription` under ~120 characters
+- [ ] `description` includes numbered setup steps
+- [ ] `category` matches Marketplace filters
+- [ ] `version` follows semver
+- [ ] Draft uses `status: 'private'` until Karzoun approves
+
+[Submit for review](/miniapps/guides/submission) with your JSON definition and sandbox credentials.

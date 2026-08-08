@@ -1,0 +1,62 @@
+---
+title: "Triggers"
+description: "Define automation trigger nodes that fire from MiniApp webhook events."
+---
+
+Triggers define which webhook events your MiniApp can react to. They appear in the Automation Builder as available trigger nodes. When a matching webhook arrives, automations that use the corresponding trigger are executed.
+
+```javascript
+triggers: [
+  {
+    type: "miniapps:my-service", // Must be "miniapps:{ns}"
+    event: "order.created", // Event identifier
+    img: "automation3.svg", // Icon image filename
+    icon: "shopping-cart", // Lucide icon name
+    label: "My Service Order Created", // Display label in Automation Builder
+    description: "Triggered when a new order is placed in My Service.",
+    isCustom: false,
+  },
+  {
+    type: "miniapps:my-service",
+    event: "customer.updated",
+    img: "automation4.svg",
+    icon: "users-alt",
+    label: "My Service Customer Updated",
+    description: "Triggered when a customer record is updated.",
+    isCustom: false,
+  },
+];
+```
+
+**Trigger fields:**
+
+| Field         | Type    | Required | Description                                  |
+| ------------- | --------- | -------- | ------------------------------------------------ |
+| `type`        | string  | ✅       | Must follow the pattern `miniapps:{ns}`       |
+| `event`       | string  | ✅       | The exact event string from your provider     |
+| `img`         | string  | ✅       | Automation builder icon filename              |
+| `icon`        | string  | ✅       | Lucide React icon name                        |
+| `label`       | string  | ✅       | Human-readable label                          |
+| `description` | string  | ✅       | Help text explaining when this trigger fires  |
+| `isCustom`    | boolean | ✅       | Set to `false` for standard triggers          |
+
+**Event name convention:** Use the exact event string your provider sends in webhooks. The platform matches the extracted event name (from `webhook.eventExtraction`) against trigger `event` values directly — no mapping layer.
+
+**Composite events:** If your provider uses a combination of fields to identify an event (e.g., GitHub uses the `X-GitHub-Event` header + the `action` body field), use the `compositeStrategy` in `webhook.eventExtraction` (see the [Webhooks guide](/miniapps/guides/webhooks)) and name your trigger events accordingly:
+
+```javascript
+// GitHub: header "push" + body action "received"
+{
+  event: "push.received";
+}
+
+// GitHub: header "pull_request" + body action "opened"
+{
+  event: "pull_request.opened";
+}
+
+// Slack: body event.type "message" + event.subtype "bot_message"
+{
+  event: "message.bot_message";
+}
+```

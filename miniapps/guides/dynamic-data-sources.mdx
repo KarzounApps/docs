@@ -1,0 +1,70 @@
+---
+title: "Dynamic data sources"
+description: "Define RPC-backed dropdowns for MiniApp action forms."
+---
+
+Sources provide dynamic dropdown options in action forms. Define them at the miniapp root level under `source`, and reference them in parameters via `x-source`.
+
+```javascript
+// MiniApp root level
+source: {
+  // Each key must start with "rpc_"
+  rpc_channels_list: {
+    url: 'https://slack.com/api/conversations.list?limit=1000&types=public_channel,private_channel',
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer [[accessToken]]',
+    },
+    dataPath: 'channels',         // JSONPath to the array in the response
+    valueField: 'id',             // Field to use as the option value
+    labelField: 'name',           // Field to use as the option label
+  },
+
+  rpc_users_list: {
+    url: 'https://slack.com/api/users.list?limit=1000',
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer [[accessToken]]',
+    },
+    dataPath: 'members',
+    valueField: 'id',
+    labelField: 'profile.real_name',  // Supports nested paths
+  },
+},
+
+// Then reference from action parameters:
+actions: [{
+  parameters: {
+    properties: {
+      channel: {
+        type: 'string',
+        title: 'Channel',
+        'x-source': 'rpc_channels_list',  // ← Matches key in source
+        'x-fallback': 'input',
+      },
+    },
+  },
+}]
+```
+
+**Source definition fields:**
+
+| Field         | Type   | Required | Description                                            |
+| ------------- | ------ | -------- | ---------------------------------------------------------- |
+| `url`         | string | ✅       | API endpoint URL (supports `[[cred]]` placeholders)    |
+| `method`      | string | ✅       | HTTP method (`GET` or `POST`)                          |
+| `headers`     | object | —        | Request headers                                         |
+| `queryParams` | object | —        | Additional query parameters                              |
+| `dataPath`    | string | ✅       | Path to the array in the API response                   |
+| `valueField`  | string | ✅       | Field name to use as the option value                    |
+| `labelField`  | string | ✅       | Field name to use as the option label                     |
+| `valueFields` | object | —        | Alternative value fields per `sourceRef` context        |
+
+**How it works at runtime:**
+
+1. User opens the action form
+2. Frontend calls `miniAppsActionSources` GraphQL query with the `sourceKey`
+3. Backend fetches the source URL with the user's credentials injected
+4. Response array is extracted from `dataPath`
+5. Each item is mapped to `{ value, label }` using `valueField` and `labelField`
+6. Dropdown renders with the options

@@ -1,0 +1,329 @@
+---
+title: "Actions"
+description: "Requests, App Functions, parameters, and chaining for MiniApp actions."
+---
+
+Actions are API calls (and optional App Function steps) that users or automations can execute. Each action has a form for user input, a step pipeline (`requests[]`), and response mapping.
+
+## Defining an Action
+
+```javascript
+actions: [
+  {
+    name: "createIssue", // Unique action identifier
+    title: "Create Issue", // Display title
+    description: "Create a new issue in a repository",
+    renderStrategy: "auto", // UI rendering ('auto' = standard form)
+
+    // Form definition (JSON Schema)
+    parameters: {
+      /* see Parameters section below */
+    },
+
+    // HTTP requests to execute (see Requests & Chaining below)
+    requests: [
+      /* ... */
+    ],
+  },
+];
+```
+
+**`renderStrategy` values:**
+
+| Value    | Description                                |
+| -------- | -------------------------------------------- |
+| `'auto'` | Standard auto-generated form (recommended) |
+
+## Parameters (JSON Schema)
+
+Parameters define the user-facing form using [JSON Schema](https://json-schema.org/). Extended with custom `x-*` properties for dynamic data.
+
+```javascript
+parameters: {
+  type: 'object',
+  required: ['repository', 'title'],
+  properties: {
+    // Simple text input
+    title: {
+      type: 'string',
+      title: 'Issue Title',
+      description: 'A short descriptive title',
+    },
+
+    // Text area (multiline)
+    body: {
+      type: 'string',
+      title: 'Description',
+    },
+
+    // Dynamic dropdown from RPC source
+    repository: {
+      type: 'string',
+      title: 'Repository',
+      'x-source': 'rpc_repos_list',   // References a source definition
+      'x-fallback': 'input',           // Fallback to text input if source fails
+    },
+
+    // Static dropdown (enum)
+    priority: {
+      type: 'string',
+      title: 'Priority',
+      enum: ['low', 'medium', 'high', 'critical'],
+      default: 'medium',
+    },
+
+    // Boolean toggle
+    isDraft: {
+      type: 'boolean',
+      title: 'Draft',
+      default: false,
+    },
+
+    // Number input
+    count: {
+      type: 'number',
+      title: 'Count',
+    },
+
+    // Array input (comma-separated or JSON)
+    labels: {
+      type: 'array',
+      title: 'Labels',
+    },
+  },
+}
+```
+
+**Supported `type` values:**
+
+| Type      | Rendered As                                   |
+| --------- | ------------------------------------------------ |
+| `string`  | Text input (or dropdown if `enum` provided)    |
+| `number`  | Number input                                    |
+| `boolean` | Toggle switch                                   |
+| `array`   | Multi-value input                               |
+| `object`  | Nested form group                               |
+
+**Custom extensions:**
+
+| Extension    | Type   | Description                                    |
+| ------------ | ------ | -------------------------------------------------- |
+| `x-source`   | string | RPC source key (e.g., `'rpc_channels_list'`)    |
+| `x-fallback` | string | Fallback mode if source fails (`'input'`)       |
+
+## Requests & Chaining
+
+Each action has a `requests` array. Requests execute **sequentially** — the response from request N is available as placeholders in request N+1.
+
+**Single request:**
+
+```javascript
+requests: [
+  {
+    url: "https://api.example.com/issues",
+    method: "POST",
+    headers: {
+      Authorization: "Bearer [[accessToken]]",
+      "Content-Type": "application/json",
+    },
+    bodyType: "json",
+    body: {
+      title: "{{title}}",
+      body: "{{body}}",
+      labels: "{{labels}}",
+    },
+    mapping: {
+      issueId: "$.id",
+      issueUrl: "$.html_url",
+    },
+  },
+];
+```
+
+**Chained requests** (multi-step):
+
+```javascript
+// Example: Send a direct message on Slack
+// Step 1: Open a DM channel with the user
+// Step 2: Post a message to that channel
+requests: [
+  // Step 1: Open DM channel
+  {
+    url: "https://slack.com/api/conversations.open",
+    method: "POST",
+    headers: {
+      Authorization: "Bearer [[accessToken]]",
+      "Content-Type": "application/json",
+    },
+    bodyType: "json",
+    body: { users: "{{userId}}" },
+    // Array mapping → values forwarded to next request (NOT persisted)
+    mapping: [{ name: "dmChannelId", value: "$.channel.id" }],
+  },
+
+  // Step 2: Post message (uses dmChannelId from step 1)
+  {
+    url: "https://slack.com/api/chat.postMessage",
+    method: "POST",
+    headers: {
+      Authorization: "Bearer [[accessToken]]",
+      "Content-Type": "application/json",
+    },
+    bodyType: "json",
+    body: {
+      channel: "{{dmChannelId}}", // ← From step 1's mapping
+      text: "{{messageText}}", // ← From user's form input
+    },
+    mapping: {
+      messageTs: "$.ts",
+      channelId: "$.channel",
+    },
+  },
+];
+```
+
+**Request fields:**
+
+| Field         | Type            | Required | Description                                             |
+| ------------- | ----------------- | -------- | ----------------------------------------------------------- |
+| `url`         | string          | ✅       | Full URL (supports `[[cred]]` and `{{param}}`)          |
+| `method`      | string          | ✅       | HTTP method: `GET`, `POST`, `PUT`, `PATCH`, `DELETE`    |
+| `headers`     | object          | —        | Request headers                                          |
+| `queryParams` | object          | —        | URL query parameters                                      |
+| `bodyType`    | string          | —        | `'json'`, `'x-www-form-urlencoded'`, `'formData'`       |
+| `body`        | object          | —        | Request body (placeholders replaced at runtime)          |
+| `mapping`     | object or array | ✅       | Response extraction (see Response Mapping below)         |
+
+## Placeholders
+
+There are two placeholder syntaxes:
+
+| Syntax    | Source                       | Persisted? | Example                          |
+| --------- | ------------------------------- | ------------ | ----------------------------------- |
+| `[[key]]` | `credentials` + `metadata`   | N/A        | `[[accessToken]]`, `[[storeId]]` |
+| `{{key}}` | User input + runtime context | No         | `{{channel}}`, `{{store_url}}`   |
+
+**Placeholder resolution order for `{{key}}`:**
+
+1. User's form input (`parameters`)
+2. Previous request's mapping output (in chained requests)
+3. `auth.config` values (for registration requests)
+4. System-injected values (`webhookUrl`, `subdomain`, `uid`)
+
+**Type preservation:** If a placeholder is the entire value (e.g., `body: { data: '{{myObject}}' }`), the raw type is preserved — objects remain objects, arrays remain arrays. If a placeholder is part of a larger string (e.g., `"Hello {{name}}!"`), it's stringified.
+
+## Response Mapping
+
+Mapping extracts values from API responses. Two formats with different behaviors:
+
+**Object mapping** — Values are **persisted** in the database:
+
+| Auth step                                              | Stored in                                              |
+| --------------------------------------------------------- | --------------------------------------------------------- |
+| `get_token`, `refresh_token`, `registrationRequests`    | `InstalledMiniApps.credentials`                        |
+| `userDetails`                                            | `InstalledMiniApps.metadata` (full mapping preserved) |
+
+```javascript
+// get_token / refresh_token / registrationRequests → credentials
+mapping: {
+  accessToken: '$.access_token',
+  webhookId: '$.webhook.id',
+}
+
+// userDetails → metadata
+mapping: {
+  uid: '$.user.id',
+  storeId: '$.user.store.id',
+  storeName: '$.user.store.title',
+}
+```
+
+Use object mapping in `get_token`, `refresh_token`, `registrationRequests`, and `userDetails`.
+
+**Array mapping** — Values are **forwarded to the next request** only (not persisted):
+
+```javascript
+mapping: [
+  { name: "channelId", value: "$.channel.id" },
+  { name: "threadTs", value: "$.message.ts" },
+];
+```
+
+Use array mapping in action `requests` when you need to chain request outputs.
+
+**Dot-path syntax:** Values use JSONPath-like syntax starting with `$`:
+
+| Expression         | Description             |
+| ------------------- | -------------------------- |
+| `$.id`             | Root-level `id` field     |
+| `$.data.user.name` | Nested access              |
+| `$.items[0].code`  | Array index access          |
+| `$.channel`        | Direct field reference     |
+
+## App Functions (pipeline steps)
+
+Actions are not limited to HTTP. The `requests[]` array is a **step pipeline** where each entry is either an HTTP request (default) or an App Function step.
+
+App Functions are small, sandboxed JavaScript helpers shipped in the mini-app definition (sibling of `source` and `actions`). They let you search, reshape, or assert on data between HTTP calls — for example, find a spreadsheet row by column name, or build a sparse update body.
+
+### Defining functions
+
+```javascript
+functions: {
+  findRows: {
+    params: ['values', 'searchColumn', 'searchValue', 'matchType', 'firstOnly'],
+    code: `
+      // Plain JavaScript — must return a plain object
+      // Throw an Error to abort the action with a friendly message
+      var rows = Array.isArray(values) ? values : [];
+      // ... search logic ...
+      return { found: true, rowNumber: 2, row: { Email: 'a@b.com' } };
+    `,
+  },
+},
+```
+
+### Using a function as a pipeline step
+
+```javascript
+requests: [
+  {
+    // Step 1 — HTTP (type defaults to 'http' when omitted)
+    url: "https://sheets.googleapis.com/v4/spreadsheets/{{spreadsheetId}}/values/{{sheetName}}",
+    method: "GET",
+    headers: { Authorization: "Bearer [[accessToken]]" },
+    mapping: { rangeValues: "$.values" },
+  },
+  {
+    // Step 2 — App Function
+    type: "function",
+    name: "findRows",
+    args: {
+      values: "{{rangeValues}}", // preserves arrays (single-placeholder passthrough)
+      searchColumn: "{{searchColumn}}",
+      searchValue: "{{searchValue}}",
+      matchType: "{{matchType}}",
+      firstOnly: true,
+    },
+  },
+];
+```
+
+Returned object keys (`found`, `rowNumber`, `row`, …) are merged into the shared placeholder context and are available to later steps and to automation custom-field mappings.
+
+### Security & sandbox limits
+
+| Rule           | Detail                                                                                                                            |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Trust boundary | Function code comes from the **reviewed** mini-app definition in the core DB — never from tenant users                          |
+| No credentials | Function args are resolved from form input + prior step outputs only. `[[accessToken]]` and other secrets are **never** passed in |
+| Runtime        | `isolated-vm`: 128 MB memory, 2 s timeout, no network / filesystem access                                                        |
+| Return type    | Must return a **plain JSON object** (not an array or primitive)                                                                  |
+| Errors         | Throwing (or a sandbox failure) aborts the pipeline with that message                                                            |
+
+### Step type reference
+
+| `type`                | Shape                                                                             | Notes                                          |
+| ----------------------- | ------------------------------------------------------------------------------------ | -------------------------------------------------- |
+| `'http'` (or omitted) | Existing HTTP request fields (`url`, `method`, `headers`, `body`, `mapping`, …) | Fully backward compatible                       |
+| `'function'`          | `{ type: 'function', name, args }`                                                | `name` must exist in `definition.functions`     |

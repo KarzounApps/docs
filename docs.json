@@ -1,35 +1,119 @@
 {
-  "theme": "mint",
-  "name": "Mintlify Starter Kit",
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "maple",
+  "name": "Karzoun Docs",
+  "description": "Developer API, partner integrations, MCP, SDK, MiniApps, and Help Center for Karzoun Chat.",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#387CEC",
+    "light": "#5B9BFF",
+    "dark": "#2563C7"
   },
   "logo": {
     "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "dark": "/logo/dark.svg",
+    "href": "/"
   },
   "favicon": "/favicon.svg",
+  "appearance": {
+    "default": "system"
+  },
+  "fonts": {
+    "family": "Inter",
+    "heading": {
+      "family": "Inter",
+      "weight": 600
+    }
+  },
+  "background": {
+    "decoration": "gradient",
+    "color": {
+      "light": "#F6F8FB",
+      "dark": "#0A1322"
+    }
+  },
+  "styling": {
+    "eyebrows": "breadcrumbs",
+    "codeblocks": {
+      "theme": {
+        "light": "github-light",
+        "dark": "github-dark"
+      }
+    }
+  },
+  "icons": {
+    "library": "lucide"
+  },
   "navbar": {
     "links": [
       {
-        "href": "mailto:hi@mintlify.com",
-        "label": "Support"
+        "label": "Playground",
+        "href": "https://karzoun.chat/developer/playground"
+      },
+      {
+        "label": "Support",
+        "href": "mailto:developers@karzoun.chat"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://app.mintlify.com"
+      "label": "Open Karzoun",
+      "href": "https://karzoun.chat"
     }
   },
   "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+    "links": [
+      {
+        "header": "Product",
+        "items": [
+          { "label": "Open Karzoun", "href": "https://karzoun.chat" },
+          {
+            "label": "Developer Dashboard",
+            "href": "https://karzoun.chat/developer"
+          },
+          {
+            "label": "Playground",
+            "href": "https://karzoun.chat/developer/playground"
+          }
+        ]
+      },
+      {
+        "header": "Docs",
+        "items": [
+          { "label": "Developers", "href": "/developers" },
+          { "label": "GraphQL API", "href": "/api-reference" },
+          { "label": "Help Center", "href": "/help-center" },
+          { "label": "Changelog", "href": "/changelog" }
+        ]
+      },
+      {
+        "header": "Legal",
+        "items": [
+          { "label": "Terms", "href": "/legal/terms" },
+          { "label": "Responsible Use", "href": "/legal/responsible-use" }
+        ]
+      }
+    ]
+  },
+  "seo": {
+    "indexing": "navigable",
+    "metatags": {
+      "og:site_name": "Karzoun Docs",
+      "og:title": "Karzoun Docs",
+      "og:description": "Build on Karzoun — GraphQL API, MCP, SDK, MiniApps, partners, and Help Center.",
+      "twitter:card": "summary_large_image",
+      "twitter:title": "Karzoun Docs",
+      "twitter:description": "Build on Karzoun — GraphQL API, MCP, SDK, MiniApps, partners, and Help Center."
+    },
+    "organization": {
+      "name": "Karzoun",
+      "url": "https://karzoun.chat"
     }
+  },
+  "search": {
+    "prompt": "Search Karzoun docs…"
+  },
+  "metadata": {
+    "timestamp": true
   },
   "contextual": {
     "options": [
@@ -44,41 +128,262 @@
     ],
     "display": "header"
   },
-  "$schema": "https://mintlify.com/docs.json",
   "navigation": {
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "icon": "book-open-cover",
-          "href": "https://mintlify.com/docs"
-        },
-        {
-          "anchor": "Blog",
-          "icon": "newspaper",
-          "href": "https://mintlify.com/blog"
+          "anchor": "Playground",
+          "icon": "terminal",
+          "href": "https://karzoun.chat/developer/playground"
         }
       ]
     },
-    "tabs": [
+    "languages": [
       {
-        "tab": "Documentation",
-        "groups": [
+        "language": "en",
+        "default": true,
+        "tabs": [
           {
-            "group": "Getting Started",
-            "pages": [
-              "index",
-              "quickstart"
+            "tab": "Home",
+            "icon": "house",
+            "groups": [
+              {
+                "group": "Start here",
+                "pages": ["index", "changelog"]
+              },
+              {
+                "group": "Legal",
+                "pages": ["legal/terms", "legal/responsible-use"]
+              }
+            ]
+          },
+          {
+            "tab": "Developers",
+            "icon": "code-2",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": ["developers/index"]
+              },
+              {
+                "group": "Getting started",
+                "pages": [
+                  "developers/getting-started/quickstart",
+                  "developers/getting-started/authentication"
+                ]
+              },
+              {
+                "group": "Guides",
+                "pages": [
+                  "developers/guides/pagination",
+                  "developers/guides/webhooks",
+                  "developers/guides/errors"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "GraphQL API",
+            "icon": "brackets",
+            "graphql": {
+              "source": "public-api.graphql",
+              "directory": "api-reference"
+            }
+          },
+          {
+            "tab": "Partners",
+            "icon": "handshake",
+            "groups": [
+              {
+                "group": "Partners",
+                "pages": [
+                  "partners/index",
+                  "partners/onboarding",
+                  "partners/whitelabel"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "MCP",
+            "icon": "bot",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": ["mcp-server/index"]
+              },
+              {
+                "group": "Setup",
+                "pages": [
+                  "mcp-server/setup/cursor",
+                  "mcp-server/setup/claude-desktop",
+                  "mcp-server/setup/hosted",
+                  "mcp-server/setup/ai-connectors",
+                  "mcp-server/setup/security"
+                ]
+              },
+              {
+                "group": "Guides",
+                "pages": [
+                  "mcp-server/guides/how-it-works",
+                  "mcp-server/guides/agent-patterns",
+                  "mcp-server/guides/troubleshooting"
+                ]
+              },
+              {
+                "group": "Tools",
+                "pages": ["mcp-server/tools/catalog"]
+              }
+            ]
+          },
+          {
+            "tab": "SDK",
+            "icon": "package",
+            "groups": [
+              {
+                "group": "SDK",
+                "pages": ["sdk/index", "sdk/dashboard-sdk", "sdk/pixel"]
+              }
+            ]
+          },
+          {
+            "tab": "MiniApps",
+            "icon": "puzzle",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": ["miniapps/index", "miniapps/architecture"]
+              },
+              {
+                "group": "Getting started",
+                "pages": [
+                  "miniapps/getting-started/quickstart",
+                  "miniapps/reference/document-schema"
+                ]
+              },
+              {
+                "group": "Core concepts",
+                "pages": [
+                  "miniapps/guides/authentication",
+                  "miniapps/guides/actions",
+                  "miniapps/guides/dynamic-data-sources",
+                  "miniapps/guides/triggers",
+                  "miniapps/guides/webhooks",
+                  "miniapps/guides/sync",
+                  "miniapps/guides/ecommerce"
+                ]
+              },
+              {
+                "group": "Publish",
+                "pages": [
+                  "miniapps/guides/marketplace",
+                  "miniapps/guides/submission",
+                  "miniapps/examples/index",
+                  "miniapps/examples/dropbox",
+                  "miniapps/examples/slack",
+                  "miniapps/examples/github",
+                  "miniapps/examples/salla"
+                ]
+              },
+              {
+                "group": "Reference",
+                "pages": [
+                  "miniapps/reference/api-reference",
+                  "miniapps/guides/best-practices",
+                  "miniapps/guides/troubleshooting"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Help Center",
+            "icon": "life-buoy",
+            "groups": [
+              {
+                "group": "Help Center",
+                "pages": ["help-center/index"]
+              }
             ]
           }
         ]
       },
       {
-        "tab": "GraphQL API",
-        "graphql": {
-          "source": "public-api.graphql",
-          "directory": "api-reference"
-        }
+        "language": "ar",
+        "navbar": {
+          "links": [
+            {
+              "label": "ساحة التجربة",
+              "href": "https://karzoun.chat/developer/playground"
+            },
+            {
+              "label": "الدعم",
+              "href": "mailto:developers@karzoun.chat"
+            }
+          ],
+          "primary": {
+            "type": "button",
+            "label": "فتح كرزون",
+            "href": "https://karzoun.chat"
+          }
+        },
+        "footer": {
+          "links": [
+            {
+              "header": "المنتج",
+              "items": [
+                { "label": "فتح كرزون", "href": "https://karzoun.chat" },
+                {
+                  "label": "لوحة المطوّرين",
+                  "href": "https://karzoun.chat/developer"
+                },
+                {
+                  "label": "ساحة التجربة",
+                  "href": "https://karzoun.chat/developer/playground"
+                }
+              ]
+            },
+            {
+              "header": "التوثيق",
+              "items": [
+                { "label": "الصفحة الرئيسية", "href": "/ar" },
+                { "label": "مركز المساعدة", "href": "/ar/help-center" },
+                { "label": "سجل التغييرات", "href": "/ar/changelog" }
+              ]
+            }
+          ]
+        },
+        "tabs": [
+          {
+            "tab": "الرئيسية",
+            "icon": "house",
+            "groups": [
+              {
+                "group": "ابدأ من هنا",
+                "pages": ["ar/index", "ar/changelog"]
+              }
+            ]
+          },
+          {
+            "tab": "مركز المساعدة",
+            "icon": "life-buoy",
+            "groups": [
+              {
+                "group": "مركز المساعدة",
+                "pages": ["ar/help-center/index"]
+              }
+            ]
+          },
+          {
+            "tab": "للمطوّرين",
+            "icon": "code-2",
+            "groups": [
+              {
+                "group": "تجربة اللغة",
+                "pages": ["ar/developers/quickstart"]
+              }
+            ]
+          }
+        ]
       }
     ]
   }

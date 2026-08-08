@@ -1,0 +1,102 @@
+---
+title: "MCP tool catalog"
+description: "All MCP tools exposed by the Karzoun MCP server, mapped 1:1 to public GraphQL operations."
+---
+
+<Note>
+  Auto-generated from `mcp-tools.json` in the [mcp-server source](https://github.com/KarzounApps/mcp-server). Do not edit manually — regenerate from the source repo when tools change.
+</Note>
+
+**75** tools available (1:1 with public GraphQL operations).
+
+Browse by domain below. For field arguments and return types, see the [GraphQL API reference](/api-reference). Usage tips: [Agent patterns](/mcp-server/guides/agent-patterns).
+
+## Apps
+
+| Tool         | Type     | Description                                                              |
+| ------------ | -------- | ---------------------------------------------------------------------------- |
+| `appDetail`  | query    | Fetch a single app credential by id.                                     |
+| `apps`       | query    | Paginated apps list with optional search filter.                         |
+| `appsAdd`    | mutation | Create a new app credential scoped to a user group with optional expiry. |
+| `appsEdit`   | mutation | Update app name and expiration only.                                     |
+| `appsRemove` | mutation | Remove an app credential by id.                                          |
+
+## Contacts
+
+| Tool                      | Type     | Description                                                                                             |
+| ------------------------- | -------- | ------------------------------------------------------------------------------------------------------------- |
+| `allBrands`               | query    | Retrieve all brands without pagination (useful for selectors).                                          |
+| `brandDetail`             | query    | Load brand details by id.                                                                               |
+| `brands`                  | query    | Paginated brands with optional search.                                                                  |
+| `brandsAdd`               | mutation | Create a new brand with basic metadata.                                                                 |
+| `brandsEdit`              | mutation | Edit brand metadata by id.                                                                              |
+| `brandsGetLast`           | query    | Fetch the most recently created brand.                                                                  |
+| `brandsRemove`            | mutation | Remove a brand by id.                                                                                   |
+| `companies`               | query    | Fetch paginated companies with filters, segmentation, and conformity context; returns paginated list.   |
+| `companiesAdd`            | mutation | Create a new company record with core contact, address, and classification fields.                      |
+| `companiesEdit`           | mutation | Update an existing company by id; supports partial edits of contact and CRM fields.                     |
+| `companiesEditByField`    | mutation | Patch company fields by selector for bulk or conditional updates.                                       |
+| `companiesMerge`          | mutation | Merge multiple companies into a primary record, applying provided field overrides.                      |
+| `companiesRemove`         | mutation | Remove one or more companies; returns removed ids.                                                      |
+| `companyCounts`           | query    | Return counts for companies matching the supplied filters (optionally scoped by "only").                |
+| `companyDetail`           | query    | Load detailed company data by id including contacts, owners, and tags.                                  |
+| `customerCounts`          | query    | Return aggregated counts for customers matching filters (optionally scoped by "only" or source).        |
+| `customerDetail`          | query    | Load a customer by id with full profile, ownership, tags, and integration info.                         |
+| `customers`               | query    | Fetch paginated customers with filtering, segmentation, and conformity context; returns paginated list. |
+| `customersAdd`            | mutation | Create a new customer/contact. The optional state can denote lead vs. customer pipelines.               |
+| `customersChangeState`    | mutation | Change the lifecycle state for a customer (e.g., lead → customer); value expects a known state key.     |
+| `customersEdit`           | mutation | Update a customer by id with profile or CRM attributes.                                                 |
+| `customersEditByField`    | mutation | Patch customer fields by selector for conditional/bulk edits.                                           |
+| `customersMerge`          | mutation | Merge several customers into one, applying provided override fields.                                    |
+| `customersRemove`         | mutation | Remove one or more customers; returns removed ids.                                                      |
+| `productCategories`       | query    | List product categories (supports tree traversal via parentId/withChild) with optional brand filter.    |
+| `productCategoriesAdd`    | mutation | Create a product category.                                                                              |
+| `productCategoriesEdit`   | mutation | Edit a product category by id.                                                                          |
+| `productCategoriesRemove` | mutation | Remove a product category by id.                                                                        |
+| `productCategoryDetail`   | query    | Fetch single product category detail by id.                                                             |
+| `productCountByTags`      | query    | Count products grouped by tag.                                                                          |
+| `productDetail`           | query    | Detailed product by id.                                                                                 |
+| `products`                | query    | List products with filtering, segmentation, and pagination.                                             |
+| `productsAdd`             | mutation | Create a new product with pricing, taxonomy, and media.                                                 |
+| `productsEdit`            | mutation | Update an existing product by id.                                                                       |
+| `productsRemove`          | mutation | Remove products by ids; returns status string.                                                          |
+| `tagDetail`               | query    | Fetch tag details by id.                                                                                |
+| `tags`                    | query    | Paginated tags with search and hierarchical filters.                                                    |
+| `tagsAdd`                 | mutation | Create a new tag.                                                                                       |
+| `tagsEdit`                | mutation | Edit a tag by id.                                                                                       |
+| `tagsMerge`               | mutation | Merge two tags (source into destination).                                                               |
+| `tagsQueryCount`          | query    | Count tags for a given type/search.                                                                     |
+| `tagsRemove`              | mutation | Remove a tag by id.                                                                                     |
+| `tagsTag`                 | mutation | Attach/detach tags to target entities.                                                                  |
+
+## Other
+
+| Tool                          | Type     | Description                                                                                    |
+| ------------------------------ | -------- | ---------------------------------------------------------------------------------------------------- |
+| `branchDetail`                | query    | query branchDetail                                                                             |
+| `branches`                    | query    | Paginated branches with optional status/parent filters, returns list + counts.                 |
+| `conformityAdd`               | mutation | mutation conformityAdd                                                                         |
+| `conformityEdit`              | mutation | mutation conformityEdit                                                                        |
+| `currentUser`                 | query    | Resolve the profile of the currently authenticated user.                                       |
+| `departmentDetail`            | query    | query departmentDetail                                                                         |
+| `departments`                 | query    | Paginated departments with optional status/parent filters, returns list + counts.              |
+| `fieldsAdd`                   | mutation | mutation fieldsAdd                                                                             |
+| `fieldsCombinedByContentType` | query    | query fieldsCombinedByContentType                                                              |
+| `fieldsDefaultColumnsConfig`  | query    | query fieldsDefaultColumnsConfig                                                               |
+| `fieldsEdit`                  | mutation | mutation fieldsEdit                                                                            |
+| `fieldsGetDetail`             | query    | query fieldsGetDetail                                                                          |
+| `fieldsGetTypes`              | query    | query fieldsGetTypes                                                                           |
+| `fieldsGroups`                | query    | query fieldsGroups                                                                             |
+| `fieldsGroupsAdd`             | mutation | mutation fieldsGroupsAdd                                                                       |
+| `fieldsGroupsEdit`            | mutation | mutation fieldsGroupsEdit                                                                      |
+| `fieldsGroupsRemove`          | mutation | mutation fieldsGroupsRemove                                                                    |
+| `fieldsRemove`                | mutation | mutation fieldsRemove                                                                          |
+| `formDetail`                  | query    | query formDetail                                                                               |
+| `forms`                       | query    | query forms                                                                                    |
+| `formsTotalCount`             | query    | query formsTotalCount                                                                          |
+| `formSubmissionDetail`        | query    | query formSubmissionDetail                                                                     |
+| `formSubmissions`             | query    | query formSubmissions                                                                          |
+| `formSubmissionsSave`         | mutation | mutation formSubmissionsSave                                                                   |
+| `formSubmissionsTotalCount`   | query    | query formSubmissionsTotalCount                                                                |
+| `userDetail`                  | query    | Load a single user with extended details by identifier.                                        |
+| `users`                       | query    | Paginated users list with filters for brands, departments, branches, status, and availability. |

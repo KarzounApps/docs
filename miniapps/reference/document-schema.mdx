@@ -1,0 +1,51 @@
+---
+title: "Document schema"
+description: "Required top-level fields for every MiniApp JSON definition."
+---
+
+Every MiniApp is a single document with these top-level fields:
+
+| Field              | Type   | Required | Description                                                                                                                          |
+| ------------------ | ------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `ns`               | string | ✅       | Unique namespace identifier (lowercase, kebab)                                                                                       |
+| `name`             | string | ✅       | Internal name (usually same as `ns`)                                                                                                 |
+| `type`             | string | ✅       | Type identifier (usually same as `ns`)                                                                                               |
+| `title`            | string | ✅       | Display title in the Marketplace                                                                                                     |
+| `label`            | string | ✅       | Short label                                                                                                                          |
+| `description`      | string | ✅       | Full description (supports markdown)                                                                                                 |
+| `shortDescription` | string | ✅       | One-line summary                                                                                                                     |
+| `status`           | string | ✅       | `'public'` or `'private'`                                                                                                            |
+| `version`          | string | ✅       | Semantic version (e.g., `'1.0.0'`)                                                                                                   |
+| `category`         | string | ✅       | Category for Marketplace filtering                                                                                                   |
+| `icon`             | string | ✅       | Icon URL (SVG recommended)                                                                                                           |
+| `logo`             | string | ✅       | Logo URL                                                                                                                             |
+| `docsUrl`          | string | ✅       | Link to your documentation                                                                                                           |
+| `youtubeId`        | string | —        | YouTube tutorial video ID                                                                                                            |
+| `auth`             | object | ✅       | Authentication configuration                                                                                                         |
+| `actions`          | array  | —        | Executable actions (API calls + optional App Function steps)                                                                         |
+| `triggers`         | array  | —        | Webhook event triggers                                                                                                               |
+| `webhook`          | object | —        | Inbound webhook processing — see [Webhooks](/miniapps/guides/webhooks)                                                               |
+| `sync`             | object | —        | Bulk import + `sync.webhooks` realtime sync — see [Sync](/miniapps/guides/sync)                                                      |
+| `source`           | object | —        | Dynamic data source (RPC) definitions — see [Dynamic data sources](/miniapps/guides/dynamic-data-sources)                            |
+| `functions`        | object | —        | Sandboxed App Functions invoked as pipeline steps — see [Actions → App Functions](/miniapps/guides/actions#app-functions-pipeline-steps) |
+
+<Info>
+  **Karzoun team fields** — First-party marketplace seeds may include additional `webhook` fields (`merchantExtraction`, `uninstallEvents`) and a top-level `provisioning` block. These are **not** part of the partner submission schema and are documented separately for internal use.
+</Info>
+
+### Categories
+
+Use one of the following category values:
+
+| Category        | Description                       |
+| --------------- | ---------------------------------- |
+| `ecommerce`     | E-commerce platforms               |
+| `productivity`  | Productivity & project management  |
+| `communication` | Chat, messaging, email             |
+| `marketing`     | Marketing & analytics              |
+| `developer`     | Developer tools & DevOps           |
+| `payment`       | Payment gateways                   |
+| `social`        | Social media platforms             |
+| `storage`       | File storage & management          |
+| `analytics`     | Analytics & reporting              |
+| `crm`           | CRM & customer management          |

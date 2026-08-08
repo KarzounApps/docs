@@ -1,0 +1,23 @@
+---
+title: "Errors"
+description: "Understand GraphQL and HTTP error shapes from the Karzoun API."
+---
+
+GraphQL errors return a standard `{ "errors": [...] }` payload with `message` and `extensions.code`.
+
+| Situation | Typical response |
+| --- | --- |
+| Missing token | HTTP 401 or GraphQL auth error |
+| Invalid token | Authentication failure |
+| Validation error | `GRAPHQL_VALIDATION_FAILED` |
+| Permission denied | Field or operation not allowed for app scope |
+
+<Tip>
+  Use the [in-app playground](https://karzoun.chat/developer/playground) to validate queries and inspect error payloads.
+</Tip>
+
+## Common fixes
+
+- **401** — Check `x-app-token` header and app `isEnabled` status
+- **Permission denied** — App user group may not include the operation; adjust scopes in `/developer/apps`
+- **Validation** — Field names and arguments must match the [schema reference](/api-reference)

@@ -1,0 +1,60 @@
+---
+title: "Authentication"
+description: "App tokens and request headers for the Karzoun public GraphQL API."
+---
+
+The public API uses **app tokens** (JWT) created in the Karzoun Developer dashboard.
+
+Send the token on every request:
+
+```bash
+-H "x-app-token: YOUR_APP_TOKEN_JWT"
+```
+
+## Request format
+
+Every GraphQL request is a JSON POST with your token in headers.
+
+### Required headers
+
+| Header | Required | Description |
+| --- | --- | --- |
+| `x-app-token` | Yes | App JWT from Developer → Apps |
+| `Content-Type` | Yes | `application/json` |
+
+### Permissions
+
+Apps can be scoped to user groups or allowed for all users. Create apps with the minimum permissions needed for your integration.
+
+<CodeGroup>
+```graphql
+query {
+  currentUser {
+    _id
+    email
+  }
+}
+```
+
+```bash
+curl -X POST 'https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql' \
+  -H 'Content-Type: application/json' \
+  -H 'x-app-token: YOUR_APP_TOKEN' \
+  -d '{"query":"query { currentUser { _id email } }"}'
+```
+</CodeGroup>
+
+<Tip>
+  Use the `currentUser` query to confirm authentication before building integrations.
+</Tip>
+
+## Security
+
+- Never expose app tokens in browser-side code
+- Use MCP and server-side agents with tokens on the backend only
+- Rotate tokens by creating a new app and revoking the old one
+
+## Next steps
+
+- [Quickstart](/developers/getting-started/quickstart)
+- [GraphQL API reference](/api-reference)

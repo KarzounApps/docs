@@ -1,0 +1,45 @@
+---
+title: "البداية السريعة"
+description: "نفّذ أول طلب GraphQL إلى واجهة كرزون العامة خلال دقائق."
+---
+
+هذه صفحة عربية تجريبية لمسار المطوّرين — لاختبار مبدّل اللغة قبل ترجمة بقية أدلة المطوّرين.
+
+<Steps>
+  <Step title="أنشئ رمز تطبيق">
+    1. افتح **المطوّر ← التطبيقات** (`/developer/apps`)
+    2. أنشئ تطبيقاً وانسخ JWT من استجابة `appsAdd`
+    3. احفظه بأمان — يُعرض مرة واحدة
+
+    أرسل الرمز مع كل طلب:
+
+    ```bash
+    -H "x-app-token: YOUR_APP_TOKEN_JWT"
+    ```
+
+    <Warning>
+      لا تضع رموز التطبيقات في Git أو في JavaScript على المتصفح.
+    </Warning>
+  </Step>
+  <Step title="اعثر على عنوان GraphQL">
+    عنوان مساحة العمل:
+
+    ```
+    https://{subdomain}.api.{domain}/graphql
+    ```
+
+    مثال: `https://dev.api.karzoun.chat/graphql`
+  </Step>
+  <Step title="نفّذ استعلاماً">
+    ```bash
+    curl -X POST 'https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql' \
+      -H 'Content-Type: application/json' \
+      -H 'x-app-token: YOUR_APP_TOKEN' \
+      -d '{"query":"query { tags(page: 1, perPage: 5) { data { _id name } } }"}'
+    ```
+
+    <Tip>
+      الدليل الإنجليزي الكامل: [Quickstart](/developers/getting-started/quickstart)
+    </Tip>
+  </Step>
+</Steps>

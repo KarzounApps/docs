@@ -1,0 +1,70 @@
+---
+title: "Quickstart"
+description: "Make your first Karzoun GraphQL API call in under five minutes."
+---
+
+Make your first call to the Karzoun public GraphQL API in under five minutes.
+
+<Steps>
+  <Step title="Create an app token">
+    1. Open **Developer → Apps** (`/developer/apps`)
+    2. Create an app and copy the JWT from the `appsAdd` response
+    3. Store it securely — it is shown once
+
+    Send the token on every request:
+
+    ```bash
+    -H "x-app-token: YOUR_APP_TOKEN_JWT"
+    ```
+
+    <Warning>
+      Never commit app tokens to git or expose them in client-side JavaScript.
+    </Warning>
+  </Step>
+  <Step title="Find your GraphQL URL">
+    Your tenant GraphQL endpoint:
+
+    ```
+    https://{subdomain}.api.{domain}/graphql
+    ```
+
+    Example: `https://dev.api.karzoun.chat/graphql`
+
+    The hosted MCP endpoint is the same origin with `/mcp` instead of `/graphql`.
+  </Step>
+  <Step title="Run a query">
+    Try this query to list tags:
+
+    <CodeGroup>
+    ```graphql
+    query {
+      tags(page: 1, perPage: 5) {
+        data {
+          _id
+          name
+        }
+        pagination {
+          totalCount
+        }
+      }
+    }
+    ```
+
+    ```bash
+    curl -X POST 'https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql' \
+      -H 'Content-Type: application/json' \
+      -H 'x-app-token: YOUR_APP_TOKEN' \
+      -d '{"query":"query { tags(page: 1, perPage: 5) { data { _id name } } }"}'
+    ```
+    </CodeGroup>
+
+    <Tip>
+      Prefer a visual editor? Open the [GraphQL Playground](https://karzoun.chat/developer/playground).
+    </Tip>
+  </Step>
+</Steps>
+
+## Next steps
+
+- [Authentication](/developers/getting-started/authentication)
+- [GraphQL API reference](/api-reference)

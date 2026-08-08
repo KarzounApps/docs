@@ -1,0 +1,243 @@
+---
+title: "Webhooks"
+description: "Configure inbound webhook processing — event extraction, verification, and customer extraction."
+---
+
+The `webhook` object tells the platform how to process incoming HTTP requests from your provider. This is the core of event-driven integration.
+
+**Your webhook URL:** `https://{saas-api-url}/miniapps/{ns}/webhooks`
+
+This URL is auto-generated and available as `{{webhookUrl}}` in registration requests.
+
+<Info>
+  **Not tenant webhooks** — These are **inbound** provider webhooks (e.g. Salla → Karzoun). For **outbound** workspace events to your own server, see [Tenant webhooks](/developers/guides/webhooks).
+</Info>
+
+## Event Extraction
+
+Tells the platform **where to find the event name** in the incoming webhook request.
+
+**Simple extraction** (single field):
+
+```javascript
+webhook: {
+  eventExtraction: {
+    source: 'body',          // 'body', 'header', or 'query'
+    path: '$.event',         // JSONPath for body, or header/query key name
+    fallback: {              // optional — try another location if primary is empty
+      source: 'body',
+      path: 'event',
+    },
+  },
+}
+```
+
+Examples:
+
+- Salla sends `{ "event": "order.created", "data": {...} }` → `source: 'body', path: '$.event'`
+- A service sends the event name in a header → `source: 'header', path: 'X-Event-Type'`
+
+**Composite extraction** (multi-field):
+
+Some providers split event identification across multiple fields. Use `compositeStrategy` to combine them:
+
+```javascript
+webhook: {
+  eventExtraction: {
+    // Primary path (ignored when compositeStrategy is present)
+    source: 'body',
+    path: '$.event',
+
+    // Combine multiple fields into one event string
+    compositeStrategy: {
+      parts: [
+        { source: 'header', path: 'X-GitHub-Event' },   // e.g., "pull_request"
+        { source: 'body', path: '$.action' },            // e.g., "opened"
+      ],
+      separator: '.',   // Result: "pull_request.opened"
+    },
+  },
+}
+```
+
+Another example — Slack uses body fields:
+
+```javascript
+compositeStrategy: {
+  parts: [
+    { source: 'body', path: '$.event.type' },      // e.g., "message"
+    { source: 'body', path: '$.event.subtype' },    // e.g., "bot_message"
+  ],
+  separator: '.',   // Result: "message.bot_message"
+},
+```
+
+## Transaction Deduplication
+
+Prevents the same webhook from being processed twice (e.g., during retries).
+
+```javascript
+webhook: {
+  transactionId: {
+    paths: ['$.data.id'],    // Try each path in order; first non-empty wins
+    separator: '_',          // optional — join multiple path values
+    fallback: 'generate',    // If not found, auto-generate a unique ID
+    overrides: {             // optional — per-event path lists
+      'order.updated': { paths: ['$.data.id', '$.data.updated_at.date'] },
+    },
+  },
+}
+```
+
+The platform checks Redis for the transaction ID. If it's already been processed, the webhook is silently acknowledged without re-processing.
+
+**Common patterns:**
+
+- `'$.data.id'` — Salla order/cart ID
+- `'$.delivery'` — GitHub delivery header
+- `'$.event_id'` — Generic event ID field
+
+## Verification (HMAC Signatures)
+
+Verify that incoming webhooks genuinely come from your provider using HMAC signature verification.
+
+```javascript
+webhook: {
+  verification: {
+    type: 'hmac-sha256',              // 'hmac-sha256', 'hmac-sha1', 'header-token', 'none'
+    headerName: 'X-Signature-256',    // Header containing the signature
+    secretKey: 'webhookSecret',       // Key name to look up the secret value
+    timestampHeader: 'X-Timestamp',   // Optional: header with request timestamp
+  },
+}
+```
+
+**Verification types:**
+
+| Type           | Description                                        |
+| -------------- | ----------------------------------------------------- |
+| `hmac-sha256`  | HMAC-SHA256 signature verification (recommended)    |
+| `hmac-sha1`    | HMAC-SHA1 signature verification                     |
+| `header-token` | Simple token comparison in header                    |
+| `none`         | No verification (not recommended for production)     |
+
+Optional `encoding` on HMAC types: `'hex'` (default) or `'base64'` (WooCommerce `X-WC-Webhook-Signature`).
+
+**How the secret is resolved (`secretKey`):**
+
+The `secretKey` field is a **key name**, not the secret value itself. The platform resolves the actual secret using a two-source lookup:
+
+1. **Per-tenant credentials** — Checks `installedMiniApps.credentials[secretKey]` first. Use this when the provider issues a unique secret per connected store/tenant (e.g., registering a webhook returns a per-store signing key).
+2. **Global app config** — Falls back to `miniApp.auth.config[secretKey]` if not found in tenant credentials. Use this when the provider uses a single global secret shared across all tenants (e.g., Salla, where the webhook secret is set once in the partner dashboard).
+
+| Secret Model     | Where to store the value        | Example Providers      |
+| ---------------- | ---------------------------------- | -------------------------- |
+| Global (per-app) | `auth.config.webhookSecret`        | Salla, Shopify              |
+| Per-tenant       | `installedMiniApps.credentials`    | Slack, GitHub, custom       |
+
+<Tip>
+  For global secrets, set the value in `auth.config` of your MiniApp definition. For per-tenant secrets, store them in credentials during registration requests or the OAuth flow.
+</Tip>
+
+**How HMAC verification works:**
+
+1. Platform reads the signature from `headerName`
+2. Strips `sha256=` or `sha1=` prefix if present
+3. Resolves the secret via the two-source lookup described above
+4. Computes HMAC of the raw request body using the resolved secret
+5. Compares using timing-safe comparison to prevent timing attacks
+6. Rejects with `401` if they don't match
+
+## Challenge/Handshake Response
+
+Some providers (like Slack) require a challenge-response handshake when registering webhooks.
+
+```javascript
+webhook: {
+  challengeResponse: {
+    identifyField: 'type',              // Body field that identifies a challenge request
+    identifyValue: 'url_verification',  // Expected value for that field
+    challengePath: '$.challenge',       // Where to find the challenge token in the body
+    responseField: 'challenge',         // Field name in the response (optional)
+  },
+}
+```
+
+**How it works:**
+
+1. Provider sends a POST with `{ "type": "url_verification", "challenge": "abc123" }`
+2. Platform checks: `body.type === 'url_verification'` → yes, this is a challenge
+3. Platform extracts challenge token from `$.challenge` → `"abc123"`
+4. Platform responds with `{ "challenge": "abc123" }`
+5. Provider considers the webhook URL verified
+
+If `responseField` is omitted, the challenge token is returned as the raw response body.
+
+## Customer Extraction
+
+For MiniApps that receive customer data in webhooks (e-commerce platforms, CRMs), configure automatic customer creation/matching.
+
+```javascript
+webhook: {
+  customerExtraction: {
+    basePath: '$.data.customer',        // Base JSONPath to customer data
+    mapping: {
+      // Webhook field → Internal customer field
+      firstName: 'first_name',
+      lastName: 'last_name',
+      primaryEmail: 'email',
+      primaryPhone: 'mobile',
+      code: 'id',                       // External customer ID
+    },
+    // Override basePath for specific events
+    overrides: {
+      'customer.created': {
+        basePath: '$.data',             // Customer data is at root for this event
+      },
+      'abandoned.cart': {
+        basePath: '$.data.customer',    // Default path works, but explicit is fine
+      },
+    },
+  },
+}
+```
+
+**Available customer fields:**
+
+| Field          | Type   | Description                            |
+| -------------- | ------ | ----------------------------------------- |
+| `firstName`    | string | First name                              |
+| `lastName`     | string | Last name                               |
+| `primaryEmail` | string | Primary email address                   |
+| `primaryPhone` | string | Primary phone number                    |
+| `code`         | string | External customer ID (for matching)     |
+| `avatar`       | string | Avatar URL                              |
+| `sex`          | number | Gender (numeric)                        |
+| `birthDate`    | Date   | Date of birth                           |
+| `position`     | string | Job position                            |
+| `department`   | string | Department                              |
+| `state`        | string | `'visitor'`, `'lead'`, `'customer'`     |
+
+**How it works:** When a webhook arrives, the platform:
+
+1. Extracts customer data from `basePath` (or override path for the specific event)
+2. Maps provider field names to internal field names
+3. Calls `getOrCreateCustomer()` which finds or creates the customer record
+4. Links the customer to the incoming event for automation context
+
+## Response Configuration
+
+Define what the platform sends back to your provider after receiving a webhook.
+
+```javascript
+webhook: {
+  response: {
+    statusCode: 200,
+    body: { ok: true },
+  },
+}
+```
+
+<Note>
+  The platform sends the response **immediately** upon receiving the webhook, before async processing begins. This prevents provider timeouts. Use `202` if your provider expects acknowledgment-style responses.
+</Note>

@@ -1,0 +1,48 @@
+---
+title: "Claude Desktop setup (stdio)"
+description: "Connect Claude Desktop to Karzoun via the local MCP server."
+---
+
+Claude Desktop uses the same `@karzounchat/mcp-server` package as Cursor, with a different config file location.
+
+## Config file
+
+| OS      | Path                                                              |
+| ------- | ------------------------------------------------------------------ |
+| macOS   | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| Windows | `%APPDATA%\Claude\claude_desktop_config.json`                     |
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "karzoun": {
+      "command": "npx",
+      "args": ["-y", "@karzounchat/mcp-server"],
+      "env": {
+        "KARZOUN_API_URL": "https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql",
+        "KARZOUN_APP_TOKEN": "YOUR_APP_TOKEN"
+      }
+    }
+  }
+}
+```
+
+Create an app token in **Developer → Apps** ([authentication](/developers/getting-started/authentication)).
+
+## Verify
+
+1. Quit and reopen Claude Desktop
+2. Look for the **hammer / tools** indicator — Karzoun tools should appear
+3. Ask: _"Using Karzoun tools, list my first 5 tags"_
+
+<Tip title="Screenshot placeholder">
+  _Coming soon: Claude Desktop showing Karzoun in the available tools list._
+</Tip>
+
+## Troubleshooting
+
+Same fixes as [Cursor troubleshooting](/mcp-server/guides/troubleshooting) — env vars, token scopes, and `npx` connectivity.
+
+For IDE-specific Cursor steps, see [Cursor setup](/mcp-server/setup/cursor).

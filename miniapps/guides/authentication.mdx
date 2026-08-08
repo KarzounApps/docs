@@ -1,0 +1,371 @@
+---
+title: "Authentication"
+description: "Bearer tokens, HTTP Basic, custom headers, and OAuth 2.0 for MiniApp installs."
+---
+
+The `auth` object tells the platform how users connect their accounts with your service.
+
+`auth.type` controls the **install UX** (`bearer_token` / `apikey` form vs `oauth2` popup). How credentials are sent on each HTTP call is declared in request **headers** (Bearer, Basic, custom headers, or query params).
+
+## Bearer Token (API Key)
+
+The simplest auth method. The user pastes their API key into a form, and the platform stores it securely.
+
+```javascript
+auth: {
+  type: 'bearer_token', // or 'apikey' — same install path
+
+  // Keys that must NEVER be sent to the frontend
+  sensitiveKeys: ['accessToken'],
+
+  // Default credential values (empty = user must provide)
+  config: {
+    accessToken: '',
+  },
+
+  // Verify the token works by calling a "who am I" endpoint
+  userDetails: {
+    url: 'https://api.example.com/users/me',
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer [[accessToken]]',
+      'Content-Type': 'application/json',
+    },
+    bodyType: 'json',
+    body: {},
+    mapping: {
+      uid: '$.user.id',        // Unique user identifier → metadata
+      name: '$.user.name',     // Display name → metadata
+    },
+  },
+}
+```
+
+**How it works:**
+
+1. User enters their API key in the settings form
+2. Platform calls `saveMiniAppCredentials` mutation
+3. If `get_token` is defined, it's executed to exchange/validate credentials
+4. Tokens and secrets are stored in `InstalledMiniApps.credentials`
+5. If `userDetails` is defined, mapped store/account fields are stored in `InstalledMiniApps.metadata`
+6. Status set to `connected`
+
+## HTTP Basic Auth
+
+Use when the provider expects `Authorization: Basic <base64(username:password)>` — common for **WooCommerce** (Consumer Key + Consumer Secret), payment gateways (e.g. Moyasar), and some legacy APIs.
+
+Declare the header with a **literal colon** between the two credential placeholders. The runtime Base64-encodes `user:pass` automatically after placeholder resolution (Base64 never contains `:`, so already-encoded values are left alone).
+
+```javascript
+auth: {
+  type: 'apikey',
+
+  form: {
+    storeUrl: {
+      type: 'text',
+      label: 'Store URL',
+      placeholder: 'https://mystore.com',
+      required: true,
+    },
+    consumerKey: {
+      type: 'text',
+      label: 'Consumer Key',
+      required: true,
+    },
+    consumerSecret: {
+      type: 'password',
+      label: 'Consumer Secret',
+      required: true,
+    },
+  },
+
+  // Connection test before marking the install connected
+  test_token: {
+    url: '{{storeUrl}}/wp-json/wc/v3/orders',
+    method: 'GET',
+    headers: {
+      // → Authorization: Basic base64(consumerKey:consumerSecret)
+      Authorization: 'Basic [[consumerKey]]:[[consumerSecret]]',
+      'Content-Type': 'application/json',
+    },
+    queryParams: { per_page: '1' },
+    mapping: { connected: 'true' },
+  },
+}
+```
+
+**Use the same header on every action / source / sync request:**
+
+```javascript
+headers: {
+  Authorization: 'Basic [[consumerKey]]:[[consumerSecret]]',
+  'Content-Type': 'application/json',
+}
+```
+
+| Pattern                   | When to use                                                                                    |
+| ------------------------- | ------------------------------------------------------------------------------------------------- |
+| `Basic [[user]]:[[pass]]` | Two secrets (WooCommerce Consumer Key/Secret)                                                    |
+| `Basic [[apiKey]]:`       | Username = API key, empty password (some gateways) — include the trailing `:` so encoding runs |
+| `Basic [[preEncoded]]`    | Value is already Base64 (no `:`) — passed through unchanged                                     |
+
+<Info>
+  **Deploy note** — Basic auto-encoding runs in `miniAppsReplaceVariablesInObject` for any `Authorization` header. Deploy **plugin-miniapps-api** with that helper before shipping WooCommerce-style seeds; otherwise the raw `key:secret` string is sent and providers return **401**.
+</Info>
+
+**WooCommerce tip:** Prefer HTTPS + Basic. If a host strips the `Authorization` header, fall back to query params (`consumer_key` / `consumer_secret`) on that request — see the WooCommerce seed.
+
+## Custom header tokens
+
+Some providers use a dedicated header instead of Bearer/Basic (e.g. Shopify `X-Shopify-Access-Token`, TikTok `Access-Token`):
+
+```javascript
+headers: {
+  'X-Shopify-Access-Token': '[[accessToken]]',
+  'Content-Type': 'application/json',
+}
+```
+
+Install UX is still `auth.type: 'apikey'` (or `bearer_token`) with a form for the token + any store domain fields.
+
+## Per-tenant install storage
+
+Each installed miniapp persists three server-side bags on `InstalledMiniApps`:
+
+| Field         | Contents                                                              | `[[key]]` | `{{key}}`     | Exposed to UI? |
+| ------------- | ----------------------------------------------------------------------- | --------- | -------------- | ---------------- |
+| `credentials` | Tokens, secrets, registration outputs (`accessToken`, `webhookId`, …) | Yes       | No             | Never            |
+| `metadata`    | Full `userDetails.mapping` result (`storeId`, `storeName`, `uid`, …)  | Yes       | Yes (runtime)  | Never            |
+| `userInput`   | User-entered install form values                                       | No        | Yes            | Pre-fill only    |
+
+`[[key]]` resolves from **credentials first**, then **metadata** (credentials win on key collision). Use camelCase keys in mappings (e.g. `storeId`) even when the HTTP header name differs (`Store-Id: '[[storeId]]'`).
+
+## OAuth 2.0
+
+For services that require OAuth 2.0 authorization (Salla, Google, etc.).
+
+```javascript
+auth: {
+  type: 'oauth2',
+
+  sensitiveKeys: ['accessToken', 'refreshToken'],
+
+  // OAuth configuration (available as {{key}} placeholders)
+  config: {
+    client_id: 'your-client-id',
+    client_secret: 'your-client-secret',
+    scope: 'read write',
+    response_type: 'code',
+    grant_type: 'authorization_code',
+    accessToken: '',
+    refreshToken: '',
+  },
+
+  // Build the authorization redirect URL
+  auth_url: {
+    url: 'https://provider.com/oauth/authorize?client_id={{client_id}}&scope={{scope}}&response_type={{response_type}}&redirect_uri={{redirect_uri}}',
+    method: 'GET',
+    headers: {},
+    bodyType: 'json',
+    body: {},
+    mapping: {},
+  },
+
+  // Exchange authorization code for tokens
+  get_token: {
+    url: 'https://provider.com/oauth/token',
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    bodyType: 'json',
+    body: {
+      client_id: '{{client_id}}',
+      client_secret: '{{client_secret}}',
+      grant_type: '{{grant_type}}',
+      code: '{{code}}',
+      redirect_uri: '{{redirect_uri}}',
+    },
+    // Map response to credential keys
+    mapping: {
+      accessToken: '$.access_token',
+      refreshToken: '$.refresh_token',
+      expiresIn: '$.expires_in',
+    },
+  },
+
+  // Refresh expired tokens
+  refresh_token: {
+    url: 'https://provider.com/oauth/token',
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    bodyType: 'json',
+    body: {
+      client_id: '{{client_id}}',
+      client_secret: '{{client_secret}}',
+      grant_type: 'refresh_token',
+      refresh_token: '[[refreshToken]]',
+    },
+    mapping: {
+      accessToken: '$.access_token',
+      refreshToken: '$.refresh_token',
+      expiresIn: '$.expires_in',
+    },
+  },
+
+  // Auto-refresh on 401 responses
+  auto_refresh: true,
+
+  // Fetch user identity after authentication
+  userDetails: {
+    url: 'https://api.provider.com/v2/oauth2/user/info',
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer [[accessToken]]',
+      'Content-Type': 'application/json',
+    },
+    bodyType: 'json',
+    body: {},
+    mapping: {
+      uid: '$.data.id',
+      name: '$.data.name',
+    },
+  },
+
+  // Post-auth setup (see Registration Requests below)
+  registrationRequests: [],
+}
+```
+
+**OAuth 2.0 Flow:**
+
+```
+User clicks "Connect" in Marketplace
+        │
+        ▼
+┌─────────────────────┐
+│ Browser popup opens  │
+│ GET /:appNs/oauth2   │
+└────────┬────────────┘
+         │
+         ▼
+┌─────────────────────┐
+│ Platform builds      │
+│ auth_url & redirects │
+│ to provider          │
+└────────┬────────────┘
+         │ User authorizes
+         ▼
+┌─────────────────────┐
+│ Provider redirects   │
+│ back with ?code=xxx  │
+└────────┬────────────┘
+         │
+         ▼
+┌─────────────────────┐
+│ Platform executes    │
+│ get_token request    │
+│ (code → tokens)      │
+└────────┬────────────┘
+         │
+         ▼
+┌─────────────────────┐
+│ Platform executes    │
+│ userDetails request  │
+│ (extract uid, name)  │
+└────────┬────────────┘
+         │
+         ▼
+┌─────────────────────┐
+│ Tokens stored in     │
+│ credentials;         │
+│ userDetails → metadata │
+│ registrationRequests   │
+│ executed (if any)      │
+└────────┬────────────┘
+         │
+         ▼
+┌─────────────────────┐
+│ Popup closes, main   │
+│ window refreshes     │
+└─────────────────────┘
+```
+
+## Token Refresh
+
+When `auto_refresh: true` is set and any action request returns a `401` response:
+
+1. Platform automatically calls the `refresh_token` request
+2. New credentials are extracted via the mapping
+3. Credentials are updated in the database
+4. The original failed request is retried with the new token
+
+This is handled transparently — no user interaction required.
+
+## Registration Requests (Post-Auth Setup)
+
+Registration requests are API calls executed **once** right after a user successfully authenticates. Use them to:
+
+- **Register webhooks** with the provider
+- **Fetch initial configuration** (store ID, workspace info)
+- **Subscribe to events**
+
+```javascript
+auth: {
+  // ...auth config...
+
+  registrationRequests: [
+    // Register your webhook URL with the provider
+    {
+      url: 'https://api.provider.com/webhooks',
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer [[accessToken]]',
+        'Content-Type': 'application/json',
+      },
+      bodyType: 'json',
+      body: {
+        url: '{{webhookUrl}}',     // Auto-injected: your webhook endpoint
+        events: ['order.created', 'customer.updated'],
+        secret: '{{webhookSecret}}',
+      },
+      mapping: {
+        webhookId: '$.id',  // Saved to credentials for later reference
+      },
+    },
+
+    // Prefer auth.userDetails for store profile; use registrationRequests
+    // only for one-off setup outputs like webhook IDs.
+    {
+      url: 'https://api.provider.com/webhooks/subscribe',
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer [[accessToken]]',
+        'Store-Id': '[[storeId]]',   // Resolved from metadata
+      },
+      bodyType: 'json',
+      body: {
+        url: '{{webhookUrl}}',
+      },
+      mapping: {
+        webhookSubscriptionId: '$.id',
+      },
+    },
+  ],
+}
+```
+
+**Available placeholders in registration requests:**
+
+| Placeholder        | Source                     | Description                                    |
+| ------------------- | ---------------------------- | ------------------------------------------------- |
+| `[[accessToken]]`  | Stored credentials         | The OAuth access token                          |
+| `[[refreshToken]]` | Stored credentials         | The OAuth refresh token                         |
+| `[[storeId]]`      | Stored metadata            | Platform context from `userDetails` (e.g. Zid)  |
+| `[[any_key]]`      | credentials + metadata     | Any key from either bag (credentials win)       |
+| `{{webhookUrl}}`   | System-generated           | Your miniapp's webhook endpoint URL             |
+| `{{subdomain}}`    | System context             | The tenant's subdomain                          |
+| `{{uid}}`          | metadata / top-level `uid` | The authenticated user's ID                     |
+| `{{configKey}}`    | `auth.config`              | Any key from the auth config object             |
+
+<Note>
+  Object mappings in `registrationRequests` are **persisted to `credentials`**. `userDetails` mappings are **persisted to `metadata`** in full. Both bags are available for `[[key]]` placeholders in sync headers, actions, and automations.
+</Note>

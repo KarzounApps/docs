@@ -1,0 +1,68 @@
+---
+title: "MCP security"
+description: "Token hygiene, scoping, and incident response for Karzoun MCP."
+---
+
+MCP agents inherit **exactly** the permissions of the app token they use. Treat MCP as production API access, not a sandbox.
+
+## Token hygiene
+
+| Do                                                        | Don't                                            |
+| ------------------------------------------------------------ | --------------------------------------------------- |
+| Store tokens in env vars, secrets managers, or CI secrets | Commit tokens to git or share in Slack           |
+| Create separate apps per environment (dev/staging/prod)   | Reuse one token across teams and bots            |
+| Rotate when someone leaves or a laptop is lost            | Embed tokens in Cursor rules or client-side code |
+| Use minimum scopes in **Developer → Apps**                | Grant all-user access unless required            |
+
+The JWT from `appsAdd` is shown **once** — same rules as [authentication](/developers/getting-started/authentication).
+
+## Stdio (local IDE)
+
+- Tokens live in `~/.cursor/mcp.json` or Claude Desktop config on **your machine**
+- Anyone with access to your laptop can read them — use full-disk encryption and separate dev tokens
+- Prefer a dedicated "MCP dev" app with read-only scopes when exploring
+
+## Hosted (/mcp)
+
+- Call only from **trusted servers** you control
+- Terminate TLS at your edge; never downgrade to HTTP
+- Pass `x-app-token` server-side; never forward to browsers or mobile apps
+- Session ids (`mcp-session-id`) are not secrets, but tie activity to your server — do not publish them
+
+## Permission scoping
+
+Before giving an agent write tools (`customersAdd`, `tagsRemove`, …):
+
+1. Create an app limited to the required user group
+2. Test mutations in the [Playground](https://karzoun.chat/developer/playground)
+3. Optionally set `KARZOUN_MCP_TOOL_PREFIX` to read-only prefixes during development
+
+## Agent safety
+
+LLMs can call mutations unexpectedly. Mitigations:
+
+- System prompts that require confirmation before deletes/merges ([agent patterns](/mcp-server/guides/agent-patterns))
+- Read-only tokens for analytics agents
+- Audit app usage via Karzoun logs where available
+
+## Comparison with other integrations
+
+| Method             | Credential exposure           | Best for                   |
+| -------------------- | -------------------------------- | ----------------------------- |
+| **MCP stdio**      | Local machine                 | Developer productivity     |
+| **MCP hosted**     | Backend only                  | Production agents          |
+| **GraphQL direct** | Your service                  | Deterministic integrations |
+| **Webhooks**       | Signing secret on your server | Event-driven, no LLM       |
+
+## Incident response
+
+If a token leaks:
+
+1. Disable or remove the app in **Developer → Apps**
+2. Create a new app and update MCP config or server secrets
+3. Review recent GraphQL activity if audit tools are enabled
+
+## Related
+
+- [Troubleshooting](/mcp-server/guides/troubleshooting) — Permission and 401 errors
+- [Tenant webhooks](/developers/guides/webhooks) — Outbound events (different threat model)

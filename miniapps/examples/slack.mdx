@@ -1,0 +1,197 @@
+---
+title: "Slack"
+description: "Bearer-token messaging MiniApp example with RPC sources and chained requests."
+---
+
+A communication platform with bearer token auth, composite event extraction, challenge response, 10 actions, 8 triggers, and RPC sources.
+
+```javascript
+const slackMiniApp = {
+  ns: "slack",
+  name: "slack",
+  type: "slack",
+  title: "Slack",
+  label: "Slack",
+  description: "Send messages, manage channels, and receive event triggers.",
+  shortDescription: "Team messaging & channel management",
+  status: "public",
+  version: "1.0.0",
+  category: "communication",
+  icon: "https://cdn.karzoun.com/miniapps/slack/icon.svg",
+  logo: "https://cdn.karzoun.com/miniapps/slack/logo.svg",
+  docsUrl: "https://api.slack.com/docs",
+
+  auth: {
+    type: "bearer_token",
+    sensitiveKeys: ["accessToken"],
+    config: { accessToken: "" },
+    userDetails: {
+      url: "https://slack.com/api/auth.test",
+      method: "POST",
+      headers: {
+        Authorization: "Bearer [[accessToken]]",
+        "Content-Type": "application/json",
+      },
+      bodyType: "json",
+      body: {},
+      mapping: { uid: "$.user_id", name: "$.user" },
+    },
+  },
+
+  // Dynamic data sources for dropdowns
+  source: {
+    rpc_channels_list: {
+      url: "https://slack.com/api/conversations.list?limit=1000&types=public_channel,private_channel",
+      method: "GET",
+      headers: { Authorization: "Bearer [[accessToken]]" },
+      dataPath: "channels",
+      valueField: "id",
+      labelField: "name",
+    },
+    rpc_users_list: {
+      url: "https://slack.com/api/users.list?limit=1000",
+      method: "GET",
+      headers: { Authorization: "Bearer [[accessToken]]" },
+      dataPath: "members",
+      valueField: "id",
+      labelField: "profile.real_name",
+    },
+  },
+
+  triggers: [
+    {
+      type: "miniapps:slack",
+      event: "message.posted",
+      icon: "comment-1",
+      label: "Message Posted",
+      description: "New message in a channel",
+      isCustom: false,
+      img: "automation3.svg",
+    },
+    {
+      type: "miniapps:slack",
+      event: "reaction.added",
+      icon: "heart-1",
+      label: "Reaction Added",
+      description: "Emoji reaction on a message",
+      isCustom: false,
+      img: "automation3.svg",
+    },
+    // ... more triggers
+  ],
+
+  actions: [
+    // Simple single-request action with RPC source
+    {
+      name: "postMessage",
+      title: "Post Message",
+      description: "Post a message to a Slack channel",
+      renderStrategy: "auto",
+      parameters: {
+        type: "object",
+        required: ["channel", "text"],
+        properties: {
+          channel: {
+            type: "string",
+            title: "Channel",
+            "x-source": "rpc_channels_list",
+            "x-fallback": "input",
+          },
+          text: { type: "string", title: "Message Text" },
+        },
+      },
+      requests: [
+        {
+          url: "https://slack.com/api/chat.postMessage",
+          method: "POST",
+          headers: {
+            Authorization: "Bearer [[accessToken]]",
+            "Content-Type": "application/json",
+          },
+          bodyType: "json",
+          body: { channel: "{{channel}}", text: "{{text}}" },
+          mapping: { channelId: "$.channel", messageTs: "$.ts" },
+        },
+      ],
+    },
+
+    // Multi-request chained action
+    {
+      name: "sendDirectMessage",
+      title: "Send Direct Message",
+      description: "Open a DM and send a message to a user",
+      renderStrategy: "auto",
+      parameters: {
+        type: "object",
+        required: ["userId", "messageText"],
+        properties: {
+          userId: {
+            type: "string",
+            title: "User",
+            "x-source": "rpc_users_list",
+            "x-fallback": "input",
+          },
+          messageText: { type: "string", title: "Message" },
+        },
+      },
+      requests: [
+        // Step 1: Open the DM channel
+        {
+          url: "https://slack.com/api/conversations.open",
+          method: "POST",
+          headers: {
+            Authorization: "Bearer [[accessToken]]",
+            "Content-Type": "application/json",
+          },
+          bodyType: "json",
+          body: { users: "{{userId}}" },
+          mapping: [{ name: "dmChannelId", value: "$.channel.id" }],
+        },
+        // Step 2: Send message to the DM channel
+        {
+          url: "https://slack.com/api/chat.postMessage",
+          method: "POST",
+          headers: {
+            Authorization: "Bearer [[accessToken]]",
+            "Content-Type": "application/json",
+          },
+          bodyType: "json",
+          body: {
+            channel: "{{dmChannelId}}", // From step 1
+            text: "{{messageText}}", // From user input
+          },
+          mapping: { messageTs: "$.ts", channelId: "$.channel" },
+        },
+      ],
+    },
+  ],
+
+  // Webhook configuration
+  webhook: {
+    eventExtraction: {
+      source: "body",
+      path: "$.event.type",
+      compositeStrategy: {
+        parts: [
+          { source: "body", path: "$.event.type" },
+          { source: "body", path: "$.event.subtype" },
+        ],
+        separator: ".",
+      },
+    },
+    transactionId: { paths: ["$.event_id"], fallback: "generate" },
+    verification: {
+      type: "hmac-sha256",
+      headerName: "X-Slack-Signature",
+      secretKey: "signingSecret", // Resolves from credentials (per-workspace secret)
+    },
+    response: { statusCode: 200, body: { ok: true } },
+    challengeResponse: {
+      identifyField: "type",
+      identifyValue: "url_verification",
+      challengePath: "$.challenge",
+      responseField: "challenge",
+    },
+  },
+};
+```

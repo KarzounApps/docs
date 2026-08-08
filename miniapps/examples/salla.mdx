@@ -1,0 +1,161 @@
+---
+title: "Salla"
+description: "OAuth 2.0 e-commerce MiniApp example with sync and customer extraction."
+---
+
+An e-commerce platform with OAuth 2.0 auth, customer extraction, and realtime order/cart sync via `sync.webhooks.handlers`.
+
+```javascript
+const sallaMiniApp = {
+  ns: "salla",
+  name: "salla",
+  type: "salla",
+  title: "Salla",
+  label: "Salla",
+  description: "Sync orders, customers, and abandoned carts from Salla.",
+  shortDescription: "Salla ecommerce: orders, customers, carts",
+  status: "public",
+  version: "1.0.0",
+  category: "ecommerce",
+  icon: "https://cdn.karzoun.com/miniapps/salla/icon.svg",
+  logo: "https://cdn.karzoun.com/miniapps/salla/logo.svg",
+  docsUrl: "https://docs.salla.dev",
+
+  auth: {
+    type: "oauth2",
+    sensitiveKeys: ["accessToken", "refreshToken", "webhookSecret"],
+    config: {
+      accessToken: "",
+      refreshToken: "",
+      webhookSecret: "",
+    },
+    userDetails: {
+      url: "https://api.salla.dev/admin/v2/oauth2/user/info",
+      method: "GET",
+      headers: {
+        Authorization: "Bearer [[accessToken]]",
+        "Content-Type": "application/json",
+      },
+      mapping: { uid: "$.data.id", name: "$.data.name" },
+    },
+    get_token: {
+      /* ... OAuth token exchange — see Authentication guide */
+    },
+    refresh_token: {
+      /* ... */
+    },
+    auto_refresh: true,
+    registrationRequests: [],
+  },
+
+  triggers: [
+    {
+      type: "miniapps:salla",
+      event: "order.created",
+      icon: "shopping-cart",
+      label: "Order Created",
+      description: "New order placed",
+      isCustom: false,
+      img: "automation3.svg",
+    },
+    {
+      type: "miniapps:salla",
+      event: "order.status.updated",
+      icon: "shopping-cart",
+      label: "Order Status Changed",
+      description: "Order status updated",
+      isCustom: false,
+      img: "automation3.svg",
+    },
+    {
+      type: "miniapps:salla",
+      event: "abandoned.cart",
+      icon: "shopping-cart",
+      label: "Cart Abandoned",
+      description: "Customer abandoned their cart",
+      isCustom: false,
+      img: "automation3.svg",
+    },
+    // ... more triggers — event strings must match webhook.eventExtraction output
+  ],
+
+  actions: [],
+  source: {},
+
+  webhook: {
+    eventExtraction: {
+      source: "body",
+      path: "$.event",
+    },
+
+    transactionId: {
+      paths: ["$.data.id"],
+      fallback: "generate",
+      overrides: {
+        "order.updated": { paths: ["$.data.id", "$.data.updated_at.date"] },
+        "order.status.updated": {
+          paths: ["$.data.id", "$.data.status.customized.id"],
+        },
+      },
+    },
+
+    verification: {
+      type: "hmac-sha256",
+      headerName: "X-Salla-Signature",
+      secretKey: "webhookSecret", // Global secret in auth.config
+    },
+
+    response: { statusCode: 200, body: { ok: true } },
+
+    customerExtraction: {
+      basePath: "$.data.customer",
+      mapping: {
+        firstName: "first_name",
+        lastName: "last_name",
+        primaryEmail: "email",
+        primaryPhone: "mobile",
+        code: "id",
+      },
+      overrides: {
+        "customer.created": { basePath: "$.data" },
+      },
+    },
+  },
+
+  // Bulk import + realtime commerce — see Sync guide
+  sync: {
+    baseUrl: "https://api.salla.dev/admin/v2",
+    headers: { Authorization: "Bearer [[accessToken]]" },
+    resources: {
+      /* products, orders, customers, ... */
+    },
+    webhooks: {
+      handlers: {
+        "order.created": {
+          resource: "orders",
+          operation: "upsert",
+          dataPath: "$.data",
+        },
+        "order.status.updated": {
+          resource: "orders",
+          operation: "upsert",
+          dataPath: "$.data.order",
+        },
+        "abandoned.cart": {
+          resource: "abandonedCarts",
+          operation: "upsert",
+          dataPath: "$.data",
+        },
+        "customer.created": {
+          resource: "customers",
+          operation: "upsert",
+          dataPath: "$.data",
+        },
+        // ... one handler per commerce trigger event
+      },
+    },
+  },
+};
+```
+
+See [Sync](/miniapps/guides/sync) for `resources`, `apiMapping`, and handler fields.

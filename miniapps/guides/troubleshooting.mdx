@@ -1,0 +1,77 @@
+---
+title: "Troubleshooting"
+description: "Common issues while building and testing a MiniApp definition."
+---
+
+Issues you may hit **while building** a MiniApp definition before or during Karzoun review.
+
+## Marketplace & submission
+
+**MiniApp not visible after approval**
+
+- Only Karzoun can set `status: 'public'` — keep `status: 'private'` in your draft
+- Confirm approval email and correct `ns` in Marketplace search
+- Partner-only apps may be restricted to specific tenants
+
+**Submission rejected for schema errors**
+
+- Validate required fields in [document schema](/miniapps/reference/document-schema)
+- Ensure `ns` is unique, lowercase, kebab-case
+- List every secret field in `auth.sensitiveKeys`
+
+## Authentication
+
+**OAuth popup does not close**
+
+- Redirect URI must be exactly `{SAAS_API_URL}/miniapps/{ns}/oauth2`
+- Check browser console for `postMessage` errors from the OAuth window
+
+**Actions return 401 / `test_token` fails with 401**
+
+- Verify `[[accessToken]]` mapping in `get_token.mapping`
+- For OAuth, confirm `refresh_token` config and `auto_refresh: true`
+- For **HTTP Basic** (`Authorization: 'Basic [[user]]:[[pass]]'`), confirm the runtime includes Basic auto-encoding — without it the raw `user:pass` is sent and providers reject the call
+- Confirm credentials are not swapped (e.g. WooCommerce Consumer Key as username, Secret as password)
+- Test the same request with curl using sandbox credentials:
+  `curl -u 'ck_…:cs_…' 'https://store.example/wp-json/wc/v3/orders?per_page=1'`
+
+## Webhooks & triggers
+
+**Automations never fire**
+
+- `triggers[].event` must match the string produced by `webhook.eventExtraction` exactly
+- Register webhook URL with provider: `{SAAS_API_URL}/miniapps/{ns}/webhooks`
+- Enable signature verification only after confirming secret resolution path
+
+**Signature verification fails**
+
+- Confirm `secretKey` resolves from credentials vs `auth.config` (global vs per-tenant)
+- Compare raw body bytes — re-serialized JSON will not match HMAC
+
+## RPC sources
+
+**Dropdowns empty**
+
+- Test `source.rpc_*` URL manually with a valid token
+- Check `dataPath`, `valueField`, and `labelField` against live JSON
+- Provide `x-fallback: 'input'` so users can paste IDs when RPC fails
+
+## E-commerce sync
+
+**Orders not appearing**
+
+- Prefer `sync.webhooks.handlers` over legacy `webhook.ecommerce`
+- Handler `recordType` must be `order` or `abandonedCart`
+- `mapping.code` must extract a stable external ID
+- Include sample webhook payloads in your [submission](/miniapps/guides/submission)
+
+## Getting help
+
+Include in support requests:
+
+1. MiniApp `ns` and `version`
+2. Redacted JSON definition
+3. Sample webhook payload and expected event name
+4. Provider sandbox account (if available)
+
+Contact: `developers@karzoun.chat` or your Karzoun partner manager.

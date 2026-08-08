@@ -1,0 +1,117 @@
+---
+title: "Dropbox"
+description: "Bearer-token file storage MiniApp example with actions and triggers."
+---
+
+A file storage integration with bearer token auth, 9 actions, and 5 triggers.
+
+```javascript
+const dropboxMiniApp = {
+  ns: "dropbox",
+  name: "dropbox",
+  type: "dropbox",
+  title: "Dropbox",
+  label: "Dropbox",
+  description: "Connect Dropbox to manage files dynamically.",
+  shortDescription: "Cloud file storage management",
+  status: "public",
+  version: "1.0.0",
+  category: "storage",
+  icon: "https://cdn.karzoun.com/miniapps/dropbox/icon.svg",
+  logo: "https://cdn.karzoun.com/miniapps/dropbox/logo.svg",
+  docsUrl: "https://www.dropbox.com/developers/documentation",
+
+  auth: {
+    type: "bearer_token",
+    sensitiveKeys: ["accessToken"],
+    config: { accessToken: "" },
+    userDetails: {
+      url: "https://api.dropboxapi.com/2/users/get_current_account",
+      method: "POST",
+      headers: {
+        Authorization: "Bearer [[accessToken]]",
+        "Content-Type": "application/json",
+      },
+      bodyType: "json",
+      body: null,
+      mapping: {
+        uid: "$.account_id",
+        name: "$.name.display_name",
+      },
+    },
+  },
+
+  // 5 webhook triggers
+  triggers: [
+    {
+      type: "miniapps:dropbox",
+      event: "file.added",
+      img: "automation3.svg",
+      icon: "file-plus",
+      label: "Dropbox File Added",
+      description: "Triggered when a new file is uploaded.",
+      isCustom: false,
+    },
+    {
+      type: "miniapps:dropbox",
+      event: "file.removed",
+      img: "automation3.svg",
+      icon: "file-minus",
+      label: "Dropbox File Removed",
+      description: "Triggered when a file is deleted.",
+      isCustom: false,
+    },
+    // ... more triggers
+  ],
+
+  // 9 actions
+  actions: [
+    {
+      name: "createFolder",
+      title: "Create Folder",
+      description: "Create a new folder in Dropbox",
+      renderStrategy: "auto",
+      parameters: {
+        type: "object",
+        required: ["path"],
+        properties: {
+          path: {
+            type: "string",
+            title: "Folder Path",
+            description: "Full path like /Documents/MyFolder",
+          },
+          autorename: {
+            type: "boolean",
+            title: "Auto Rename",
+            description: "Rename if folder exists",
+            default: false,
+          },
+        },
+      },
+      requests: [
+        {
+          url: "https://api.dropboxapi.com/2/files/create_folder_v2",
+          method: "POST",
+          headers: {
+            Authorization: "Bearer [[accessToken]]",
+            "Content-Type": "application/json",
+          },
+          bodyType: "json",
+          body: {
+            path: "{{path}}",
+            autorename: "{{autorename}}",
+          },
+          mapping: {
+            folderId: "$.metadata.id",
+            folderPath: "$.metadata.path_display",
+          },
+        },
+      ],
+    },
+    // ... more actions
+  ],
+
+  source: {}, // No RPC sources needed
+  webhook: null, // Simple triggers without webhook processing
+};
+```

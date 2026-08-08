@@ -1,0 +1,55 @@
+---
+title: "API reference"
+description: "REST endpoints and GraphQL operations for MiniApps."
+---
+
+MiniApps expose a small **REST surface** for OAuth and inbound webhooks. Tenants interact with installed MiniApps through **GraphQL** in the Karzoun app (Marketplace install, credentials, action execution).
+
+Base path: `{SAAS_API_URL}/miniapps`
+
+## REST endpoints (runtime)
+
+| Method | Path                | Description                               |
+| ------ | ------------------- | ------------------------------------------ |
+| `GET`  | `/{appNs}/oauth2`   | Start or complete OAuth 2.0 authorization |
+| `POST` | `/{appNs}/webhooks` | Receive webhooks from external providers  |
+
+Register these URLs with your provider:
+
+- **Redirect URI:** `{SAAS_API_URL}/miniapps/{ns}/oauth2`
+- **Webhook URL:** `{SAAS_API_URL}/miniapps/{ns}/webhooks`
+
+## GraphQL — Marketplace & install
+
+Available to authenticated Karzoun users in the app. See the [GraphQL API reference](/api-reference) for full argument types.
+
+### Queries
+
+| Query                     | Description                                            |
+| ------------------------- | -------------------------------------------------------- |
+| `listMiniAppsGeneralInfo` | Browse Marketplace apps (`installStatus`, `search`)    |
+| `miniAppGeneralInfo`      | Single app listing by `ns`                              |
+| `miniAppDetail`           | Installed app detail — actions and forms (`miniAppNs`) |
+| `miniAppsActionSources`   | RPC dropdown data (`miniAppNs`, `sourceKey`, …)         |
+| `testMiniApiRequest`      | Test one action request (developer tooling in app)     |
+| `miniAppDashboardConfig`  | Dashboard iframe bridge — actions and auth state        |
+
+### Mutations
+
+| Mutation                 | Description                                                                     |
+| ------------------------- | ---------------------------------------------------------------------------------- |
+| `installMiniApp`         | Install from Marketplace (`ns`)                                                 |
+| `saveMiniAppCredentials` | Save auth credentials; runs token exchange + registration                      |
+| `executeMiniAppAction`   | Run an action with server-side credentials (`appNs`, `actionName`, `formInput`) |
+
+<Warning>
+  **Rate limits** — Action execution is rate-limited per user per app (30 requests / 60 seconds). Design actions to be idempotent where possible.
+</Warning>
+
+## Tenant webhooks vs MiniApp webhooks
+
+|                  | [Tenant webhooks](/developers/guides/webhooks) | MiniApp webhooks                             |
+| ---------------- | ------------------------------------------------- | ----------------------------------------------- |
+| **Direction**    | Karzoun → your server                              | Provider → Karzoun                              |
+| **Purpose**      | Notify your backend about workspace events         | Ingest provider events into automations/sync    |
+| **Registration** | `webhooksAdd` GraphQL                              | Defined in MiniApp JSON + provider dashboard    |

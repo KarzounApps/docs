@@ -1,0 +1,66 @@
+---
+title: "Submit for review"
+description: "Package and submit your MiniApp definition to Karzoun for review and approval."
+---
+
+MiniApps are **not self-published**. You build the JSON definition locally, test against your provider's API, then submit it to Karzoun for review. After approval, Karzoun registers the MiniApp and lists it in the Marketplace (or enables it for your partner program).
+
+<Info>
+  **Who this is for** — Independent integrators and [partners](/partners) building connectors for external services. Karzoun operates the hosting layer — you deliver the definition and supporting assets.
+</Info>
+
+## Before you submit
+
+1. **Complete document** — Identity, `auth`, `actions`, and (if applicable) `triggers`, `webhook`, `sync`, and `source` blocks per the [document schema](/miniapps/reference/document-schema).
+2. **Unique `ns`** — Lowercase kebab-case namespace (e.g. `my-service`). Cannot change after approval without a new submission.
+3. **Marketplace metadata** — `title`, descriptions, `icon`, `logo`, `category`, `docsUrl`. See [Marketplace listing](/miniapps/guides/marketplace).
+4. **Provider assets** — Host `icon` and `logo` on HTTPS URLs you control (SVG or PNG). Karzoun does not host partner brand assets during review.
+5. **Test credentials** — Sandbox API keys or OAuth app for reviewers (see checklist below).
+6. **Webhook URL** — Document the Karzoun endpoint pattern: `https://{tenant-api}/miniapps/{ns}/webhooks` (exact host provided during onboarding).
+
+## Submission package
+
+Send to your Karzoun partner contact or `developers@karzoun.chat`:
+
+| Item               | Format                                                       |
+| ------------------ | ------------------------------------------------------------- |
+| MiniApp definition | `.json` file (pretty-printed) or link to private repo        |
+| Changelog          | What changed if this is an update                              |
+| Test account       | Sandbox store / workspace + credentials for reviewers          |
+| Setup guide        | 3–5 steps for end users (can match `description` markdown)   |
+| Webhook events     | List of subscribed events and sample payloads                  |
+
+<Warning>
+  **Secrets in submissions** — Never embed production secrets in the JSON you submit. Use empty strings in `auth.config` for user-provided values. OAuth `client_id` / `client_secret` for **public** OAuth apps are acceptable when required for the flow.
+</Warning>
+
+## Review process
+
+| Stage        | What happens                                                                             |
+| ------------ | ------------------------------------------------------------------------------------------ |
+| **Intake**   | Karzoun validates schema, naming, and security (`sensitiveKeys`, webhook verification)   |
+| **QA**       | Reviewers install in a sandbox tenant, connect auth, run actions, fire test webhooks      |
+| **Approval** | Definition is registered; `status: 'public'` (or partner-only) is set by Karzoun         |
+| **Updates**  | Submit a new version with incremented `version`; Karzoun publishes after review           |
+
+Typical turnaround is **5–10 business days** depending on complexity (OAuth + webhooks + sync take longer than bearer-token + actions).
+
+## After approval
+
+- Your MiniApp appears in **Marketplace** for tenants to install.
+- OAuth redirect URI to register with your provider: `{SAAS_API_URL}/miniapps/{ns}/oauth2`
+- Webhook URL tenants register: `{SAAS_API_URL}/miniapps/{ns}/webhooks`
+- For breaking changes, increment `version` and submit again — do not change `ns`.
+
+## Updating an approved MiniApp
+
+1. Edit your JSON definition locally.
+2. Bump `version` (semver).
+3. Submit the package again with a short changelog.
+4. Karzoun rolls out after QA — existing installs keep working unless you document migration steps.
+
+## Next steps
+
+- [Marketplace listing](/miniapps/guides/marketplace) — Copy and media checklist
+- [Troubleshooting](/miniapps/guides/troubleshooting) — Issues while building locally
+- [Examples](/miniapps/examples) — Reference definitions

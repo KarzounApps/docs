@@ -1,0 +1,28 @@
+---
+title: "Karzoun Pixel"
+description: "Embed the Karzoun tracking pixel to identify website visitors and sync customer data."
+---
+
+Embed the Karzoun tracking pixel on your website to identify visitors and sync customer data with your Karzoun workspace.
+
+## Basic embed
+
+```html
+<script>
+  (function (w, d, s, l, i) {
+    /* pixel bootstrap */
+  })(window, document, "script", "dataLayer", "PIXEL_ID");
+</script>
+```
+
+## Configuration
+
+| Setting         | Description                     |
+| ----------------- | ---------------------------------- |
+| `integrationId` | Your Karzoun integration ID     |
+| `apiUrl`        | Gateway API URL for your tenant |
+| `cdnUrl`        | Static asset CDN                |
+
+Configure the pixel in **Settings → Integrations** and use the generated snippet.
+
+For advanced customer data mapping, see the pixel documentation in `packages/karzoun-pixel/docs/` in the monorepo.

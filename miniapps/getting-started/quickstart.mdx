@@ -1,0 +1,84 @@
+---
+title: "Quickstart"
+description: "Build a minimal MiniApp definition with bearer-token auth and one action."
+---
+
+Build a minimal MiniApp definition with bearer-token auth and one action. When it works against your provider's sandbox, [submit it for review](/miniapps/guides/submission).
+
+## Minimal definition
+
+```javascript
+const myMiniApp = {
+  ns: "my-service",
+  name: "my-service",
+  type: "my-service",
+  title: "My Service",
+  label: "My Service",
+  description: "Connect My Service to automate workflows.",
+  shortDescription: "My Service integration",
+  status: "private", // Karzoun sets 'public' after approval
+  version: "1.0.0",
+  category: "productivity",
+  icon: "https://cdn.example.com/icon.svg",
+  logo: "https://cdn.example.com/logo.svg",
+  docsUrl: "https://docs.example.com/your-karzoun-guide",
+
+  auth: {
+    type: "bearer_token",
+    sensitiveKeys: ["accessToken"],
+    config: { accessToken: "" },
+    userDetails: {
+      url: "https://api.example.com/me",
+      method: "GET",
+      headers: { Authorization: "Bearer [[accessToken]]" },
+      bodyType: "json",
+      body: {},
+      mapping: { uid: "$.id", name: "$.name" },
+    },
+  },
+
+  actions: [
+    {
+      name: "sendMessage",
+      title: "Send Message",
+      description: "Send a message to a channel",
+      renderStrategy: "auto",
+      parameters: {
+        type: "object",
+        required: ["channel", "text"],
+        properties: {
+          channel: { type: "string", title: "Channel" },
+          text: { type: "string", title: "Message Text" },
+        },
+      },
+      requests: [
+        {
+          url: "https://api.example.com/messages",
+          method: "POST",
+          headers: {
+            Authorization: "Bearer [[accessToken]]",
+            "Content-Type": "application/json",
+          },
+          bodyType: "json",
+          body: { channel: "{{channel}}", text: "{{text}}" },
+          mapping: { messageId: "$.id" },
+        },
+      ],
+    },
+  ],
+
+  triggers: [],
+  webhook: null,
+  source: {},
+};
+```
+
+<Tip>
+  **Test locally first** — Validate JSON shape, call your provider APIs with the same URLs/headers, and verify webhook payloads before submission. Karzoun sandbox access is provided during review.
+</Tip>
+
+## Next steps
+
+1. [Document schema](/miniapps/reference/document-schema) — Required fields
+2. [Authentication](/miniapps/guides/authentication) — OAuth and registration flows
+3. [Submit for review](/miniapps/guides/submission) — Send your package to Karzoun
