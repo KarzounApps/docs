@@ -127,7 +127,8 @@ html[dir="rtl"] #table-of-contents-layout {
 
 /* =============================================================================
    MAIN SIDEBAR NAV (#navigation-items / .sidebar-group)
-   Mintlify uses ml-4 + border-l + inline padding-left + text-left
+   Mintlify uses ml-4 + border-l + inline padding-left + text-left on both
+   page links (`a`) and nested group toggles (`button[aria-expanded]`).
    ============================================================================= */
 
 html[dir="rtl"] #navigation-items,
@@ -152,15 +153,18 @@ html[dir="rtl"] #sidebar .sidebar-group-header {
   text-align: start !important;
 }
 
-html[dir="rtl"] #navigation-items .sidebar-group a,
-html[dir="rtl"] #sidebar .sidebar-group a,
-html[dir="rtl"] #navigation-items li > a[class*="border-l"],
-html[dir="rtl"] #sidebar li > a[class*="border-l"] {
+/* Nested rail: links + expandable subgroup buttons share ml-4 / border-l */
+html[dir="rtl"] #navigation-items .sidebar-group :is(a, button)[class*="border-l"],
+html[dir="rtl"] #sidebar .sidebar-group :is(a, button)[class*="border-l"],
+html[dir="rtl"] #navigation-items .sidebar-group :is(a, button)[class*="ml-4"],
+html[dir="rtl"] #sidebar .sidebar-group :is(a, button)[class*="ml-4"],
+html[dir="rtl"] #navigation-items li > :is(a, button)[class*="border-l"],
+html[dir="rtl"] #sidebar li > :is(a, button)[class*="border-l"] {
   margin-left: 0 !important;
   margin-right: 0 !important;
   margin-inline-start: 1rem !important; /* ml-4 */
   margin-inline-end: 0 !important;
-  /* Override Mintlify inline style="padding-left: 1rem" */
+  /* Override Mintlify inline style="padding-left: …" — keep end padding from pr-3 */
   padding-left: 0 !important;
   padding-right: 0 !important;
   padding-inline-start: 1rem !important;
@@ -170,6 +174,33 @@ html[dir="rtl"] #sidebar li > a[class*="border-l"] {
   border-inline-start-width: 1px !important;
   border-inline-start-style: solid;
   text-align: start !important;
+}
+
+/* Nested depth > 1: Mintlify sets padding-left: 2rem / 3rem inline — mirror to start */
+html[dir="rtl"] #sidebar .sidebar-group :is(a, button)[style*="padding-left:2rem"],
+html[dir="rtl"] #sidebar .sidebar-group :is(a, button)[style*="padding-left: 2rem"] {
+  padding-inline-start: 2rem !important;
+}
+
+html[dir="rtl"] #sidebar .sidebar-group :is(a, button)[style*="padding-left:3rem"],
+html[dir="rtl"] #sidebar .sidebar-group :is(a, button)[style*="padding-left: 3rem"] {
+  padding-inline-start: 3rem !important;
+}
+
+html[dir="rtl"] #sidebar .sidebar-group :is(a, button)[style*="padding-left:4rem"],
+html[dir="rtl"] #sidebar .sidebar-group :is(a, button)[style*="padding-left: 4rem"] {
+  padding-inline-start: 4rem !important;
+}
+
+/* Subgroup chevron: LTR points right with -mr-0.5 → RTL point left when collapsed.
+   Expanded (down) needs no flip — avoid overriding Mintlify rotate-90. */
+html[dir="rtl"] #sidebar .sidebar-group button[aria-expanded] svg {
+  margin-right: 0 !important;
+  margin-inline-end: -0.125rem !important; /* -mr-0.5 */
+}
+
+html[dir="rtl"] #sidebar .sidebar-group button[aria-expanded="false"] svg {
+  transform: scaleX(-1);
 }
 
 /* =============================================================================

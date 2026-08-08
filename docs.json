@@ -616,158 +616,31 @@
                 ]
               },
               {
-                "group": "البريد الوارد",
+                "group": "قنوات التواصل",
                 "pages": [
-                  "ar/help-center/guides/inbox/doc-1889759",
-                  "ar/help-center/guides/inbox/doc-1889760",
-                  "ar/help-center/guides/inbox/doc-1889764"
+                  "ar/help-center/guides/channels/doc-1890470",
+                  "ar/help-center/guides/channels/doc-1889747",
+                  "ar/help-center/guides/channels/doc-1889748",
+                  "ar/help-center/guides/channels/doc-1889749",
+                  "ar/help-center/guides/channels/doc-1889750",
+                  "ar/help-center/guides/channels/doc-1889751",
+                  "ar/help-center/guides/channels/doc-2279234",
+                  "ar/help-center/guides/channels/email-channels",
+                  "ar/help-center/guides/channels/doc-1889752",
+                  "ar/help-center/guides/channels/doc-2279230",
+                  "ar/help-center/guides/channels/doc-1889753",
+                  "ar/help-center/guides/channels/api-1889754",
+                  "ar/help-center/guides/channels/doc-1890471"
                 ]
               },
               {
-                "group": "النوافذ المنبثقة",
+                "group": "واتساب",
                 "pages": [
-                  "ar/help-center/guides/popups/doc-1890613",
-                  "ar/help-center/guides/popups/doc-1890614",
-                  "ar/help-center/guides/popups/doc-1890615",
-                  "ar/help-center/guides/popups/doc-1890616"
-                ]
-              },
-              {
-                "group": "الرسائل الجماعية",
-                "pages": [
-                  "ar/help-center/guides/broadcasts/doc-1890617",
-                  "ar/help-center/guides/broadcasts/doc-1890618",
-                  "ar/help-center/guides/broadcasts/doc-2186153",
-                  "ar/help-center/guides/broadcasts/doc-1890619",
-                  "ar/help-center/guides/broadcasts/doc-1890621",
-                  "ar/help-center/guides/broadcasts/doc-1904692"
-                ]
-              },
-              {
-                "group": "الأتمتة والرد الالي",
-                "pages": [
-                  "ar/help-center/guides/automations/flow-builder-1890495",
-                  "ar/help-center/guides/automations/triggers-1890496",
-                  "ar/help-center/guides/automations/doc-1890497",
-                  "ar/help-center/guides/automations/doc-1914142",
-                  "ar/help-center/guides/automations/doc-1890498",
-                  "ar/help-center/guides/automations/doc-1937880",
-                  {
-                    "group": "الأساسيات",
-                    "pages": [
-                      "ar/help-center/guides/automations/basics/doc-1890493",
-                      "ar/help-center/guides/automations/basics/doc-1916528",
-                      "ar/help-center/guides/automations/basics/doc-1890494",
-                      "ar/help-center/guides/automations/basics/doc-1922139"
-                    ]
-                  },
-                  {
-                    "group": "الخطوات / النود",
-                    "pages": [
-                      "ar/help-center/guides/automations/nodes/doc-1918969",
-                      "ar/help-center/guides/automations/nodes/doc-1920222",
-                      "ar/help-center/guides/automations/nodes/doc-1922142",
-                      "ar/help-center/guides/automations/nodes/a-b-test-1922144",
-                      "ar/help-center/guides/automations/nodes/doc-1922145",
-                      "ar/help-center/guides/automations/nodes/ai-1922146",
-                      {
-                        "group": "الإجرائات",
-                        "pages": [
-                          "ar/help-center/guides/automations/nodes/actions/doc-1922143"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "group": "الذكاء الاصطناعي AI",
-                "pages": [
-                  "ar/help-center/guides/ai/ai-1890564",
-                  "ar/help-center/guides/ai/doc-1890565",
-                  "ar/help-center/guides/ai/copilot-ai-1890567",
-                  "ar/help-center/guides/ai/doc-2192686",
-                  "ar/help-center/guides/ai/doc-1890569",
-                  "ar/help-center/guides/ai/ai-1890570"
-                ]
-              },
-              {
-                "group": "مدير الملفات",
-                "pages": [
-                  "ar/help-center/guides/file-manager/doc-2268283"
-                ]
-              },
-              {
-                "group": "الطلبات",
-                "pages": [
-                  "ar/help-center/guides/orders/doc-2278718"
-                ]
-              },
-              {
-                "group": "الإجتماعات",
-                "pages": [
-                  "ar/help-center/guides/meetings/doc-2278755",
-                  "ar/help-center/guides/meetings/doc-2278756",
-                  "ar/help-center/guides/meetings/google-calendar-2279087"
-                ]
-              },
-              {
-                "group": "الحضور والإنصراف",
-                "pages": [
-                  "ar/help-center/guides/attendance/doc-1890579",
-                  "ar/help-center/guides/attendance/doc-1890580",
-                  "ar/help-center/guides/attendance/doc-1890581",
-                  "ar/help-center/guides/attendance/doc-1894250",
-                  "ar/help-center/guides/attendance/doc-2278715",
-                  "ar/help-center/guides/attendance/doc-2278716"
-                ]
-              },
-              {
-                "group": "قاعدة المعرفة",
-                "pages": [
-                  "ar/help-center/guides/knowledge-base/doc-2188090",
-                  "ar/help-center/guides/knowledge-base/doc-2188091"
-                ]
-              },
-              {
-                "group": "المتجر",
-                "pages": [
-                  "ar/help-center/guides/store/doc-2278814",
-                  "ar/help-center/guides/store/salla-2278936",
-                  "ar/help-center/guides/store/zid-2278937",
-                  "ar/help-center/guides/store/google-sheets-2278938"
-                ]
-              },
-              {
-                "group": "توثيق الاعمال",
-                "pages": [
-                  "ar/help-center/guides/business-verification/doc-2279116"
-                ]
-              },
-              {
-                "group": "المطور API",
-                "pages": [
-                  "ar/help-center/guides/developers/doc-2278988",
-                  "ar/help-center/guides/developers/api-2279059",
-                  "ar/help-center/guides/developers/webhooks-2279089",
-                  "ar/help-center/guides/developers/graphql-playground-2279090",
-                  "ar/help-center/guides/developers/mcp-2279092",
-                  "ar/help-center/guides/developers/karzoun-pixel-2279094",
-                  "ar/help-center/guides/developers/doc-2279095",
-                  "ar/help-center/guides/developers/api-1904852",
-                  "ar/help-center/guides/developers/api-1915056"
-                ]
-              },
-              {
-                "group": "تطبيق الجوال",
-                "pages": [
-                  "ar/help-center/guides/mobile-app/doc-1890606",
-                  "ar/help-center/guides/mobile-app/doc-1890607"
-                ]
-              },
-              {
-                "group": "مدير الواتساب",
-                "pages": [
+                  "ar/help-center/guides/whatsapp/getting-started/api-1890472",
+                  "ar/help-center/guides/whatsapp/getting-started/api-1890473",
+                  "ar/help-center/guides/whatsapp/getting-started/doc-1890474",
+                  "ar/help-center/guides/whatsapp/getting-started/api-1890475",
+                  "ar/help-center/guides/whatsapp/getting-started/doc-1894809",
                   "ar/help-center/guides/whatsapp/doc-1890487",
                   "ar/help-center/guides/whatsapp/doc-2280953",
                   "ar/help-center/guides/whatsapp/qr-1890488",
@@ -793,7 +666,7 @@
                     ]
                   },
                   {
-                    "group": "WhatsApp Flows - واتساب فلو",
+                    "group": "تدفقات واتساب",
                     "pages": [
                       "ar/help-center/guides/whatsapp/flows/doc-1890480",
                       "ar/help-center/guides/whatsapp/flows/doc-1890481",
@@ -802,41 +675,169 @@
                     ]
                   },
                   {
-                    "group": "تسعير الواتساب",
+                    "group": "التسعير والتقارير",
                     "pages": [
                       "ar/help-center/guides/whatsapp/pricing/doc-1890483",
-                      "ar/help-center/guides/whatsapp/pricing/doc-2284478"
-                    ]
-                  },
-                  {
-                    "group": "تقارير الواتساب",
-                    "pages": [
+                      "ar/help-center/guides/whatsapp/pricing/doc-2284478",
                       "ar/help-center/guides/whatsapp/reports/doc-2284476"
-                    ]
-                  },
-                  {
-                    "group": "البدء مع واتساب",
-                    "pages": [
-                      "ar/help-center/guides/whatsapp/getting-started/api-1890472",
-                      "ar/help-center/guides/whatsapp/getting-started/api-1890473",
-                      "ar/help-center/guides/whatsapp/getting-started/doc-1890474",
-                      "ar/help-center/guides/whatsapp/getting-started/api-1890475",
-                      "ar/help-center/guides/whatsapp/getting-started/doc-1894809"
                     ]
                   }
                 ]
               },
               {
-                "group": "المهام",
+                "group": "مركز المحادثات",
+                "pages": [
+                  "ar/help-center/guides/inbox/doc-1889759",
+                  "ar/help-center/guides/inbox/doc-1889760",
+                  "ar/help-center/guides/inbox/doc-1889764"
+                ]
+              },
+              {
+                "group": "جهات الاتصال",
+                "pages": [
+                  "ar/help-center/guides/contacts/overview",
+                  {
+                    "group": "جهات الاتصال",
+                    "pages": [
+                      "ar/help-center/guides/contacts/profile",
+                      "ar/help-center/guides/contacts/add",
+                      "ar/help-center/guides/contacts/companies",
+                      "ar/help-center/guides/contacts/leads",
+                      "ar/help-center/guides/contacts/import",
+                      "ar/help-center/guides/contacts/merge"
+                    ]
+                  },
+                  {
+                    "group": "الشرائح",
+                    "pages": [
+                      "ar/help-center/guides/contacts/segments/overview",
+                      "ar/help-center/guides/contacts/segments/create",
+                      "ar/help-center/guides/contacts/segments/static"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "الحملات التسويقية",
+                "pages": [
+                  "ar/help-center/guides/broadcasts/overview",
+                  {
+                    "group": "إطلاق الحملات التسويقية",
+                    "pages": [
+                      "ar/help-center/guides/broadcasts/create",
+                      "ar/help-center/guides/broadcasts/audience"
+                    ]
+                  },
+                  {
+                    "group": "القنوات",
+                    "pages": [
+                      "ar/help-center/guides/broadcasts/whatsapp",
+                      "ar/help-center/guides/broadcasts/whatsapp-recurring",
+                      "ar/help-center/guides/broadcasts/email",
+                      "ar/help-center/guides/broadcasts/email-templates",
+                      "ar/help-center/guides/broadcasts/livechat",
+                      "ar/help-center/guides/broadcasts/automation",
+                      "ar/help-center/guides/broadcasts/push"
+                    ]
+                  },
+                  {
+                    "group": "الإدارة والمتابعة",
+                    "pages": [
+                      "ar/help-center/guides/broadcasts/schedule-and-status",
+                      "ar/help-center/guides/broadcasts/manage",
+                      "ar/help-center/guides/broadcasts/analytics",
+                      "ar/help-center/guides/broadcasts/calendar"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "الأتمتة والرد الآلي",
+                "pages": [
+                  "ar/help-center/guides/automations/basics/doc-1890493",
+                  "ar/help-center/guides/automations/basics/doc-1916528",
+                  "ar/help-center/guides/automations/basics/doc-1890494",
+                  "ar/help-center/guides/automations/basics/doc-1922139",
+                  "ar/help-center/guides/automations/doc-1890497",
+                  "ar/help-center/guides/automations/doc-1937880",
+                  "ar/help-center/guides/automations/doc-1890498",
+                  {
+                    "group": "خطوات البناء",
+                    "pages": [
+                      "ar/help-center/guides/automations/nodes/doc-1918969",
+                      "ar/help-center/guides/automations/nodes/doc-1920222"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "الذكاء الاصطناعي",
+                "pages": [
+                  "ar/help-center/guides/ai/ai-1890564",
+                  "ar/help-center/guides/ai/doc-1890565",
+                  "ar/help-center/guides/ai/copilot-ai-1890567",
+                  "ar/help-center/guides/ai/doc-2192686",
+                  "ar/help-center/guides/ai/doc-1890569",
+                  "ar/help-center/guides/ai/ai-1890570"
+                ]
+              },
+              {
+                "group": "النوافذ المنبثقة",
+                "pages": [
+                  "ar/help-center/guides/popups/doc-1890613",
+                  "ar/help-center/guides/popups/doc-1890614"
+                ]
+              },
+              {
+                "group": "قاعدة المعرفة",
+                "pages": [
+                  "ar/help-center/guides/knowledge-base/doc-2188090",
+                  "ar/help-center/guides/knowledge-base/doc-2188091"
+                ]
+              },
+              {
+                "group": "المتجر والربط",
+                "pages": [
+                  "ar/help-center/guides/store/doc-2278814",
+                  "ar/help-center/guides/store/salla-2278936",
+                  "ar/help-center/guides/store/zid-2278937",
+                  "ar/help-center/guides/store/google-sheets-2278938"
+                ]
+              },
+              {
+                "group": "المهام والاجتماعات",
                 "pages": [
                   "ar/help-center/guides/tasks/doc-1890582",
                   "ar/help-center/guides/tasks/doc-1890584",
                   "ar/help-center/guides/tasks/doc-1890583",
-                  "ar/help-center/guides/tasks/doc-1890586"
+                  "ar/help-center/guides/tasks/doc-1890586",
+                  "ar/help-center/guides/meetings/doc-2278755",
+                  "ar/help-center/guides/meetings/doc-2278756",
+                  "ar/help-center/guides/meetings/google-calendar-2279087"
                 ]
               },
               {
-                "group": "الإعدادات",
+                "group": "الحضور والطلبات والملفات",
+                "pages": [
+                  "ar/help-center/guides/attendance/doc-1890579",
+                  "ar/help-center/guides/attendance/doc-1890580",
+                  "ar/help-center/guides/attendance/doc-1890581",
+                  "ar/help-center/guides/attendance/doc-1894250",
+                  "ar/help-center/guides/attendance/doc-2278715",
+                  "ar/help-center/guides/attendance/doc-2278716",
+                  "ar/help-center/guides/orders/doc-2278718",
+                  "ar/help-center/guides/file-manager/doc-2268283"
+                ]
+              },
+              {
+                "group": "محادثات الفريق",
+                "pages": [
+                  "ar/help-center/guides/team-chat/doc-2179912",
+                  "ar/help-center/guides/team-chat/doc-2179913"
+                ]
+              },
+              {
+                "group": "الإعدادات والفوترة",
                 "pages": [
                   "ar/help-center/guides/settings/doc-1890608",
                   "ar/help-center/guides/settings/doc-1890610",
@@ -848,84 +849,8 @@
                   "ar/help-center/guides/settings/doc-2279107",
                   "ar/help-center/guides/settings/doc-2279112",
                   "ar/help-center/guides/settings/doc-2279113",
-                  "ar/help-center/guides/settings/doc-2279114"
-                ]
-              },
-              {
-                "group": "الشركاء",
-                "pages": [
-                  "ar/help-center/guides/partners/doc-1890588",
-                  "ar/help-center/guides/partners/doc-1890589",
-                  "ar/help-center/guides/partners/doc-1890599",
-                  "ar/help-center/guides/partners/doc-1919938",
-                  "ar/help-center/guides/partners/become-meta-tech-provider-and-multi-partner-solutions-with-karzoun-1920023",
-                  {
-                    "group": "اللوحة البيضاء للشركاء (White-label)",
-                    "pages": [
-                      "ar/help-center/guides/partners/whitelabel/doc-1890590",
-                      "ar/help-center/guides/partners/whitelabel/doc-1890604",
-                      "ar/help-center/guides/partners/whitelabel/doc-1890598",
-                      "ar/help-center/guides/partners/whitelabel/doc-1890600",
-                      {
-                        "group": "إعدادات نظام اللوحة البيضاء",
-                        "pages": [
-                          "ar/help-center/guides/partners/whitelabel/system-settings/doc-1890593",
-                          "ar/help-center/guides/partners/whitelabel/system-settings/doc-1890594",
-                          "ar/help-center/guides/partners/whitelabel/system-settings/doc-1890595",
-                          "ar/help-center/guides/partners/whitelabel/system-settings/doc-1890596",
-                          "ar/help-center/guides/partners/whitelabel/system-settings/doc-1890597"
-                        ]
-                      },
-                      {
-                        "group": "إعدادات الشريك",
-                        "pages": [
-                          "ar/help-center/guides/partners/whitelabel/partner-settings/doc-1890601",
-                          "ar/help-center/guides/partners/whitelabel/partner-settings/doc-1890602",
-                          "ar/help-center/guides/partners/whitelabel/partner-settings/doc-1890603"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "group": "قنوات التواصل",
-                "pages": [
-                  "ar/help-center/guides/channels/doc-1890470",
-                  "ar/help-center/guides/channels/doc-1889747",
-                  "ar/help-center/guides/channels/doc-1889748",
-                  "ar/help-center/guides/channels/doc-1889749",
-                  "ar/help-center/guides/channels/doc-1889750",
-                  "ar/help-center/guides/channels/doc-1889751",
-                  "ar/help-center/guides/channels/doc-2279234",
-                  "ar/help-center/guides/channels/email-channels",
-                  "ar/help-center/guides/channels/doc-1889752",
-                  "ar/help-center/guides/channels/doc-2279230",
-                  "ar/help-center/guides/channels/doc-1889753",
-                  "ar/help-center/guides/channels/api-1889754",
-                  "ar/help-center/guides/channels/doc-1890471"
-                ]
-              },
-              {
-                "group": "محادثات الفريق",
-                "pages": [
-                  "ar/help-center/guides/team-chat/doc-2179912",
-                  "ar/help-center/guides/team-chat/doc-2179913"
-                ]
-              },
-              {
-                "group": "جهات الاتصال",
-                "pages": [
-                  "ar/help-center/guides/contacts/doc-1890489",
-                  "ar/help-center/guides/contacts/doc-1890490",
-                  "ar/help-center/guides/contacts/doc-1890492",
-                  {
-                    "group": "الشرائح",
-                    "pages": [
-                      "ar/help-center/guides/contacts/segments/doc-2180424",
-                      "ar/help-center/guides/contacts/segments/doc-2268252"
-                    ]
-                  }
+                  "ar/help-center/guides/settings/doc-2279114",
+                  "ar/help-center/guides/business-verification/doc-2279116"
                 ]
               }
             ]
@@ -933,5 +858,55 @@
         ]
       }
     ]
-  }
+  },
+  "redirects": [
+    {
+      "source": "/ar/help-center/guides/contacts/doc-1890489",
+      "destination": "/ar/help-center/guides/contacts/overview"
+    },
+    {
+      "source": "/ar/help-center/guides/contacts/doc-1890490",
+      "destination": "/ar/help-center/guides/contacts/import"
+    },
+    {
+      "source": "/ar/help-center/guides/contacts/doc-1890492",
+      "destination": "/ar/help-center/guides/contacts/profile"
+    },
+    {
+      "source": "/ar/help-center/guides/contacts/segments/doc-2180424",
+      "destination": "/ar/help-center/guides/contacts/segments/overview"
+    },
+    {
+      "source": "/ar/help-center/guides/contacts/segments/doc-2268252",
+      "destination": "/ar/help-center/guides/contacts/segments/create"
+    },
+    {
+      "source": "/ar/help-center/guides/contacts/add-and-profile",
+      "destination": "/ar/help-center/guides/contacts/profile"
+    },
+    {
+      "source": "/ar/help-center/guides/broadcasts/doc-1890617",
+      "destination": "/ar/help-center/guides/broadcasts/overview"
+    },
+    {
+      "source": "/ar/help-center/guides/broadcasts/doc-1890618",
+      "destination": "/ar/help-center/guides/broadcasts/whatsapp"
+    },
+    {
+      "source": "/ar/help-center/guides/broadcasts/doc-2186153",
+      "destination": "/ar/help-center/guides/broadcasts/whatsapp-recurring"
+    },
+    {
+      "source": "/ar/help-center/guides/broadcasts/doc-1890619",
+      "destination": "/ar/help-center/guides/broadcasts/email"
+    },
+    {
+      "source": "/ar/help-center/guides/broadcasts/doc-1904692",
+      "destination": "/ar/help-center/guides/broadcasts/analytics"
+    },
+    {
+      "source": "/ar/help-center/guides/broadcasts/doc-1890621",
+      "destination": "/ar/help-center/guides/broadcasts/livechat"
+    }
+  ]
 }
