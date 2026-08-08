@@ -1,0 +1,175 @@
+---
+title: "WhatsApp calling"
+description: "Enable WhatsApp voice calls, set business hours, record calls, and manage voicemail from Karzoun."
+---
+Receive and make **WhatsApp voice calls** from Karzoun — with business hours, call recording, transcripts, and optional voicemail.
+
+This guide is for business owners and team admins. You do not need technical knowledge of Meta’s APIs.
+
+## What you can do
+
+| Feature              | What it means for your team                                                      |
+| -------------------- | -------------------------------------------------------------------------------- |
+| Voice calls          | Customers can call your WhatsApp number; agents answer in the browser            |
+| Call button          | Show or hide the call icon in the customer’s WhatsApp chat                       |
+| Callback permission  | After a customer calls you, WhatsApp can ask if your business may call them back |
+| Business hours       | Only receive calls during the hours you set                                      |
+| Call recording       | Automatically save every call on the number                                      |
+| Written transcripts  | Turn recorded calls into searchable text                                         |
+| Voicemail (Beta)     | Let customers leave a message when nobody answers                                |
+| Call link            | Share a link so customers can start a call from your website or social profiles  |
+| Call history & stats | Review past calls and pickup rates                                               |
+
+## What you need first
+
+- A connected [WhatsApp channel](/help-center/guides/channels/doc-1889747) in Karzoun
+- Calling enabled for your number in **WhatsApp Manager** (Meta), when Meta requires it
+- A modern browser (Chrome or Firefox recommended) with **microphone** permission
+- A stable internet connection (wired is best for long calls)
+
+<Info>
+**Messaging limit:** Meta usually requires a WhatsApp messaging limit of **2,000 or higher** before calling can be enabled on a business number.
+</Info>
+
+### Country limits for outbound calls
+
+Customers can **call you** from most countries. Your business **calling customers** may be restricted in some regions (for example United States, Canada, Egypt, Vietnam, and Nigeria). If outbound calling is blocked for your number, inbound calling and messaging still work.
+
+---
+
+## Turn on calling in Karzoun
+
+1. Go to **Channels → WhatsApp** and open your connected number
+2. Open the **Calling** tab
+3. Turn on **Allow WhatsApp calls**
+4. Optionally turn on **Show the call button** so customers see a call icon in WhatsApp
+5. Optionally turn on **Ask permission to call customers back**
+
+Changes can take time to appear for every WhatsApp user. Opening your business chat info page in WhatsApp often refreshes the call button sooner.
+
+---
+
+## Business hours
+
+Use business hours when you only want to receive calls while your team is available.
+
+1. In the **Calling** tab, turn on **Only receive calls during set hours**
+2. Choose your **business time zone**
+3. Add weekly periods (up to two periods per day)
+4. Add **special dates** for holidays or different hours on a specific day
+5. Save
+
+Calls outside these hours are blocked. Customers can still send WhatsApp messages.
+
+<Warning>
+If you enable **voicemail**, Meta recommends turning **business hours** off for calling — customers cannot place calls outside hours, so they would never reach voicemail.
+</Warning>
+
+---
+
+## Answer and place calls
+
+### Incoming calls
+
+- An incoming call shows a ringing notification in Karzoun
+- Accept (green) or decline (red)
+- If nobody answers in time, the call is marked missed (and may go to voicemail if you enabled it)
+
+### Outgoing calls
+
+1. Open the customer’s WhatsApp conversation
+2. Tap the **phone** icon in the conversation header
+3. Speak with the customer in the browser softphone
+
+### During a call
+
+- Mute / unmute the microphone
+- End the call with the red button
+- If the connection drops briefly, Karzoun tries to reconnect automatically
+
+### Call button message
+
+From the composer tools, you can send an interactive **Call** button so the customer starts the call from their side. Set the button text and how long the button stays valid.
+
+---
+
+## Record calls and create written conversations
+
+Recording is configured **per WhatsApp number**, not per single call.
+
+1. Open **Calling → Record and summarize calls**
+2. Turn on **Automatically record calls**
+3. Write a short sentence for **What customers should hear** (spoken consent notice)
+4. Choose the **language of the spoken notice**
+5. Optionally turn on **Create a written conversation** and choose the language spoken during calls
+6. Save
+
+<Info>
+Customers hear a short spoken notice at the start of the call when recording (and/or transcription) is enabled. Keep the purpose text clear and honest.
+</Info>
+
+After the call ends:
+
+- The **recording** appears in call history and the conversation timeline
+- The **transcript** (if enabled) appears as readable text agents and AI tools can use
+
+---
+
+## Voicemail (Beta)
+
+Voicemail lets WhatsApp answer when your team declines a call or does not pick up in time, play your greeting, and deliver the customer’s message as an audio note in the Inbox.
+
+<Warning>
+**Beta:** Meta is still rolling out voicemail for WhatsApp Business accounts. Upload or save may fail until Meta enables the feature for your account. Recording and other calling features are unaffected.
+</Warning>
+
+### How to set it up
+
+1. Turn on **Let customers leave a voice message**
+2. Choose when voicemail should answer:
+   - When the team declines the call
+   - When nobody answers
+3. Set how many **seconds** the phone rings before voicemail answers (0–30)
+4. Upload a short **greeting** (OGG/Opus audio, under 60 seconds)
+5. Save when the greeting shows as ready
+
+Voicemail messages arrive in the conversation as audio. They are linked to the original call.
+
+---
+
+## Shareable call link
+
+In the **Calling** tab, copy the **shareable call link** and place it on your website, email signature, or social profiles. Opening the link takes the customer into a WhatsApp call with your business.
+
+---
+
+## Call history and analytics
+
+- **Call history** lists inbound and outbound calls with status and duration
+- **Analytics** shows totals, completion rate, missed rate, and average duration
+
+Use these to spot pickup problems early — Meta may hide the call button if too many calls go unanswered.
+
+---
+
+## Troubleshooting
+
+| Problem                     | What to try                                                                    |
+| --------------------------- | ------------------------------------------------------------------------------ |
+| No call notification        | Check your internet connection and that calling is enabled on the channel      |
+| Microphone blocked          | Allow the microphone for Karzoun in browser settings                           |
+| No microphone found         | Unplug/replug the headset; close other apps using the mic                      |
+| Call drops often            | Prefer a wired connection; avoid unstable Wi‑Fi                                |
+| Phone icon missing in chat  | Enable calling and the call button in the Calling tab                          |
+| Outbound call not available | Your number may be in a restricted country for business-initiated calls        |
+| Cannot hear the other party | Check speaker volume; try a headset                                            |
+| Voicemail upload fails      | The feature may still be Beta for your Meta account — wait for Meta enablement |
+| Recording not available     | Confirm recording is saved on the Calling tab and that calling is enabled      |
+
+---
+
+## Privacy
+
+- Call audio travels between the agent’s browser and Meta over encrypted WebRTC
+- Karzoun stores call **metadata** (who, when, duration, status) and, when enabled, copies of **recordings** and **transcripts** in your workspace storage
+- Share recordings only with people who need them for quality, training, or compliance

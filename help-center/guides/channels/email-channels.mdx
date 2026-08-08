@@ -1,0 +1,131 @@
+---
+title: "Email channels"
+description: "Choose between Karzoun Business Email and IMAP/SMTP, when to use each, and how they fit together with Inbox."
+---
+Karzoun can put your email in the same **Inbox** as WhatsApp and other channels — so your team replies from one place, with contacts, tags, and automations.
+
+You can connect email in **two ways**:
+
+| Option in Karzoun     | Best when…                                                                                                  |
+| --------------------- | ----------------------------------------------------------------------------------------------------------- |
+| **Business Email**    | You want Karzoun to host send/receive for a domain (or subdomain) with simple DNS setup                     |
+| **Email (IMAP/SMTP)** | You already have mail on Google, Microsoft 365, Zoho, cPanel, or another provider and want to keep it there |
+
+This guide helps you **pick the right option**. For click-by-click setup with screenshots, use the how-to guides linked below.
+
+---
+
+## Which one should I use?
+
+### Choose Business Email if you want to…
+
+- Use a professional address like `support@yourbrand.com` without managing a separate mailbox host
+- Send campaigns / transactional mail with open & click tracking from Karzoun
+- Verify your domain once with DNS, then add more addresses (aliases) under the same domain
+- Keep setup mostly inside Karzoun (guided DNS checklist)
+
+**Typical fits:** support@, sales@, info@ on a domain (or subdomain) dedicated to customer conversations.
+
+### Choose Email (IMAP/SMTP) if you want to…
+
+- Keep mailboxes where they already are (Google Workspace, Microsoft 365, etc.)
+- Continue using the same webmail / Outlook / phone apps your team uses today
+- Connect an existing inbox so conversations also appear in Karzoun
+- Avoid changing how DNS MX records work for your whole company domain
+
+**Typical fits:** “We already live in Gmail / Outlook — just sync that inbox into Karzoun.”
+
+<Info>
+**Same brand, different jobs:** Many teams use **IMAP/SMTP** for personal staff mailboxes and **Business Email** for public addresses (support@ / sales@) that should live in the shared Inbox.
+</Info>
+
+---
+
+## Side-by-side comparison
+
+|                                | **Business Email**                                                                                  | **Email (IMAP/SMTP)**                                         |
+| ------------------------------ | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| Who hosts mail?                | Karzoun (managed for you)                                                                           | Your current provider                                         |
+| Setup                          | Domain + DNS records in Karzoun                                                                     | Host, ports, username, password (or app password)             |
+| Receiving mail in Karzoun      | Optional — turn on only if you point MX to the hosts we show                                        | Yes, as long as IMAP credentials work                         |
+| Keep Google / Microsoft inbox? | Yes for **send-only**; full receive needs MX on our hosts (replaces provider inbox for that domain) | Yes — that is the point                                       |
+| Open / click tracking          | Built in (can toggle in settings)                                                                   | Depends on your provider; not managed by Karzoun the same way |
+| Best for                       | Shared customer addresses & campaigns                                                               | Existing mailboxes you do not want to move                    |
+| Team experience                | Conversations in Karzoun Inbox                                                                      | Conversations in Karzoun Inbox **and** still in Gmail/Outlook |
+
+---
+
+## Business Email — what to know before you start
+
+1. You add a **domain** (example: `yourbrand.com` or `mail.yourbrand.com`)
+2. Karzoun shows **DNS records** to publish at your domain registrar
+3. You **Verify DNS**, then create a **channel** address (example: `support@yourbrand.com`)
+4. Your team handles mail in the **Inbox**
+
+### Sending vs receiving
+
+- **Sending** needs authentication DNS (SPF + DKIM) and a verified domain. Without that, outbound mail may land in spam or fail.
+- **Receiving** needs **MX** records pointing at the exact hosts shown in Karzoun.
+
+<Warning>
+**MX replaces existing company mail for that domain.**  
+If `yourbrand.com` already uses Google or Microsoft for everyone’s email, do **not** point that domain’s MX to Karzoun unless you intend to move receiving. Prefer a **subdomain** (example: `mail.yourbrand.com`), or use **send-only** Business Email and keep receiving on Google/Microsoft.
+</Warning>
+
+**Send-only** is supported: finish SPF/DKIM (and tracking CNAME if you use open/click tracking), skip MX, and send from Karzoun while people still receive mail in Google/Microsoft.
+
+**Next:** [Set up Business Email (how-to)](/help-center/doc-1889752)
+
+---
+
+## Email (IMAP/SMTP) — what to know before you start
+
+Karzoun connects to **your** mail server:
+
+- **IMAP** — syncs incoming messages into the Inbox
+- **SMTP** — sends replies through your provider
+
+Your mail still lives with Google, Microsoft, or whoever hosts the mailbox. Karzoun is an extra workspace for the team — not a replacement host.
+
+Prepare the full address, an **app password** (when 2FA is on), and IMAP/SMTP host + ports before you start.
+
+**Next:** [Connect an existing mailbox (IMAP/SMTP how-to)](/help-center/doc-2279230)
+
+---
+
+## Practical recommendations
+
+| Situation                                                  | Recommendation                                                                     |
+| ---------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| New support@ for the company, no strong preference on host | **Business Email** on a subdomain or dedicated domain                              |
+| Everyone already on Google Workspace / M365                | **IMAP/SMTP** for staff boxes; optional **Business Email send-only** for campaigns |
+| Marketing / broadcast from your domain                     | **Business Email** (tracking + domain auth in one place)                           |
+| Must not touch company MX                                  | **IMAP/SMTP**, or Business Email **without** MX                                    |
+| One shared inbox for a small team                          | Either works — pick based on whether you want to keep the current host             |
+
+---
+
+## FAQ
+
+**Can I use both?**  
+Yes. Example: IMAP for `ahmad@yourbrand.com`, Business Email for `support@mail.yourbrand.com`.
+
+**Will Business Email delete my Google mail?**  
+Only if you change **MX** on a domain that Google currently receives on. Send-only + no MX change leaves Google untouched.
+
+**How long does DNS take?**  
+Often under an hour; allow up to 48 hours. Use **Verify DNS** after each change.
+
+**Where do customers’ emails show up?**  
+In **Inbox**, like other channels — with the same assignment, tags, bots, and automations you already use.
+
+---
+
+## Related
+
+- [Channels overview](/help-center/doc-1890470)
+- [Set up Business Email](/help-center/doc-1889752)
+- [Connect IMAP/SMTP mailbox](/help-center/doc-2279230)
+- [Conversation center (Inbox)](/help-center/guides/inbox/doc-1889759)
+- [Automations overview](/help-center/guides/automations/basics/doc-1890493)
+- [Contacts](/help-center/guides/contacts/doc-1890489)

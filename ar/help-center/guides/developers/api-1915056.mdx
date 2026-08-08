@@ -1,0 +1,417 @@
+---
+title: "ارسال قالب واتساب API"
+description: "ارسال قالب واتساب API"
+---
+## Overview
+
+The WhatsApp Send Template Message API allows you to send pre-approved WhatsApp message templates to customers via either GraphQL or REST endpoints. This documentation provides comprehensive information on how to use the API, structure variables, handle authentication, and manage responses.
+
+## API Endpoint
+
+**Base URL:** `${YOUR_SUBDOMAIN}/graphql`
+
+## Authentication
+
+The WhatsApp gateway accepts **app-level JWT tokens** issued for server-to-server access. Every request must include the `x-app-token` header:
+
+```http
+x-app-token: <YOUR_APP_JWT>
+```
+
+### Getting an App Token
+
+1. In the Karzoun admin area, create (or open) an App under **Settings → API Apps**.
+2. Copy the generated **Access Token**. This is a JWT signed with the workspace secret and contains the app metadata (group, permissions, expiry, etc.).
+3. Store the token securely. It expires on the date encoded in the payload unless the app is configured with `noExpire`.
+4. Rotate the token by regenerating it from the App detail screen if it is compromised or nearing expiry.
+
+> ℹ️ **Heads-up:** Session-based headers such as `sessioncode` are meant for browser clients and won’t satisfy the `requireLogin` guard on `whatsappSendTemplateMessage`. Use the app token header for automations and backend integrations.
+
+## GraphQL Mutation
+
+### Mutation Definition
+
+```graphql
+mutation WhatsappSendTemplateMessage(
+  $integrationId: String!
+  $conversationId: String
+  $customerId: String
+  $recipient: String
+  $recipientName: String
+  $templateId: String
+  $templateName: String
+  $language: String
+  $params: JSON
+  $statusOnCreate: String
+) {
+  whatsappSendTemplateMessage(
+    integrationId: $integrationId
+    conversationId: $conversationId
+    customerId: $customerId
+    recipient: $recipient
+    recipientName: $recipientName
+    templateId: $templateId
+    templateName: $templateName
+    language: $language
+    params: $params
+    statusOnCreate: $statusOnCreate
+  ) {
+    _id
+    mid
+    conversationId
+    status
+    errorMsg
+    createdAt
+  }
+}
+```
+
+### Parameters
+
+| Parameter        | Type   | Required   | Description                                                                     |
+| ---------------- | ------ | ---------- | ------------------------------------------------------------------------------- |
+| `integrationId`  | String | ✅ **Yes** | The WhatsApp integration ID                                                     |
+| `conversationId` | String | ❌ No      | Existing conversation ID (optional if customerId or recipient provided)         |
+| `customerId`     | String | ❌ No      | Existing customer ID (optional if conversationId or recipient provided)         |
+| `recipient`      | String | ❌ No      | Phone number in international format (required if no conversationId/customerId) |
+| `recipientName`  | String | ❌ No      | Display name for the recipient (used when creating new customer)                |
+| `templateId`     | String | ❌ No\*    | WhatsApp template ID (required if templateName/language not provided)           |
+| `templateName`   | String | ❌ No\*    | WhatsApp template name (required if templateId not provided)                    |
+| `language`       | String | ❌ No\*    | Template language code (required if templateId not provided, defaults to 'ar')  |
+| `params`         | JSON   | ❌ No      | Template parameters for placeholder replacement                                 |
+| `statusOnCreate` | String | ❌ No      | Initial conversation status when creating new conversation                      |
+
+**\* Note:** Either `templateId` OR (`templateName` AND `language`) must be provided.
+
+### Parameter Rules
+
+1. **Customer Identification**: You must provide ONE of:
+   - `conversationId` - for existing conversations
+   - `customerId` - for existing customers
+   - `recipient` - for new or unknown recipients (phone number)
+
+2. **Template Identification**: You must provide ONE of:
+   - `templateId` - specific template ID from WhatsApp
+   - `templateName` + `language` - template name with language code
+
+3. **Status on Create**: Valid values are: ('open' by default)
+   - `'open'`, `'pending'`, `'closed'`, `'bot'`, `'marketing'`, `'new'`
+
+### Response Format
+
+```json
+[
+  {
+    "_id": "message_document_id",
+    "mid": "whatsapp_message_id",
+    "conversationId": "conversation_id",
+    "status": "sent|failed",
+    "errorMsg": "error_description_if_failed",
+    "createdAt": "2024-10-02T10:30:00.000Z"
+  }
+]
+```
+
+## Template Parameters & Placeholders
+
+### Basic Parameters
+
+Template parameters are passed as a JSON object in the `params` field. The system supports:
+
+1. **Simple text replacements**
+2. **Placeholder patterns** using `{{field_name}}` syntax
+3. **Customer data integration** for automatic field population
+
+### Parameter Examples
+
+#### Simple Text Parameters
+
+```json
+{
+  "params": {
+    "name": "John Doe",
+    "order_number": "ORD-12345",
+    "amount": "99.99"
+  }
+}
+```
+
+#### Using Customer Data Placeholders
+
+```json
+{
+  "params": {
+    "greeting": "Hello {{firstName}}",
+    "account_info": "Your account {{email}} is ready",
+    "custom_message": "Welcome {{firstName}} {{lastName}}"
+  }
+}
+```
+
+### Placeholder System
+
+The API automatically detects placeholders in your parameters and fetches customer data when needed:
+
+- **Pattern**: `{{field_name}}`
+- **Performance**: Only fetches customer data if placeholders are detected
+- **Supported Fields**: Any field from customer profile (firstName, lastName, email, etc.)
+
+## Usage Examples
+
+### Example 1: Send to Existing Conversation
+
+```javascript
+// GraphQL Request
+fetch("http://demo.api.karzoun.chat/graphql", {
+  headers: {
+    accept: "*/*",
+    "content-type": "application/json",
+    "x-app-token": "<YOUR_APP_JWT>",
+  },
+  body: JSON.stringify({
+    operationName: "whatsappSendTemplateMessage",
+    variables: {
+      integrationId: "68d96e1c04949e50b4c5a3e3",
+      conversationId: "conv_12345",
+      templateId: "1092723376387722",
+      params: {
+        order_id: "ORD-789",
+        delivery_date: "Tomorrow",
+      },
+    },
+    query: `mutation whatsappSendTemplateMessage($integrationId: String!, $conversationId: String, $templateId: String, $params: JSON) {
+      whatsappSendTemplateMessage(
+        integrationId: $integrationId
+        conversationId: $conversationId
+        templateId: $templateId
+        params: $params
+      ) {
+        _id
+        mid
+        status
+        errorMsg
+      }
+    }`,
+  }),
+  method: "POST",
+});
+```
+
+### Example 2: Send to New Recipient
+
+```javascript
+fetch("http://demo.api.karzoun.chat/graphql", {
+  headers: {
+    accept: "*/*",
+    "content-type": "application/json",
+    "x-app-token": "<YOUR_APP_JWT>",
+  },
+  body: JSON.stringify({
+    operationName: "whatsappSendTemplateMessage",
+    variables: {
+      integrationId: "68d96e1c04949e50b4c5a3e3",
+      recipient: "905050555441",
+      recipientName: "Muhammad",
+      templateName: "welcome_message",
+      language: "en",
+      statusOnCreate: "pending",
+      params: {
+        welcome_bonus: "50",
+        company_name: "Your Company",
+      },
+    },
+    query: `mutation whatsappSendTemplateMessage($integrationId: String!, $recipient: String, $recipientName: String, $templateName: String, $language: String, $statusOnCreate: String, $params: JSON) {
+      whatsappSendTemplateMessage(
+        integrationId: $integrationId
+        recipient: $recipient
+        recipientName: $recipientName
+        templateName: $templateName
+        language: $language
+        statusOnCreate: $statusOnCreate
+        params: $params
+      ) {
+        _id
+        mid
+        conversationId
+        status
+        createdAt
+      }
+    }`,
+  }),
+  method: "POST",
+});
+```
+
+### Example 3: Using Customer Placeholders
+
+```javascript
+fetch("http://demo.api.karzoun.chat/graphql", {
+  headers: {
+    accept: "*/*",
+    "content-type": "application/json",
+    "x-app-token": "<YOUR_APP_JWT>",
+  },
+  body: JSON.stringify({
+    operationName: "whatsappSendTemplateMessage",
+    variables: {
+      integrationId: "68d96e1c04949e50b4c5a3e3",
+      customerId: "cust_67890",
+      templateId: "1092723376387722",
+      params: {
+        personalized_greeting: "Hello {{firstName}}, welcome back!",
+        account_email: "Your registered email is {{email}}",
+        last_order: "Thank you for your recent purchase",
+      },
+    },
+    query: `mutation whatsappSendTemplateMessage($integrationId: String!, $customerId: String, $templateId: String, $params: JSON) {
+      whatsappSendTemplateMessage(
+        integrationId: $integrationId
+        customerId: $customerId
+        templateId: $templateId
+        params: $params
+      ) {
+        _id
+        mid
+        status
+        errorMsg
+      }
+    }`,
+  }),
+  method: "POST",
+});
+```
+
+## REST API Alternative
+
+You can also use the GraphQL endpoint as a REST-like API by sending the GraphQL query in the request body:
+
+### REST Example
+
+```bash
+curl -X POST http://demo.api.karzoun.chat/graphql \
+  -H "Content-Type: application/json" \
+  -H "x-app-token: <YOUR_APP_JWT>" \
+  -d '{
+    "operationName": "whatsappSendTemplateMessage",
+    "variables": {
+      "integrationId": "68d96e1c04949e50b4c5a3e3",
+      "recipient": "971507746687",
+      "templateId": "1092723376387722",
+      "params": {}
+    },
+    "query": "mutation whatsappSendTemplateMessage($integrationId: String!, $recipient: String, $templateId: String, $params: JSON) { whatsappSendTemplateMessage(integrationId: $integrationId, recipient: $recipient, templateId: $templateId, params: $params) { _id mid status errorMsg } }"
+  }'
+```
+
+## Response Handling
+
+### Success Response
+
+```json
+{
+  "data": {
+    "whatsappSendTemplateMessage": [
+      {
+        "_id": "671a12b45f8e9c0012345678",
+        "mid": "wamid.HBgMOTA1MDUwNTU1NDE0...",
+        "conversationId": "671a12b45f8e9c0012345679",
+        "status": "sent",
+        "errorMsg": null,
+        "createdAt": "2024-10-02T10:30:00.000Z"
+      }
+    ]
+  }
+}
+```
+
+### Error Response
+
+```json
+{
+  "errors": [
+    {
+      "message": "Template ID or Name and Language are required",
+      "locations": [{ "line": 2, "column": 3 }],
+      "path": ["whatsappSendTemplateMessage"]
+    }
+  ],
+  "data": {
+    "whatsappSendTemplateMessage": null
+  }
+}
+```
+
+## Common Error Messages
+
+| Error                                                               | Description                           | Solution                                                                 |
+| ------------------------------------------------------------------- | ------------------------------------- | ------------------------------------------------------------------------ |
+| `"Either conversationId, customerId or recipient must be provided"` | No customer identification provided   | Provide one of: conversationId, customerId, or recipient                 |
+| `"Template ID or Name and Language are required"`                   | No template identification provided   | Provide either templateId OR (templateName + language)                   |
+| `"Specified message template not found"`                            | Template doesn't exist or is inactive | Verify template ID/name and ensure template is approved                  |
+| `"Invalid statusOnCreate value"`                                    | Invalid status provided               | Use valid status: 'open', 'pending', 'closed', 'bot', 'marketing', 'new' |
+| `"Integration not found"`                                           | Invalid integration ID                | Verify the integrationId exists and is active                            |
+
+## Best Practices
+
+### 1. Template Management
+
+- Always use approved templates
+- Test templates before production use
+- Keep template IDs organized and documented
+
+### 2. Customer Targeting
+
+- Use `conversationId` for ongoing conversations
+- Use `customerId` for known customers
+- Use `recipient` only for new contacts
+
+### 3. Parameter Optimization
+
+- Use placeholders for dynamic content
+- Avoid unnecessary API calls by checking if placeholders exist
+- Keep parameter objects minimal
+
+### 4. Error Handling
+
+- Always check the response status
+- Implement retry logic for temporary failures
+- Log errors for debugging
+
+### 5. Rate Limiting
+
+- Respect WhatsApp's rate limits (max 20 messages per second)
+- Implement proper queuing for bulk messages
+- Monitor delivery status
+
+## Rate Limits
+
+- **Maximum Rate**: 20 messages per second per integration
+- **Recommendation**: Implement queuing for bulk operations
+- **Monitoring**: Check delivery reports for rate limit violations
+
+## Security Considerations
+
+1. **Authentication**: Keep the `x-app-token` secret and rotate it periodically
+2. **Integration IDs**: Protect integration IDs; avoid exposing them in logs
+3. **Customer Data**: Ensure proper data privacy compliance
+4. **Template Content**: Follow WhatsApp's content policies
+
+## Support & Troubleshooting
+
+### Debug Information
+
+The API includes comprehensive logging for troubleshooting:
+
+- Message generation logs
+- Template validation logs
+- Customer lookup logs
+- Delivery status tracking
+
+### Common Issues
+
+1. **Template not found**: Verify template is approved in WhatsApp Business Manager
+2. **Invalid phone format**: Ensure recipient numbers include country code
+3. **Rate limiting**: Implement proper message queuing
+4. **Authentication failures**: Verify the `x-app-token` is present, unexpired, and matches an active App
+
+For additional support, monitor the API response messages and error logs for detailed debugging information.

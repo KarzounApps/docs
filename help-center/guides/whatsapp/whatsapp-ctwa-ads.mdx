@@ -1,0 +1,225 @@
+---
+title: "WhatsApp ads that open a chat"
+description: "Why use WhatsApp ads, how to design the first message, connect it in Facebook Ads Manager, see the ad in Inbox, and get more replies with Automations."
+---
+When someone sees your ad on Facebook or Instagram and taps **Message**, WhatsApp opens to your business. That moment is valuable — and easy to waste.
+
+With Karzoun you can:
+
+1. **Design the first screen** they see (your greeting + how they reply)
+2. **Show your team which ad** they came from (image, headline, text)
+3. **Start the right workflow** automatically (sales, support, shopping)
+
+This guide explains **why it matters**, **how to set it up**, and **how to get more value** from every ad click — without needing a technical meeting.
+
+---
+
+## Why this matters
+
+A normal WhatsApp ad often drops the customer into an empty chat. They hesitate, type something vague, or leave.
+
+A clear first screen does three jobs at once:
+
+| Goal             | What you design                         | Business result                    |
+| ---------------- | --------------------------------------- | ---------------------------------- |
+| Warm welcome     | Short greeting from your brand          | Feels intentional, not random      |
+| Easy first reply | Ready-to-send text **or** quick buttons | More people reply (less friction)  |
+| Smart routing    | Buttons like “Pricing” / “Support”      | Right team, faster, fewer handoffs |
+
+**Extra win:** your agents see the ad creative in the Inbox, so they never ask “which offer did you click?”
+
+---
+
+## The customer journey (simple picture)
+
+1. Customer taps **Message** on your ad
+2. WhatsApp opens
+3. They see **your greeting**, plus either:
+   - a **ready-to-send message** already typed for them, **or**
+   - up to **3 quick reply buttons**
+4. They send / tap
+5. In Karzoun Inbox, the conversation opens with an **ad card** (what they saw)
+6. Optional: an **Automation** assigns, tags, or replies based on the ad or the button they chose
+
+<Info>
+Facebook allows **either** a ready-to-send message **or** quick reply buttons on the same first message — not both. Choose the style that fits the campaign.
+</Info>
+
+---
+
+## What you need first
+
+- A connected [WhatsApp channel](/help-center/guides/channels/doc-1889747) in Karzoun
+- Access to **Facebook Ads Manager** (Meta)
+- A WhatsApp ad that opens a chat with your business number
+
+<Info>
+Designing the **first message** in Karzoun needs Facebook to enable this for your WhatsApp account. If **Ads Manager → First message after the ad** shows unavailable, you can still use the Inbox ad card and Automations from ad clicks — only creating first messages inside Karzoun is blocked until Facebook enables it. Contact support if you believe it should already be on.
+</Info>
+
+---
+
+## Part 1 — Design the first message (in Karzoun)
+
+Open **Channels → WhatsApp → Ads Manager**.
+
+The section **First message after the ad** is where you create what customers see.
+
+### Create one
+
+1. Click **Create message**, or **Use a ready template**
+2. Give it a clear **Name** (example: “Spring sale — sales leads”)
+3. Write **Your greeting** — what your business says first
+4. Choose **how the customer replies** (one tab only):
+   - **Ready-to-send message** — text already typed; they tap Send
+   - **Quick reply buttons** — up to 3 short buttons
+5. Save — Karzoun syncs it to Facebook and shows an **ID for ads**
+
+### Ready templates (good starting points)
+
+| Template     | Best for                         | Style                 |
+| ------------ | -------------------------------- | --------------------- |
+| Sales leads  | Offers, demos, pricing questions | Quick buttons         |
+| Support help | Billing / technical / other      | Quick buttons         |
+| Shopping     | Product interest                 | Ready-to-send message |
+
+### Writing tips that raise reply rates
+
+- Make the greeting **campaign-specific** (“Thanks for checking our spring offer”) not generic (“Hello”)
+- Keep buttons **short and different** (“Pricing”, “Book a demo”, “Talk to us”) so people pick one clearly
+- Prefer **one first message per campaign type** (sales vs support vs shopping) instead of one message for everything
+- Ready-to-send text should sound like something a real customer would type
+
+### Copy the ID
+
+In the list, click the **ID for ads** (or **Copy ID for ads**). You will use it when setting up the ad.
+
+<Warning>
+If a first message shows **Connected to an ad**, Facebook locks it. Disconnect it from the ad in Ads Manager before you edit or delete it in Karzoun.
+</Warning>
+
+---
+
+## Part 2 — Connect it to your ad (Facebook Ads Manager)
+
+1. Open **Facebook Ads Manager** and edit (or create) your WhatsApp message ad
+2. In **Message template**, choose **Partner app**
+3. Select your messaging partner app (Karzoun / as shown by Facebook)
+4. Under the message list, pick the **first message** you created in Karzoun
+5. Preview and publish
+
+Then run a real test: click the ad yourself, send a message, and confirm it arrives in Karzoun.
+
+---
+
+## Part 3 — See the ad in the Inbox
+
+When a customer messages you from an ad, the **first message** in the thread shows an **ad card**:
+
+- Ad image (or video thumbnail)
+- Headline and main text they saw
+- Optional greeting from the first message
+- Name of the first message (when Karzoun can match it)
+- **View ad** link
+
+Agents get context instantly — no awkward “which campaign?” questions.
+
+### Tips for your team
+
+- Scroll to the **top** of the thread if you do not see the card
+- Conversations started before this feature may not have a full card
+- If the image is missing, headline and text still help when Facebook sent them
+
+---
+
+## Part 4 — Get more juice with Automations
+
+Every ad click can start a WhatsApp event:
+
+- **Trigger:** WhatsApp Events → **Ad Referral**
+
+Useful ideas (publish the automation after you test):
+
+### Route by button
+
+1. Trigger: Ad Referral
+2. If the customer’s first text is `Pricing` (exact button title)
+3. Assign to Sales / send a catalog / add tag `ad-pricing`
+
+### Tag every ad lead
+
+1. Trigger: Ad Referral
+2. Add tag `from-whatsapp-ad` and put the conversation in your Leads queue
+
+### Different first messages → different teams
+
+1. Trigger: Ad Referral
+2. If the first-message name is `Shopping`
+3. Assign to Commerce
+
+<Info>
+Button routing works best when the customer’s first text **exactly matches** the button title. Keep titles short and consistent.
+</Info>
+
+See also: [Automations](/help-center/guides/automations/basics/doc-1890493).
+
+---
+
+## Playbooks by business goal
+
+### Sales / lead generation
+
+- Greeting: thank them for the offer they saw
+- Buttons: Pricing · Book a demo · Talk to us
+- Automation: Pricing → Sales; Talk to us → human queue
+
+### Support campaigns
+
+- Greeting: “Tell us what you need help with”
+- Buttons: Billing · Technical issue · Something else
+- Automation: each button → the right support team or FAQ reply
+
+### Shopping / catalog
+
+- Greeting: invite them to browse
+- Ready-to-send: “Hi! I want to see your products.”
+- Automation: open catalog or assign to Commerce
+
+### Multiple offers at once
+
+Create a **separate first message per offer**. Agents and reports stay clearer, and Ads Manager stays easier to manage.
+
+---
+
+## Checklist (go live in one pass)
+
+1. WhatsApp channel connected and receiving messages
+2. Create a first message under **Ads Manager**
+3. Copy the **ID for ads**
+4. In Facebook Ads Manager: Message template → Partner app → your first message
+5. Publish the ad
+6. Click it from a test account and send a message
+7. Confirm the **ad card** in Inbox
+8. Confirm your Ad Referral automation ran (if you published one)
+
+---
+
+## Troubleshooting
+
+| What you see                      | What to check                                                                                   |
+| --------------------------------- | ----------------------------------------------------------------------------------------------- |
+| No ad card in Inbox               | The chat must start from an ad click (not a normal WhatsApp chat). Open the first message.      |
+| Image missing, text still there   | Image download may have failed once; headline/caption still show when Facebook sent them.       |
+| First message section unavailable | Facebook has not enabled it for this WhatsApp account yet. Contact Karzoun support.             |
+| Cannot edit or delete             | Status is **Connected to an ad**. Disconnect it in Ads Manager first.                           |
+| Message missing in Ads Manager    | Create/refresh in Karzoun, wait a moment, refresh Ads Manager, confirm Partner app is selected. |
+| Automation did not run            | Published? Trigger = WhatsApp Events → Ad Referral? Correct WhatsApp channel?                   |
+| Button not detected               | First customer text must **exactly match** the button title.                                    |
+
+---
+
+## Related
+
+- [WhatsApp channel](/help-center/guides/channels/doc-1889747)
+- [Inbox basics](/help-center/guides/inbox/doc-1889759)
+- [Automations](/help-center/guides/automations/basics/doc-1890493)

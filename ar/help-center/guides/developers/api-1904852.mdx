@@ -1,0 +1,177 @@
+---
+title: "ارسال فلو API"
+description: "ارسال فلو API"
+---
+This document explains how to trigger automation flows manually via the GraphQL `runFlow` mutation, including customer resolution, payload handling, and messaging integration.
+
+## Endpoint
+
+- URL: `https://YOURWORKSPACENAME.api.staging.karzoun.chat/graphql`
+- Method: `POST`
+- Headers:
+  - `accept: */*`
+  - `content-type: application/json`
+  - `x-app-token: <your-app-token>`
+
+## Payload shape (source request)
+
+Use this JSON when collecting input for a manual execution. Comments indicate optional fields.
+
+```json
+{
+  "integrationId": "W5OJnPzu7QK8cJQdfRX231da",
+  // The inbox ID to use if the triggered flow contains message blocks
+  // (send text message, send video message, etc.)
+
+  "conversationId": "cJQdfRXdaW5OJn23Pzu7QK8",
+  // Optional
+  // Required only when you want to target a specific customer conversation
+  // Not required if `integrationId` and `customer` are defined
+
+  "nodeNs": "F690c30988:N2674158819",
+  // Node namespace to execute
+
+  "automationNs": null,
+  // Automation namespace of the node to execute
+  // Either `nodeNs` or `automationNs` can be used
+
+  "customer": {
+    // Customer object
+    // Used to uniquely identify customers by:
+    // (_id, code, phone, email)
+
+    "_id": "XdaW5OJnPzXdaW25OXda",
+
+    "code": "17236123",
+    // Customizable customer identifier
+    // You can store your own customer ID here and reuse it
+    // when sending other flows, messages, or interacting with
+    // different Karzoun V3 APIs
+
+    "phone": "9665966266632",
+    "email": "xyz@karzoun.dev",
+
+    "firstName": "",
+    // Optional — value can be provided on creation
+
+    "lastName": "",
+    // Optional — value can be provided on creation
+
+    "isSubscribed": false
+    // Optional — indicates whether the customer is subscribed
+    // to broadcast messages
+    // Used to exclude customers from campaigns
+    // Default: true (when not provided)
+  },
+
+  "payload": {
+    // Data passed to the automation flow
+    // Accessible at runtime via flow memory
+    //
+    // You can use a `setCustomer` node inside the flow
+    // to persist values from this payload
+
+    "branch": "Jeddah",
+
+    "order": {
+      "id": "O-123",
+      "total": 120
+    }
+  }
+}
+```
+
+## GraphQL Mutation
+
+```graphql
+mutation RunAutomation(
+  $automationNs: String
+  $nodeNs: String
+  $customer: JSON
+  $conversationId: String
+  $integrationId: String
+  $payload: JSON
+) {
+  runFlow(
+    automationNs: $automationNs
+    nodeNs: $nodeNs
+    customer: $customer
+    conversationId: $conversationId
+    integrationId: $integrationId
+    payload: $payload
+  ) {
+    status
+    executionId
+    automationNs
+    startNodeNs
+    customerId
+  }
+}
+```
+
+### Variables (example)
+
+```json
+{
+  "automationNs": "F690c84930988",
+  "nodeNs": "F690c84930988:N674123258819",
+  "integrationId": "inbox-123",
+  "conversationId": "cJQdfR2XdaW5OJnPzu7QK8",
+  "customer": {
+    "phone": "96659462xxxx",
+    "email": "r.almutairi@karzoun.dev",
+    "firstName": "Rawan",
+    "lastName": "Almutairi",
+    "isSubscribed": true
+  },
+  "payload": {
+    "branch": "Jeddah",
+    "order": { "id": "O-123", "total": 120 }
+  }
+}
+```
+
+### cURL example
+
+```bash
+curl --location 'https://YOURWORKSPACENAME.api.staging.karzoun.chat/graphql' \
+  --header 'accept: */*' \
+  --header 'content-type: application/json' \
+  --header 'x-app-token: <your-app-token>' \
+  --data '{
+    "operationName": "RunAutomation",
+    "variables": {
+      "automationNs": "F690c84930988",
+      "nodeNs": "F690c84930988:N674123258819",
+      "integrationId": "inbox-123",
+      "conversationId": "cJQdfRXd2aW5OJnPzu7QK8",
+      "customer": {
+        "phone": "966596666632",
+        "firstName": "John",
+        "lastName": "Doe",
+        "isSubscribed": true
+      },
+      "payload": {"branch": "Jeddah","order": { "id": "O-123", "total": 120 }}
+    },
+    "query": "mutation RunAutomation($automationNs: String, $nodeNs: String, $customer: JSON, $conversationId: String, $integrationId: String, $payload: JSON) { runFlow(automationNs: $automationNs nodeNs: $nodeNs customer: $customer conversationId: $conversationId integrationId: $integrationId payload: $payload) { status executionId automationNs startNodeNs customerId } }"
+  }'
+```
+
+## Field Semantics
+
+- `automationNs` or `nodeNs` (required: at least one): target automation or specific node to start. If only `automationNs` is provided, the automation’s `startNodeNs` is used.
+- `integrationId`: (optional) required when the flow contains messaging nodes (send text/video/etc.) to select the inbox integration, if not passed dependent nodes (message, conversation action nodes) will be skipped.
+- `conversationId`: optional; scopes conversation-aware nodes. If omitted but `customer`+`integrationId` exist, the flow can still run, if we couldn't identify the customer conversation dependent nodes (message, conversation action nodes) will be skipped.
+- `customer`: (optional) customer object used to identify unique customers by (`_id`, `code`, `phone`, `email`). Also accepts `firstName`, `lastName`, and `isSubscribed`. Flow still runs if no customer is found.
+- `payload`: arbitrary JSON available to the flow as in-memory variables for the entire execution, used to pass extra data to the automation flow and use them inside the nodes or save the data using setCustomField node for later use.
+
+## Troubleshooting
+
+- Missing automation or start node → mutation throws error.
+- Invalid `nodeNs` (not live) → error.
+- No customer match → flow still queues; payload-only context is used.
+- Messaging fails without `integrationId` when message nodes are present
+
+:::tip[WhatsApp Templates Message Nodes]
+(WhatsApp Template Messages don't require integrationId, integrationId usually configured in the node settings).
+:::

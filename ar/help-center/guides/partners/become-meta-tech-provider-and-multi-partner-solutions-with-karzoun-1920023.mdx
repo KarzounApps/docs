@@ -1,0 +1,725 @@
+---
+title: "become meta tech provider and Multi-Partner Solutions With Karzoun"
+description: "become meta tech provider and Multi-Partner Solutions With Karzoun"
+---
+**Last Updated**: January 14, 2026
+
+---
+
+## Introduction
+
+The Technology Provider model is an innovative partnership framework that brings together platforms and Karzon to deliver a powerful solution for the WhatsApp Business platform. This model enables platforms to act as WhatsApp service providers, while **Karzon**, as an **Official WhatsApp Solution Partner**, manages all WhatsApp messaging services in the background, from the initial onboarding process through ongoing maintenance.
+
+This document serves as a comprehensive guide, outlining the seamless integration process for technology providers looking to leverage WhatsApp Business platform solutions through Karzon’s expertise. The guide covers a range of essential aspects, including business considerations and technical details involved in the integration process.
+
+---
+
+## Key Steps
+
+Welcome to the journey of joining the Technology Provider program! In the following sections, we will guide you through a three-phase process including **Setup**, **Integration**, and **Launch**. This guide will provide you with a clear handbook to successfully onboard with Meta and Karzon and maximize the capabilities of WhatsApp for your platform.
+
+### Overview of Phases
+
+**Phase 1: Setup**  
+The setup phase involves business-level procedures. This includes creating the account and submitting basic information for account verification. Simultaneously, your Karzon account manager will assist you in configuring the necessary components on the Karzon platform in preparation for the integration phase.
+
+**Phase 2: Integration**  
+This phase covers the technical integration setup between your platform and Karzon, including embedding the WhatsApp Embedded Signup interface, applying for required permissions, and undergoing Meta’s app review.
+
+**Phase 3: Launch**  
+After completing all integration steps, you can plan for final testing and launch to your end customers.
+
+---
+
+## 1. Setup
+
+### 1.1. Creating a Business Portfolio
+
+To start the process, you can either create a new business portfolio on Meta or review and update your existing portfolio to include all required business details such as business address, website, and email. Ensure that the account creator or owner can provide accurate business information during the subsequent business verification process.
+
+**Points to Consider:**
+
+- Ensure all submitted information is accurate; otherwise, it will be rejected during the business portfolio verification stage.
+- Information must match official documents (commercial registration, tax number, etc.).
+
+### 1.2. Setting Up a Meta App
+
+#### Creating a Meta App
+
+To create a Meta app, select **"Business"** as the app type and link your business account to this new app. Alternatively, use an existing commercial app already linked to your business portfolio. If you cannot proceed past this step, try setting the business account dropdown to **"No Business Manager account selected"** and continue.
+
+If you create an app and are not immediately given the option to create a commercial app, first select **"Other"** and then **"Next"**.
+
+Once the app is created, navigate to your app under **Settings > Basic** to update domains, icons, etc. Add links to your **Privacy Policy** and **Terms of Service**, which will be visible to users during the embedded signup process. To complete app creation, select the **Message Category** and save all changes.
+
+![image.png](/images/help/become-meta-tech-provider-and-multi-partner-solutions-with-karzoun-1920023/01-fe69c9ac0d55.png)
+
+![image.png](/images/help/become-meta-tech-provider-and-multi-partner-solutions-with-karzoun-1920023/02-5874a22f0f3e.png)
+
+![image.png](/images/help/become-meta-tech-provider-and-multi-partner-solutions-with-karzoun-1920023/03-590d8d7a42ee.png)
+
+Once the app is created, go to your app under Settings > Basic to update domains, icons, etc. Add your Privacy Policy and Terms of Service links, which will be visible to users during the embedded signup. To finalize app creation, select the Message Category and save all changes.
+
+![image.png](/images/help/become-meta-tech-provider-and-multi-partner-solutions-with-karzoun-1920023/04-d53eb88032c0.png)
+
+#### Adding WhatsApp App
+
+From your app control panel, add the **WhatsApp** product. You will then be redirected to select your business account and accept Facebook’s terms for using WhatsApp Business and Meta’s hosting terms for using the Cloud API.
+
+![image.png](/images/help/become-meta-tech-provider-and-multi-partner-solutions-with-karzoun-1920023/05-e758683d6acb.png)
+
+#### Sending Test
+
+After accepting the terms and conditions, you will be directed to the **Quick Start** page where you can begin using the API. You will gain access to a fully integrated test environment that includes a test phone number starting with the area code **"555"** to send and receive messages. You can add up to **5 numbers** to the allowlist in the test environment.
+
+A window will appear allowing you to send a test WhatsApp message.
+![image.png](/images/help/become-meta-tech-provider-and-multi-partner-solutions-with-karzoun-1920023/06-4e6556a673a0.png)
+
+> **Important Note:**
+> Please keep in mind that you will be setting up Karzon APIs to send messages and webhooks to receive messages and status updates for the production stage, which will be explained later in this guide. At this stage, it is sufficient to test Meta’s sandbox environment. Therefore, feel free to skip steps 3, 4, and 5 of the instructions shown on the Quick Start page.
+
+Once the WhatsApp integration is set up, you can start onboarding your end users by selecting the **"Onboard customers"** option on the Quick Start page.
+
+![image.png](/images/help/become-meta-tech-provider-and-multi-partner-solutions-with-karzoun-1920023/07-34256569ace2.png)
+
+![image.png](/images/help/become-meta-tech-provider-and-multi-partner-solutions-with-karzoun-1920023/08-d480a0eff797.png)
+
+### 1.3. Business Verification
+
+Select **"Start Verification"** in the service provider verification step to submit a business verification request if you have not done so already. Make sure to upload the required **official documents** and follow the guidelines related to **Domain Verification**.
+
+**Typically required documents:**
+
+- Commercial registration or equivalent
+- Tax number
+- Proof of address (electricity bill, lease contract, etc.)
+- Owner’s or manager’s ID
+
+**Expected timeline:**
+
+- Business verification: **2-5 business days**
+
+![image.png](/images/help/become-meta-tech-provider-and-multi-partner-solutions-with-karzoun-1920023/09-df0aba9ad0dd.png)
+
+---
+
+## 2. Integration with Karzon
+
+### 2.1. Partner Solutions
+
+At the core of the technology provider model lies the **Partner Solution**, which is a setup in the app control panel that defines the WhatsApp assets accessible to you and Karzon for your end customers. Once this setup is created and approved, it can be used to customize the embedded registration process. When your end customers follow this process, they can grant access to these assets to both business entities.
+
+#### Creating a Partner Solution
+
+A partner solution is an asset-sharing relationship between two business entities, configured, initiated, and accepted in:
+**App Control Panel > WhatsApp > Partner Solutions Dashboard**
+
+#### Adding Karzon’s App to the Partner Solutions List
+
+As a first step, you must collaborate with Karzon to determine the **solution name**, which will appear in WhatsApp → Partner Solutions in the control panel so that you and Karzon can distinguish it from other solutions you may create.
+![image.png](/images/help/become-meta-tech-provider-and-multi-partner-solutions-with-karzoun-1920023/10-510fcedb4c49.png)
+
+Once the name is agreed upon, you can start the partner solution request at:
+**Control Panel → WhatsApp → Partner Solutions**
+
+Go to the Partner Solutions dashboard and click the **"Create Partner Solution"** button. Enter:
+
+- The agreed solution name
+- Karzon app ID: **`5122552547866102`**
+
+Complete the steps to initiate the partner solution request.
+
+Once finished, Karzon will receive an email and a notification from Meta informing us of the request. The solution will appear in the Partner Solutions dashboard with the status **"Under Review"** until it is accepted by Karzon.
+![image.png](/images/help/become-meta-tech-provider-and-multi-partner-solutions-with-karzoun-1920023/11-e286e8c40da4.png)When Karzon accepts the partnership solution request, its status will change from **"Under Review"** to **"Active"**. Periodically check the Partnership Solutions dashboard until you see that its status has changed to **"Active"**. Once it is active, copy the **Solution ID**, as you will need to add it to the Embedded Signup configuration.
+![image.png](/images/help/become-meta-tech-provider-and-multi-partner-solutions-with-karzoun-1920023/12-082046e9fb83.png)
+
+### 2.2. Embedded Signup
+
+The Embedded Signup can be configured and hosted by the technology provider, Karzon, or both. End customers who access it will see a customized version of the embedded signup flow. When the end user completes the process, all WhatsApp assets for the client are automatically created, and access to these assets is granted to both parties.
+
+#### Embedded Signup Configuration
+
+![image.png](/images/help/become-meta-tech-provider-and-multi-partner-solutions-with-karzoun-1920023/13-14ed823bbca5.png)
+
+Follow these three steps:
+
+**Step 1: Create the Configuration**
+
+This button displays the Facebook Business Login permission settings, but you likely have not created any settings yet. To create a setting, look for the **Products** link on the left side of the app dashboard and add the **Facebook Login for Business** product to your app.
+
+**Step 2: View the Script**
+
+This button displays the embedded signup script with many pre-filled values, such as your app ID. Make sure to set your permission configuration ID to the `config_id` property in the script.
+
+#### Two Types of Embedded Signup
+
+![image.png](/images/help/become-meta-tech-provider-and-multi-partner-solutions-with-karzoun-1920023/14-29d8e674843c.png)
+
+Allowed Domains Management  
+Add your platform’s domain here to allow it to interact with the embedded signup  
+![image.png](/images/help/become-meta-tech-provider-and-multi-partner-solutions-with-karzoun-1920023/15-56f9294e3ba5.png)
+
+Karzon supports **two** types of embedded signup according to your needs:
+
+---
+
+##### **Type 1: Only Sharing**
+
+This type is intended for cases where the WhatsApp Business account **already exists** for the client, and you only want to **share access** to it with Karzon without any new setup.
+
+**When to use it:**
+
+- The client already has an existing WhatsApp Business account
+- You only want to grant Karzon access permissions to the account
+- No need to create a new account or set up a phone number
+
+**Code:**
+
+```html
+<script>
+  window.fbAsyncInit = function () {
+    FB.init({
+      appId: "YOUR_APP_ID",
+      cookie: true,
+      xfbml: true,
+      version: "v24.0",
+    });
+  };
+
+  (function (d, s, id) {
+    var js,
+      fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {
+      return;
+    }
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  })(document, "script", "facebook-jssdk");
+</script>
+
+<script type="text/javascript">
+  document.getElementById("login-btn-sharing").onclick = () =>
+    FB.login(
+      (response) => {
+        if (response.authResponse) {
+          const code = response.authResponse.code;
+          // Send the code to your server
+          console.log("Authorization Code:", code);
+        }
+      },
+      {
+        config_id: "<CONFIGURATION_ID>",
+        response_type: "code",
+        override_default_response_type: true,
+        extras: {
+          setup: {
+            solutionID: "<SOLUTION_ID>", // Solution ID from Karzon
+          },
+        },
+        scope: "whatsapp_business_management,whatsapp_business_messaging",
+      },
+    );
+</script>
+
+<button
+  id="login-btn-sharing"
+  style="background-color:#25D366; padding:10px 20px; color:#fff; border:none; border-radius:5px; cursor:pointer;"
+>
+  Share WhatsApp Account with Karzon
+</button>
+```
+
+**Notes:**
+
+- This type does not require setting up a new phone number
+- The client will see a simple interface to grant permissions only
+- Suitable for clients with existing accounts
+
+---
+
+##### **Type 2: Full Setup (Default)**
+
+This is the **default** and most common type, where a **new** WhatsApp Business account is created for the client from scratch, including phone number setup and business profile configuration.
+
+**When to use it:**
+
+- The client does not have a WhatsApp Business account
+- You want to create a completely new account
+- You want to set up a new phone number for the client
+
+**Code:**
+
+```html
+<script>
+  window.fbAsyncInit = function () {
+    FB.init({
+      appId: "YOUR_APP_ID",
+      cookie: true,
+      xfbml: true,
+      version: "v24.0",
+    });
+  };
+
+  (function (d, s, id) {
+    var js,
+      fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {
+      return;
+    }
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  })(document, "script", "facebook-jssdk");
+</script>
+
+<script type="text/javascript">
+  // Message Event Listener - receives WABA ID and Phone Number ID
+  window.addEventListener("message", (event) => {
+    if (!event.origin.endsWith("facebook.com")) return;
+    try {
+      const data = JSON.parse(event.data);
+      if (data.type === "WA_EMBEDDED_SIGNUP") {
+        console.log("WABA ID:", data.data.waba_id);
+        console.log("Phone Number ID:", data.data.phone_number_id);
+        console.log("Business ID:", data.data.business_id);
+
+        // Send this data to your server
+        sendToServer(data.data);
+      }
+    } catch (error) {
+      console.error("Error parsing message:", error);
+    }
+  });
+
+  // Response Callback - receives Authorization Code
+  document.getElementById("login-btn-full").onclick = () =>
+    FB.login(
+      (response) => {
+        if (response.authResponse) {
+          const code = response.authResponse.code;
+          console.log("Authorization Code:", code);
+
+          // Send the code to your server to exchange it for an Access Token
+          // The code is valid for only 30 seconds!
+          exchangeCodeForToken(code);
+        }
+      },
+      {
+        config_id: "<CONFIGURATION_ID>",
+        response_type: "code",
+        override_default_response_type: true,
+        extras: {
+          setup: {
+            solutionID: "<SOLUTION_ID>", // Solution ID from Karzon
+          },
+        },
+        scope: "whatsapp_business_management,whatsapp_business_messaging",
+      },
+    );
+</script>
+
+<button
+  id="login-btn-full"
+  style="background-color:#25D366; padding:10px 20px; color:#fff; border:none; border-radius:5px; cursor:pointer;"
+>
+  Create New WhatsApp Account
+</button>
+```
+
+**Notes:**
+
+- The client is required to enter a new phone number
+- A full WhatsApp Business account will be created
+- The client will go through all setup steps (phone number, business profile, etc.)
+- WABA ID and Phone Number ID are received via the Message Event Listener
+- Authorization Code is received via the Response Callback
+
+---
+
+**Step 3: Managing Allowed Domains**
+
+Add your platform’s domain here to allow it to interact with the embedded signup. The domain must be **HTTPS** and trusted.
+
+### 2.3. Retrieving Account Data after Embedded Signup
+
+After the client completes the Embedded Signup process, you need to obtain the necessary account data to integrate with Karzon. This section explains in detail how to get the **Access Token**, **WABA ID**, and **Phone Number ID**.
+
+#### Phase 1: Receiving Data from JavaScript
+
+When the client successfully completes Embedded Signup, data is returned via two channels:
+
+**A. Message Event Listener** (contains account identifiers):
+
+```javascript
+window.addEventListener('message', (event) => {
+if (!event.origin.endsWith('facebook.com')) return;
+try {
+const data = JSON.parse(event.data);
+if (data.type === 'WA_EMBEDDED_SIGNUP' && data.event === 'FINISH') {
+// Received data:
+const wabaId = data.data.waba_id; // WhatsApp Business Account ID
+const phoneNumberId = data.data.phone_number_id; // Phone Number ID
+const businessId = data.data.business_id; // Business Manager ID
+
+      // Send this data to your server
+      fetch('/api/save-waba-info', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ wabaId, phoneNumberId, businessId })
+      });
+    }
+
+} catch (error) {
+console.error('Error:', error);
+}
+});
+
+```
+
+**B. Response Callback** (contains Authorization Code):
+
+```javascript
+const fbLoginCallback = (response) => {
+  if (response.authResponse) {
+    const code = response.authResponse.code;  // Authorization Code
+
+    // This code is valid for only 30 seconds!
+    // It must be sent immediately to your server
+    fetch('/api/exchange-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code })
+    });
+  }
+};
+```
+
+#### Step 2: Exchange Authorization Code for Access Token
+
+On your server, you need to exchange the Authorization Code to obtain an Access Token:
+
+**API Endpoint:**
+
+```
+GET https://graph.facebook.com/v24.0/oauth/access_token
+```
+
+**Parameters:**
+
+- `client_id`: Your App ID
+- `client_secret`: Your App Secret
+- `code`: Authorization Code received from JavaScript
+
+**Example (Node.js):**
+
+```javascript
+async function exchangeCodeForToken(code) {
+  const url =
+    `https://graph.facebook.com/v24.0/oauth/access_token?` +
+    `client_id=${process.env.APP_ID}&` +
+    `client_secret=${process.env.APP_SECRET}&` +
+    `code=${code}`;
+
+  const response = await fetch(url);
+  const data = await response.json();
+
+  // data.access_token is the required Access Token
+  return data.access_token;
+}
+```
+
+**Example (cURL):**
+
+```bash
+curl -X GET "https://graph.facebook.com/v24.0/oauth/access_token?\
+client_id=YOUR_APP_ID&\
+client_secret=YOUR_APP_SECRET&\
+code=AUTHORIZATION_CODE"
+```
+
+**Response:**
+
+```json
+{
+  "access_token": "EAAxxxxxxxxxxxxx",
+  "token_type": "bearer"
+}
+```
+
+#### Step 3: Use Access Token to Retrieve Additional Details
+
+After obtaining the Access Token, you can use it to get more information about the account:
+
+**A. Get WABA Details:**
+
+```bash
+curl -X GET "https://graph.facebook.com/v24.0/{WABA_ID}?\
+fields=id,name,currency,message_template_namespace,timezone_id&\
+access_token=ACCESS_TOKEN"
+```
+
+**B. Get Phone Number Details:**
+
+```bash
+curl -X GET "https://graph.facebook.com/v24.0/{PHONE_NUMBER_ID}?\
+fields=id,display_phone_number,verified_name,quality_rating&\
+access_token=ACCESS_TOKEN"
+```
+
+**C. Get All Phone Numbers in WABA:**
+
+```bash
+curl -X GET "https://graph.facebook.com/v24.0/{WABA_ID}/phone_numbers?\
+access_token=ACCESS_TOKEN"
+```
+
+#### Step 4: Register Phone Number (Required)
+
+Before using the phone number to send messages, it must be registered:
+
+```bash
+curl -X POST "https://graph.facebook.com/v24.0/{PHONE_NUMBER_ID}/register?\
+messaging_product=whatsapp&\
+pin=YOUR_2FA_PIN&\
+access_token=ACCESS_TOKEN"
+```
+
+> **Note:** If you do not have a 2FA PIN, you can omit this parameter initially, but it is strongly recommended to set it up later.
+
+#### Step 5: Subscribe to Webhooks (Required)
+
+To receive messages and updates, you must subscribe to Webhooks:
+
+```bash
+curl -X POST "https://graph.facebook.com/v24.0/{WABA_ID}/subscribed_apps?\
+access_token=ACCESS_TOKEN"
+```
+
+#### Summary of Required Data
+
+| After completing all steps, you will have the following data: | Field                       | Source                       | Usage |
+| ------------------------------------------------------------- | --------------------------- | ---------------------------- | ----- |
+| **WABA ID**                                                   | Message Event Listener      | WhatsApp Business Account ID |
+| **Phone Number ID**                                           | Message Event Listener      | Registered Phone Number ID   |
+| **Business ID**                                               | Message Event Listener      | Business Manager ID          |
+| **Access Token**                                              | Authorization Code Exchange | For authenticating API calls |
+
+#### Sharing Data with Karzon
+
+After obtaining this data, you can share it with Karzon in one of two ways:
+
+**Method 1: Via Partner Solution (Recommended)**
+
+- Karzon will automatically receive access permissions via the Partner Solution
+- No need to manually share the Access Token
+- More secure and easier to manage
+
+**Method 2: Manual Data Sharing**
+
+- Send the WABA ID, Phone Number ID, and Access Token to Karzon
+- Karzon will use this data to send messages on behalf of the client
+
+#### Important Notes
+
+⚠️ **Authorization Code is valid for only 30 seconds** – must be exchanged immediately  
+⚠️ **App Secret** must remain confidential and not be shared in client-side code  
+⚠️ **Access Token** may be short-lived or long-lived depending on settings  
+⚠️ **Phone Number** must be registered before using it to send messages  
+⚠️ **Webhooks** must be subscribed to receive messages and updates
+
+### 2.4. Submitting the App for Review (App Review)
+
+App review is a **mandatory** step to allow apps access to specific WhatsApp features. Since your app will be able to manage another business’s WhatsApp account and send messages on their behalf, Meta needs to verify how you use the requested permissions to ensure no misuse or harm to user data occurs. Meta’s operations team reviews submissions and either approves, rejects, or requests additional information.
+
+First, click **"Review App Settings"** to review saved settings and ensure the app ID, privacy policy URL, and app category are set before starting the app review.
+
+#### Advanced Permissions Required for the App
+
+![image.png](/images/help/become-meta-tech-provider-and-multi-partner-solutions-with-karzoun-1920023/16-52c629b37a1a.png)  
+The app review process begins by clicking the **"Request Permissions"** button in the final review step on the registration page, then selecting **"Edit"** to continue.
+
+Permissions are a form of granular authorization granted by the user, where your app must obtain user consent to access the user’s app data. To pass app review, it is important to request **only the permissions your app needs** to function properly. Requesting unnecessary permissions is a common reason for app review rejection.
+
+These are the app permissions required for WhatsApp Business Solutions app review. You must provide **a separate video for each permission**, clearly demonstrating where the relevant permissions are used in your product (website or other forms), not Karzon’s or Meta’s products.
+
+##### 1. `whatsapp_business_management`
+
+**Description:**  
+Allows your app to read and/or manage WhatsApp Business assets that you own or that other businesses have granted you access to via this permission. These assets include:
+
+- WhatsApp Business Accounts
+- Phone Numbers
+- Message Templates
+- QR codes and their associated messages
+- Webhook subscriptions
+
+Enables managing WhatsApp accounts shared with you through the embedded registration flow. You must include `whatsapp_business_management` as part of the `scope` in the embedded registration script setup.
+
+**Usage:**  
+As a technology provider, you will likely use this permission to send and receive messages on behalf of your clients, either via API or app.
+
+**Script Explanation:**  
+You should explain how you use this permission to send messages on behalf of your users, whether through the API or app.
+
+**Video:**  
+The video should show a walkthrough of your API documentation, a test or development environment, or product if you have one. If all you provide is an API, you do not need to create a dummy product just to show an example of a demo client using your API.
+
+##### 2. `whatsapp_business_messaging`
+
+**Description:**  
+Allows your app to send WhatsApp messages to a specific phone number, upload/retrieve media from messages, manage WhatsApp Business profile information, and register those phone numbers with Meta.**Usage:**  
+As a technology provider, you will likely use this permission to manage your clients’ accounts after they have joined your solutions through embedded onboarding. To demonstrate its use, we recommend building a post-registration user experience that shows account setup and phone number linking—for example, a flow where you set up a user’s phone and take them to a messaging experience.
+
+When displaying users’ phone numbers or message templates belonging to a WhatsApp Business Account on your portal, it will be easier to establish the link between the collected data and the permission used.
+
+**Text Explanation:**  
+You should explain how you will manage a client account—for example, enabling technology providers via an API or app to allow clients to manage their account details and message templates.
+
+**Video:**  
+Record a demo of your product showing your clients’ information/assets management. One of the easiest things to showcase is a page displaying your clients’ phone numbers or message templates, or scrolling through documentation that illustrates API functionality.
+
+If you create a test user that meets the above criteria, they can proceed with embedded onboarding with your business, and you can use that to create your demo video.
+
+![image.png](/images/help/become-meta-tech-provider-and-multi-partner-solutions-with-karzoun-1920023/17-a1574f494452.png)
+
+#### Access Verification
+
+To ensure that only businesses with legitimate use cases can access data belonging to other businesses, you must undergo an **Access Verification** process. You can start the access verification process after submitting a request for advanced permissions on your app. To begin, click **"Start Verification"**. You can open the full access verification page inside our WhatsApp product and quickly return to the onboarding page.
+
+![image.png](/images/help/become-meta-tech-provider-and-multi-partner-solutions-with-karzoun-1920023/18-db8f40a751b2.png)
+
+**Expected Timeline:**
+
+- App Review: **5-7 business days**
+- Access Verification: **3-5 business days**
+
+![image.png](/images/help/become-meta-tech-provider-and-multi-partner-solutions-with-karzoun-1920023/19-306e27804360.png)
+
+### 2.5. Setup Verification
+
+Once embedded onboarding is set up, display it in a suitable place on your website where you can test it. To test embedded onboarding, simulate completing the flow using your platform’s directed client business credentials.
+
+To verify your embedded onboarding setup, please ensure you can do the following:
+
+- [ ] Successfully register a number using Karzoun Register API
+- [ ] Successfully send messages on behalf of your client using Karzoun Traffic APIs (WhatsApp Standalone or Messages API, depending on your preference)
+
+Then, go to **Meta App Quickstart → Onboarding → Integration** and check the box to mark it as complete.
+
+---
+
+## 3. Advanced Topics
+
+### 3.1. Webhooks Setup
+
+Webhooks are used to notify your platform of real-time events, such as receiving a new message from a client or an update on delivery status.
+
+#### Webhook Settings
+
+- **Webhook URL:** You must provide Karzoun with a URL (must be HTTPS) to receive events.
+- **Verification:** Karzoun will send a `GET` request to the URL with `hub.mode`, `hub.challenge`, and `hub.verify_token`. Your server must respond with the `hub.challenge` to confirm the setup.
+
+#### Supported Events
+
+| Event               | Description                                                     |
+| ------------------- | --------------------------------------------------------------- |
+| `message.received`  | When a new message is received from a client                    |
+| `message.delivered` | When a message is successfully delivered to the client’s device |
+| `message.read`      | When the client reads the message                               |
+| `account.updated`   | When account information is updated                             |
+
+#### Example Payload for `message.received`
+
+```json
+{
+  "event": "message.received",
+  "timestamp": 1673683200,
+  "waba_id": "123456789012345",
+  "data": {
+    "message_id": "wamid.xxx",
+    "from": {
+      "name": "John Doe",
+      "phone_number": "+966501234567"
+    },
+    "message": {
+      "type": "text",
+      "body": "Hello, can I get some help?"
+    }
+  }
+}
+```
+
+#### Webhook Security
+
+To ensure that Webhooks originate from Karzoun, an `X-Karzoun-Signature` header is sent with each request. You must verify this signature using the HMAC-SHA256 algorithm and the Secret Key provided to you.
+
+```javascript
+// Example for verifying the signature (Node.js)
+const crypto = require('crypto');
+
+function verifyWebhookSignature(payload, signature, secret) {
+const expectedSignature = 'sha256=' + crypto
+.createHmac('sha256', secret)
+.update(JSON.stringify(payload))
+.digest('hex');
+return crypto.timingSafeEqual(
+Buffer.from(signature),
+Buffer.from(expectedSignature)
+);
+}
+
+```
+
+### 3.2. Billing and Payment
+
+End customers who are onboarded via embedded registration (configured for a partnership solution) subscribe to Karzoun's **Credit Line**. Karzoun is responsible for invoicing you for the solution based on the API usage by the end customer. You can charge your customers directly for the solution or service you provide.
+
+**Billing Model:**
+- Karzoun pays Meta directly
+- Karzoun invoices the technology provider (you) monthly
+- You invoice your end customers according to your business model
+
+### 3.3. Revoking Permissions and Terminating Partnership
+
+If you need to revoke access permissions or terminate the partnership with a specific customer:
+
+1. Go to **Dashboard → WhatsApp → Partnership Solutions**
+2. Select the solution to be disabled
+3. Click **"Disable Solution"** or **"Remove Access"**
+4. Confirm the action
+
+**Note:** Revoking permissions does not delete the customer's WhatsApp account; it only removes the shared access permissions.
+
+---
+
+## 4. Technical Support
+
+### Communication Channels
+
+| Channel | Details |
+|---|---|
+| **Email** | `partners@karzoun.app` (for general questions and inquiries) |
+| **Shared Slack Channel** | A dedicated channel will be created for you and Karzoun for immediate support and technical discussions |
+| **Status Page** | `https://status.karzoun.app` (to monitor the status of Karzoun services) |
+
+### Service Level Agreement (SLA)
+
+| Metric | Commitment |
+|---|---|
+| **Uptime** | 99.9% monthly |
+| **API Response Time** | Under 500ms (95th percentile) |
+| **Webhook Delivery Time** | Under 5 seconds |
+
+---
+
+## Summary
+
+This guide covers all the essential steps to join as an approved technology provider and integrate with Karzoun. For additional support or inquiries, please contact the Karzoun partnerships team at `partners@karzoun.app`.
+
+---
+
+**Last Updated**: January 14, 2026
+**Version**: 2.1

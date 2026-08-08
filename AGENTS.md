@@ -39,6 +39,7 @@
 - Prefer CSS logical properties (`inset-inline-*`, `margin-inline-*`, `padding-inline-*`, `border-inline-*`) over physical left/right when overriding Mintlify chrome for RTL
 - `style.css` is the full Arabic RTL audit — update it when new Mintlify chrome breaks under `/ar` (do not wait for per-component reports). Never re-enable `list-style` on prose `ul` (Mintlify uses `li::before` bullets)
 - **Arabic content parity:** every English MDX page (except Help Center articles and generated `api-reference/`) has a matching `ar/…` translation with the same structure; AR nav mirrors EN tabs. Keep internal links under `/ar/…`
+- **Help Center:** source of truth is Redocly `octobots/docs/@l10n/ar/customers/` + `customers/sidebars.yaml`. Re-run `node scripts/migrate-help-center.mjs` after Apidog re-imports. Images live in `images/help/`. EN hub lists the 3 bilingual guides; full library is under `ar/help-center/`
 
 ## Terminology
 
