@@ -1,0 +1,41 @@
+---
+title: "Dashboard SDK"
+description: "ابنِ تطبيقات لوحات صندوق الوارد باستخدام Karzoun Dashboard SDK."
+---
+
+`@karzoun/dashboard-sdk` — SDK خفيف لتطبيقات **لوحة التحكم** داخل iframe صندوق وارد كرزون.
+
+## التثبيت
+
+```bash
+npm install @karzoun/dashboard-sdk
+```
+
+## بداية سريعة
+
+```typescript
+import { createDashboard } from "@karzoun/dashboard-sdk";
+
+const dashboard = createDashboard({
+  miniappId: "YOUR_MINIAPP_ID",
+});
+
+dashboard.onContext((ctx) => {
+  console.log("Customer:", ctx.customer);
+});
+
+await dashboard.executeAction("listOrders", { limit: 10 });
+```
+
+## المتطلبات الأساسية
+
+1. ثبّت واضبط **MiniApp** ببيانات اعتماد صالحة (الإعدادات ← MiniApps)
+2. أنشئ **تطبيق لوحة تحكم** يشير إلى عنوان iframe المستضاف لديك (الإعدادات ← تطبيقات لوحة التحكم)
+
+## الميزات
+
+- استقبال سياق المحادثة والعميل من المضيف
+- تنفيذ إجراءات مصادق عليها عبر MiniApp (لا تُعرَض بيانات الاعتماد أبداً داخل iframe)
+- تشغيل واجهة المضيف: إشعارات toast، وملاحظات، ووسوم، وتنقّل
+
+راجع README الحزمة تحت `v4UI/dashboard-sdk` في مستودع كرزون الأحادي لمرجع API وبروتوكول postMessage والأمثلة.

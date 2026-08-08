@@ -31,9 +31,14 @@
 - **`ar`**: pages under `ar/` only — never reuse an English path in Arabic nav
 - Partial Arabic coverage is OK; only list translated pages in the `ar` navigation
 - Translate tab/group/navbar/footer labels for Arabic
-- GraphQL auto-reference stays on the English language entry (shared generated paths)
-- Help Center bulk content will land primarily under `ar/help-center/…`
-- Mintlify enables RTL automatically for `ar`
+- GraphQL auto-reference is shared (`api-reference/`, English schema text) and linked from both language entries
+- Help Center hub exists in both languages; bulk articles land next under `ar/help-center/…`
+- Mintlify does **not** currently set `dir="rtl"` automatically for `ar`
+- We force RTL via `rtl.js` + `style.css` (Cairo font on Arabic pages; code blocks stay LTR)
+- Mintlify custom JS runs **after** interactive paint — use `rtl-boot.css` (`html:not([data-rtl-ready]) { visibility: hidden }`) + `rtl.js` setting `data-rtl-ready` so Arabic does not flash LTR→RTL. Do not add `@import` to `rtl-boot.css`
+- Prefer CSS logical properties (`inset-inline-*`, `margin-inline-*`, `padding-inline-*`, `border-inline-*`) over physical left/right when overriding Mintlify chrome for RTL
+- `style.css` is the full Arabic RTL audit — update it when new Mintlify chrome breaks under `/ar` (do not wait for per-component reports). Never re-enable `list-style` on prose `ul` (Mintlify uses `li::before` bullets)
+- **Arabic content parity:** every English MDX page (except Help Center articles and generated `api-reference/`) has a matching `ar/…` translation with the same structure; AR nav mirrors EN tabs. Keep internal links under `/ar/…`
 
 ## Terminology
 
@@ -51,7 +56,7 @@
 
 - Primary blue: `#387CEC` (also `#5B9BFF` light / `#2563C7` dark)
 - Logo mark uses red `#E03C28`, green `#2CA04C`, yellow `#F0B400`, blue `#387CEC`
-- Font: Inter (Arabic Help Center will use Cairo when `ar` locale is enabled)
+- Font: Inter (English); Cairo applied on Arabic via `style.css` when `dir=rtl`
 - Theme: `maple` in `docs.json`
 - Do not reintroduce Mintlify starter green or Mintlify logos
 

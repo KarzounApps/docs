@@ -1,0 +1,70 @@
+---
+title: "مصادر البيانات الديناميكية"
+description: "عرّف قوائم منسدلة مدعومة بـ RPC لنماذج إجراءات ميني أب."
+---
+
+توفّر المصادر خيارات قوائم منسدلة ديناميكية في نماذج الإجراءات. عرّفها في المستوى الجذري لميني أب تحت `source`، وأشر إليها في المعاملات عبر `x-source`.
+
+```javascript
+// MiniApp root level
+source: {
+  // Each key must start with "rpc_"
+  rpc_channels_list: {
+    url: 'https://slack.com/api/conversations.list?limit=1000&types=public_channel,private_channel',
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer [[accessToken]]',
+    },
+    dataPath: 'channels',         // JSONPath to the array in the response
+    valueField: 'id',             // Field to use as the option value
+    labelField: 'name',           // Field to use as the option label
+  },
+
+  rpc_users_list: {
+    url: 'https://slack.com/api/users.list?limit=1000',
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer [[accessToken]]',
+    },
+    dataPath: 'members',
+    valueField: 'id',
+    labelField: 'profile.real_name',  // Supports nested paths
+  },
+},
+
+// Then reference from action parameters:
+actions: [{
+  parameters: {
+    properties: {
+      channel: {
+        type: 'string',
+        title: 'Channel',
+        'x-source': 'rpc_channels_list',  // ← Matches key in source
+        'x-fallback': 'input',
+      },
+    },
+  },
+}]
+```
+
+**حقول تعريف المصدر:**
+
+| الحقل         | النوع   | مطلوب | الوصف                                            |
+| ------------- | ------ | -------- | ---------------------------------------------------------- |
+| `url`         | string | ✅       | عنوان نقطة نهاية API (يدعم عناصر نائبة `[[cred]]`)    |
+| `method`      | string | ✅       | طريقة HTTP (`GET` أو `POST`)                          |
+| `headers`     | object | —        | ترويسات الطلب                                         |
+| `queryParams` | object | —        | معاملات استعلام إضافية                              |
+| `dataPath`    | string | ✅       | المسار إلى المصفوفة في استجابة API                   |
+| `valueField`  | string | ✅       | اسم الحقل المستخدم كقيمة للخيار                    |
+| `labelField`  | string | ✅       | اسم الحقل المستخدم كتسمية للخيار                     |
+| `valueFields` | object | —        | حقول قيمة بديلة حسب سياق `sourceRef`        |
+
+**كيف يعمل وقت التشغيل:**
+
+1. يفتح المستخدم نموذج الإجراء
+2. يستدعي الواجهة الأمامية استعلام GraphQL `miniAppsActionSources` مع `sourceKey`
+3. يجلب الخلفي عنوان المصدر مع حقن بيانات اعتماد المستخدم
+4. تُستخرج مصفوفة الاستجابة من `dataPath`
+5. يُربط كل عنصر إلى `{ value, label }` باستخدام `valueField` و`labelField`
+6. تُعرض القائمة المنسدلة بالخيارات

@@ -1,0 +1,13 @@
+/* =============================================================================
+   RTL boot — anti-FOUC
+   -----------------------------------------------------------------------------
+   Mintlify custom JS runs only after the page is interactive, so rtl.js cannot
+   set dir=rtl before first paint. Hide the document until rtl.js marks ready
+   (sets html[data-rtl-ready]). Prefer a brief blank over an LTR→RTL flash.
+
+   Keep this file free of @import so it applies before style.css / fonts.
+   ============================================================================= */
+
+html:not([data-rtl-ready]) {
+  visibility: hidden;
+}

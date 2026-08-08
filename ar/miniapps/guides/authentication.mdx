@@ -1,0 +1,371 @@
+---
+title: "المصادقة"
+description: "رموز Bearer وHTTP Basic والترويسات المخصصة وOAuth 2.0 لعمليات تثبيت ميني أب."
+---
+
+يُخبر كائن `auth` المنصة كيف يربط المستخدمون حساباتهم بخدمتك.
+
+يتحكم `auth.type` في **تجربة التثبيت** (نموذج `bearer_token` / `apikey` مقابل نافذة منبثقة لـ `oauth2`). أما كيفية إرسال بيانات الاعتماد في كل استدعاء HTTP فتُعرَّف في **ترويسات** الطلب (Bearer أو Basic أو ترويسات مخصصة أو معاملات استعلام).
+
+## Bearer Token (مفتاح API)
+
+أبسط طريقة مصادقة. يلصق المستخدم مفتاح API الخاص به في نموذج، وتخزّنه المنصة بأمان.
+
+```javascript
+auth: {
+  type: 'bearer_token', // or 'apikey' — same install path
+
+  // Keys that must NEVER be sent to the frontend
+  sensitiveKeys: ['accessToken'],
+
+  // Default credential values (empty = user must provide)
+  config: {
+    accessToken: '',
+  },
+
+  // Verify the token works by calling a "who am I" endpoint
+  userDetails: {
+    url: 'https://api.example.com/users/me',
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer [[accessToken]]',
+      'Content-Type': 'application/json',
+    },
+    bodyType: 'json',
+    body: {},
+    mapping: {
+      uid: '$.user.id',        // Unique user identifier → metadata
+      name: '$.user.name',     // Display name → metadata
+    },
+  },
+}
+```
+
+**كيف تعمل:**
+
+1. يُدخل المستخدم مفتاح API في نموذج الإعدادات
+2. تستدعي المنصة طفرة `saveMiniAppCredentials`
+3. إذا عُرِّف `get_token`، يُنفَّذ لتبادل/التحقق من بيانات الاعتماد
+4. تُخزَّن الرموز والأسرار في `InstalledMiniApps.credentials`
+5. إذا عُرِّف `userDetails`، تُخزَّن حقول المتجر/الحساب المُعيَّنة في `InstalledMiniApps.metadata`
+6. تُضبط الحالة إلى `connected`
+
+## مصادقة HTTP Basic
+
+استخدمها عندما يتوقع المزوّد `Authorization: Basic <base64(username:password)>` — شائعة في **WooCommerce** (Consumer Key + Consumer Secret)، وبوابات الدفع (مثل Moyasar)، وبعض واجهات البرمجة القديمة.
+
+عرّف الترويسة بنقطتين حرفيتين `:` بين نائبي بيانات الاعتماد. يقوم وقت التشغيل بترميز Base64 لـ `user:pass` تلقائياً بعد حلّ العناصر النائبة (لا يحتوي Base64 على `:`، لذا تُترك القيم المرمَّزة مسبقاً كما هي).
+
+```javascript
+auth: {
+  type: 'apikey',
+
+  form: {
+    storeUrl: {
+      type: 'text',
+      label: 'Store URL',
+      placeholder: 'https://mystore.com',
+      required: true,
+    },
+    consumerKey: {
+      type: 'text',
+      label: 'Consumer Key',
+      required: true,
+    },
+    consumerSecret: {
+      type: 'password',
+      label: 'Consumer Secret',
+      required: true,
+    },
+  },
+
+  // Connection test before marking the install connected
+  test_token: {
+    url: '{{storeUrl}}/wp-json/wc/v3/orders',
+    method: 'GET',
+    headers: {
+      // → Authorization: Basic base64(consumerKey:consumerSecret)
+      Authorization: 'Basic [[consumerKey]]:[[consumerSecret]]',
+      'Content-Type': 'application/json',
+    },
+    queryParams: { per_page: '1' },
+    mapping: { connected: 'true' },
+  },
+}
+```
+
+**استخدم الترويسة نفسها في كل طلب إجراء / مصدر / مزامنة:**
+
+```javascript
+headers: {
+  Authorization: 'Basic [[consumerKey]]:[[consumerSecret]]',
+  'Content-Type': 'application/json',
+}
+```
+
+| النمط                   | متى تستخدمه                                                                                    |
+| ------------------------- | ------------------------------------------------------------------------------------------------- |
+| `Basic [[user]]:[[pass]]` | سرّان (WooCommerce Consumer Key/Secret)                                                    |
+| `Basic [[apiKey]]:`       | اسم المستخدم = مفتاح API، كلمة مرور فارغة (بعض البوابات) — أدرج `:` اللاحقة حتى يعمل الترميز |
+| `Basic [[preEncoded]]`    | القيمة مرمَّزة Base64 مسبقاً (بدون `:`) — تُمرَّر دون تغيير                                     |
+
+<Info>
+  **ملاحظة النشر** — يعمل الترميز التلقائي لـ Basic داخل `miniAppsReplaceVariablesInObject` لأي ترويسة `Authorization`. انشر **plugin-miniapps-api** مع هذا المساعد قبل شحن بذور بأسلوب WooCommerce؛ وإلا تُرسل السلسلة الخام `key:secret` ويعيد المزوّدون **401**.
+</Info>
+
+**نصيحة WooCommerce:** فضّل HTTPS + Basic. إذا أزال المضيف ترويسة `Authorization`، فالرجوع إلى معاملات الاستعلام (`consumer_key` / `consumer_secret`) على ذلك الطلب — راجع بذرة WooCommerce.
+
+## رموز الترويسة المخصصة
+
+بعض المزوّدين يستخدمون ترويسة مخصصة بدل Bearer/Basic (مثل Shopify `X-Shopify-Access-Token`، وTikTok `Access-Token`):
+
+```javascript
+headers: {
+  'X-Shopify-Access-Token': '[[accessToken]]',
+  'Content-Type': 'application/json',
+}
+```
+
+تبقى تجربة التثبيت `auth.type: 'apikey'` (أو `bearer_token`) مع نموذج للرمز وأي حقول لنطاق المتجر.
+
+## تخزين التثبيت لكل مستأجر
+
+كل ميني أب مثبَّت يحتفظ بثلاث حقائب من جانب الخادم على `InstalledMiniApps`:
+
+| الحقل         | المحتوى                                                              | `[[key]]` | `{{key}}`     | يُعرض للواجهة؟ |
+| ------------- | ----------------------------------------------------------------------- | --------- | -------------- | ---------------- |
+| `credentials` | الرموز والأسرار ومخرجات التسجيل (`accessToken`، `webhookId`، …) | نعم       | لا             | أبداً            |
+| `metadata`    | نتيجة `userDetails.mapping` الكاملة (`storeId`، `storeName`، `uid`، …)  | نعم       | نعم (وقت التشغيل)  | أبداً            |
+| `userInput`   | قيم نموذج التثبيت التي أدخلها المستخدم                                       | لا        | نعم            | تعبئة مسبقة فقط    |
+
+يُحلّ `[[key]]` من **credentials أولاً**، ثم **metadata** (تفوز credentials عند تصادم المفاتيح). استخدم مفاتيح camelCase في التعيينات (مثل `storeId`) حتى عندما يختلف اسم ترويسة HTTP (`Store-Id: '[[storeId]]'`).
+
+## OAuth 2.0
+
+للخدمات التي تتطلب تفويض OAuth 2.0 (Salla وGoogle وغيرها).
+
+```javascript
+auth: {
+  type: 'oauth2',
+
+  sensitiveKeys: ['accessToken', 'refreshToken'],
+
+  // OAuth configuration (available as {{key}} placeholders)
+  config: {
+    client_id: 'your-client-id',
+    client_secret: 'your-client-secret',
+    scope: 'read write',
+    response_type: 'code',
+    grant_type: 'authorization_code',
+    accessToken: '',
+    refreshToken: '',
+  },
+
+  // Build the authorization redirect URL
+  auth_url: {
+    url: 'https://provider.com/oauth/authorize?client_id={{client_id}}&scope={{scope}}&response_type={{response_type}}&redirect_uri={{redirect_uri}}',
+    method: 'GET',
+    headers: {},
+    bodyType: 'json',
+    body: {},
+    mapping: {},
+  },
+
+  // Exchange authorization code for tokens
+  get_token: {
+    url: 'https://provider.com/oauth/token',
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    bodyType: 'json',
+    body: {
+      client_id: '{{client_id}}',
+      client_secret: '{{client_secret}}',
+      grant_type: '{{grant_type}}',
+      code: '{{code}}',
+      redirect_uri: '{{redirect_uri}}',
+    },
+    // Map response to credential keys
+    mapping: {
+      accessToken: '$.access_token',
+      refreshToken: '$.refresh_token',
+      expiresIn: '$.expires_in',
+    },
+  },
+
+  // Refresh expired tokens
+  refresh_token: {
+    url: 'https://provider.com/oauth/token',
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    bodyType: 'json',
+    body: {
+      client_id: '{{client_id}}',
+      client_secret: '{{client_secret}}',
+      grant_type: 'refresh_token',
+      refresh_token: '[[refreshToken]]',
+    },
+    mapping: {
+      accessToken: '$.access_token',
+      refreshToken: '$.refresh_token',
+      expiresIn: '$.expires_in',
+    },
+  },
+
+  // Auto-refresh on 401 responses
+  auto_refresh: true,
+
+  // Fetch user identity after authentication
+  userDetails: {
+    url: 'https://api.provider.com/v2/oauth2/user/info',
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer [[accessToken]]',
+      'Content-Type': 'application/json',
+    },
+    bodyType: 'json',
+    body: {},
+    mapping: {
+      uid: '$.data.id',
+      name: '$.data.name',
+    },
+  },
+
+  // Post-auth setup (see Registration Requests below)
+  registrationRequests: [],
+}
+```
+
+**تدفق OAuth 2.0:**
+
+```
+المستخدم ينقر "Connect" في السوق
+        │
+        ▼
+┌─────────────────────┐
+│ تفتح نافذة منبثقة   │
+│ GET /:appNs/oauth2   │
+└────────┬────────────┘
+         │
+         ▼
+┌─────────────────────┐
+│ المنصة تبني          │
+│ auth_url وتعيد التوجيه │
+│ إلى المزوّد          │
+└────────┬────────────┘
+         │ المستخدم يفوّض
+         ▼
+┌─────────────────────┐
+│ المزوّد يعيد التوجيه │
+│ مع ?code=xxx         │
+└────────┬────────────┘
+         │
+         ▼
+┌─────────────────────┐
+│ المنصة تنفّذ         │
+│ طلب get_token        │
+│ (code → tokens)      │
+└────────┬────────────┘
+         │
+         ▼
+┌─────────────────────┐
+│ المنصة تنفّذ         │
+│ طلب userDetails      │
+│ (استخراج uid, name)  │
+└────────┬────────────┘
+         │
+         ▼
+┌─────────────────────┐
+│ الرموز تُخزَّن في     │
+│ credentials؛         │
+│ userDetails → metadata │
+│ registrationRequests   │
+│ تُنفَّذ (إن وُجدت)     │
+└────────┬────────────┘
+         │
+         ▼
+┌─────────────────────┐
+│ تُغلق النافذة المنبثقة │
+│ وتُحدَّث النافذة الرئيسية │
+└─────────────────────┘
+```
+
+## تحديث الرمز
+
+عندما يُضبط `auto_refresh: true` ويعيد أي طلب إجراء استجابة `401`:
+
+1. تستدعي المنصة تلقائياً طلب `refresh_token`
+2. تُستخرج بيانات الاعتماد الجديدة عبر التعيين
+3. تُحدَّث بيانات الاعتماد في قاعدة البيانات
+4. يُعاد محاولة الطلب الأصلي الفاشل بالرمز الجديد
+
+يُعالَج هذا بشفافية — دون تفاعل من المستخدم.
+
+## طلبات التسجيل (إعداد ما بعد المصادقة)
+
+طلبات التسجيل هي استدعاءات API تُنفَّذ **مرة واحدة** مباشرة بعد مصادقة المستخدم بنجاح. استخدمها لـ:
+
+- **تسجيل الويب هوك** لدى المزوّد
+- **جلب الإعداد الأولي** (معرّف المتجر، معلومات مساحة العمل)
+- **الاشتراك في الأحداث**
+
+```javascript
+auth: {
+  // ...auth config...
+
+  registrationRequests: [
+    // Register your webhook URL with the provider
+    {
+      url: 'https://api.provider.com/webhooks',
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer [[accessToken]]',
+        'Content-Type': 'application/json',
+      },
+      bodyType: 'json',
+      body: {
+        url: '{{webhookUrl}}',     // Auto-injected: your webhook endpoint
+        events: ['order.created', 'customer.updated'],
+        secret: '{{webhookSecret}}',
+      },
+      mapping: {
+        webhookId: '$.id',  // Saved to credentials for later reference
+      },
+    },
+
+    // Prefer auth.userDetails for store profile; use registrationRequests
+    // only for one-off setup outputs like webhook IDs.
+    {
+      url: 'https://api.provider.com/webhooks/subscribe',
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer [[accessToken]]',
+        'Store-Id': '[[storeId]]',   // Resolved from metadata
+      },
+      bodyType: 'json',
+      body: {
+        url: '{{webhookUrl}}',
+      },
+      mapping: {
+        webhookSubscriptionId: '$.id',
+      },
+    },
+  ],
+}
+```
+
+**العناصر النائبة المتاحة في طلبات التسجيل:**
+
+| العنصر النائب        | المصدر                     | الوصف                                    |
+| ------------------- | ---------------------------- | ------------------------------------------------- |
+| `[[accessToken]]`  | بيانات الاعتماد المخزَّنة         | رمز وصول OAuth                          |
+| `[[refreshToken]]` | بيانات الاعتماد المخزَّنة         | رمز تحديث OAuth                         |
+| `[[storeId]]`      | البيانات الوصفية المخزَّنة            | سياق المنصة من `userDetails` (مثل Zid)  |
+| `[[any_key]]`      | credentials + metadata     | أي مفتاح من أيٍّ من الحقيبتين (تفوز credentials)       |
+| `{{webhookUrl}}`   | مولَّد من النظام           | عنوان نقطة نهاية الويب هوك لميني أب الخاص بك             |
+| `{{subdomain}}`    | سياق النظام             | النطاق الفرعي للمستأجر                          |
+| `{{uid}}`          | metadata / `uid` المستوى الأعلى | معرّف المستخدم المصادق عليه                     |
+| `{{configKey}}`    | `auth.config`              | أي مفتاح من كائن إعدادات المصادقة             |
+
+<Note>
+  تعيينات الكائنات في `registrationRequests` تُ**حفظ في `credentials`**. تعيينات `userDetails` تُ**حفظ في `metadata`** بالكامل. كلتا الحقيبتين متاحتان لعناصر `[[key]]` النائبة في ترويسات المزامنة والإجراءات والأتمتة.
+</Note>

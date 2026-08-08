@@ -1,0 +1,39 @@
+---
+title: "الترقيم الصفحي"
+description: "ترقيم استعلامات القوائم في واجهة GraphQL لكرزون."
+---
+
+تقبل استعلامات القوائم الترقيم الصفحي:
+
+| الوسيط | النوع | الوصف |
+| --- | --- | --- |
+| `page` | Int | رقم الصفحة (يبدأ من 1) |
+| `perPage` | Int | العناصر في كل صفحة |
+
+مثال على المتغيرات:
+
+```json
+{ "page": 1, "perPage": 20 }
+```
+
+تتضمن استجابات القوائم كائن `pagination` مع `totalCount` و`currentPage` و`totalPages` و`hasNextPage` و`hasPreviousPage`.
+
+## مثال
+
+مرّر `page` و`perPage` في استعلامات القوائم مثل `tags` و`customers` و`conversations`.
+
+```graphql
+query {
+  customers(page: 2, perPage: 20) {
+    data {
+      _id
+      firstName
+    }
+    pagination {
+      totalCount
+      currentPage
+      hasNextPage
+    }
+  }
+}
+```

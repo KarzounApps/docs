@@ -1,30 +1,38 @@
 ---
 title: "ابنِ على كرزون"
-description: "واجهة GraphQL، والشركاء، وMCP، وSDK، وتطبيقات MiniApps، ومركز المساعدة — منصة توثيق واحدة لكرزون شات."
+description: "واجهة GraphQL للمطوّرين، وتكاملات الشركاء، وأدوات MCP، وSDK، وMiniApps، ومركز المساعدة للعملاء — منصة توثيق واحدة."
 ---
 
 كرزون شات مساحة عمل متعددة القنوات للمبيعات والدعم والتسويق. يساعدك هذا التوثيق على التكامل والتوسيع والتشغيل.
 
-<Info>
-  هذه صفحات عربية تجريبية لاختبار مبدّل اللغة في Mintlify. سيتم نقل محتوى **مركز المساعدة** الكامل بعد موافقتك.
-</Info>
-
 <Columns cols={2}>
+  <Card title="المطوّرون" icon="code-2" href="/ar/developers">
+    واجهة GraphQL العامة، ورموز التطبيقات، وWebhooks، وساحة التجربة.
+  </Card>
+  <Card title="GraphQL API" icon="brackets" href="/api-reference">
+    مرجع المخطط الكامل للاستعلامات والطفرات والأنواع.
+  </Card>
+  <Card title="الشركاء" icon="handshake" href="/ar/partners">
+    الانضمام، والعلامة البيضاء، والتطبيقات المضمّنة لـ Salla وZid والمزيد.
+  </Card>
+  <Card title="MCP" icon="bot" href="/ar/mcp-server">
+    اربط Cursor أو Claude أو الوكلاء ببيانات كرزون الحية.
+  </Card>
+  <Card title="SDK" icon="package" href="/ar/sdk">
+    SDK للوحة التحكم وبكسل التتبع للتكاملات المخصصة.
+  </Card>
+  <Card title="MiniApps" icon="puzzle" href="/ar/miniapps">
+    تكاملات Marketplace بصيغة JSON — ابنِ محلياً وقدّم للمراجعة.
+  </Card>
   <Card title="مركز المساعدة" icon="life-buoy" href="/ar/help-center">
-    أدلة المستخدم للبريد الوارد وواتساب والأتمتة والمزيد.
-  </Card>
-  <Card title="بداية سريعة للمطوّرين" icon="code-2" href="/ar/developers/quickstart">
-    صفحة عربية تجريبية لمسار المطوّرين.
-  </Card>
-  <Card title="English docs" icon="languages" href="/">
-    التوثيق الكامل للمطوّرين وGraphQL وMCP وSDK باللغة الإنجليزية.
+    أدلة المستخدم للبريد الوارد وواتساب والأتمتة والفوترة.
   </Card>
   <Card title="سجل التغييرات" icon="newspaper" href="/ar/changelog">
-    آخر التحديثات على المنتج وواجهة البرمجة.
+    تحديثات المنتج وواجهة البرمجة عند إصدارها.
   </Card>
 </Columns>
 
-## جرّب طلباً سريعاً
+## جرّب طلباً
 
 ```bash
 curl -X POST 'https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql' \

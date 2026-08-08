@@ -1,0 +1,60 @@
+---
+title: "المصادقة"
+description: "رموز التطبيقات وترويسات الطلب لواجهة GraphQL العامة لكرزون."
+---
+
+تستخدم الواجهة العامة **رموز التطبيقات** (JWT) التي تُنشأ من لوحة مطوّري كرزون.
+
+أرسل الرمز مع كل طلب:
+
+```bash
+-H "x-app-token: YOUR_APP_TOKEN_JWT"
+```
+
+## تنسيق الطلب
+
+كل طلب GraphQL هو POST بصيغة JSON مع الرمز في الترويسات.
+
+### الترويسات المطلوبة
+
+| الترويسة | مطلوبة | الوصف |
+| --- | --- | --- |
+| `x-app-token` | نعم | JWT التطبيق من المطوّر ← التطبيقات |
+| `Content-Type` | نعم | `application/json` |
+
+### الصلاحيات
+
+يمكن تقييد التطبيقات على مجموعات مستخدمين أو السماح بها لجميع المستخدمين. أنشئ التطبيقات بأقل صلاحيات تحتاجها تكاملاتك.
+
+<CodeGroup>
+```graphql
+query {
+  currentUser {
+    _id
+    email
+  }
+}
+```
+
+```bash
+curl -X POST 'https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql' \
+  -H 'Content-Type: application/json' \
+  -H 'x-app-token: YOUR_APP_TOKEN' \
+  -d '{"query":"query { currentUser { _id email } }"}'
+```
+</CodeGroup>
+
+<Tip>
+  استخدم استعلام `currentUser` للتأكد من المصادقة قبل بناء التكاملات.
+</Tip>
+
+## الأمان
+
+- لا تعرض رموز التطبيقات أبداً في الشيفرة على جانب المتصفح
+- استخدم MCP والوكلاء من جانب الخادم مع الرموز على الخلفية فقط
+- دوّر الرموز بإنشاء تطبيق جديد وإلغاء القديم
+
+## الخطوات التالية
+
+- [البداية السريعة](/ar/developers/getting-started/quickstart)
+- [مرجع GraphQL API](/api-reference)

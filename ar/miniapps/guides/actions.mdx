@@ -1,0 +1,329 @@
+---
+title: "الإجراءات"
+description: "الطلبات ودوال التطبيق والمعاملات والتسلسل لإجراءات ميني أب."
+---
+
+الإجراءات هي استدعاءات API (وخطوات دوال تطبيق اختيارية) يمكن للمستخدمين أو الأتمتة تنفيذها. لكل إجراء نموذج لإدخال المستخدم، ومسار خطوات (`requests[]`)، وتعيين للاستجابة.
+
+## تعريف إجراء
+
+```javascript
+actions: [
+  {
+    name: "createIssue", // Unique action identifier
+    title: "Create Issue", // Display title
+    description: "Create a new issue in a repository",
+    renderStrategy: "auto", // UI rendering ('auto' = standard form)
+
+    // Form definition (JSON Schema)
+    parameters: {
+      /* see Parameters section below */
+    },
+
+    // HTTP requests to execute (see Requests & Chaining below)
+    requests: [
+      /* ... */
+    ],
+  },
+];
+```
+
+**قيم `renderStrategy`:**
+
+| القيمة    | الوصف                                |
+| -------- | -------------------------------------------- |
+| `'auto'` | نموذج قياسي مولَّد تلقائياً (موصى به) |
+
+## المعاملات (JSON Schema)
+
+تعرّف المعاملات النموذج المواجه للمستخدم باستخدام [JSON Schema](https://json-schema.org/). موسَّعة بخصائص `x-*` مخصصة للبيانات الديناميكية.
+
+```javascript
+parameters: {
+  type: 'object',
+  required: ['repository', 'title'],
+  properties: {
+    // Simple text input
+    title: {
+      type: 'string',
+      title: 'Issue Title',
+      description: 'A short descriptive title',
+    },
+
+    // Text area (multiline)
+    body: {
+      type: 'string',
+      title: 'Description',
+    },
+
+    // Dynamic dropdown from RPC source
+    repository: {
+      type: 'string',
+      title: 'Repository',
+      'x-source': 'rpc_repos_list',   // References a source definition
+      'x-fallback': 'input',           // Fallback to text input if source fails
+    },
+
+    // Static dropdown (enum)
+    priority: {
+      type: 'string',
+      title: 'Priority',
+      enum: ['low', 'medium', 'high', 'critical'],
+      default: 'medium',
+    },
+
+    // Boolean toggle
+    isDraft: {
+      type: 'boolean',
+      title: 'Draft',
+      default: false,
+    },
+
+    // Number input
+    count: {
+      type: 'number',
+      title: 'Count',
+    },
+
+    // Array input (comma-separated or JSON)
+    labels: {
+      type: 'array',
+      title: 'Labels',
+    },
+  },
+}
+```
+
+**قيم `type` المدعومة:**
+
+| النوع      | يُعرَض كـ                                   |
+| --------- | ------------------------------------------------ |
+| `string`  | إدخال نصي (أو قائمة منسدلة إن وُجد `enum`)    |
+| `number`  | إدخال رقمي                                    |
+| `boolean` | مفتاح تبديل                                   |
+| `array`   | إدخال متعدد القيم                               |
+| `object`  | مجموعة نموذج متداخلة                               |
+
+**امتدادات مخصصة:**
+
+| الامتداد    | النوع   | الوصف                                    |
+| ------------ | ------ | -------------------------------------------------- |
+| `x-source`   | string | مفتاح مصدر RPC (مثل `'rpc_channels_list'`)    |
+| `x-fallback` | string | وضع الاحتياط إذا فشل المصدر (`'input'`)       |
+
+## الطلبات والتسلسل
+
+لكل إجراء مصفوفة `requests`. تُنفَّذ الطلبات **بالتسلسل** — استجابة الطلب N متاحة كعناصر نائبة في الطلب N+1.
+
+**طلب واحد:**
+
+```javascript
+requests: [
+  {
+    url: "https://api.example.com/issues",
+    method: "POST",
+    headers: {
+      Authorization: "Bearer [[accessToken]]",
+      "Content-Type": "application/json",
+    },
+    bodyType: "json",
+    body: {
+      title: "{{title}}",
+      body: "{{body}}",
+      labels: "{{labels}}",
+    },
+    mapping: {
+      issueId: "$.id",
+      issueUrl: "$.html_url",
+    },
+  },
+];
+```
+
+**طلبات متسلسلة** (متعددة الخطوات):
+
+```javascript
+// Example: Send a direct message on Slack
+// Step 1: Open a DM channel with the user
+// Step 2: Post a message to that channel
+requests: [
+  // Step 1: Open DM channel
+  {
+    url: "https://slack.com/api/conversations.open",
+    method: "POST",
+    headers: {
+      Authorization: "Bearer [[accessToken]]",
+      "Content-Type": "application/json",
+    },
+    bodyType: "json",
+    body: { users: "{{userId}}" },
+    // Array mapping → values forwarded to next request (NOT persisted)
+    mapping: [{ name: "dmChannelId", value: "$.channel.id" }],
+  },
+
+  // Step 2: Post message (uses dmChannelId from step 1)
+  {
+    url: "https://slack.com/api/chat.postMessage",
+    method: "POST",
+    headers: {
+      Authorization: "Bearer [[accessToken]]",
+      "Content-Type": "application/json",
+    },
+    bodyType: "json",
+    body: {
+      channel: "{{dmChannelId}}", // ← From step 1's mapping
+      text: "{{messageText}}", // ← From user's form input
+    },
+    mapping: {
+      messageTs: "$.ts",
+      channelId: "$.channel",
+    },
+  },
+];
+```
+
+**حقول الطلب:**
+
+| الحقل         | النوع            | مطلوب | الوصف                                             |
+| ------------- | ----------------- | -------- | ----------------------------------------------------------- |
+| `url`         | string          | ✅       | عنوان URL كامل (يدعم `[[cred]]` و `{{param}}`)          |
+| `method`      | string          | ✅       | طريقة HTTP: `GET`، `POST`، `PUT`، `PATCH`، `DELETE`    |
+| `headers`     | object          | —        | ترويسات الطلب                                          |
+| `queryParams` | object          | —        | معاملات استعلام URL                                      |
+| `bodyType`    | string          | —        | `'json'`، `'x-www-form-urlencoded'`، `'formData'`       |
+| `body`        | object          | —        | جسم الطلب (تُستبدل العناصر النائبة وقت التشغيل)          |
+| `mapping`     | object أو array | ✅       | استخراج الاستجابة (انظر تعيين الاستجابة أدناه)         |
+
+## العناصر النائبة
+
+هناك صيغتان للعناصر النائبة:
+
+| الصيغة    | المصدر                       | تُحفظ؟ | مثال                          |
+| --------- | ------------------------------- | ------------ | ----------------------------------- |
+| `[[key]]` | `credentials` + `metadata`   | غ/م        | `[[accessToken]]`، `[[storeId]]` |
+| `{{key}}` | إدخال المستخدم + سياق وقت التشغيل | لا         | `{{channel}}`، `{{store_url}}`   |
+
+**ترتيب حلّ `{{key}}`:**
+
+1. إدخال نموذج المستخدم (`parameters`)
+2. مخرجات تعيين الطلب السابق (في الطلبات المتسلسلة)
+3. قيم `auth.config` (لطلبات التسجيل)
+4. قيم يحقنها النظام (`webhookUrl`، `subdomain`، `uid`)
+
+**الحفاظ على النوع:** إذا كان العنصر النائب هو القيمة بأكملها (مثل `body: { data: '{{myObject}}' }`)، يُحفظ النوع الخام — تبقى الكائنات كائنات والمصفوفات مصفوفات. إذا كان العنصر النائب جزءاً من سلسلة أكبر (مثل `"Hello {{name}}!"`)، يُحوَّل إلى نص.
+
+## تعيين الاستجابة
+
+يستخرج التعيين قيماً من استجابات API. صيغتان بسلوكين مختلفين:
+
+**تعيين كائن** — تُ**حفظ** القيم في قاعدة البيانات:
+
+| خطوة المصادقة                                              | تُخزَّن في                                              |
+| --------------------------------------------------------- | --------------------------------------------------------- |
+| `get_token`، `refresh_token`، `registrationRequests`    | `InstalledMiniApps.credentials`                        |
+| `userDetails`                                            | `InstalledMiniApps.metadata` (يُحفظ التعيين كاملاً) |
+
+```javascript
+// get_token / refresh_token / registrationRequests → credentials
+mapping: {
+  accessToken: '$.access_token',
+  webhookId: '$.webhook.id',
+}
+
+// userDetails → metadata
+mapping: {
+  uid: '$.user.id',
+  storeId: '$.user.store.id',
+  storeName: '$.user.store.title',
+}
+```
+
+استخدم تعيين الكائن في `get_token` و`refresh_token` و`registrationRequests` و`userDetails`.
+
+**تعيين مصفوفة** — تُ**مرَّر القيم إلى الطلب التالي** فقط (لا تُحفظ):
+
+```javascript
+mapping: [
+  { name: "channelId", value: "$.channel.id" },
+  { name: "threadTs", value: "$.message.ts" },
+];
+```
+
+استخدم تعيين المصفوفة في `requests` الخاصة بالإجراء عندما تحتاج إلى تسلسل مخرجات الطلبات.
+
+**صيغة مسار النقطة:** تستخدم القيم صيغة شبيهة بـ JSONPath تبدأ بـ `$`:
+
+| التعبير         | الوصف             |
+| ------------------- | -------------------------- |
+| `$.id`             | حقل `id` في المستوى الجذر     |
+| `$.data.user.name` | وصول متداخل              |
+| `$.items[0].code`  | وصول بفهرس المصفوفة          |
+| `$.channel`        | مرجع حقل مباشر     |
+
+## دوال التطبيق (خطوات المسار)
+
+الإجراءات ليست مقتصرة على HTTP. مصفوفة `requests[]` هي **مسار خطوات** حيث كل عنصر إما طلب HTTP (الافتراضي) أو خطوة دالة تطبيق.
+
+دوال التطبيق هي مساعدات JavaScript صغيرة ومعزولة تُشحن في تعريف الميني أب (بجانب `source` و`actions`). تتيح لك البحث أو إعادة تشكيل البيانات أو التحقق منها بين استدعاءات HTTP — مثلاً إيجاد صف في جدول حسب اسم العمود، أو بناء جسم تحديث متناثر.
+
+### تعريف الدوال
+
+```javascript
+functions: {
+  findRows: {
+    params: ['values', 'searchColumn', 'searchValue', 'matchType', 'firstOnly'],
+    code: `
+      // Plain JavaScript — must return a plain object
+      // Throw an Error to abort the action with a friendly message
+      var rows = Array.isArray(values) ? values : [];
+      // ... search logic ...
+      return { found: true, rowNumber: 2, row: { Email: 'a@b.com' } };
+    `,
+  },
+},
+```
+
+### استخدام دالة كخطوة في المسار
+
+```javascript
+requests: [
+  {
+    // Step 1 — HTTP (type defaults to 'http' when omitted)
+    url: "https://sheets.googleapis.com/v4/spreadsheets/{{spreadsheetId}}/values/{{sheetName}}",
+    method: "GET",
+    headers: { Authorization: "Bearer [[accessToken]]" },
+    mapping: { rangeValues: "$.values" },
+  },
+  {
+    // Step 2 — App Function
+    type: "function",
+    name: "findRows",
+    args: {
+      values: "{{rangeValues}}", // preserves arrays (single-placeholder passthrough)
+      searchColumn: "{{searchColumn}}",
+      searchValue: "{{searchValue}}",
+      matchType: "{{matchType}}",
+      firstOnly: true,
+    },
+  },
+];
+```
+
+تُدمَج مفاتيح الكائن المُرجَع (`found`، `rowNumber`، `row`، …) في سياق العناصر النائبة المشترك وتكون متاحة للخطوات اللاحقة ولتعيينات الحقول المخصصة في الأتمتة.
+
+### حدود الأمان والعزل
+
+| القاعدة           | التفصيل                                                                                                                            |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| حدود الثقة | تأتي شيفرة الدالة من تعريف الميني أب **المراجع** في قاعدة البيانات الأساسية — وليس أبداً من مستخدمي المستأجر                          |
+| بلا بيانات اعتماد | تُحلّ وسائط الدالة من إدخال النموذج + مخرجات الخطوات السابقة فقط. لا يُمرَّر `[[accessToken]]` أو أسرار أخرى **أبداً** |
+| وقت التشغيل        | `isolated-vm`: ذاكرة 128 MB، مهلة 2 ثانية، بلا وصول للشبكة / نظام الملفات                                                        |
+| نوع الإرجاع    | يجب أن يُرجع **كائن JSON عادياً** (وليس مصفوفة أو قيمة أولية)                                                                  |
+| الأخطاء         | الرمي (أو فشل العزل) يُوقف المسار بتلك الرسالة                                                            |
+
+### مرجع نوع الخطوة
+
+| `type`                | الشكل                                                                             | ملاحظات                                          |
+| ----------------------- | ------------------------------------------------------------------------------------ | -------------------------------------------------- |
+| `'http'` (أو محذوف) | حقول طلب HTTP الحالية (`url`، `method`، `headers`، `body`، `mapping`، …) | متوافق بالكامل مع الإصدارات السابقة                       |
+| `'function'`          | `{ type: 'function', name, args }`                                                | يجب أن يوجد `name` في `definition.functions`     |

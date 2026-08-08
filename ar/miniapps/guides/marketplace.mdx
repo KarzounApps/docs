@@ -1,0 +1,63 @@
+---
+title: "قائمة السوق"
+description: "البيانات الوصفية والأيقونات والنصوص التي تتحكم في ظهور ميني أبك في السوق."
+---
+
+يظهر ميني أبك في سوق كرزون. تتحكم هذه الحقول في كيفية عرضه:
+
+```javascript
+{
+  title: 'My Service',                                    // Main heading
+  label: 'My Service',                                    // Badge/tag label
+  shortDescription: 'Automate workflows with My Service', // Subtitle
+  description: `
+Connect **My Service** to Karzoun to:
+
+- Automatically create tasks from incoming orders
+- Send notifications when customer actions happen
+- Sync data bi-directionally
+
+## Setup Instructions
+
+1. Create an API key in My Service settings
+2. Install this app from the Marketplace
+3. Paste your API key and click Connect
+
+## Supported Events
+
+| Event              | Description                    |
+| ------------------ | ------------------------------ |
+| order.created      | A new order is placed          |
+| customer.updated   | Customer profile is updated    |
+  `,
+  icon: 'https://cdn.example.com/icon.svg',              // App icon (SVG recommended)
+  logo: 'https://cdn.example.com/logo.svg',              // Full logo
+  docsUrl: 'https://docs.example.com/karzoun-integration',// External docs link
+  youtubeId: 'dQw4w9WgXcQ',                              // Tutorial video (optional)
+  category: 'ecommerce',                                  // Filter category
+  status: 'private',                                       // Karzoun sets 'public' after approval
+  version: '1.0.0',                                       // Semantic version
+}
+```
+
+## قائمة تحقق الأصول
+
+| الأصل         | المتطلب                                        |
+| ------------- | ------------------------------------------------------ |
+| `icon`        | رابط HTTPS، SVG أو PNG، مربّع، مقروء عند 32×32     |
+| `logo`        | رابط HTTPS، شعار أفقي لصفحة التفاصيل            |
+| `docsUrl`     | دليل الإعداد للمستخدمين النهائيين (وليس وثائق كرزون)     |
+| `description` | Markdown بخطوات الإعداد وجدول الأحداث             |
+| `youtubeId`   | فيديو توضيحي اختياري                             |
+
+استضف الأيقونات والشعارات على بنية تحتية تتحكم بها.
+
+## قبل التقديم
+
+- [ ] `shortDescription` أقل من ~120 حرفاً
+- [ ] يتضمن `description` خطوات إعداد مرقّمة
+- [ ] يطابق `category` فلاتر السوق
+- [ ] يتبع `version` semver
+- [ ] تستخدم المسودة `status: 'private'` حتى توافق كرزون
+
+[قدّم للمراجعة](/ar/miniapps/guides/submission) مع تعريف JSON وبيانات اعتماد بيئة الاختبار.

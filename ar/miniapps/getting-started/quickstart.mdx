@@ -1,0 +1,84 @@
+---
+title: "البداية السريعة"
+description: "ابنِ تعريفاً بسيطاً لميني أب بمصادقة bearer-token وإجراء واحد."
+---
+
+ابنِ تعريفاً بسيطاً لميني أب بمصادقة bearer-token وإجراء واحد. عندما يعمل على بيئة الاختبار لدى مزوّدك، [قدّمه للمراجعة](/ar/miniapps/guides/submission).
+
+## تعريف بسيط
+
+```javascript
+const myMiniApp = {
+  ns: "my-service",
+  name: "my-service",
+  type: "my-service",
+  title: "My Service",
+  label: "My Service",
+  description: "Connect My Service to automate workflows.",
+  shortDescription: "My Service integration",
+  status: "private", // Karzoun sets 'public' after approval
+  version: "1.0.0",
+  category: "productivity",
+  icon: "https://cdn.example.com/icon.svg",
+  logo: "https://cdn.example.com/logo.svg",
+  docsUrl: "https://docs.example.com/your-karzoun-guide",
+
+  auth: {
+    type: "bearer_token",
+    sensitiveKeys: ["accessToken"],
+    config: { accessToken: "" },
+    userDetails: {
+      url: "https://api.example.com/me",
+      method: "GET",
+      headers: { Authorization: "Bearer [[accessToken]]" },
+      bodyType: "json",
+      body: {},
+      mapping: { uid: "$.id", name: "$.name" },
+    },
+  },
+
+  actions: [
+    {
+      name: "sendMessage",
+      title: "Send Message",
+      description: "Send a message to a channel",
+      renderStrategy: "auto",
+      parameters: {
+        type: "object",
+        required: ["channel", "text"],
+        properties: {
+          channel: { type: "string", title: "Channel" },
+          text: { type: "string", title: "Message Text" },
+        },
+      },
+      requests: [
+        {
+          url: "https://api.example.com/messages",
+          method: "POST",
+          headers: {
+            Authorization: "Bearer [[accessToken]]",
+            "Content-Type": "application/json",
+          },
+          bodyType: "json",
+          body: { channel: "{{channel}}", text: "{{text}}" },
+          mapping: { messageId: "$.id" },
+        },
+      ],
+    },
+  ],
+
+  triggers: [],
+  webhook: null,
+  source: {},
+};
+```
+
+<Tip>
+  **اختبر محلياً أولاً** — تحقّق من شكل JSON، واستدعِ واجهات مزوّدك بنفس عناوين URL/الترويسات، وتحقّق من حمولات الويب هوك قبل التقديم. تُوفَّر وصول إلى بيئة اختبار كرزون أثناء المراجعة.
+</Tip>
+
+## الخطوات التالية
+
+1. [مخطط المستند](/ar/miniapps/reference/document-schema) — الحقول المطلوبة
+2. [المصادقة](/ar/miniapps/guides/authentication) — تدفقات OAuth والتسجيل
+3. [التقديم للمراجعة](/ar/miniapps/guides/submission) — أرسل حزمتك إلى كرزون

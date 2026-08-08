@@ -1,0 +1,113 @@
+---
+title: "أنماط الوكلاء"
+description: "أوامر وسير عمل موثوقة للوكلاء الذين يستخدمون أدوات كرزون MCP."
+---
+
+يمنح MCP الوكلاء **أيديًا** على بيانات كرزون. تساعد هذه الأنماط في الحصول على نتائج موثوقة دون تكرار نفسك في كل محادثة.
+
+<Tip title="مكان مخصص للقطة شاشة">
+  _قريبًا: لقطة شاشة لوكيل يسرد العملاء ويطبّق وسومًا عبر أدوات كرزون MCP._
+</Tip>
+
+للاتصالات **المستضافة** (Claude.ai، Manus، Cursor عن بُعد)، راجع [موصّلات تطبيقات الذكاء الاصطناعي](/ar/mcp-server/setup/ai-connectors) — نفس الأدوات، إعداد عميل مختلف.
+
+## أرْسِ الوكيل أولًا
+
+أضف تعليمات نظام أو مشروع قصيرة حتى يعرف النموذج أن أدوات كرزون موجودة:
+
+```text
+You have Karzoun MCP tools for CRM and workspace data.
+- Prefer read tools (customers, tags, customerDetail) before mutations.
+- Use page: 1, perPage: 10 for list queries unless I ask for more.
+- Confirm destructive actions (customersRemove, tagsRemove) before calling.
+```
+
+وجّه الوكيل إلى موقع الوثائق هذا لأسماء العمليات: [كتالوج الأدوات](/ar/mcp-server/tools/catalog).
+
+## النمط: ابحث قبل التنفيذ
+
+| الخطوة | الأداة                           | لماذا                                       |
+| ---- | -------------------------------- | -------------------------------------------- |
+| 1    | `customers` مع `searchValue` | إيجاد السجل الصحيح                     |
+| 2    | `customerDetail` مع `_id`    | سياق كامل (الوسوم، المالك، الحقول المخصصة) |
+| 3    | `customersEdit` أو `tagsTag`   | تعديل بثقة                    |
+
+**مثال أمر:** _"Find customer with email alice@example.com, show their tags, then add tag VIP if missing."_
+
+## النمط: استكشاف آمن
+
+ابدأ بالقراءة فقط ببادئة أدوات:
+
+```json
+"KARZOUN_MCP_TOOL_PREFIX": "customer"
+```
+
+أو وجّه: _"Only use query tools for the next five messages."_
+
+استخدم `currentUser` للتحقق من عمل الرمز ومعرفة هوية مساحة العمل التي يعمل بها التطبيق.
+
+## النمط: قوائم مرقّمة
+
+غالبًا ما تجلب الوكلاء قوائم بلا حدود وتصطدم بـ **حد الاستجابة 512 كيلوبايت**.
+
+**أمر جيد:** _"List the first 5 customers created this month using page 1 and perPage 5."_
+
+**مثال حجج الأداة:**
+
+```json
+{ "page": 1, "perPage": 5 }
+```
+
+راجع [الترقيم](/ar/developers/guides/pagination) لـ `pagination.totalCount` و`hasNextPage`.
+
+## النمط: نظافة CRM
+
+| الهدف           | الأدوات                                                            |
+| -------------- | -------------------------------------------------------------------- |
+| فحص التكرار   | `customers` + `searchValue`، ثم `customerDetail` على المرشحين |
+| الدمج          | `customersMerge` (أكّد مع المستخدم أولًا)                       |
+| حملات الوسوم  | `tags` → `tagsTag` على معرّفات العملاء                               |
+| البحث عن منتج | `products` → `productDetail`                                     |
+
+## النمط: فحص خطافات الويب
+
+لتصحيح أخطاء التكامل (وليس خطافات المزوّد):
+
+1. `webhooks` — سرد الاشتراكات
+2. `webhookDetail` — فحص الإعداد
+3. `webhookDeliveryLogs` — رؤية الإخفاقات ورموز حالة HTTP
+
+اربط مع [دليل خطافات الويب](/ar/developers/guides/webhooks) لأحداث المستأجر الصادرة.
+
+## النمط: وكيل خلفية مستضاف
+
+لعمال جهة الخادم الذين يستدعون `/mcp`:
+
+1. خزّن `KARZOUN_APP_TOKEN` في مدير الأسرار
+2. `initialize` → التقط `mcp-session-id`
+3. `tools/call` في حلقة بأسماء أدوات صريحة
+4. سجّل أخطاء GraphQL من استجابات الأدوات
+
+لا تعرض الجلسة أو الرمز للمستخدمين النهائيين. التفاصيل: [MCP المستضاف](/ar/mcp-server/setup/hosted).
+
+## أنماط مضادة
+
+| تجنّب                                | افعل بدلًا من ذلك                                           |
+| ---------------------------------------- | --------------------------------------------------------- |
+| "Do everything with Karzoun" (غامض) | سمِّ الأدوات أو النتائج: "list open tags"             |
+| `perPage` ضخم في أول استدعاء         | ابدأ بـ 5–20 صفًا                                 |
+| تعديلات دون تأكيد       | اطلب من الوكيل الاقتراح ثم التنفيذ                   |
+| تضمين الرموز في قواعد Cursor     | أبقِ الرموز في `env` لـ MCP أو أسرار الخادم           |
+| استخدام MCP في JavaScript الواجهة     | GraphQL من الخلفية، أو MCP المستضاف من جهة الخادم فقط |
+
+## قواعد مخصصة في Cursor
+
+اختياري `.cursor/rules/karzoun-mcp.mdc`:
+
+```markdown
+# Karzoun MCP
+
+- Use Karzoun tools for live CRM data; do not invent customer ids.
+- After mutations, summarize what changed and link to relevant record ids.
+- On permission errors, tell the user to check Developer → Apps scopes.
+```

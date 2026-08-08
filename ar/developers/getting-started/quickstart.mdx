@@ -1,0 +1,70 @@
+---
+title: "البداية السريعة"
+description: "نفّذ أول استدعاء لواجهة GraphQL العامة لكرزون في أقل من خمس دقائق."
+---
+
+نفّذ أول استدعاء لواجهة GraphQL العامة لكرزون في أقل من خمس دقائق.
+
+<Steps>
+  <Step title="أنشئ رمز تطبيق">
+    1. افتح **المطوّر ← التطبيقات** (`/developer/apps`)
+    2. أنشئ تطبيقاً وانسخ JWT من استجابة `appsAdd`
+    3. احفظه بأمان — يُعرض مرة واحدة
+
+    أرسل الرمز مع كل طلب:
+
+    ```bash
+    -H "x-app-token: YOUR_APP_TOKEN_JWT"
+    ```
+
+    <Warning>
+      لا تضع رموز التطبيقات في Git أبداً ولا تعرضها في JavaScript على جانب العميل.
+    </Warning>
+  </Step>
+  <Step title="اعثر على عنوان GraphQL">
+    نقطة نهاية GraphQL لمساحة العمل:
+
+    ```
+    https://{subdomain}.api.{domain}/graphql
+    ```
+
+    مثال: `https://dev.api.karzoun.chat/graphql`
+
+    نقطة نهاية MCP المستضافة هي نفس الأصل مع `/mcp` بدلاً من `/graphql`.
+  </Step>
+  <Step title="نفّذ استعلاماً">
+    جرّب هذا الاستعلام لسرد الوسوم:
+
+    <CodeGroup>
+    ```graphql
+    query {
+      tags(page: 1, perPage: 5) {
+        data {
+          _id
+          name
+        }
+        pagination {
+          totalCount
+        }
+      }
+    }
+    ```
+
+    ```bash
+    curl -X POST 'https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql' \
+      -H 'Content-Type: application/json' \
+      -H 'x-app-token: YOUR_APP_TOKEN' \
+      -d '{"query":"query { tags(page: 1, perPage: 5) { data { _id name } } }"}'
+    ```
+    </CodeGroup>
+
+    <Tip>
+      تفضّل محرراً مرئياً؟ افتح [ساحة GraphQL](https://karzoun.chat/developer/playground).
+    </Tip>
+  </Step>
+</Steps>
+
+## الخطوات التالية
+
+- [المصادقة](/ar/developers/getting-started/authentication)
+- [مرجع GraphQL API](/api-reference)

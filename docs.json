@@ -345,9 +345,20 @@
             {
               "header": "التوثيق",
               "items": [
-                { "label": "الصفحة الرئيسية", "href": "/ar" },
+                { "label": "المطوّرون", "href": "/ar/developers" },
+                { "label": "GraphQL API", "href": "/api-reference" },
                 { "label": "مركز المساعدة", "href": "/ar/help-center" },
                 { "label": "سجل التغييرات", "href": "/ar/changelog" }
+              ]
+            },
+            {
+              "header": "قانوني",
+              "items": [
+                { "label": "الشروط", "href": "/ar/legal/terms" },
+                {
+                  "label": "الاستخدام المسؤول",
+                  "href": "/ar/legal/responsible-use"
+                }
               ]
             }
           ]
@@ -360,6 +371,152 @@
               {
                 "group": "ابدأ من هنا",
                 "pages": ["ar/index", "ar/changelog"]
+              },
+              {
+                "group": "قانوني",
+                "pages": ["ar/legal/terms", "ar/legal/responsible-use"]
+              }
+            ]
+          },
+          {
+            "tab": "المطوّرون",
+            "icon": "code-2",
+            "groups": [
+              {
+                "group": "نظرة عامة",
+                "pages": ["ar/developers/index"]
+              },
+              {
+                "group": "البداية",
+                "pages": [
+                  "ar/developers/getting-started/quickstart",
+                  "ar/developers/getting-started/authentication"
+                ]
+              },
+              {
+                "group": "أدلة",
+                "pages": [
+                  "ar/developers/guides/pagination",
+                  "ar/developers/guides/webhooks",
+                  "ar/developers/guides/errors"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "GraphQL API",
+            "icon": "brackets",
+            "graphql": {
+              "source": "public-api.graphql",
+              "directory": "api-reference"
+            }
+          },
+          {
+            "tab": "الشركاء",
+            "icon": "handshake",
+            "groups": [
+              {
+                "group": "الشركاء",
+                "pages": [
+                  "ar/partners/index",
+                  "ar/partners/onboarding",
+                  "ar/partners/whitelabel"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "MCP",
+            "icon": "bot",
+            "groups": [
+              {
+                "group": "نظرة عامة",
+                "pages": ["ar/mcp-server/index"]
+              },
+              {
+                "group": "الإعداد",
+                "pages": [
+                  "ar/mcp-server/setup/cursor",
+                  "ar/mcp-server/setup/claude-desktop",
+                  "ar/mcp-server/setup/hosted",
+                  "ar/mcp-server/setup/ai-connectors",
+                  "ar/mcp-server/setup/security"
+                ]
+              },
+              {
+                "group": "أدلة",
+                "pages": [
+                  "ar/mcp-server/guides/how-it-works",
+                  "ar/mcp-server/guides/agent-patterns",
+                  "ar/mcp-server/guides/troubleshooting"
+                ]
+              },
+              {
+                "group": "الأدوات",
+                "pages": ["ar/mcp-server/tools/catalog"]
+              }
+            ]
+          },
+          {
+            "tab": "SDK",
+            "icon": "package",
+            "groups": [
+              {
+                "group": "SDK",
+                "pages": [
+                  "ar/sdk/index",
+                  "ar/sdk/dashboard-sdk",
+                  "ar/sdk/pixel"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "MiniApps",
+            "icon": "puzzle",
+            "groups": [
+              {
+                "group": "نظرة عامة",
+                "pages": ["ar/miniapps/index", "ar/miniapps/architecture"]
+              },
+              {
+                "group": "البداية",
+                "pages": [
+                  "ar/miniapps/getting-started/quickstart",
+                  "ar/miniapps/reference/document-schema"
+                ]
+              },
+              {
+                "group": "المفاهيم الأساسية",
+                "pages": [
+                  "ar/miniapps/guides/authentication",
+                  "ar/miniapps/guides/actions",
+                  "ar/miniapps/guides/dynamic-data-sources",
+                  "ar/miniapps/guides/triggers",
+                  "ar/miniapps/guides/webhooks",
+                  "ar/miniapps/guides/sync",
+                  "ar/miniapps/guides/ecommerce"
+                ]
+              },
+              {
+                "group": "النشر",
+                "pages": [
+                  "ar/miniapps/guides/marketplace",
+                  "ar/miniapps/guides/submission",
+                  "ar/miniapps/examples/index",
+                  "ar/miniapps/examples/dropbox",
+                  "ar/miniapps/examples/slack",
+                  "ar/miniapps/examples/github",
+                  "ar/miniapps/examples/salla"
+                ]
+              },
+              {
+                "group": "مرجع",
+                "pages": [
+                  "ar/miniapps/reference/api-reference",
+                  "ar/miniapps/guides/best-practices",
+                  "ar/miniapps/guides/troubleshooting"
+                ]
               }
             ]
           },
@@ -370,16 +527,6 @@
               {
                 "group": "مركز المساعدة",
                 "pages": ["ar/help-center/index"]
-              }
-            ]
-          },
-          {
-            "tab": "للمطوّرين",
-            "icon": "code-2",
-            "groups": [
-              {
-                "group": "تجربة اللغة",
-                "pages": ["ar/developers/quickstart"]
               }
             ]
           }

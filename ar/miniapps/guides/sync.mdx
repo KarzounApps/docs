@@ -1,0 +1,156 @@
+---
+title: "المزامنة"
+description: "الاستيراد الجماعي ومزامنة التجارة في الوقت الفعلي لميني أب التجارة الإلكترونية."
+---
+
+تستخدم ميني أب التجارة الإلكترونية والكتالوج الكتلة العلوية `sync` لـ **الاستيراد الجماعي** (المزامنة الأولية والمجدولة) و**معالجات الويب هوك في الوقت الفعلي** التي تشارك نفس مفردات ربط الحقول.
+
+استخدم `sync` عندما يجب أن يحافظ تكاملك على محاذاة الطلبات أو العملاء أو المنتجات أو السلال بين منصة خارجية وكرزون — وليس فقط إطلاق مشغّلات الأتمتة.
+
+<Info>
+  **انظر أيضاً**
+
+  - [الويب هوك](/ar/miniapps/guides/webhooks) — استخراج الأحداث والتحقق و`customerExtraction`
+  - [مثال Salla](/ar/miniapps/examples/salla) — نمط كامل لـ OAuth + ويب هوك + مزامنة
+  - [نظرة عامة على التجارة الإلكترونية](/ar/miniapps/guides/ecommerce) — متى تستخدم المزامنة مقابل المشغّلات فقط
+</Info>
+
+## البنية
+
+```javascript
+sync: {
+  baseUrl: 'https://api.example.com/v2',
+  // Same auth styles as actions — Bearer, Basic ([[user]]:[[pass]]), or custom headers
+  headers: {
+    Authorization: 'Bearer [[accessToken]]',
+    'Content-Type': 'application/json',
+  },
+  syncConfiguration: {
+    enabled: true,
+    batchSize: 200,
+    rateLimitPerSecond: 10,
+    timeout: 30000,
+  },
+  resources: {
+    products: { /* ... */ },
+    customers: { /* ... */ },
+    orders: { /* ... */ },
+  },
+  webhooks: {
+    handlers: {
+      'order.created': { /* same mapping style as resources */ },
+    },
+  },
+},
+```
+
+| الكتلة                 | الغرض                                                                    |
+| --------------------- | ------------------------------------------------------------------------- |
+| `baseUrl` + `headers` | بادئة مشتركة لجميع استدعاءات HTTP للمزامنة (تدعم `[[accessToken]]`)        |
+| `syncConfiguration`   | حجم الدفعة وحدود المعدل والمهلات لمهام الاستيراد الجماعي                           |
+| `resources.*`         | نقاط نهاية قائمة/تفاصيل مع ترقيم صفحات + `apiMapping` إلى أنواع محتوى كرزون |
+| `webhooks.handlers`   | ربطات إنشاء/تحديث فورية بمفتاح اسم الحدث                       |
+
+## تعريف المورد
+
+كل مفتاح تحت `resources` يعرّف كياناً واحداً قابلاً للاستيراد:
+
+```javascript
+products: {
+  name: 'products',
+  displayName: 'Products',
+  description: 'Sync products from your platform',
+  contentType: 'core:product',
+  expandDetails: true,
+  endpoints: {
+    list: { url: '/products', method: 'GET' },
+    details: { url: '/products/{id}', method: 'GET' },
+  },
+  pagination: {
+    paramName: 'per_page',
+    defaultLimit: 60,
+    maxLimit: 1000,
+  },
+  responseMapping: {
+    dataProperty: 'data',
+    totalProperty: 'pagination.total',
+  },
+  apiMapping: {
+    name: 'name',
+    code: { path: 'id', transform: 'toString' },
+    unitPrice: { paths: ['price.amount', 'regular_price.amount'], transform: 'coalesce' },
+    // ...
+  },
+  icon: 'package',
+},
+```
+
+| الحقل               | الوصف                                                                          |
+| ------------------- | ------------------------------------------------------------------------------------- |
+| `contentType`       | كيان كرزون المستهدف (`core:product` و`core:customer` و`ecommerce:orders` و…)      |
+| `endpoints.list`    | جلب مجموعة مع ترقيم صفحات                                                            |
+| `endpoints.details` | إثراء اختياري لكل سجل عندما يكون `expandDetails: true`                            |
+| `apiMapping`        | قواعد ربط الحقول (مسارات وتحويلات وقيم ثابتة) — نفس مخطط معالجات الويب هوك  |
+
+### تحويلات الربط
+
+تحويلات شائعة تُستخدم في `apiMapping`:
+
+| التحويل        | الاستخدام                                                                        |
+| ------------------ | ----------------------------------------------------------------------------- |
+| `toString`       | تحويل المعرّفات إلى سلاسل                                                       |
+| `toNumberOrNull` | حقول رقمية مع احتياطي null                                          |
+| `coalesce`       | أول مسار غير فارغ في مصفوفة `paths`                                      |
+| `compute` + `fn` | مساعدات خاصة بالمنصة (وثّق أسماء `fn` المخصصة في تقديمك) |
+| `mapItems`       | بنود السطر في الطلبات/السلال                                                 |
+| `joinCodes`      | مصفوفات أكواد الخصم/القسائم                                                |
+
+## معالجات الويب هوك تحت المزامنة
+
+تستخدم الأحداث الفورية `sync.webhooks.handlers` (مفضّلة على `webhook.ecommerce` القديمة):
+
+```javascript
+sync: {
+  // ... resources ...
+  webhooks: {
+    handlers: {
+      'order.created': {
+        recordType: 'order',
+        operation: 'create',
+        mapping: {
+          code: '$.data.id',
+          orderNumber: '$.data.reference_id',
+          status: '$.data.status.name',
+          totalAmount: '$.data.amounts.total.amount',
+          items: { path: '$.data.items', transform: 'mapItems' },
+        },
+      },
+      'order.status.updated': {
+        recordType: 'order',
+        operation: 'update',
+        mapping: {
+          code: '$.data.id',
+          status: '$.data.status.name',
+        },
+      },
+    },
+  },
+},
+```
+
+اربط كل حدث معالج بـ [مشغّل](/ar/miniapps/guides/triggers) مطابق حتى تتمكن الأتمتة من التفاعل بعد معالجة المزامنة.
+
+## دورة حياة المزامنة الجماعية
+
+1. يثبّت المستأجر ميني أب ويكمل إعداد OAuth / مفتاح API.
+2. تشغّل كرزون موارد `resources` المفعّلة وفق `syncConfiguration`.
+3. تصل التغييرات المستمرة عبر ويب هوك المزوّد → `sync.webhooks.handlers`.
+4. تحمي حدود المعدل وأحجام الدفعات واجهتك وعمال كرزون معاً.
+
+## قائمة تحقق التقديم
+
+- [ ] اختبار نقاط نهاية القائمة + التفاصيل ببيانات اعتماد بيئة الاختبار
+- [ ] يغطي `apiMapping` الحقول المطلوبة لكل `contentType`
+- [ ] تطابق أحداث معالج الويب هوك سلاسل `triggers[].event` تماماً
+- [ ] يطابق ترقيم الصفحات في `responseMapping` شكل JSON لدى مزوّدك
+- [ ] تضمين حمولات عيّنة في [حزمة التقديم](/ar/miniapps/guides/submission)

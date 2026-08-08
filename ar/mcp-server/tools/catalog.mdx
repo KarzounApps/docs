@@ -1,0 +1,102 @@
+---
+title: "كتالوج أدوات MCP"
+description: "جميع أدوات MCP التي يعرضها خادم كرزون MCP، مربوطة 1:1 بعمليات GraphQL العامة."
+---
+
+<Note>
+  مُولَّد تلقائيًا من `mcp-tools.json` في [مصدر mcp-server](https://github.com/KarzounApps/mcp-server). لا تعدّل يدويًا — أعد التوليد من مستودع المصدر عند تغيّر الأدوات.
+</Note>
+
+**75** أداة متاحة (1:1 مع عمليات GraphQL العامة).
+
+تصفّح حسب المجال أدناه. لحجج الحقول وأنواع الإرجاع، راجع [مرجع واجهة GraphQL](/api-reference). نصائح الاستخدام: [أنماط الوكلاء](/ar/mcp-server/guides/agent-patterns).
+
+## التطبيقات
+
+| الأداة         | النوع     | الوصف                                                              |
+| ------------ | -------- | ---------------------------------------------------------------------------- |
+| `appDetail`  | query    | جلب بيانات اعتماد تطبيق واحد بالمعرّف.                                     |
+| `apps`       | query    | قائمة تطبيقات مرقّمة مع تصفية بحث اختيارية.                         |
+| `appsAdd`    | mutation | إنشاء بيانات اعتماد تطبيق جديدة بنطاق مجموعة مستخدمين وصلاحية اختيارية. |
+| `appsEdit`   | mutation | تحديث اسم التطبيق وتاريخ الانتهاء فقط.                                     |
+| `appsRemove` | mutation | حذف بيانات اعتماد تطبيق بالمعرّف.                                          |
+
+## جهات الاتصال
+
+| الأداة                      | النوع     | الوصف                                                                                             |
+| ------------------------- | -------- | ------------------------------------------------------------------------------------------------------------- |
+| `allBrands`               | query    | استرجاع جميع العلامات التجارية دون ترقيم (مفيد للقوائم المنسدلة).                                          |
+| `brandDetail`             | query    | تحميل تفاصيل العلامة التجارية بالمعرّف.                                                                               |
+| `brands`                  | query    | علامات تجارية مرقّمة مع بحث اختياري.                                                                  |
+| `brandsAdd`               | mutation | إنشاء علامة تجارية جديدة ببيانات أساسية.                                                                 |
+| `brandsEdit`              | mutation | تعديل بيانات العلامة التجارية بالمعرّف.                                                                              |
+| `brandsGetLast`           | query    | جلب أحدث علامة تجارية تم إنشاؤها.                                                                  |
+| `brandsRemove`            | mutation | حذف علامة تجارية بالمعرّف.                                                                                   |
+| `companies`               | query    | جلب شركات مرقّمة مع عوامل تصفية وتقسيم وسياق مطابقة؛ يعيد قائمة مرقّمة.   |
+| `companiesAdd`            | mutation | إنشاء سجل شركة جديد بحقول الاتصال والعنوان والتصنيف الأساسية.                      |
+| `companiesEdit`           | mutation | تحديث شركة موجودة بالمعرّف؛ يدعم تعديلات جزئية لحقول الاتصال وCRM.                     |
+| `companiesEditByField`    | mutation | تصحيح حقول الشركة عبر محدّد لتحديثات جماعية أو مشروطة.                                       |
+| `companiesMerge`          | mutation | دمج عدة شركات في سجل أساسي، مع تطبيق تجاوزات الحقول المقدَّمة.                      |
+| `companiesRemove`         | mutation | حذف شركة أو أكثر؛ يعيد المعرّفات المحذوفة.                                                      |
+| `companyCounts`           | query    | إرجاع أعداد للشركات المطابقة لعوامل التصفية (اختياريًا بنطاق "only").                |
+| `companyDetail`           | query    | تحميل بيانات شركة مفصّلة بالمعرّف بما في ذلك جهات الاتصال والمالكون والوسوم.                                  |
+| `customerCounts`          | query    | إرجاع أعداد مجمّعة للعملاء المطابقين لعوامل التصفية (اختياريًا بنطاق "only" أو المصدر).        |
+| `customerDetail`          | query    | تحميل عميل بالمعرّف مع الملف الكامل والملكية والوسوم ومعلومات التكامل.                         |
+| `customers`               | query    | جلب عملاء مرقّمين مع تصفية وتقسيم وسياق مطابقة؛ يعيد قائمة مرقّمة. |
+| `customersAdd`            | mutation | إنشاء عميل/جهة اتصال جديدة. يمكن للحالة الاختيارية تمييز مسارات العميل المحتمل مقابل العميل.               |
+| `customersChangeState`    | mutation | تغيير حالة دورة الحياة لعميل (مثل lead → customer)؛ تتوقع القيمة مفتاح حالة معروفًا.     |
+| `customersEdit`           | mutation | تحديث عميل بالمعرّف بسمات الملف أو CRM.                                                 |
+| `customersEditByField`    | mutation | تصحيح حقول العميل عبر محدّد لتعديلات مشروطة/جماعية.                                           |
+| `customersMerge`          | mutation | دمج عدة عملاء في واحد، مع تطبيق حقول التجاوز المقدَّمة.                                    |
+| `customersRemove`         | mutation | حذف عميل أو أكثر؛ يعيد المعرّفات المحذوفة.                                                      |
+| `productCategories`       | query    | سرد فئات المنتجات (يدعم اجتياز الشجرة عبر parentId/withChild) مع تصفية علامة تجارية اختيارية.    |
+| `productCategoriesAdd`    | mutation | إنشاء فئة منتج.                                                                              |
+| `productCategoriesEdit`   | mutation | تعديل فئة منتج بالمعرّف.                                                                          |
+| `productCategoriesRemove` | mutation | حذف فئة منتج بالمعرّف.                                                                        |
+| `productCategoryDetail`   | query    | جلب تفاصيل فئة منتج واحدة بالمعرّف.                                                             |
+| `productCountByTags`      | query    | عدّ المنتجات مجمّعة حسب الوسم.                                                                          |
+| `productDetail`           | query    | منتج مفصّل بالمعرّف.                                                                                 |
+| `products`                | query    | سرد المنتجات مع التصفية والتقسيم والترقيم.                                             |
+| `productsAdd`             | mutation | إنشاء منتج جديد بالتسعير والتصنيف والوسائط.                                                 |
+| `productsEdit`            | mutation | تحديث منتج موجود بالمعرّف.                                                                       |
+| `productsRemove`          | mutation | حذف منتجات بالمعرّفات؛ يعيد سلسلة حالة.                                                          |
+| `tagDetail`               | query    | جلب تفاصيل وسم بالمعرّف.                                                                                |
+| `tags`                    | query    | وسوم مرقّمة مع بحث وتصفية هرمية.                                                    |
+| `tagsAdd`                 | mutation | إنشاء وسم جديد.                                                                                       |
+| `tagsEdit`                | mutation | تعديل وسم بالمعرّف.                                                                                       |
+| `tagsMerge`               | mutation | دمج وسمين (المصدر في الوجهة).                                                               |
+| `tagsQueryCount`          | query    | عدّ الوسوم لنوع/بحث معيّن.                                                                     |
+| `tagsRemove`              | mutation | حذف وسم بالمعرّف.                                                                                     |
+| `tagsTag`                 | mutation | إرفاق/فصل وسوم عن الكيانات المستهدفة.                                                                  |
+
+## أخرى
+
+| الأداة                          | النوع     | الوصف                                                                                    |
+| ------------------------------ | -------- | ---------------------------------------------------------------------------------------------------- |
+| `branchDetail`                | query    | استعلام branchDetail                                                                             |
+| `branches`                    | query    | فروع مرقّمة مع تصفية حالة/أصل اختيارية، تعيد القائمة + الأعداد.                 |
+| `conformityAdd`               | mutation | تعديل conformityAdd                                                                         |
+| `conformityEdit`              | mutation | تعديل conformityEdit                                                                        |
+| `currentUser`                 | query    | حل ملف المستخدم المصادق عليه حاليًا.                                       |
+| `departmentDetail`            | query    | استعلام departmentDetail                                                                         |
+| `departments`                 | query    | أقسام مرقّمة مع تصفية حالة/أصل اختيارية، تعيد القائمة + الأعداد.              |
+| `fieldsAdd`                   | mutation | تعديل fieldsAdd                                                                             |
+| `fieldsCombinedByContentType` | query    | استعلام fieldsCombinedByContentType                                                              |
+| `fieldsDefaultColumnsConfig`  | query    | استعلام fieldsDefaultColumnsConfig                                                               |
+| `fieldsEdit`                  | mutation | تعديل fieldsEdit                                                                            |
+| `fieldsGetDetail`             | query    | استعلام fieldsGetDetail                                                                          |
+| `fieldsGetTypes`              | query    | استعلام fieldsGetTypes                                                                           |
+| `fieldsGroups`                | query    | استعلام fieldsGroups                                                                             |
+| `fieldsGroupsAdd`             | mutation | تعديل fieldsGroupsAdd                                                                       |
+| `fieldsGroupsEdit`            | mutation | تعديل fieldsGroupsEdit                                                                      |
+| `fieldsGroupsRemove`          | mutation | تعديل fieldsGroupsRemove                                                                    |
+| `fieldsRemove`                | mutation | تعديل fieldsRemove                                                                          |
+| `formDetail`                  | query    | استعلام formDetail                                                                               |
+| `forms`                       | query    | استعلام forms                                                                                    |
+| `formsTotalCount`             | query    | استعلام formsTotalCount                                                                          |
+| `formSubmissionDetail`        | query    | استعلام formSubmissionDetail                                                                     |
+| `formSubmissions`             | query    | استعلام formSubmissions                                                                          |
+| `formSubmissionsSave`         | mutation | تعديل formSubmissionsSave                                                                   |
+| `formSubmissionsTotalCount`   | query    | استعلام formSubmissionsTotalCount                                                                |
+| `userDetail`                  | query    | تحميل مستخدم واحد بتفاصيل موسّعة بالمعرّف.                                        |
+| `users`                       | query    | قائمة مستخدمين مرقّمة مع تصفية للعلامات التجارية والأقسام والفروع والحالة والتوفر. |

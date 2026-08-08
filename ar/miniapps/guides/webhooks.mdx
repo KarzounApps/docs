@@ -1,0 +1,243 @@
+---
+title: "الويب هوك"
+description: "إعداد معالجة الويب هوك الواردة — استخراج الأحداث والتحقق واستخراج العملاء."
+---
+
+يُخبر كائن `webhook` المنصة كيف تعالج طلبات HTTP الواردة من مزوّدك. هذا هو جوهر التكامل القائم على الأحداث.
+
+**عنوان الويب هوك الخاص بك:** `https://{saas-api-url}/miniapps/{ns}/webhooks`
+
+هذا العنوان يُولَّد تلقائياً ومتاح كـ `{{webhookUrl}}` في طلبات التسجيل.
+
+<Info>
+  **ليست ويب هوك المستأجر** — هذه ويب هوك مزوّد **واردة** (مثل Salla → كرزون). لأحداث مساحة العمل **الصادرة** إلى خادمك، راجع [ويب هوك المستأجر](/ar/developers/guides/webhooks).
+</Info>
+
+## استخراج الحدث
+
+يخبر المنصة **أين تجد اسم الحدث** في طلب الويب هوك الوارد.
+
+**استخراج بسيط** (حقل واحد):
+
+```javascript
+webhook: {
+  eventExtraction: {
+    source: 'body',          // 'body', 'header', or 'query'
+    path: '$.event',         // JSONPath for body, or header/query key name
+    fallback: {              // optional — try another location if primary is empty
+      source: 'body',
+      path: 'event',
+    },
+  },
+}
+```
+
+أمثلة:
+
+- ترسل Salla `{ "event": "order.created", "data": {...} }` ← `source: 'body', path: '$.event'`
+- خدمة ترسل اسم الحدث في ترويسة ← `source: 'header', path: 'X-Event-Type'`
+
+**استخراج مركّب** (متعدد الحقول):
+
+بعض المزوّدين يقسمون تعريف الحدث عبر حقول متعددة. استخدم `compositeStrategy` لدمجها:
+
+```javascript
+webhook: {
+  eventExtraction: {
+    // Primary path (ignored when compositeStrategy is present)
+    source: 'body',
+    path: '$.event',
+
+    // Combine multiple fields into one event string
+    compositeStrategy: {
+      parts: [
+        { source: 'header', path: 'X-GitHub-Event' },   // e.g., "pull_request"
+        { source: 'body', path: '$.action' },            // e.g., "opened"
+      ],
+      separator: '.',   // Result: "pull_request.opened"
+    },
+  },
+}
+```
+
+مثال آخر — يستخدم Slack حقول الجسم:
+
+```javascript
+compositeStrategy: {
+  parts: [
+    { source: 'body', path: '$.event.type' },      // e.g., "message"
+    { source: 'body', path: '$.event.subtype' },    // e.g., "bot_message"
+  ],
+  separator: '.',   // Result: "message.bot_message"
+},
+```
+
+## إلغاء تكرار المعاملات
+
+يمنع معالجة الويب هوك نفسه مرتين (مثلاً أثناء إعادة المحاولة).
+
+```javascript
+webhook: {
+  transactionId: {
+    paths: ['$.data.id'],    // Try each path in order; first non-empty wins
+    separator: '_',          // optional — join multiple path values
+    fallback: 'generate',    // If not found, auto-generate a unique ID
+    overrides: {             // optional — per-event path lists
+      'order.updated': { paths: ['$.data.id', '$.data.updated_at.date'] },
+    },
+  },
+}
+```
+
+تتحقق المنصة من Redis لمعرّف المعاملة. إذا عُولج مسبقاً، يُقرّ الويب هوك بصمت دون إعادة المعالجة.
+
+**أنماط شائعة:**
+
+- `'$.data.id'` — معرّف طلب/سلة Salla
+- `'$.delivery'` — ترويسة delivery في GitHub
+- `'$.event_id'` — حقل معرّف حدث عام
+
+## التحقق (توقيعات HMAC)
+
+تحقق من أن الويب هوك الواردة تأتي فعلاً من مزوّدك باستخدام التحقق بتوقيع HMAC.
+
+```javascript
+webhook: {
+  verification: {
+    type: 'hmac-sha256',              // 'hmac-sha256', 'hmac-sha1', 'header-token', 'none'
+    headerName: 'X-Signature-256',    // Header containing the signature
+    secretKey: 'webhookSecret',       // Key name to look up the secret value
+    timestampHeader: 'X-Timestamp',   // Optional: header with request timestamp
+  },
+}
+```
+
+**أنواع التحقق:**
+
+| النوع           | الوصف                                        |
+| -------------- | ----------------------------------------------------- |
+| `hmac-sha256`  | تحقق توقيع HMAC-SHA256 (موصى به)    |
+| `hmac-sha1`    | تحقق توقيع HMAC-SHA1                     |
+| `header-token` | مقارنة رمز بسيط في الترويسة                    |
+| `none`         | بلا تحقق (غير موصى به للإنتاج)     |
+
+`encoding` اختياري لأنواع HMAC: `'hex'` (الافتراضي) أو `'base64'` (WooCommerce `X-WC-Webhook-Signature`).
+
+**كيف يُحلّ السر (`secretKey`):**
+
+حقل `secretKey` هو **اسم مفتاح**، وليس قيمة السر نفسها. تحلّ المنصة السر الفعلي ببحث من مصدرين:
+
+1. **بيانات اعتماد لكل مستأجر** — تتحقق أولاً من `installedMiniApps.credentials[secretKey]`. استخدم هذا عندما يُصدر المزوّد سراً فريداً لكل متجر/مستأجر متصل (مثلاً تسجيل ويب هوك يعيد مفتاح توقيع لكل متجر).
+2. **إعداد التطبيق العام** — الرجوع إلى `miniApp.auth.config[secretKey]` إن لم يُوجد في بيانات اعتماد المستأجر. استخدم هذا عندما يستخدم المزوّد سراً عاماً واحداً مشتركاً بين جميع المستأجرين (مثل Salla، حيث يُضبط سر الويب هوك مرة واحدة في لوحة الشريك).
+
+| نموذج السر     | أين تخزّن القيمة        | أمثلة المزوّدين      |
+| ---------------- | ---------------------------------- | -------------------------- |
+| عام (لكل تطبيق) | `auth.config.webhookSecret`        | Salla، Shopify              |
+| لكل مستأجر       | `installedMiniApps.credentials`    | Slack، GitHub، مخصص       |
+
+<Tip>
+  للأسرار العامة، اضبط القيمة في `auth.config` ضمن تعريف ميني أب الخاص بك. لأسرار لكل مستأجر، خزّنها في credentials أثناء طلبات التسجيل أو تدفق OAuth.
+</Tip>
+
+**كيف يعمل تحقق HMAC:**
+
+1. تقرأ المنصة التوقيع من `headerName`
+2. تزيل البادئة `sha256=` أو `sha1=` إن وُجدت
+3. تحلّ السر عبر بحث المصدرين الموضّح أعلاه
+4. تحسب HMAC لجسم الطلب الخام باستخدام السر المحلول
+5. تقارن بمقارنة آمنة زمنياً لمنع هجمات التوقيت
+6. ترفض بـ `401` إن لم يتطابقا
+
+## استجابة التحدي / المصافحة
+
+بعض المزوّدين (مثل Slack) يتطلبون مصافحة تحدٍّ–استجابة عند تسجيل الويب هوك.
+
+```javascript
+webhook: {
+  challengeResponse: {
+    identifyField: 'type',              // Body field that identifies a challenge request
+    identifyValue: 'url_verification',  // Expected value for that field
+    challengePath: '$.challenge',       // Where to find the challenge token in the body
+    responseField: 'challenge',         // Field name in the response (optional)
+  },
+}
+```
+
+**كيف تعمل:**
+
+1. يرسل المزوّد POST مع `{ "type": "url_verification", "challenge": "abc123" }`
+2. تتحقق المنصة: `body.type === 'url_verification'` ← نعم، هذا تحدٍّ
+3. تستخرج المنصة رمز التحدي من `$.challenge` ← `"abc123"`
+4. ترد المنصة بـ `{ "challenge": "abc123" }`
+5. يعتبر المزوّد عنوان الويب هوك موثَّقاً
+
+إذا حُذف `responseField`، يُرجع رمز التحدي كجسم استجابة خام.
+
+## استخراج العميل
+
+لميني أب التي تستقبل بيانات عملاء في الويب هوك (منصات التجارة الإلكترونية، أنظمة CRM)، اضبط إنشاء/مطابقة العملاء تلقائياً.
+
+```javascript
+webhook: {
+  customerExtraction: {
+    basePath: '$.data.customer',        // Base JSONPath to customer data
+    mapping: {
+      // Webhook field → Internal customer field
+      firstName: 'first_name',
+      lastName: 'last_name',
+      primaryEmail: 'email',
+      primaryPhone: 'mobile',
+      code: 'id',                       // External customer ID
+    },
+    // Override basePath for specific events
+    overrides: {
+      'customer.created': {
+        basePath: '$.data',             // Customer data is at root for this event
+      },
+      'abandoned.cart': {
+        basePath: '$.data.customer',    // Default path works, but explicit is fine
+      },
+    },
+  },
+}
+```
+
+**حقول العميل المتاحة:**
+
+| الحقل          | النوع   | الوصف                            |
+| -------------- | ------ | ----------------------------------------- |
+| `firstName`    | string | الاسم الأول                              |
+| `lastName`     | string | اسم العائلة                               |
+| `primaryEmail` | string | عنوان البريد الإلكتروني الأساسي                   |
+| `primaryPhone` | string | رقم الهاتف الأساسي                    |
+| `code`         | string | معرّف العميل الخارجي (للمطابقة)     |
+| `avatar`       | string | عنوان URL للصورة الرمزية                              |
+| `sex`          | number | الجنس (رقمي)                        |
+| `birthDate`    | Date   | تاريخ الميلاد                           |
+| `position`     | string | المسمى الوظيفي                            |
+| `department`   | string | القسم                              |
+| `state`        | string | `'visitor'`، `'lead'`، `'customer'`     |
+
+**كيف تعمل:** عند وصول ويب هوك، تقوم المنصة بـ:
+
+1. استخراج بيانات العميل من `basePath` (أو مسار التجاوز للحدث المحدد)
+2. تعيين أسماء حقول المزوّد إلى أسماء الحقول الداخلية
+3. استدعاء `getOrCreateCustomer()` الذي يجد أو ينشئ سجل العميل
+4. ربط العميل بالحدث الوارد لسياق الأتمتة
+
+## إعداد الاستجابة
+
+عرّف ما ترسله المنصة إلى مزوّدك بعد استلام الويب هوك.
+
+```javascript
+webhook: {
+  response: {
+    statusCode: 200,
+    body: { ok: true },
+  },
+}
+```
+
+<Note>
+  ترسل المنصة الاستجابة **فوراً** عند استلام الويب هوك، قبل بدء المعالجة غير المتزامنة. هذا يمنع مهلات المزوّد. استخدم `202` إذا كان مزوّدك يتوقع استجابات بأسلوب الإقرار.
+</Note>

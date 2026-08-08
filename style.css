@@ -1,0 +1,556 @@
+/* =============================================================================
+   Karzoun Docs — Arabic RTL overrides
+   -----------------------------------------------------------------------------
+   Mintlify does not set dir=rtl for `ar`, and most chrome/prose still uses
+   physical Tailwind (left-*, pl-*, ml-*, border-l-*, rounded-l-*).
+
+   Strategy:
+   1. rtl.js sets html[dir=rtl] from the /ar URL (after interactive)
+   2. rtl-boot.css hides the page until html[data-rtl-ready] to avoid LTR→RTL flash
+   3. This file prefers logical properties (inline-start/end)
+   4. Physical left/right from Mintlify are unset, then re-applied logically
+
+   Keep code blocks LTR. Do not re-enable list-style on prose ul (Mintlify
+   draws bullets with li::before — enabling disc creates double markers).
+   ============================================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap");
+
+html[dir="rtl"] {
+  direction: rtl;
+  /* Mintlify headings use --font-family-headings-custom / --font-inter — override both */
+  --font-family-headings-custom: "Cairo", "Inter", system-ui, sans-serif;
+  --font-inter: "Cairo", "Inter", system-ui, sans-serif;
+  font-family: "Cairo", "Inter", system-ui, sans-serif;
+}
+
+html[dir="rtl"] body,
+html[dir="rtl"] #page-title,
+html[dir="rtl"] h1,
+html[dir="rtl"] h2,
+html[dir="rtl"] h3,
+html[dir="rtl"] h4,
+html[dir="rtl"] h5,
+html[dir="rtl"] h6,
+html[dir="rtl"] #sidebar,
+html[dir="rtl"] #sidebar-content,
+html[dir="rtl"] #navbar,
+html[dir="rtl"] #header,
+html[dir="rtl"] #table-of-contents,
+html[dir="rtl"] #content,
+html[dir="rtl"] #content-area,
+html[dir="rtl"] mdx-content,
+html[dir="rtl"] .advanced-footer,
+html[dir="rtl"] footer,
+html[dir="rtl"] button,
+html[dir="rtl"] input,
+html[dir="rtl"] textarea,
+html[dir="rtl"] select,
+html[dir="rtl"] label,
+html[dir="rtl"] a,
+html[dir="rtl"] p,
+html[dir="rtl"] li,
+html[dir="rtl"] span {
+  font-family: "Cairo", "Inter", system-ui, sans-serif !important;
+}
+
+html[dir="rtl"] body {
+  text-align: start;
+}
+
+/* Code stays LTR monospace — do not inherit Cairo */
+html[dir="rtl"] pre,
+html[dir="rtl"] code,
+html[dir="rtl"] kbd,
+html[dir="rtl"] samp,
+html[dir="rtl"] .cm-editor,
+html[dir="rtl"] [class*="CodeBlock"],
+html[dir="rtl"] [data-language],
+html[dir="rtl"] [data-component-part="code-block-root"] {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace !important;
+}
+
+/* =============================================================================
+   APP CHROME — sidebar / content / navbar / footer / TOC
+   ============================================================================= */
+
+html[dir="rtl"] #sidebar {
+  left: unset !important;
+  right: unset !important;
+  inset-inline-start: 0 !important;
+  inset-inline-end: auto !important;
+  /* LTR uses border-r (content-facing). In RTL the sidebar sits on the
+     inline-start edge, so the content-facing divider is inline-end. */
+  border-left-width: 0 !important;
+  border-right-width: 0 !important;
+  border-inline-start-width: 0 !important;
+  border-inline-end: 1px solid rgb(229 231 235 / 0.7) !important;
+}
+
+:is(html.dark)[dir="rtl"] #sidebar {
+  border-inline-end-color: rgb(255 255 255 / 0.07) !important;
+}
+
+html[dir="rtl"] #content-container {
+  margin-left: unset !important;
+  margin-right: unset !important;
+  margin-inline-start: 19rem !important;
+  margin-inline-end: 0 !important;
+  padding-left: unset !important;
+  padding-right: unset !important;
+  padding-inline-start: 4rem !important;
+  padding-inline-end: 2.5rem !important;
+}
+
+html[dir="rtl"] .advanced-footer {
+  margin-left: unset !important;
+  margin-right: unset !important;
+  margin-inline-start: 19rem !important;
+  margin-inline-end: 0 !important;
+}
+
+html[dir="rtl"] #navbar-transition-maple {
+  left: unset !important;
+  right: unset !important;
+  inset-inline-start: 19rem !important;
+  inset-inline-end: var(--assistant-sheet-width, 0px) !important;
+  width: auto !important;
+}
+
+html[dir="rtl"] #table-of-contents-layout {
+  padding-left: unset !important;
+  padding-right: unset !important;
+  padding-inline-start: 2.5rem !important;
+  padding-inline-end: 0 !important;
+}
+
+/* =============================================================================
+   MAIN SIDEBAR NAV (#navigation-items / .sidebar-group)
+   Mintlify uses ml-4 + border-l + inline padding-left + text-left
+   ============================================================================= */
+
+html[dir="rtl"] #navigation-items,
+html[dir="rtl"] #sidebar-content,
+html[dir="rtl"] #sidebar {
+  text-align: start;
+}
+
+html[dir="rtl"] #navigation-items .nav-anchor,
+html[dir="rtl"] #sidebar .nav-anchor {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-inline-start: 1rem !important; /* pl-4 */
+  padding-inline-end: 0 !important;
+  text-align: start !important;
+}
+
+html[dir="rtl"] #navigation-items .sidebar-group-header,
+html[dir="rtl"] #sidebar .sidebar-group-header {
+  padding-left: 0 !important;
+  padding-inline-start: 1rem !important; /* pl-4 */
+  text-align: start !important;
+}
+
+html[dir="rtl"] #navigation-items .sidebar-group a,
+html[dir="rtl"] #sidebar .sidebar-group a,
+html[dir="rtl"] #navigation-items li > a[class*="border-l"],
+html[dir="rtl"] #sidebar li > a[class*="border-l"] {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  margin-inline-start: 1rem !important; /* ml-4 */
+  margin-inline-end: 0 !important;
+  /* Override Mintlify inline style="padding-left: 1rem" */
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-inline-start: 1rem !important;
+  padding-inline-end: 0.75rem !important; /* pr-3 */
+  border-left-width: 0 !important;
+  border-right-width: 0 !important;
+  border-inline-start-width: 1px !important;
+  border-inline-start-style: solid;
+  text-align: start !important;
+}
+
+/* =============================================================================
+   ON-PAGE TOC — border-l + pl-[calc(var(--toc-padding-left))]
+   ============================================================================= */
+
+html[dir="rtl"] #table-of-contents,
+html[dir="rtl"] #table-of-contents-content,
+html[dir="rtl"] .toc {
+  text-align: start;
+  direction: rtl;
+}
+
+html[dir="rtl"] #table-of-contents-content .toc-item > a,
+html[dir="rtl"] .toc .toc-item > a,
+html[dir="rtl"] #table-of-contents a[class*="border-l"] {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-inline-start: calc(
+    var(--toc-padding-left, 1rem) + var(--toc-focus-padding, 0rem)
+  ) !important;
+  border-left-width: 0 !important;
+  border-right-width: 0 !important;
+  border-inline-start-width: 1px !important;
+  border-inline-start-style: solid;
+  text-align: start !important;
+  margin-left: 0 !important;
+}
+
+html[dir="rtl"] #table-of-contents-content .toc-item > a:focus-visible,
+html[dir="rtl"] .toc .toc-item > a:focus-visible {
+  margin-left: 0 !important;
+  margin-inline-start: -0.25rem !important; /* -ml-1 */
+}
+
+html[dir="rtl"] #table-of-contents button,
+html[dir="rtl"] #content-side-layout button {
+  text-align: start;
+}
+
+/* space-x-* under RTL in TOC header */
+html[dir="rtl"] #table-of-contents .space-x-2 > :not([hidden]) ~ :not([hidden]),
+html[dir="rtl"] #content-side-layout .space-x-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-left: calc(0.5rem * var(--tw-space-x-reverse)) !important;
+  margin-right: calc(0.5rem * calc(1 - var(--tw-space-x-reverse))) !important;
+}
+
+/* =============================================================================
+   PAGE HEADER — context menu (copy + more)
+   ============================================================================= */
+
+html[dir="rtl"] #page-context-menu {
+  margin-left: unset !important;
+  margin-inline-start: auto !important;
+  justify-content: flex-end;
+}
+
+html[dir="rtl"] #page-context-menu-button {
+  border-radius: 0 !important;
+  border-start-start-radius: 0.75rem !important;
+  border-end-start-radius: 0.75rem !important;
+  border-start-end-radius: 0 !important;
+  border-end-end-radius: 0 !important;
+  border-right-width: unset !important;
+  border-inline-end-width: 0 !important;
+}
+
+html[dir="rtl"] #page-context-menu > button:not(#page-context-menu-button) {
+  border-radius: 0 !important;
+  border-start-start-radius: 0 !important;
+  border-end-start-radius: 0 !important;
+  border-start-end-radius: 0.75rem !important;
+  border-end-end-radius: 0.75rem !important;
+}
+
+/* =============================================================================
+   STEPS TIMELINE
+   ============================================================================= */
+
+html[dir="rtl"] .steps,
+html[dir="rtl"] steps {
+  margin-left: unset !important;
+  margin-inline-start: 0.875rem !important;
+}
+
+html[dir="rtl"] .step [data-component-part="step-line"],
+html[dir="rtl"] step [data-component-part="step-line"] {
+  left: unset !important;
+  right: unset !important;
+  inset-inline-start: 0 !important;
+}
+
+html[dir="rtl"] .step [data-component-part="step-number"],
+html[dir="rtl"] step [data-component-part="step-number"] {
+  left: unset !important;
+  right: unset !important;
+  margin-left: unset !important;
+  inset-inline-start: 0 !important;
+  margin-inline-start: -13px !important;
+}
+
+html[dir="rtl"] .step > .w-full,
+html[dir="rtl"] step > .w-full {
+  padding-left: unset !important;
+  padding-right: unset !important;
+  padding-inline-start: 2rem !important;
+  padding-inline-end: 1px !important;
+}
+
+/* =============================================================================
+   PROSE — lists (Mintlify custom ::before bullets — do NOT enable list-style)
+   ============================================================================= */
+
+html[dir="rtl"] .prose ul:not(.list-none),
+html[dir="rtl"] #content ul:not(.list-none),
+html[dir="rtl"] mdx-content ul:not(.list-none) {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-inline-start: 0 !important;
+  list-style: none !important;
+}
+
+html[dir="rtl"] .prose ul:not(.list-none) > li,
+html[dir="rtl"] #content ul:not(.list-none) > li,
+html[dir="rtl"] mdx-content ul:not(.list-none) > li {
+  position: relative;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-inline-start: 2em !important;
+  padding-inline-end: 0 !important;
+  text-align: start;
+}
+
+html[dir="rtl"] .prose ul:not(.list-none) > li::before,
+html[dir="rtl"] #content ul:not(.list-none) > li::before,
+html[dir="rtl"] mdx-content ul:not(.list-none) > li::before {
+  left: unset !important;
+  right: unset !important;
+  inset-inline-start: 0.5em !important;
+}
+
+/* Task lists / checkboxes */
+html[dir="rtl"] .prose ul.contains-task-list,
+html[dir="rtl"] .prose li.task-list-item {
+  padding-left: 0 !important;
+  padding-inline-start: 1.375rem !important;
+}
+
+html[dir="rtl"] .prose li.task-list-item > input[type="checkbox"] {
+  left: unset !important;
+  right: unset !important;
+  inset-inline-start: 0 !important;
+}
+
+/* Ordered lists — native markers */
+html[dir="rtl"] .prose ol:not(.list-none),
+html[dir="rtl"] #content ol:not(.list-none),
+html[dir="rtl"] mdx-content ol:not(.list-none) {
+  padding-left: unset !important;
+  padding-right: unset !important;
+  padding-inline-start: 1.625em !important;
+  padding-inline-end: 0 !important;
+}
+
+html[dir="rtl"] .prose ol:not(.list-none) > li,
+html[dir="rtl"] #content ol:not(.list-none) > li,
+html[dir="rtl"] mdx-content ol:not(.list-none) > li {
+  padding-left: unset !important;
+  padding-right: unset !important;
+  padding-inline-start: 0.375em !important;
+  text-align: start;
+}
+
+/* =============================================================================
+   PROSE — blockquotes, tables, misc content
+   ============================================================================= */
+
+html[dir="rtl"] .prose blockquote,
+html[dir="rtl"] #content blockquote,
+html[dir="rtl"] mdx-content blockquote {
+  border-left-width: 0 !important;
+  border-right-width: 0 !important;
+  border-inline-start-width: 4px !important;
+  border-inline-start-style: solid !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-inline-start: 1.5rem !important;
+  padding-inline-end: 0 !important;
+}
+
+html[dir="rtl"] .prose table th,
+html[dir="rtl"] .prose table td,
+html[dir="rtl"] #content table th,
+html[dir="rtl"] #content table td {
+  text-align: start;
+}
+
+html[dir="rtl"] .prose img,
+html[dir="rtl"] #content img {
+  margin-inline: auto;
+}
+
+html[dir="rtl"] #content-area,
+html[dir="rtl"] #content,
+html[dir="rtl"] #page-title,
+html[dir="rtl"] mdx-content,
+html[dir="rtl"] callout,
+html[dir="rtl"] card,
+html[dir="rtl"] tip,
+html[dir="rtl"] note,
+html[dir="rtl"] info,
+html[dir="rtl"] warning {
+  text-align: start;
+}
+
+/* =============================================================================
+   CALLOUTS / CARDS / ACCORDION / TABS
+   ============================================================================= */
+
+html[dir="rtl"] callout,
+html[dir="rtl"] .callout,
+html[dir="rtl"] [data-callout-type] {
+  text-align: start;
+}
+
+html[dir="rtl"] accordion,
+html[dir="rtl"] .accordion,
+html[dir="rtl"] [data-component-part*="accordion"] {
+  text-align: start;
+}
+
+html[dir="rtl"] tabs,
+html[dir="rtl"] .tabs {
+  text-align: start;
+}
+
+/* Expand / chevron icons that point “forward” in LTR */
+html[dir="rtl"] #page-context-menu svg.rotate-90,
+html[dir="rtl"] button[aria-haspopup="menu"] svg.rotate-90 {
+  transform: rotate(-90deg) !important;
+}
+
+html[dir="rtl"] pagination-prev svg,
+html[dir="rtl"] pagination-next svg,
+html[dir="rtl"] .pagination-prev svg,
+html[dir="rtl"] .pagination-next svg,
+html[dir="rtl"] breadcrumb-item svg,
+html[dir="rtl"] [data-component-part="breadcrumb"] svg {
+  transform: scaleX(-1);
+}
+
+/* =============================================================================
+   NAV / BREADCRUMBS / PAGINATION / ANCHORS
+   ============================================================================= */
+
+html[dir="rtl"] .nav-anchor,
+html[dir="rtl"] nav-anchor {
+  padding-left: 0 !important;
+  padding-inline-start: 1rem !important;
+}
+
+html[dir="rtl"] breadcrumb-list,
+html[dir="rtl"] .breadcrumb-list,
+html[dir="rtl"] #header {
+  text-align: start;
+}
+
+html[dir="rtl"] #pagination,
+html[dir="rtl"] pagination-prev,
+html[dir="rtl"] pagination-next {
+  text-align: start;
+}
+
+/* =============================================================================
+   CODE BLOCKS — content stays LTR; chrome uses logical ends
+   ============================================================================= */
+
+html[dir="rtl"] pre,
+html[dir="rtl"] code,
+html[dir="rtl"] code-block,
+html[dir="rtl"] .code-block,
+html[dir="rtl"] .cm-editor,
+html[dir="rtl"] [class*="CodeBlock"],
+html[dir="rtl"] [data-language],
+html[dir="rtl"] .code-block [data-component-part="code-block-root"],
+html[dir="rtl"] .code-block [data-component-part="scroll-area-content"],
+html[dir="rtl"] [data-component-part="code-block-root"] {
+  direction: ltr !important;
+  text-align: start !important;
+  unicode-bidi: isolate;
+}
+
+html[dir="rtl"] [data-floating-buttons="true"] {
+  left: unset !important;
+  right: unset !important;
+  inset-inline-end: 1rem !important;
+}
+
+/* Line highlight / diff gutters stay on the physical start of LTR code */
+html[dir="rtl"] [data-component-part="code-block-root"] {
+  direction: ltr !important;
+}
+
+/* =============================================================================
+   GENERIC PHYSICAL → LOGICAL SWEEPS (content area only)
+   ============================================================================= */
+
+/* Push utilities that pin to a physical edge inside MDX content */
+html[dir="rtl"] #content .ml-auto {
+  margin-left: unset !important;
+  margin-inline-start: auto !important;
+}
+
+html[dir="rtl"] #content .mr-auto {
+  margin-right: unset !important;
+  margin-inline-end: auto !important;
+}
+
+html[dir="rtl"] #content .text-left {
+  text-align: start !important;
+}
+
+html[dir="rtl"] #content .text-right {
+  text-align: end !important;
+}
+
+html[dir="rtl"] #content .float-left {
+  float: inline-start !important;
+}
+
+html[dir="rtl"] #content .float-right {
+  float: inline-end !important;
+}
+
+/* Joined control groups that use rounded-l / rounded-r + border-r-0 */
+html[dir="rtl"] #content .rounded-l-xl,
+html[dir="rtl"] #content .rounded-l-lg,
+html[dir="rtl"] #content .rounded-l-md {
+  border-radius: 0 !important;
+  border-start-start-radius: 0.75rem !important;
+  border-end-start-radius: 0.75rem !important;
+}
+
+html[dir="rtl"] #content .rounded-r-xl,
+html[dir="rtl"] #content .rounded-r-lg,
+html[dir="rtl"] #content .rounded-r-md {
+  border-radius: 0 !important;
+  border-start-end-radius: 0.75rem !important;
+  border-end-end-radius: 0.75rem !important;
+}
+
+html[dir="rtl"] #content .border-r-0 {
+  border-right-width: unset !important;
+  border-inline-end-width: 0 !important;
+}
+
+html[dir="rtl"] #content .border-l-0 {
+  border-left-width: unset !important;
+  border-inline-start-width: 0 !important;
+}
+
+/* =============================================================================
+   MOBILE
+   ============================================================================= */
+
+@media (max-width: 1023px) {
+  html[dir="rtl"] #content-container {
+    margin-inline-start: 0 !important;
+    margin-inline-end: 0 !important;
+    padding-inline-start: 1rem !important;
+    padding-inline-end: 1rem !important;
+  }
+
+  html[dir="rtl"] .advanced-footer {
+    margin-inline-start: 0 !important;
+    margin-inline-end: 0 !important;
+  }
+
+  html[dir="rtl"] #navbar-transition-maple {
+    inset-inline-start: 0 !important;
+    inset-inline-end: 0 !important;
+  }
+}

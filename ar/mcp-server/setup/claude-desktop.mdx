@@ -1,0 +1,48 @@
+---
+title: "إعداد Claude Desktop (stdio)"
+description: "اربط Claude Desktop بكرزون عبر خادم MCP المحلي."
+---
+
+يستخدم Claude Desktop نفس حزمة `@karzounchat/mcp-server` المستخدمة في Cursor، مع موقع ملف إعداد مختلف.
+
+## ملف الإعداد
+
+| نظام التشغيل      | المسار                                                              |
+| ------- | ------------------------------------------------------------------ |
+| macOS   | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| Windows | `%APPDATA%\Claude\claude_desktop_config.json`                     |
+
+## الإعداد
+
+```json
+{
+  "mcpServers": {
+    "karzoun": {
+      "command": "npx",
+      "args": ["-y", "@karzounchat/mcp-server"],
+      "env": {
+        "KARZOUN_API_URL": "https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql",
+        "KARZOUN_APP_TOKEN": "YOUR_APP_TOKEN"
+      }
+    }
+  }
+}
+```
+
+أنشئ رمز تطبيق من **المطوّر ← التطبيقات** ([المصادقة](/ar/developers/getting-started/authentication)).
+
+## التحقق
+
+1. أغلق Claude Desktop وأعد فتحه
+2. ابحث عن مؤشر **المطرقة / الأدوات** — يجب أن تظهر أدوات كرزون
+3. اطلب: _"Using Karzoun tools, list my first 5 tags"_
+
+<Tip title="مكان مخصص للقطة شاشة">
+  _قريبًا: Claude Desktop يعرض كرزون في قائمة الأدوات المتاحة._
+</Tip>
+
+## استكشاف الأخطاء
+
+نفس الإصلاحات كما في [استكشاف أخطاء Cursor](/ar/mcp-server/guides/troubleshooting) — متغيرات البيئة، نطاقات الرمز، واتصال `npx`.
+
+لخطوات Cursor الخاصة ببيئة التطوير، راجع [إعداد Cursor](/ar/mcp-server/setup/cursor).

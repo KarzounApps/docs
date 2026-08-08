@@ -1,0 +1,62 @@
+---
+title: "المشغّلات"
+description: "عرّف عُقد مشغّلات الأتمتة التي تُفعَّل من أحداث ويب هوك ميني أب."
+---
+
+تحدّد المشغّلات أحداث الويب هوك التي يمكن لميني أبك التفاعل معها. تظهر في منشئ الأتمتة كعُقد مشغّلات متاحة. عندما يصل ويب هوك مطابق، تُنفَّذ الأتمتات التي تستخدم المشغّل المقابل.
+
+```javascript
+triggers: [
+  {
+    type: "miniapps:my-service", // Must be "miniapps:{ns}"
+    event: "order.created", // Event identifier
+    img: "automation3.svg", // Icon image filename
+    icon: "shopping-cart", // Lucide icon name
+    label: "My Service Order Created", // Display label in Automation Builder
+    description: "Triggered when a new order is placed in My Service.",
+    isCustom: false,
+  },
+  {
+    type: "miniapps:my-service",
+    event: "customer.updated",
+    img: "automation4.svg",
+    icon: "users-alt",
+    label: "My Service Customer Updated",
+    description: "Triggered when a customer record is updated.",
+    isCustom: false,
+  },
+];
+```
+
+**حقول المشغّل:**
+
+| الحقل         | النوع    | مطلوب | الوصف                                  |
+| ------------- | --------- | -------- | ------------------------------------------------ |
+| `type`        | string  | ✅       | يجب أن يتبع النمط `miniapps:{ns}`       |
+| `event`       | string  | ✅       | سلسلة الحدث الدقيقة من مزوّدك     |
+| `img`         | string  | ✅       | اسم ملف أيقونة منشئ الأتمتة              |
+| `icon`        | string  | ✅       | اسم أيقونة Lucide React                        |
+| `label`       | string  | ✅       | تسمية قابلة للقراءة                          |
+| `description` | string  | ✅       | نص مساعدة يشرح متى يُفعَّل هذا المشغّل  |
+| `isCustom`    | boolean | ✅       | عيّنه إلى `false` للمشغّلات القياسية          |
+
+**اصطلاح اسم الحدث:** استخدم سلسلة الحدث الدقيقة التي يرسلها مزوّدك في الويب هوك. تطابق المنصة اسم الحدث المستخرج (من `webhook.eventExtraction`) مع قيم `event` في المشغّل مباشرة — بدون طبقة ربط.
+
+**الأحداث المركّبة:** إذا استخدم مزوّدك مجموعة حقول لتحديد حدث (مثلاً، يستخدم GitHub ترويسة `X-GitHub-Event` + حقل `action` في الجسم)، استخدم `compositeStrategy` في `webhook.eventExtraction` (انظر [دليل الويب هوك](/ar/miniapps/guides/webhooks)) وسمِّ أحداث مشغّلاتك وفقاً لذلك:
+
+```javascript
+// GitHub: header "push" + body action "received"
+{
+  event: "push.received";
+}
+
+// GitHub: header "pull_request" + body action "opened"
+{
+  event: "pull_request.opened";
+}
+
+// Slack: body event.type "message" + event.subtype "bot_message"
+{
+  event: "message.bot_message";
+}
+```
