@@ -1,0 +1,4087 @@
+"""
+Union type for all action payloads.
+"""
+union ActionsPayload =
+  | AssignedPayload
+  | UnassignedPayload
+  | StatusChangedPayload
+  | TaggedPayload
+  | UntaggedPayload
+  | TagsChangedPayload
+  | ParticipantAddedPayload
+  | ParticipantRemovedPayload
+  | ConvertedToCardPayload
+  | PriorityChangedPayload
+
+"""
+Third-party or internal app credential allowing scoped access for user groups.
+Tokens are never exposed via queries — only returned once at creation.
+"""
+type App {
+  _id: String
+  isEnabled: Boolean
+  createdAt: Date
+  lastUsedAt: Date
+  name: String
+  userGroupId: String
+  workspaceId: String
+  expireDate: Date
+  allowAllPermission: Boolean
+  noExpire: Boolean
+  accessToken: String
+  userGroupName: String
+}
+
+"""
+Paginated response wrapper for app list queries.
+Uses standard Pagination type from permission schema.
+"""
+type AppListResponse {
+  data: [App]
+  pagination: PaginationInfo!
+}
+
+"""
+Returned only from the appsAdd mutation.
+Contains the access token which is shown once and never again.
+"""
+type AppTokenResult {
+  _id: String
+  accessToken: String
+}
+
+"""
+Payload for assigned action.
+"""
+type AssignedPayload {
+  assignedTo: String
+  assignedUserId: String
+  assignedDepartmentId: String
+  assignedBy: String
+  performedBy: String
+  """
+  Resolved user who was assigned to.
+  """
+  assignedToUser: User
+  """
+  Resolved user who was assigned (by assignedUserId).
+  """
+  assignedUser: User
+  """
+  Resolved user who performed the assignment.
+  """
+  assignedByUser: User
+  """
+  Resolved user who performed the action.
+  """
+  performedByUser: User
+  """
+  Resolved department the conversation was assigned to.
+  """
+  assignedDepartment: Department
+}
+
+type Attachment {
+  url: String!
+  name: String
+  type: String
+  size: Float
+  duration: Float
+  locationData: LocationData
+}
+
+input AttachmentInput {
+  url: String!
+  name: String!
+  type: String
+  size: Float
+  duration: Float
+  locationData: LocationDataInput
+}
+
+type Branch {
+  _id: String!
+  title: String
+  parentId: String
+  supervisorId: String
+  supervisor: User
+  code: String
+  order: String
+  users: [User]
+  userIds: [String]
+  userCount: Int
+  parent: Branch
+  children: [Branch]
+  status: String
+  address: String
+  hasChildren: Boolean
+}
+
+type BranchListQueryResponse {
+  data: [Branch]
+  pagination: PaginationInfo!
+  totalUsersCount: Int
+}
+
+type ColumnConfigItem {
+  name: String
+  label: String
+  order: Int
+}
+
+"""
+Paginated company list response.
+"""
+type CompaniesListResponse {
+  data: [Company]
+  pagination: PaginationInfo!
+}
+
+"""
+Company (account) entity that aggregates contacts, contact details, and CRM metadata.
+"""
+type Company {
+  createdAt: Date
+  modifiedAt: Date
+  avatar: String
+  size: Int
+  website: String
+  industry: String
+  plan: String
+  parentCompanyId: String
+  ownerId: String
+  mergedIds: [String]
+  names: [String]
+  primaryName: String
+  emails: [String]
+  primaryEmail: String
+  phones: [String]
+  primaryPhone: String
+  primaryAddress: JSON
+  addresses: [JSON]
+  businessType: String
+  description: String
+  isSubscribed: String
+  links: JSON
+  owner: User
+  parentCompany: Company
+  tagIds: [String]
+  customFieldsData: JSON
+  customFieldsDataByFieldCode: JSON
+  customers: [Customer]
+  getTags: [Tag]
+  code: String
+  location: String
+  score: Float
+  _id: String!
+}
+
+type Conformity {
+  _id: String!
+  mainType: String
+  mainTypeId: String
+  relType: String
+  relTypeId: String
+}
+
+"""
+A conversation in the inbox representing a communication thread between
+a customer and the support team. Conversations are created from integrations
+(messenger, email, WhatsApp, etc.) and managed through the inbox workflow.
+"""
+type Conversation {
+  _id: String!
+  """
+  The latest text content or snippet of the conversation.
+  """
+  content: String
+  """
+  The integration (channel) this conversation originated from.
+  """
+  integrationId: String
+  """
+  The customer participating in this conversation.
+  """
+  customerId: String
+  """
+  The department this conversation is routed to.
+  """
+  departmentId: String
+  """
+  The user/agent who created or owns this conversation.
+  """
+  userId: String
+  """
+  The user/agent currently assigned to handle this conversation.
+  """
+  assignedUserId: String
+  """
+  User IDs of agents participating in this conversation.
+  """
+  participatedUserIds: [String]
+  """
+  User IDs of agents who have read this conversation.
+  """
+  readUserIds: [String]
+  """
+  When this conversation was created.
+  """
+  createdAt: Date
+  """
+  When this conversation was last updated.
+  """
+  updatedAt: Date
+  """
+  SLA elapsed idle time in minutes (time since customer started waiting for a response).
+  """
+  slaTime: Float
+  """
+  Configured SLA threshold in minutes.
+  """
+  slaConfig: Float
+  """
+  Idle time in minutes (deprecated — use slaTime).
+  """
+  idleTime: Float
+  """
+  Configured idle time threshold in minutes (deprecated — use slaConfig).
+  """
+  idleTimeConfig: Float
+  """
+  Whether the customer sent the most recent message.
+  """
+  isCustomerRespondedLast: Boolean
+  """
+  Timestamp of the last customer message.
+  """
+  lastCustomerMessageAt: Date
+  """
+  Timestamp of the last agent message.
+  """
+  lastUserMessageAt: Date
+  """
+  When the customer started waiting for a response.
+  """
+  customerWaitingStartTime: Date
+  """
+  Average agent response time in seconds.
+  """
+  averageResponseTime: Float
+  """
+  Total cumulative response time in seconds.
+  """
+  totalResponseTime: Float
+  """
+  Number of agent responses in this conversation.
+  """
+  responseCount: Int
+  """
+  Current workflow status: 'open', 'closed', 'pending', 'snoozed', or 'bot'.
+  """
+  status: String
+  """
+  When a snoozed conversation will auto-reopen (null if indefinite or not snoozed).
+  """
+  snoozedUntil: Date
+  """
+  Total number of messages in this conversation.
+  """
+  messageCount: Int
+  """
+  Auto-incremented conversation number for display.
+  """
+  number: Int
+  """
+  Tag IDs applied to this conversation.
+  """
+  tagIds: [String]
+  """
+  The most recent message in this conversation, resolved from the appropriate service (inbox, whatsapp, facebook, etc.).
+  """
+  messages: [ConversationMessage]
+  """
+  Resolved tags applied to this conversation.
+  """
+  tags: [Tag]
+  """
+  The customer associated with this conversation.
+  """
+  customer: Customer
+  """
+  The integration (channel) this conversation came from.
+  """
+  integration: Integration
+  """
+  The user/agent who owns this conversation.
+  """
+  user: User
+  """
+  The agent currently assigned to this conversation.
+  """
+  assignedUser: User
+  """
+  The department this conversation is routed to.
+  """
+  assignedDepartment: Department
+  """
+  Users participating in this conversation.
+  """
+  participatedUsers: [User]
+  """
+  Users who have read this conversation.
+  """
+  readUsers: [User]
+  """
+  Number of participants in this conversation.
+  """
+  participatorCount: Int
+  customFieldsData: JSON
+}
+
+"""
+Paginated list of conversations.
+"""
+type ConversationListResponse {
+  """
+  The list of conversations for the current page.
+  """
+  data: [Conversation]
+  """
+  Pagination metadata.
+  """
+  pagination: PaginationInfo!
+}
+
+"""
+A single message within a conversation. Uses a discriminated-union pattern
+where the `type` field determines which content sub-object is populated.
+"""
+type ConversationMessage {
+  _id: String!
+  """
+  Message type discriminator.
+  """
+  type: String
+  """
+  Who sent this message.
+  """
+  sender: MessageSender
+  """
+  Visibility level: 'public', 'internal', or 'hidden'.
+  """
+  visibility: String
+  """
+  Text content (when type='text').
+  """
+  text: MessageText
+  """
+  Media content (image, audio, video, document — single or multiple).
+  """
+  media: MessageMedia
+  """
+  Template content (when type='template').
+  """
+  template: MessageTemplate
+  """
+  Interactive content (when type='interactive').
+  """
+  interactive: MessageInteractive
+  """
+  Tool call data (when type='tool_call').
+  """
+  toolCalls: JSON
+  """
+  Email envelope and body (when type='email').
+  """
+  email: MessageEmail
+  """
+  Threading, forwarding, mention context.
+  """
+  context: MessageContext
+  """
+  Delivery status and error info.
+  """
+  delivery: MessageDelivery
+  """
+  Reactions on this message.
+  """
+  reactions: [MessageReaction]
+  """
+  External origin tracking.
+  """
+  origin: MessageOrigin
+  """
+  Message edit history.
+  """
+  editHistory: [MessageEditEntry]
+  """
+  Extensible metadata bucket.
+  """
+  metadata: JSON
+  """
+  The resolved original message being replied to.
+  """
+  replyForMsg: JSON
+  """
+  The resolved customer who sent this message.
+  """
+  customer: Customer
+  """
+  The resolved agent who sent this message.
+  """
+  user: User
+  """
+  The parent conversation.
+  """
+  conversation: Conversation
+  """
+  The conversation this message belongs to.
+  """
+  conversationId: String
+  """
+  When this message was created.
+  """
+  createdAt: Date
+  """
+  Sticker attachment (when type='sticker').
+  """
+  sticker: WASticker
+  """
+  Location data (when type='location').
+  """
+  location: WALocation
+  """
+  Contact cards (when type='contacts').
+  """
+  contacts: [WAContact]
+  """
+  System event content (when type='system').
+  """
+  system: MessageSystem
+  """
+  Form submission content (when type='form').
+  """
+  form: MessageForm
+  """
+  Engage/campaign content (when type='engage').
+  """
+  engage: MessageEngage
+  """
+  Video call content (when type='videoCall').
+  """
+  videoCall: MessageVideoCall
+  """
+  Order/commerce content (when type='order').
+  """
+  order: MessageOrder
+  """
+  WhatsApp ad referral data.
+  """
+  referral: WAReferral
+  """
+  When this message was last updated.
+  """
+  updatedAt: Date
+}
+
+"""
+Paginated list of conversation messages.
+"""
+type ConversationMessageListResponse {
+  """
+  The list of messages for the current page.
+  """
+  data: [ConversationMessage]
+  """
+  Pagination metadata.
+  """
+  pagination: PaginationInfo!
+}
+
+"""
+Status of a conversation in the inbox.
+Determines the conversation's workflow state and visibility.
+"""
+enum ConversationStatus {
+  """
+  Conversation is actively being handled
+  """
+  open
+  """
+  Conversation has been resolved and closed
+  """
+  closed
+  """
+  Conversation is on hold, awaiting customer action
+  """
+  pending
+  """
+  Conversation is snoozed until a later time, awaiting team action
+  """
+  snoozed
+  """
+  Conversation currently handled by the automation bot/ai agents
+  """
+  bot
+  """
+  Conversations that was never closed/reopned
+  """
+  new
+}
+
+"""
+Payload for converted_to_card action.
+"""
+type ConvertedToCardPayload {
+  cardType: String
+  performedBy: String
+  """
+  Resolved user who performed the conversion.
+  """
+  performedByUser: User
+}
+
+"""
+Customer/contact entity capturing personal details, subscription status, and engagement metadata.
+"""
+type Customer {
+  state: String
+  createdAt: Date
+  modifiedAt: Date
+  avatar: String
+  integrationId: String
+  firstName: String
+  lastName: String
+  birthDate: Date
+  sex: Int
+  email: String
+  primaryEmail: String
+  emails: [String]
+  primaryPhone: String
+  phones: [String]
+  primaryAddress: JSON
+  addresses: [JSON]
+  phone: String
+  tagIds: [String]
+  customFieldsData: JSON
+  customFieldsDataByFieldCode: JSON
+  ownerId: String
+  leadStatus: String
+  leadStageHistory: [LeadStageHistoryEntry]
+  description: String
+  isSubscribed: String
+  code: String
+  emailValidationStatus: String
+  phoneValidationStatus: String
+  links: JSON
+  companies: [Company]
+  getTags: [Tag]
+  integration: Integration
+  owner: User
+  score: Float
+  """
+  Active segments-v2 memberships for this customer (active version only).
+  """
+  segmentsV2: [CustomerSegmentV2Membership]
+  _id: String!
+  conversations: [Conversation]
+}
+
+"""
+A customer's membership in a segments-v2 segment (active version).
+"""
+type CustomerSegmentV2Membership {
+  segmentId: String!
+  name: String!
+  status: String!
+  enteredAt: Date
+  source: String
+}
+
+"""
+Paginated customers response.
+"""
+type CustomersListResponse {
+  data: [Customer]
+  pagination: PaginationInfo!
+}
+
+scalar Date
+
+type Department {
+  _id: String!
+  title: String
+  description: String
+  parentId: String
+  supervisorId: String
+  supervisor: User
+  code: String
+  order: String
+  parent: Department
+  children: [Department]
+  childCount: Int
+  users: [User]
+  userCount: Int
+  userIds: [String]
+}
+
+type DepartmentListQueryResponse {
+  data: [Department]
+  pagination: PaginationInfo!
+  totalUsersCount: Int
+}
+
+"""
+An email address with optional display name.
+"""
+type EmailAddress {
+  """
+  Display name (e.g. 'John Doe').
+  """
+  name: String
+  """
+  Email address (e.g. 'john@example.com').
+  """
+  address: String!
+}
+
+"""
+Email-specific attachment metadata.
+"""
+type EmailAttachment {
+  """
+  Original filename.
+  """
+  filename: String
+  """
+  MIME type.
+  """
+  mimeType: String
+  """
+  File size in bytes.
+  """
+  size: Int
+  """
+  Content-ID for inline/embedded images.
+  """
+  contentId: String
+  """
+  Server-side storage ID for download.
+  """
+  attachmentId: String
+}
+
+type Field {
+  _id: String!
+  contentType: String!
+  contentTypeId: String
+  name: String
+  isVisible: Boolean
+  isVisibleInDetail: Boolean
+  canHide: Boolean
+  groupId: String
+  lastUpdatedUser: User
+  lastUpdatedUserId: String
+  associatedField: Field
+  locationOptions: [LocationOption]
+  objectListConfigs: [ObjectListConfig]
+  optionsValues: String
+  subFieldIds: [String]
+  subFields: [Field]
+  products: [Product]
+  logics: [Logic]
+  description: String
+  options: [String]
+  type: String
+  validation: String
+  regexValidation: String
+  text: String
+  content: String
+  isRequired: Boolean
+  order: Int
+  associatedFieldId: String
+  logicAction: String
+  column: Int
+  pageNumber: Int
+  code: String
+  searchable: Boolean
+  showInCard: Boolean
+  isVisibleToCreate: Boolean
+  productCategoryId: String
+  field: String
+  isDefinedByKarzoun: Boolean
+}
+
+type FieldsGroup {
+  _id: String!
+  name: String
+  contentType: String
+  order: Int
+  code: String
+  parentId: String
+  description: String
+  isMultiple: Boolean
+  isVisible: Boolean
+  isVisibleInDetail: Boolean
+  alwaysOpen: Boolean
+  isDefinedByKarzoun: Boolean
+  fields: [Field]
+  lastUpdatedUserId: String
+  lastUpdatedUser: User
+  config: JSON
+  logicAction: String
+  logics: [Logic]
+}
+
+type Form {
+  _id: String!
+  name: String!
+  title: String
+  code: String
+  type: String
+  description: String
+  buttonText: String
+  createdUserId: String
+  createdUser: User
+  createdDate: Date
+  numberOfPages: Int
+  status: String
+  googleMapApiKey: String
+  fields: [Field]
+  visibility: String
+  leadData: JSON
+  languageCode: String
+  departmentIds: [String]
+  tagIds: [String]
+  tags: [Tag]
+  workspaceId: String
+  workspace: Workspace
+  integrationId: String
+}
+
+"""
+A form code linking a brand to a form within a knowledge base article.
+"""
+type FormCode {
+  workspaceId: String
+  formId: String
+}
+
+"""
+Input for associating a form code with a knowledge base article.
+"""
+input FormCodeInput {
+  workspaceId: String
+  formId: String
+}
+
+type FormsResponse {
+  data: [Form]
+  pagination: PaginationInfo!
+}
+
+type FormsTotalCount {
+  total: Int
+  byTag: JSON
+  byWorkspace: JSON
+  byStatus: JSON
+}
+
+type FormSubmission {
+  _id: String!
+  customerId: String
+  formId: String
+  formFieldId: String
+  text: String
+  formFieldText: String
+  value: JSON
+  submittedAt: Date
+}
+
+type FormSubmissionListResponse {
+  data: [Submission]
+  pagination: PaginationInfo!
+}
+
+type HealthEntity {
+  entity_type: String
+  id: String
+  can_send_message: String
+  additional_info: [String]
+}
+
+"""
+Available custom field definitions for inbox entities.
+"""
+type InboxField {
+  """
+  Custom fields available on customer records.
+  """
+  customer: [Field]
+  """
+  Custom fields available on conversations.
+  """
+  conversation: [Field]
+  """
+  Custom fields available on device/browser data.
+  """
+  device: [Field]
+}
+
+type Integration {
+  _id: String!
+  kind: String!
+  name: String!
+  languageCode: String
+  code: String
+  formId: String
+  tagIds: [String]
+  createdAt: Date
+  workspaceId: String
+  tags: [Tag]
+  leadData: JSON
+  messengerData: JSON
+  whatsappData: WhatsappIntegration
+  uiOptions: JSON
+  isActive: Boolean
+  isConnected: Boolean
+  webhookData: JSON
+  form: Form
+  departmentId: String
+  department: Department
+  workspace: Workspace
+  websiteMessengerApps: [MessengerApp]
+  knowledgeBaseMessengerApps: [MessengerApp]
+  leadMessengerApps: [MessengerApp]
+  healthStatus: JSON
+  visibility: String
+  departmentIds: [String]
+  details: JSON
+}
+
+scalar JSON
+
+"""
+A knowledge base article containing help content, documentation, or guides.
+Articles belong to categories within topics and support rich content, attachments, and reactions.
+"""
+type KnowledgeBaseArticle {
+  _id: String!
+  """
+  Unique code identifier for programmatic access.
+  """
+  code: String
+  """
+  The article title.
+  """
+  title: String
+  """
+  Brief summary or excerpt of the article content.
+  """
+  summary: String
+  """
+  Full article content (HTML).
+  """
+  content: String
+  """
+  Publication status: 'draft', 'publish', or 'scheduled'.
+  """
+  status: String
+  """
+  Whether this article is only visible to team members.
+  """
+  isPrivate: Boolean
+  """
+  Available emoji reaction types for this article.
+  """
+  reactionChoices: [String]
+  """
+  Count of each reaction type received.
+  """
+  reactionCounts: JSON
+  """
+  User ID of the article creator.
+  """
+  createdBy: String
+  """
+  The resolved user who created this article.
+  """
+  createdUser: User
+  """
+  When this article was created.
+  """
+  createdDate: Date
+  """
+  User ID of the last modifier.
+  """
+  modifiedBy: String
+  """
+  When this article was last modified.
+  """
+  modifiedDate: Date
+  """
+  The topic this article belongs to.
+  """
+  topicId: String
+  """
+  The category this article belongs to.
+  """
+  categoryId: String
+  """
+  Total number of times this article has been viewed.
+  """
+  viewCount: Int
+  """
+  File attachments included with this article.
+  """
+  attachments: [Attachment]
+  """
+  Featured image for the article.
+  """
+  image: Attachment
+  """
+  PDF attachment with extracted page images.
+  """
+  pdfAttachment: PdfAttachment
+  """
+  User ID of who published this article.
+  """
+  publishedUserId: String
+  """
+  The resolved user who published this article.
+  """
+  publishedUser: User
+  """
+  Scheduled publication date (for status 'scheduled').
+  """
+  scheduledDate: Date
+  """
+  Forms embedded in this article.
+  """
+  forms: [FormCode]
+}
+
+"""
+Input for creating or editing a knowledge base article.
+"""
+input KnowledgeBaseArticleDoc {
+  """
+  Unique code identifier.
+  """
+  code: String
+  """
+  The article title (required).
+  """
+  title: String!
+  """
+  Brief summary or excerpt.
+  """
+  summary: String
+  """
+  Full article content in HTML (required).
+  """
+  content: String!
+  """
+  Publication status: 'draft', 'publish', or 'scheduled' (required).
+  """
+  status: String!
+  """
+  Whether this article is only visible to team members.
+  """
+  isPrivate: Boolean
+  """
+  Available emoji reaction types.
+  """
+  reactionChoices: [String]
+  """
+  Category IDs to assign this article to.
+  """
+  categoryIds: [String]
+  """
+  The topic this article belongs to.
+  """
+  topicId: String
+  """
+  The primary category this article belongs to.
+  """
+  categoryId: String
+  """
+  Featured image for the article.
+  """
+  image: AttachmentInput
+  """
+  File attachments.
+  """
+  attachments: [AttachmentInput]
+  """
+  PDF attachment with page images.
+  """
+  pdfAttachment: PdfAttachmentInput
+  """
+  Scheduled publication date.
+  """
+  scheduledDate: Date
+  """
+  Forms to embed in this article.
+  """
+  forms: [FormCodeInput]
+}
+
+"""
+Paginated list of knowledge base articles.
+"""
+type KnowledgeBaseArticlesPaginated {
+  """
+  The list of articles for the current page.
+  """
+  data: [KnowledgeBaseArticle]
+  """
+  Pagination metadata.
+  """
+  pagination: PaginationInfo
+}
+
+"""
+Paginated list of knowledge base categories.
+"""
+type KnowledgeBaseCategoriesPaginated {
+  """
+  The list of categories for the current page.
+  """
+  data: [KnowledgeBaseCategory]
+  """
+  Pagination metadata.
+  """
+  pagination: PaginationInfo
+}
+
+"""
+A category that groups related knowledge base articles together.
+Categories can be nested under parent categories for hierarchical organization.
+"""
+type KnowledgeBaseCategory {
+  _id: String
+  """
+  Unique code identifier for programmatic access.
+  """
+  code: String
+  """
+  The category title.
+  """
+  title: String
+  """
+  Description of what this category covers.
+  """
+  description: String
+  """
+  Articles in this category, optionally filtered by status.
+  """
+  articles(status: String): [KnowledgeBaseArticle]
+  """
+  Icon identifier for the category.
+  """
+  icon: String
+  """
+  User ID of the category creator.
+  """
+  createdBy: String
+  """
+  When this category was created.
+  """
+  createdDate: Date
+  """
+  User ID of the last modifier.
+  """
+  modifiedBy: String
+  """
+  When this category was last modified.
+  """
+  modifiedDate: Date
+  """
+  Parent category ID for nested categorization.
+  """
+  parentCategoryId: String
+  """
+  The first topic this category belongs to.
+  """
+  firstTopic: KnowledgeBaseTopic
+  """
+  Users who have authored articles in this category.
+  """
+  authors: [User]
+  """
+  Count of articles in this category, optionally filtered by status.
+  """
+  numOfArticles(status: String): Float
+  """
+  Total article count in this category.
+  """
+  countArticles: Int
+}
+
+"""
+Input for creating or editing a knowledge base category.
+"""
+input KnowledgeBaseCategoryDoc {
+  """
+  Unique code identifier.
+  """
+  code: String
+  """
+  The category title (required).
+  """
+  title: String!
+  """
+  Description of what this category covers.
+  """
+  description: String
+  """
+  Article IDs to include in this category.
+  """
+  articleIds: [String]
+  """
+  Icon identifier (required).
+  """
+  icon: String!
+  """
+  Topic IDs this category belongs to.
+  """
+  topicIds: [String]
+  """
+  Primary topic ID.
+  """
+  topicId: String
+  """
+  Parent category ID for nesting.
+  """
+  parentCategoryId: String
+}
+
+"""
+A category with its nested child categories included.
+"""
+type KnowledgeBaseParentCategory {
+  _id: String
+  """
+  Unique code identifier.
+  """
+  code: String
+  """
+  The category title.
+  """
+  title: String
+  """
+  Description of what this category covers.
+  """
+  description: String
+  """
+  Articles directly in this parent category.
+  """
+  articles: [KnowledgeBaseArticle]
+  """
+  Icon identifier.
+  """
+  icon: String
+  """
+  User ID of the creator.
+  """
+  createdBy: String
+  """
+  When this category was created.
+  """
+  createdDate: Date
+  """
+  User ID of the last modifier.
+  """
+  modifiedBy: String
+  """
+  When this category was last modified.
+  """
+  modifiedDate: Date
+  """
+  Parent category ID (for deeper nesting).
+  """
+  parentCategoryId: String
+  """
+  The first topic this category belongs to.
+  """
+  firstTopic: KnowledgeBaseTopic
+  """
+  Users who have authored articles in this category.
+  """
+  authors: [User]
+  """
+  Count of articles, optionally filtered by status.
+  """
+  numOfArticles(status: String): Float
+  """
+  Nested child categories.
+  """
+  childrens: [KnowledgeBaseCategory]
+}
+
+"""
+A single search result hit from the knowledge base vector search.
+"""
+type KnowledgeBaseSearchHit {
+  """
+  The article ID that matched.
+  """
+  id: String!
+  """
+  Relevance score (higher is better).
+  """
+  score: Float
+  """
+  Additional metadata about the match.
+  """
+  metadata: JSON
+  """
+  Highlighted text snippet showing the matching content.
+  """
+  highlight: String
+}
+
+"""
+Results from a knowledge base semantic search query.
+"""
+type KnowledgeBaseSearchResult {
+  """
+  The original search query.
+  """
+  query: String!
+  """
+  Total number of matching results.
+  """
+  totalResults: Int!
+  """
+  The search result hits, ordered by relevance.
+  """
+  results: [KnowledgeBaseSearchHit!]!
+  """
+  Source citations for the results.
+  """
+  citations: [JSON!]
+}
+
+"""
+A knowledge base topic — the top-level organizational unit.
+Topics are associated with a brand and contain categories of articles.
+They can be styled with custom colors and background images.
+"""
+type KnowledgeBaseTopic {
+  _id: String!
+  """
+  Unique code identifier for programmatic access.
+  """
+  code: String
+  """
+  The topic title.
+  """
+  title: String
+  """
+  Description of the topic.
+  """
+  description: String
+  """
+  Categories within this topic.
+  """
+  categories: [KnowledgeBaseCategory]
+  workspace: Workspace
+  color: String
+  """
+  URL of the background image for the topic page.
+  """
+  backgroundImage: String
+  """
+  ISO language code for the topic content (e.g. 'en', 'ar').
+  """
+  languageCode: String
+  """
+  User ID of the topic creator.
+  """
+  createdBy: String
+  """
+  When this topic was created.
+  """
+  createdDate: Date
+  """
+  User ID of the last modifier.
+  """
+  modifiedBy: String
+  """
+  When this topic was last modified.
+  """
+  modifiedDate: Date
+  """
+  Top-level parent categories within this topic.
+  """
+  parentCategories: [KnowledgeBaseParentCategory]
+}
+
+"""
+Input for creating or editing a knowledge base topic.
+"""
+input KnowledgeBaseTopicDoc {
+  """
+  Unique code identifier.
+  """
+  code: String
+  """
+  The topic title (required).
+  """
+  title: String!
+  """
+  Description of the topic.
+  """
+  description: String
+  """
+  Category IDs to include in this topic.
+  """
+  categoryIds: [String]
+  color: String
+  """
+  Background image URL.
+  """
+  backgroundImage: String
+  """
+  ISO language code.
+  """
+  languageCode: String
+}
+
+"""
+Paginated list of knowledge base topics.
+"""
+type KnowledgeBaseTopicsPaginated {
+  """
+  The list of topics for the current page.
+  """
+  data: [KnowledgeBaseTopic]
+  """
+  Pagination metadata.
+  """
+  pagination: PaginationInfo
+}
+
+"""
+Single entry in a lead's stage-change history.
+"""
+type LeadStageHistoryEntry {
+  stageCode: String!
+  at: Date!
+  byUserId: String
+  note: String
+}
+
+type LocationData {
+  latitude: Float
+  longitude: Float
+  name: String
+  address: String
+}
+
+input LocationDataInput {
+  latitude: Float!
+  longitude: Float!
+  name: String
+  address: String
+}
+
+type LocationOption {
+  lat: Float
+  lng: Float
+  description: String
+}
+
+input LocationOptionInput {
+  lat: Float
+  lng: Float
+  description: String
+}
+
+type Logic {
+  fieldId: String!
+  logicOperator: String
+  logicValue: JSON
+}
+
+input LogicInput {
+  fieldId: String
+  tempFieldId: String
+  logicOperator: String
+  logicValue: JSON
+}
+
+"""
+Threading and forwarding context for a message.
+"""
+type MessageContext {
+  """
+  The message ID this is replying to.
+  """
+  replyTo: String
+  """
+  Whether this message was forwarded.
+  """
+  isForwarded: Boolean
+  """
+  User IDs mentioned in this message.
+  """
+  mentions: [String]
+}
+
+"""
+Input for threading and mention context.
+"""
+input MessageContextInput {
+  """
+  The message ID this is replying to.
+  """
+  replyTo: String
+  """
+  Whether this message was forwarded.
+  """
+  isForwarded: Boolean
+  """
+  User IDs mentioned in this message.
+  """
+  mentions: [String]
+}
+
+"""
+Delivery status tracking for a message.
+"""
+type MessageDelivery {
+  """
+  Delivery status: 'sending', 'sent', 'delivered', 'seen', 'failed'.
+  """
+  status: String!
+  """
+  Error message if delivery failed.
+  """
+  error: String
+}
+
+"""
+A single edit in a message's edit history.
+"""
+type MessageEditEntry {
+  """
+  The previous content before this edit.
+  """
+  content: String
+  """
+  When the edit was made.
+  """
+  editedAt: Date
+}
+
+"""
+Email-specific envelope and body data.
+"""
+type MessageEmail {
+  """
+  Email subject line.
+  """
+  subject: String
+  """
+  Integration ID this email belongs to.
+  """
+  integrationId: String
+  """
+  Sender address(es).
+  """
+  from: [EmailAddress]
+  """
+  To recipients.
+  """
+  to: [EmailAddress]
+  """
+  CC recipients.
+  """
+  cc: [EmailAddress]
+  """
+  BCC recipients (only visible to sender).
+  """
+  bcc: [EmailAddress]
+  """
+  RFC 5322 References header chain for threading.
+  """
+  references: [String]
+  """
+  Sanitized HTML body.
+  """
+  htmlBody: String
+  """
+  Plain-text fallback body.
+  """
+  textBody: String
+  """
+  Short preview snippet.
+  """
+  snippet: String
+  """
+  Email-native attachment metadata.
+  """
+  attachments: [EmailAttachment]
+  """
+  Extracted new content (stripped of quoted/replied text).
+  """
+  newContent: String
+  """
+  The quoted/replied portion of the email body.
+  """
+  quotedContent: String
+  """
+  Detected email signature block.
+  """
+  signature: String
+}
+
+"""
+Engage/campaign message content.
+"""
+type MessageEngage {
+  """
+  The engage message ID.
+  """
+  messageId: String
+  """
+  The workspace associated with the engage campaign.
+  """
+  workspaceId: String
+  """
+  The campaign content/body.
+  """
+  content: String
+  """
+  The user who initiated the campaign.
+  """
+  fromUserId: String
+  """
+  Campaign kind.
+  """
+  kind: String
+  """
+  How the campaign was sent.
+  """
+  sentAs: String
+  """
+  Campaign targeting rules.
+  """
+  rules: JSON
+}
+
+"""
+Form submission content.
+"""
+type MessageForm {
+  """
+  The raw form submission data.
+  """
+  data: JSON
+}
+
+"""
+Interactive message (buttons, quick replies, lists, carousels, flows, etc.).
+"""
+type MessageInteractive {
+  """
+  Interactive type discriminator (button, list, cta_url, carousel, quickReplies, button_reply, list_reply, nfm_reply, etc.).
+  """
+  type: String
+  """
+  Optional header (text, image, video, document).
+  """
+  header: JSON
+  """
+  Body content.
+  """
+  body: JSON
+  """
+  Footer text.
+  """
+  footer: JSON
+  """
+  Action configuration (buttons, sections, cards, parameters, etc.).
+  """
+  action: JSON
+  """
+  Customer button tap reply (incoming).
+  """
+  button_reply: JSON
+  """
+  Customer list selection reply (incoming).
+  """
+  list_reply: JSON
+  """
+  Customer WA Flow / native form submission (incoming).
+  """
+  nfm_reply: JSON
+}
+
+"""
+Media content attached to a message.
+"""
+type MessageMedia {
+  """
+  List of file attachments.
+  """
+  attachments: [Attachment]
+  """
+  Optional caption for the media.
+  """
+  caption: String
+}
+
+"""
+Input for media message content.
+"""
+input MessageMediaInput {
+  """
+  File attachments.
+  """
+  attachments: [AttachmentInput]
+  """
+  Optional caption.
+  """
+  caption: String
+}
+
+"""
+Order/commerce message content (WhatsApp order flow).
+"""
+type MessageOrder {
+  """
+  Commerce catalog identifier.
+  """
+  catalogId: String
+  """
+  Products in this order.
+  """
+  productItems: [MessageOrderProductItem]
+  """
+  Order summary text.
+  """
+  text: String
+}
+
+"""
+A single product item in an order message.
+"""
+type MessageOrderProductItem {
+  """
+  Product retailer identifier (matches Product.code in core).
+  """
+  productRetailerId: String
+  """
+  Quantity ordered.
+  """
+  quantity: Int
+  """
+  Unit price of the item (as reported by WhatsApp).
+  """
+  itemPrice: Float
+  """
+  Currency code (e.g. 'AED', 'USD').
+  """
+  currency: String
+  """
+  Resolved product name, or null when no matching product exists.
+  """
+  name: String
+  """
+  Resolved product attachment ({ url, name, type }), or null when no matching product exists.
+  """
+  attachment: Attachment
+}
+
+"""
+External origin tracking for a message.
+"""
+type MessageOrigin {
+  """
+  External message ID from the integration platform.
+  """
+  externalId: String
+  """
+  Origin application identifier.
+  """
+  app: String
+}
+
+"""
+A reaction on a message.
+"""
+type MessageReaction {
+  """
+  The emoji string.
+  """
+  emoji: String!
+  """
+  Who reacted: 'user', 'customer', etc.
+  """
+  fromKind: String!
+  """
+  The ID of the person who reacted.
+  """
+  fromId: String
+}
+
+"""
+Identifies who sent a message.
+"""
+type MessageSender {
+  """
+  Sender kind: 'user', 'customer', 'bot', 'ai_assistant', 'system', 'visitor'.
+  """
+  kind: String!
+  """
+  The sender's ID (user, customer, bot, etc.).
+  """
+  id: String
+}
+
+"""
+Input for identifying the message sender.
+"""
+input MessageSenderInput {
+  """
+  Sender kind: 'user', 'customer', 'bot', 'ai_assistant', 'system', 'visitor'.
+  """
+  kind: String!
+  """
+  The sender's platform ID.
+  """
+  id: String
+}
+
+"""
+System-generated event shown inline in the conversation.
+"""
+type MessageSystem {
+  """
+  The action that occurred (e.g. 'assigned', 'status_changed', 'tagged').
+  """
+  action: String!
+  """
+  Structured action-specific payload based on action type.
+  """
+  payload: ActionsPayload
+  """
+  Human-readable label for the event.
+  """
+  label: String
+}
+
+"""
+Template message content.
+"""
+type MessageTemplate {
+  """
+  Template name.
+  """
+  name: String
+  """
+  Template parameters (resolved key-value pairs).
+  """
+  params: JSON
+  """
+  Template language code.
+  """
+  language: JSON
+  """
+  Template category (MARKETING, UTILITY, AUTHENTICATION).
+  """
+  category: String
+  """
+  Pre-rendered snapshot of what the customer received.
+  """
+  rendered: TemplateRendered
+}
+
+"""
+Plain-text or rich-text message body.
+"""
+type MessageText {
+  """
+  The message body content.
+  """
+  body: String!
+  """
+  An optional short preview for long messages.
+  """
+  preview: String
+}
+
+"""
+Input for text message content.
+"""
+input MessageTextInput {
+  """
+  The message body.
+  """
+  body: String!
+  """
+  Optional short preview.
+  """
+  preview: String
+}
+
+"""
+Video call message content.
+"""
+type MessageVideoCall {
+  """
+  URL to join the video call.
+  """
+  url: String
+  """
+  Current call status.
+  """
+  status: String
+  """
+  Provider name (e.g. 'dailyco').
+  """
+  provider: String
+}
+
+type MessengerApp {
+  _id: String!
+  kind: String!
+  name: String!
+  showInInbox: Boolean
+  credentials: JSON
+  accountId: String
+}
+
+type Mutation {
+  conformityAdd(
+    mainType: String
+    mainTypeId: String
+    relType: String
+    relTypeId: String
+  ): Conformity
+  conformityEdit(
+    mainType: String
+    mainTypeId: String
+    relType: String
+    relTypeIds: [String]
+  ): SuccessResult
+  """
+  Create a new app credential scoped to a user group with optional expiry.
+  Returns the access token once — it will never be queryable again.
+  """
+  appsAdd(
+    name: String
+    userGroupId: String
+    workspaceId: String
+    expireDate: Date
+    allowAllPermission: Boolean
+    noExpire: Boolean
+  ): AppTokenResult
+  """
+  Update app name and expiration only.
+  Permissions (userGroupId, allowAllPermission) are locked after creation.
+  """
+  appsEdit(_id: String!, name: String, expireDate: Date, noExpire: Boolean): App
+  """
+  Remove an app credential by id.
+  """
+  appsRemove(_id: String!): JSON
+  """
+  Create a new tag.
+  """
+  tagsAdd(
+    name: String!
+    type: String!
+    colorCode: String
+    parentId: String
+  ): Tag
+  """
+  Edit a tag by id.
+  """
+  tagsEdit(
+    _id: String!
+    name: String!
+    type: String!
+    colorCode: String
+    parentId: String
+  ): Tag
+  """
+  Remove a tag by id.
+  """
+  tagsRemove(_id: String!): JSON
+  """
+  Attach/detach tags to target entities.
+  """
+  tagsTag(type: String!, targetIds: [String!]!, tagIds: [String!]!): String
+  """
+  Merge two tags (source into destination).
+  """
+  tagsMerge(sourceId: String!, destId: String!): Tag
+  formSubmissionsSave(
+    formId: String
+    contentTypeId: String
+    contentType: String
+    formSubmissions: JSON
+  ): Boolean
+  fieldsAdd(
+    contentType: String!
+    contentTypeId: String
+    type: String
+    validation: String
+    regexValidation: String
+    text: String
+    description: String
+    code: String
+    options: [String]
+    locationOptions: [LocationOptionInput]
+    isRequired: Boolean
+    order: Int
+    groupId: String
+    isVisible: Boolean
+    canHide: Boolean
+    associatedFieldId: String
+    logicAction: String
+    logics: [LogicInput]
+    searchable: Boolean
+    showInCard: Boolean
+    objectListConfigs: [objectListConfigInput]
+    isVisibleToCreate: Boolean
+  ): Field
+  fieldsEdit(
+    _id: String!
+    type: String
+    validation: String
+    regexValidation: String
+    text: String
+    description: String
+    code: String
+    options: [String]
+    locationOptions: [LocationOptionInput]
+    isRequired: Boolean
+    order: Int
+    groupId: String
+    isVisible: Boolean
+    canHide: Boolean
+    associatedFieldId: String
+    logicAction: String
+    logics: [LogicInput]
+    searchable: Boolean
+    showInCard: Boolean
+    objectListConfigs: [objectListConfigInput]
+    isVisibleToCreate: Boolean
+  ): Field
+  fieldsRemove(_id: String!): Field
+  fieldsGroupsAdd(
+    name: String
+    contentType: String
+    order: Int
+    description: String
+    parentId: String
+    code: String
+    isMultiple: Boolean
+    isVisible: Boolean
+    alwaysOpen: Boolean
+    isVisibleInDetail: Boolean
+    config: JSON
+    logicAction: String
+    logics: [LogicInput]
+  ): FieldsGroup
+  fieldsGroupsEdit(
+    _id: String!
+    name: String
+    contentType: String
+    order: Int
+    description: String
+    parentId: String
+    code: String
+    isMultiple: Boolean
+    isVisible: Boolean
+    alwaysOpen: Boolean
+    isVisibleInDetail: Boolean
+    config: JSON
+    logicAction: String
+    logics: [LogicInput]
+  ): FieldsGroup
+  fieldsGroupsRemove(_id: String!): JSON
+  """
+  Create a new company record with core contact, address, and classification fields.
+  """
+  companiesAdd(
+    avatar: String
+    primaryName: String
+    names: [String]
+    primaryPhone: String
+    phones: [String]
+    primaryEmail: String
+    emails: [String]
+    primaryAddress: JSON
+    addresses: [JSON]
+    size: Int
+    website: String
+    industry: String
+    parentCompanyId: String
+    email: String
+    ownerId: String
+    businessType: String
+    description: String
+    isSubscribed: String
+    links: JSON
+    tagIds: [String]
+    customFieldsData: JSON
+    code: String
+    location: String
+  ): Company
+  """
+  Update an existing company by id; supports partial edits of contact and CRM fields.
+  """
+  companiesEdit(
+    _id: String!
+    avatar: String
+    primaryName: String
+    names: [String]
+    primaryPhone: String
+    phones: [String]
+    primaryEmail: String
+    emails: [String]
+    primaryAddress: JSON
+    addresses: [JSON]
+    size: Int
+    website: String
+    industry: String
+    parentCompanyId: String
+    email: String
+    ownerId: String
+    businessType: String
+    description: String
+    isSubscribed: String
+    links: JSON
+    tagIds: [String]
+    customFieldsData: JSON
+    code: String
+    location: String
+  ): Company
+  """
+  Patch company fields by selector for bulk or conditional updates.
+  """
+  companiesEditByField(selector: JSON, doc: JSON): Company
+  """
+  Remove one or more companies; returns removed ids.
+  """
+  companiesRemove(companyIds: [String]): [String]
+  """
+  Merge multiple companies into a primary record, applying provided field overrides.
+  """
+  companiesMerge(companyIds: [String], companyFields: JSON): Company
+  """
+  Create a new customer/contact. The optional state can denote lead vs. customer pipelines.
+  """
+  customersAdd(
+    state: String
+    avatar: String
+    firstName: String
+    lastName: String
+    primaryEmail: String
+    emails: [String]
+    primaryPhone: String
+    phones: [String]
+    primaryAddress: JSON
+    addresses: [JSON]
+    ownerId: String
+    tagIds: [String]
+    leadStatus: String
+    description: String
+    isSubscribed: String
+    links: JSON
+    customFieldsData: JSON
+    code: String
+    sex: Int
+    birthDate: Date
+    emailValidationStatus: String
+    phoneValidationStatus: String
+  ): Customer
+  """
+  Update a customer by id with profile or CRM attributes.
+  """
+  customersEdit(
+    _id: String!
+    avatar: String
+    firstName: String
+    lastName: String
+    primaryEmail: String
+    emails: [String]
+    primaryPhone: String
+    phones: [String]
+    primaryAddress: JSON
+    addresses: [JSON]
+    ownerId: String
+    tagIds: [String]
+    leadStatus: String
+    description: String
+    isSubscribed: String
+    links: JSON
+    customFieldsData: JSON
+    code: String
+    sex: Int
+    birthDate: Date
+    emailValidationStatus: String
+    phoneValidationStatus: String
+  ): Customer
+  """
+  Patch customer fields by selector for conditional/bulk edits.
+  """
+  customersEditByField(selector: JSON, doc: JSON): Customer
+  """
+  Merge several customers into one, applying provided override fields.
+  """
+  customersMerge(customerIds: [String], customerFields: JSON): Customer
+  """
+  Remove one or more customers; returns removed ids.
+  """
+  customersRemove(customerIds: [String]): [String]
+  """
+  Change the lifecycle state for a customer (e.g., lead → customer); value expects a known state key.
+  """
+  customersChangeState(_id: String!, value: String!): Customer
+  """
+  Create a new product with pricing, taxonomy, and media.
+  """
+  productsAdd(
+    name: String
+    shortName: String
+    slug: String
+    categoryId: String
+    type: String
+    description: String
+    barcodes: [String]
+    unitPrice: Float
+    salePrice: Float
+    compareAtPrice: Float
+    code: String
+    costPrice: Float
+    currency: String
+    mpn: String
+    gtin: String
+    requireShipping: Boolean
+    channels: [String]
+    unlimitedQuantity: Boolean
+    saleStart: Date
+    saleEnd: Date
+    maxPerOrder: Int
+    maxPerCustomer: Int
+    isAvailable: Boolean
+    hideQuantity: Boolean
+    customFieldsData: JSON
+    attachment: AttachmentInput
+    attachmentMore: [AttachmentInput]
+    media: [AttachmentInput]
+    vendorId: String
+    uom: String
+    subUoms: JSON
+    taxType: String
+    taxCode: String
+    sku: String
+    externalUrl: String
+    source: String
+    status: String
+    productOptions: JSON
+    productVariants: JSON
+    priceRange: JSON
+    hasVariants: Boolean
+    weight: Float
+    weightUnit: String
+    dimensions: JSON
+    inventory: JSON
+    seo: JSON
+  ): Product
+  """
+  Update an existing product by id.
+  """
+  productsEdit(
+    _id: String!
+    name: String
+    shortName: String
+    slug: String
+    categoryId: String
+    type: String
+    description: String
+    barcodes: [String]
+    unitPrice: Float
+    salePrice: Float
+    compareAtPrice: Float
+    code: String
+    costPrice: Float
+    currency: String
+    mpn: String
+    gtin: String
+    requireShipping: Boolean
+    channels: [String]
+    unlimitedQuantity: Boolean
+    saleStart: Date
+    saleEnd: Date
+    maxPerOrder: Int
+    maxPerCustomer: Int
+    isAvailable: Boolean
+    hideQuantity: Boolean
+    customFieldsData: JSON
+    attachment: AttachmentInput
+    attachmentMore: [AttachmentInput]
+    media: [AttachmentInput]
+    vendorId: String
+    uom: String
+    subUoms: JSON
+    taxType: String
+    taxCode: String
+    sku: String
+    externalUrl: String
+    source: String
+    status: String
+    productOptions: JSON
+    productVariants: JSON
+    priceRange: JSON
+    hasVariants: Boolean
+    weight: Float
+    weightUnit: String
+    dimensions: JSON
+    inventory: JSON
+    seo: JSON
+  ): Product
+  """
+  Remove products by ids; returns status string.
+  """
+  productsRemove(productIds: [String!]): String
+  """
+  Create a product category.
+  """
+  productCategoriesAdd(
+    name: String!
+    code: String!
+    description: String
+    parentId: String
+    slug: String
+    attachment: AttachmentInput
+    status: String
+    seo: JSON
+  ): ProductCategory
+  """
+  Edit a product category by id.
+  """
+  productCategoriesEdit(
+    _id: String!
+    name: String!
+    code: String!
+    description: String
+    parentId: String
+    slug: String
+    attachment: AttachmentInput
+    status: String
+    seo: JSON
+  ): ProductCategory
+  """
+  Remove a product category by id.
+  """
+  productCategoriesRemove(_id: String!): JSON
+  """
+  Adds a new message to a conversation.
+  Use this to send replies, internal notes, or bot messages.
+  Set visibility='internal' for team-only notes invisible to customers.
+  """
+  conversationMessageAdd(
+    """
+    The conversation ID to add the message to.
+    """
+    conversationId: String
+    """
+    Message type discriminator: 'text', 'media', 'template', etc.
+    """
+    type: String
+    """
+    Text content of the message.
+    """
+    text: MessageTextInput
+    """
+    Media content (attachments).
+    """
+    media: MessageMediaInput
+    """
+    Who is sending this message.
+    """
+    sender: MessageSenderInput
+    """
+    Visibility level: 'public', 'internal', or 'hidden'.
+    """
+    visibility: String
+    """
+    Threading, forwarding, and mention context.
+    """
+    context: MessageContextInput
+    """
+    Template content for template messages.
+    """
+    template: JSON
+    """
+    Additional metadata as JSON.
+    """
+    metadata: JSON
+    """
+    Interactive message payload (buttons, lists, carousels) for WhatsApp/Instagram/Facebook.
+    """
+    interactive: JSON
+  ): ConversationMessage
+  """
+  Updates an existing conversation message.
+  Can add reactions or change visibility.
+  """
+  conversationMessageUpdate(
+    """
+    The message ID to update.
+    """
+    _id: String
+    """
+    The conversation ID containing the message.
+    """
+    conversationId: String
+    """
+    V2 reactions array as JSON (e.g., [{ emoji, fromKind, fromId }]).
+    """
+    reactions: JSON
+    """
+    Visibility level: 'public', 'internal', or 'hidden'.
+    """
+    visibility: String
+  ): ConversationMessage
+  """
+  Assigns one or more conversations to a user or department.
+  Use this to route conversations to the appropriate agent or team.
+  """
+  conversationsAssign(
+    """
+    List of conversation IDs to assign
+    """
+    conversationIds: [String]!
+    """
+    The user ID to assign the conversations to
+    """
+    assignedUserId: String
+    """
+    The department ID to assign the conversations to
+    """
+    assignedDepartmentId: String
+  ): [Conversation]
+  """
+  Removes assignment from conversations, making them unassigned.
+  Conversations return to the general inbox queue.
+  """
+  conversationsUnassign(
+    """
+    List of conversation IDs to unassign
+    """
+    _ids: [String]!
+  ): [Conversation]
+  """
+  Changes the status of one or more conversations.
+  Use 'closed' to resolve conversations, 'open' to reopen them.
+  When setting status to 'snoozed', optionally provide snoozedUntil to auto-reopen at that time.
+  """
+  conversationsChangeStatus(
+    """
+    List of conversation IDs to update
+    """
+    _ids: [String]!
+    """
+    New status for the conversations
+    """
+    status: ConversationStatus!
+    """
+    Optional auto-reopen datetime (only used when status is 'snoozed'). Conversation will auto-reopen after this time.
+    """
+    snoozedUntil: Date
+  ): [Conversation]
+  """
+  Marks a conversation as read by the current user.
+  Clears unread indicators and updates read receipts.
+  """
+  conversationMarkAsRead(
+    """
+    The conversation ID to mark as read
+    """
+    _id: String
+  ): Conversation
+  """
+  Resolves (closes) all conversations matching the filter criteria.
+  Use with caution as this performs a bulk status change.
+  Returns the count of conversations resolved.
+  """
+  conversationResolveAll(
+    """
+    Filter by department ID
+    """
+    departmentId: String
+    """
+    Filter by conversation status
+    """
+    status: ConversationStatus
+    """
+    Filter unassigned conversations only ('true' to get unassigned, 'false' to get assigned, keep empty for no filter)
+    """
+    unAssigned: Boolean
+    """
+    Filter by tag ID or name
+    """
+    tag: String
+    """
+    Filter by integration type (e.g., 'messenger', 'email', 'facebook', 'whatsapp')
+    """
+    integrationType: String
+    """
+    Filter by specific integration ID
+    """
+    integrationId: String
+    """
+    Filter conversations where current user is participating ('true'/'false')
+    """
+    participating: String
+    """
+    Filter conversations where customer awaiting response ('true'/'false')
+    """
+    awaitingResponse: String
+    """
+    Filter starred/favorited conversations ('true'/'false')
+    """
+    starred: String
+    """
+    Filter by start date (ISO date string)
+    """
+    startDate: String
+    """
+    Filter by end date (ISO date string)
+    """
+    endDate: String
+    """
+    Filter by customer segment ID
+    """
+    segment: String
+    """
+    Filter by assigned user/agent ID
+    """
+    assignedUserId: String
+    """
+    Field to sort results by (e.g., 'createdAt', 'updatedAt')
+    """
+    sortField: String
+    """
+    Sort direction: 'asc' for ascending, 'desc' for descending
+    """
+    sortDirection: SortDirection
+  ): Int
+  """
+  Converts a conversation into a card (deal, ticket, task, or purchase).
+  Creates a new card in the specified pipeline stage with conversation context.
+  Use this to escalate customer issues or create follow-up tasks.
+  """
+  conversationConvertToCard(
+    """
+    The conversation ID to convert
+    """
+    _id: String!
+    """
+    Target card type to convert to: 'deal', 'ticket', 'task', or 'purchase'
+    """
+    type: String!
+    """
+    Existing item ID if linking to an existing card
+    """
+    itemId: String
+    """
+    Name for the new card item
+    """
+    itemName: String
+    """
+    Pipeline stage ID where the card will be created
+    """
+    stageId: String
+    """
+    Custom field values as JSON object
+    """
+    customFieldsData: JSON
+    """
+    Priority level: 'Critical', 'High', 'Normal', or 'Low'
+    """
+    priority: String
+    """
+    User IDs to assign to the new card
+    """
+    assignedUserIds: [String]
+    """
+    Label IDs to apply to the new card
+    """
+    labelIds: [String]
+    """
+    Start date for the card
+    """
+    startDate: Date
+    """
+    Due/close date for the card
+    """
+    closeDate: Date
+    """
+    File attachments to include
+    """
+    attachments: [AttachmentInput]
+    """
+    Description text for the card
+    """
+    description: String
+  ): String
+  """
+  Updates custom field values on a conversation.
+  Use this to add or modify custom metadata on conversations.
+  """
+  conversationEditCustomFields(
+    """
+    The conversation ID to update
+    """
+    _id: String!
+    """
+    Custom field values as JSON object with field IDs as keys
+    """
+    customFieldsData: JSON
+  ): Conversation
+  """
+  Create a new knowledge base topic.
+  """
+  knowledgeBaseTopicsAdd(doc: KnowledgeBaseTopicDoc!): KnowledgeBaseTopic
+  """
+  Update an existing knowledge base topic.
+  """
+  knowledgeBaseTopicsEdit(
+    _id: String!
+    doc: KnowledgeBaseTopicDoc!
+  ): KnowledgeBaseTopic
+  """
+  Delete a knowledge base topic and disassociate its categories.
+  """
+  knowledgeBaseTopicsRemove(_id: String!): JSON
+  """
+  Create a new knowledge base category.
+  """
+  knowledgeBaseCategoriesAdd(
+    doc: KnowledgeBaseCategoryDoc!
+  ): KnowledgeBaseCategory
+  """
+  Update an existing knowledge base category.
+  """
+  knowledgeBaseCategoriesEdit(
+    _id: String!
+    doc: KnowledgeBaseCategoryDoc!
+  ): KnowledgeBaseCategory
+  """
+  Delete a knowledge base category and unlink its articles.
+  """
+  knowledgeBaseCategoriesRemove(_id: String!): JSON
+  """
+  Create a new knowledge base article.
+  """
+  knowledgeBaseArticlesAdd(doc: KnowledgeBaseArticleDoc!): KnowledgeBaseArticle
+  """
+  Update an existing knowledge base article.
+  """
+  knowledgeBaseArticlesEdit(
+    _id: String!
+    doc: KnowledgeBaseArticleDoc!
+  ): KnowledgeBaseArticle
+  """
+  Delete a knowledge base article.
+  """
+  knowledgeBaseArticlesRemove(_id: String!): JSON
+}
+
+type ObjectListConfig {
+  key: String
+  label: String
+  type: String
+}
+
+input objectListConfigInput {
+  key: String
+  label: String
+  type: String
+}
+
+"""
+User-level onboarding history and progress
+"""
+type OnboardingHistory {
+  _id: String
+  userId: String
+  isCompleted: Boolean
+  completedSteps: [String]
+  sections: OnboardingSections
+  dismissedAt: Date
+  firstLoginAt: Date
+  lastActivityAt: Date
+}
+
+"""
+Section-level completion status for user onboarding
+"""
+type OnboardingSection {
+  completed: Boolean
+  completedAt: Date
+}
+
+"""
+Section-level completion tracking for user onboarding
+"""
+type OnboardingSections {
+  essential: OnboardingSection
+  roleBased: OnboardingSection
+  discovery: OnboardingSection
+}
+
+"""
+Standard pagination metadata returned with all paginated list queries.
+"""
+type PaginationInfo {
+  """
+  The current page number (1-based).
+  """
+  currentPage: Int!
+  """
+  Number of items per page.
+  """
+  perPage: Int!
+  """
+  Total number of items matching the query.
+  """
+  totalCount: Int!
+  """
+  Total number of pages.
+  """
+  totalPages: Int!
+  """
+  Whether there are more pages after the current one.
+  """
+  hasNextPage: Boolean!
+  """
+  Whether there are pages before the current one.
+  """
+  hasPreviousPage: Boolean!
+}
+
+"""
+Payload for participant_added action.
+"""
+type ParticipantAddedPayload {
+  addedUserId: String
+  addedUserIds: [String]
+  viaMention: Boolean
+  """
+  Resolved user who was added (by addedUserId).
+  """
+  addedUser: User
+  """
+  Resolved users who were added (by addedUserIds).
+  """
+  addedUsers: [User]
+}
+
+"""
+Payload for participant_removed action.
+"""
+type ParticipantRemovedPayload {
+  removedUserIds: [String]
+  performedBy: String
+  """
+  Resolved users who were removed (by removedUserIds).
+  """
+  removedUsers: [User]
+  """
+  Resolved user who performed the removal.
+  """
+  performedByUser: User
+}
+
+"""
+A PDF attachment with its individual page images.
+"""
+type PdfAttachment {
+  """
+  The full PDF file.
+  """
+  pdf: Attachment
+  """
+  Individual page images extracted from the PDF.
+  """
+  pages: [Attachment]
+}
+
+"""
+Input for uploading a PDF attachment with page images.
+"""
+input PdfAttachmentInput {
+  """
+  The full PDF file.
+  """
+  pdf: AttachmentInput
+  """
+  Individual page images for the PDF.
+  """
+  pages: [AttachmentInput]
+}
+
+type Position {
+  _id: String!
+  title: String
+  code: String
+  order: String
+  parentId: String
+  parent: Position
+  status: String
+  children: [Position]
+  users: [User]
+  userIds: [String]
+  userCount: Int
+}
+
+"""
+Min/max price summary for variants.
+"""
+type PriceRange {
+  min: Float
+  max: Float
+  currency: String
+}
+
+"""
+Payload for priority_changed action.
+"""
+type PriorityChangedPayload {
+  priority: String
+}
+
+"""
+Product entity including variants, pricing, and metadata.
+"""
+type Product {
+  _id: String!
+  name: String
+  shortName: String
+  slug: String
+  status: String
+  code: String
+  type: String
+  description: String
+  barcodes: [String]
+  unitPrice: Float
+  salePrice: Float
+  costPrice: Float
+  currency: String
+  categoryId: String
+  customFieldsData: JSON
+  customFieldsDataByFieldCode: JSON
+  createdAt: Date
+  updatedAt: Date
+  publishedAt: Date
+  createdBy: String
+  updatedBy: String
+  getTags: [Tag]
+  tagIds: [String]
+  attachment: Attachment
+  attachmentMore: [Attachment]
+  media: [Attachment]
+  vendorId: String
+  workspaceId: String
+  uom: String
+  subUoms: JSON
+  category: ProductCategory
+  vendor: Company
+  taxType: String
+  taxCode: String
+  sku: String
+  externalUrl: String
+  source: String
+  mpn: String
+  gtin: String
+  requireShipping: Boolean
+  channels: [String]
+  unlimitedQuantity: Boolean
+  saleStart: Date
+  saleEnd: Date
+  maxPerOrder: Int
+  maxPerCustomer: Int
+  isAvailable: Boolean
+  hideQuantity: Boolean
+  productOptions: [ProductOption]
+  productVariants: [ProductVariant]
+  priceRange: PriceRange
+  hasVariants: Boolean
+  hasCatalogWarning: Boolean
+  weight: Float
+  weightUnit: String
+  dimensions: ProductDimensions
+  inventory: ProductInventory
+  seo: ProductSEO
+}
+
+"""
+Category (taxonomy) for products.
+"""
+type ProductCategory {
+  _id: String!
+  name: String
+  description: String
+  parentId: String
+  code: String!
+  order: String!
+  slug: String
+  workspaceId: String
+  attachment: Attachment
+  status: String
+  isRoot: Boolean
+  productCount: Int
+  seo: ProductSEO
+  createdAt: Date
+  updatedAt: Date
+}
+
+type ProductCategoryListResponse {
+  data: [ProductCategory]
+  pagination: PaginationInfo!
+}
+
+"""
+Physical dimensions of a product.
+"""
+type ProductDimensions {
+  length: Float
+  width: Float
+  height: Float
+  unit: String
+}
+
+"""
+Inventory tracking for a product.
+"""
+type ProductInventory {
+  tracked: Boolean
+  quantity: Int
+  lowStockThreshold: Int
+  allowBackorder: Boolean
+}
+
+type ProductListResponse {
+  data: [Product]
+  pagination: PaginationInfo!
+}
+
+type ProductOption {
+  id: String!
+  name: String!
+  slug: String
+  displayOrder: Int
+  type: String
+  displayType: String
+  required: Boolean
+  values: [ProductOptionValue]
+}
+
+"""
+Option value for a product option (e.g., color: red).
+"""
+type ProductOptionValue {
+  id: String!
+  value: String!
+  slug: String
+  displayOrder: Int
+  image: Attachment
+  priceAdjustment: Float
+  currency: String
+  isDefault: Boolean
+  isOutOfStock: Boolean
+}
+
+"""
+SEO metadata for products and categories.
+"""
+type ProductSEO {
+  title: String
+  description: String
+  slug: String
+  keywords: [String]
+}
+
+"""
+Variant of a product with pricing and option values.
+"""
+type ProductVariant {
+  id: String!
+  sku: String
+  barcode: String
+  name: String
+  optionValues: [VariantOptionValue]
+  unitPrice: Float
+  salePrice: Float
+  costPrice: Float
+  quantity: Int
+  unlimitedQuantity: Boolean
+  weight: Float
+  weightUnit: String
+  image: Attachment
+  status: String
+  externalId: String
+  source: String
+}
+
+type Query {
+  """
+  Paginated users list with filters for workspaces, departments, branches, status, and availability.
+  Returns { list, totalCount } in a single response using paginateQuery.
+  """
+  users(
+    sortField: String
+    sortDirection: SortDirection
+    page: Int
+    perPage: Int
+    status: String
+    excludeIds: Boolean
+    searchValue: String
+    isActive: Boolean
+    requireUsername: Boolean
+    ids: [String]
+    workspaceIds: [String]
+    branchIds: [String]
+    departmentIds: [String]
+    availability: UserChatStatus
+  ): UserListResponse
+  """
+  Load a single user with extended details by identifier.
+  """
+  userDetail(_id: String): User
+  """
+  Resolve the profile of the currently authenticated user.
+  """
+  currentUser: User
+  """
+  Paginated departments with optional status/parent filters, returns list + counts.
+  """
+  departments(
+    ids: [String]
+    excludeIds: Boolean
+    perPage: Int
+    page: Int
+    searchValue: String
+    status: String
+    onlyFirstLevel: Boolean
+    parentId: String
+    withoutUserFilter: Boolean
+  ): DepartmentListQueryResponse
+  departmentDetail(_id: String!): Department
+  """
+  Paginated branches with optional status/parent filters, returns list + counts.
+  """
+  branches(
+    ids: [String]
+    excludeIds: Boolean
+    perPage: Int
+    page: Int
+    searchValue: String
+    status: String
+    onlyFirstLevel: Boolean
+    parentId: String
+    withoutUserFilter: Boolean
+  ): BranchListQueryResponse
+  branchDetail(_id: String!): Branch
+  """
+  Paginated apps list with optional search filter.
+  Returns { data, pagination } using paginateQuery.
+  """
+  apps(page: Int, perPage: Int, searchValue: String): AppListResponse
+  """
+  Fetch a single app credential by id.
+  """
+  appDetail(_id: String): App
+  """
+  Paginated tags with search and hierarchical filters.
+  """
+  tags(
+    type: String
+    searchValue: String
+    tagIds: [String]
+    parentId: String
+    ids: [String]
+    excludeIds: Boolean
+    page: Int
+    perPage: Int
+  ): TagsPaginatedResponse!
+  """
+  Fetch tag details by id.
+  """
+  tagDetail(_id: String!): Tag
+  """
+  Count tags for a given type/search.
+  """
+  tagsQueryCount(type: String, searchValue: String): Int
+  formDetail(_id: String!): Form
+  forms(
+    page: Int
+    perPage: Int
+    type: String
+    tagId: String
+    status: String
+    searchValue: String
+  ): FormsResponse
+  formsTotalCount(
+    type: String
+    tagId: String
+    status: String
+    searchValue: String
+  ): FormsTotalCount
+  formSubmissions(
+    tagId: String
+    formId: String
+    customerId: String
+    contentTypeIds: [String]
+    filters: [SubmissionFilter]
+    page: Int
+    perPage: Int
+  ): FormSubmissionListResponse
+  formSubmissionsTotalCount(
+    tagId: String
+    formId: String
+    customerId: String
+    contentTypeIds: [String]
+    filters: [SubmissionFilter]
+  ): Int
+  formSubmissionDetail(contentTypeId: String!): Submission
+  fieldsGetTypes: [JSON]
+  fieldsCombinedByContentType(
+    contentType: String!
+    usageType: String
+    excludedNames: [String]
+    segmentId: String
+    config: JSON
+    onlyDates: Boolean
+  ): JSON
+  fieldsDefaultColumnsConfig(contentType: String!): [ColumnConfigItem]
+  fieldsGroups(
+    contentType: String
+    isDefinedByKarzoun: Boolean
+    codes: [String]
+    config: JSON
+  ): [FieldsGroup]
+  fieldsGetDetail(_id: String, code: String): Field
+  """
+  Fetch paginated companies with filters, segmentation, and conformity context; returns paginated list.
+  """
+  companies(
+    page: Int
+    perPage: Int
+    tag: String
+    ids: [String]
+    excludeIds: Boolean
+    searchValue: String
+    autoCompletion: Boolean
+    autoCompletionType: String
+    sortField: String
+    sortDirection: SortDirection
+    dateFilters: String
+    conformityMainType: String
+    conformityMainTypeId: String
+    conformityRelType: String
+    conformityIsRelated: Boolean
+    conformityIsSaved: Boolean
+  ): CompaniesListResponse
+  """
+  Return counts for companies matching the supplied filters (optionally scoped by "only").
+  """
+  companyCounts(
+    page: Int
+    perPage: Int
+    tag: String
+    ids: [String]
+    excludeIds: Boolean
+    searchValue: String
+    autoCompletion: Boolean
+    autoCompletionType: String
+    sortField: String
+    sortDirection: SortDirection
+    dateFilters: String
+    conformityMainType: String
+    conformityMainTypeId: String
+    conformityRelType: String
+    conformityIsRelated: Boolean
+    conformityIsSaved: Boolean
+    only: String
+  ): JSON
+  """
+  Load detailed company data by id including contacts, owners, and tags.
+  """
+  companyDetail(_id: String!): Company
+  """
+  Fetch paginated customers with filtering, segmentation, and conformity context; returns paginated list.
+  """
+  customers(
+    page: Int
+    perPage: Int
+    segmentV2Id: String
+    type: String
+    tag: String
+    ids: [String]
+    excludeIds: Boolean
+    searchValue: String
+    autoCompletion: Boolean
+    autoCompletionType: String
+    integration: String
+    form: String
+    startDate: String
+    endDate: String
+    leadStatus: String
+    sortField: String
+    sortDirection: SortDirection
+    sex: Int
+    birthDate: Date
+    dateFilters: String
+    emailValidationStatus: String
+    conformityMainType: String
+    conformityMainTypeId: String
+    conformityRelType: String
+    conformityIsRelated: Boolean
+    conformityIsSaved: Boolean
+  ): CustomersListResponse
+  """
+  Return aggregated counts for customers matching filters (optionally scoped by "only" or source).
+  """
+  customerCounts(
+    page: Int
+    perPage: Int
+    segmentV2Id: String
+    type: String
+    tag: String
+    ids: [String]
+    excludeIds: Boolean
+    searchValue: String
+    autoCompletion: Boolean
+    autoCompletionType: String
+    integration: String
+    form: String
+    startDate: String
+    endDate: String
+    leadStatus: String
+    sortField: String
+    sortDirection: SortDirection
+    sex: Int
+    birthDate: Date
+    dateFilters: String
+    emailValidationStatus: String
+    conformityMainType: String
+    conformityMainTypeId: String
+    conformityRelType: String
+    conformityIsRelated: Boolean
+    conformityIsSaved: Boolean
+    only: String
+    source: String
+  ): JSON
+  """
+  Load a customer by id with full profile, ownership, tags, and integration info.
+  """
+  customerDetail(_id: String!): Customer
+  """
+  List product categories with optional workspace filter and tree traversal.
+  """
+  productCategories(
+    ids: [String]
+    parentId: String
+    withChild: Boolean
+    searchValue: String
+    status: String
+    page: Int
+    perPage: Int
+  ): ProductCategoryListResponse
+  """
+  Fetch single product category detail by id.
+  """
+  productCategoryDetail(_id: String): ProductCategory
+  """
+  List products with filtering, segmentation, and pagination.
+  """
+  products(
+    type: String
+    status: String
+    categoryId: String
+    searchValue: String
+    vendorId: String
+    tag: String
+    ids: [String]
+    codes: [String]
+    excludeIds: Boolean
+    excludeCodes: Boolean
+    image: String
+    page: Int
+    perPage: Int
+    sortField: String
+    sortDirection: SortDirection
+  ): ProductListResponse
+  """
+  Detailed product by id.
+  """
+  productDetail(_id: String): Product
+  """
+  Count products grouped by tag.
+  """
+  productCountByTags: JSON
+  """
+  Retrieves a single conversation message by its ID.
+  Use this to get full details of a specific message.
+  """
+  conversationMessage(
+    """
+    The unique message ID
+    """
+    _id: String!
+  ): ConversationMessage
+  """
+  Searches and retrieves a paginated list of conversations based on filters.
+  Use this to find conversations by status, assignment, date range, or other criteria.
+  Returns conversations sorted by the specified field or by last activity.
+  """
+  conversations(
+    """
+    Filter by specific conversation IDs
+    """
+    ids: [String]
+    """
+    Filter by department ID
+    """
+    departmentId: String
+    """
+    Filter by conversation status
+    """
+    status: ConversationStatus
+    """
+    Filter unassigned conversations only ('true' to get unassigned, 'false' to get assigned, keep empty for no filter)
+    """
+    unAssigned: Boolean
+    """
+    Filter by tag ID or name
+    """
+    tag: String
+    """
+    Filter by integration type (e.g., 'messenger', 'email', 'facebook', 'whatsapp')
+    """
+    integrationType: String
+    """
+    Filter by specific integration ID
+    """
+    integrationId: String
+    """
+    Filter conversations where current user is participating ('true'/'false')
+    """
+    participating: String
+    """
+    Filter conversations where customer awaiting response ('true'/'false')
+    """
+    awaitingResponse: String
+    """
+    Filter starred/favorited conversations ('true'/'false')
+    """
+    starred: String
+    """
+    Filter by start date (ISO date string)
+    """
+    startDate: String
+    """
+    Filter by end date (ISO date string)
+    """
+    endDate: String
+    """
+    Filter by customer segment ID
+    """
+    segment: String
+    """
+    Filter by assigned user/agent ID
+    """
+    assignedUserId: String
+    """
+    Field to sort results by (e.g., 'createdAt', 'updatedAt')
+    """
+    sortField: String
+    """
+    Sort direction: 'asc' for ascending, 'desc' for descending
+    """
+    sortDirection: SortDirection
+    """
+    Page number (1-based, default: 1)
+    """
+    page: Int
+    """
+    Number of items per page (default: 20, max: 100)
+    """
+    perPage: Int
+  ): ConversationListResponse
+  """
+  Retrieves a paginated list of messages within a specific conversation.
+  Returns messages in reverse chronological order by default.
+  """
+  conversationMessages(
+    """
+    The conversation ID to get messages from
+    """
+    conversationId: String!
+    """
+    Page number (1-based, default: 1)
+    """
+    page: Int
+    """
+    Number of messages per page (default: 20, max: 100)
+    """
+    perPage: Int
+    """
+    If true, returns messages in chronological order (oldest first); if false, reverse chronological (newest first)
+    """
+    getFirst: Boolean
+  ): ConversationMessageListResponse
+  """
+  Returns aggregated counts of conversations grouped by various criteria.
+  Useful for dashboard statistics and inbox counters.
+  """
+  conversationCounts(
+    """
+    Filter by specific conversation IDs
+    """
+    ids: [String]
+    """
+    Filter by department ID
+    """
+    departmentId: String
+    """
+    Filter by conversation status
+    """
+    status: ConversationStatus
+    """
+    Filter unassigned conversations only ('true' to get unassigned, 'false' to get assigned, keep empty for no filter)
+    """
+    unAssigned: Boolean
+    """
+    Filter by tag ID or name
+    """
+    tag: String
+    """
+    Filter by integration type (e.g., 'messenger', 'email', 'facebook', 'whatsapp')
+    """
+    integrationType: String
+    """
+    Filter by specific integration ID
+    """
+    integrationId: String
+    """
+    Filter conversations where current user is participating ('true'/'false')
+    """
+    participating: String
+    """
+    Filter conversations where customer awaiting response ('true'/'false')
+    """
+    awaitingResponse: String
+    """
+    Filter starred/favorited conversations ('true'/'false')
+    """
+    starred: String
+    """
+    Filter by start date (ISO date string)
+    """
+    startDate: String
+    """
+    Filter by end date (ISO date string)
+    """
+    endDate: String
+    """
+    Filter by customer segment ID
+    """
+    segment: String
+    """
+    Filter by assigned user/agent ID
+    """
+    assignedUserId: String
+    """
+    Field to sort results by (e.g., 'createdAt', 'updatedAt')
+    """
+    sortField: String
+    """
+    Sort direction: 'asc' for ascending, 'desc' for descending
+    """
+    sortDirection: SortDirection
+    """
+    Specify which count to return: 'byChannels', 'byIntegrationTypes', 'byWorkspaces', 'byTags', or null for all
+    """
+    only: String
+  ): JSON
+  """
+  Retrieves complete details of a specific conversation by ID.
+  Includes customer info, assigned agent, tags, and metadata.
+  """
+  conversationDetail(
+    """
+    The unique conversation ID
+    """
+    _id: String!
+  ): Conversation
+  """
+  Returns the total count of unread conversations for the current user.
+  Used for notification badges and alerts.
+  """
+  conversationsTotalUnreadCount: Int
+  """
+  Retrieves available custom fields for inbox entities.
+  Returns field definitions for customers, conversations, and devices.
+  """
+  inboxFields: InboxField
+  knowledgeBaseTopics(
+    page: Int
+    perPage: Int
+    workspaceId: String
+    codes: [String]
+  ): KnowledgeBaseTopicsPaginated
+  knowledgeBaseTopicDetail(_id: String!): KnowledgeBaseTopic
+  """
+  Return the total number of knowledge base topics.
+  """
+  knowledgeBaseTopicsTotalCount: Int
+  """
+  List knowledge base categories with pagination. Filter by topic, code, or icon.
+  """
+  knowledgeBaseCategories(
+    page: Int
+    perPage: Int
+    ids: [String]
+    topicIds: [String]
+    codes: [String]
+    icon: String
+  ): KnowledgeBaseCategoriesPaginated
+  """
+  Retrieve a single knowledge base category by ID.
+  """
+  knowledgeBaseCategoryDetail(_id: String!): KnowledgeBaseCategory
+  """
+  Return the total number of categories matching the given filters.
+  """
+  knowledgeBaseCategoriesTotalCount(topicIds: [String], codes: [String]): Int
+  """
+  Return the most recently created knowledge base category.
+  """
+  knowledgeBaseCategoriesGetLast: KnowledgeBaseCategory
+  """
+  List knowledge base articles with pagination, search, sorting, and filtering.
+  """
+  knowledgeBaseArticles(
+    searchValue: String
+    page: Int
+    perPage: Int
+    categoryIds: [String]
+    articleIds: [String]
+    codes: [String]
+    topicIds: [String]
+    sortField: String
+    sortDirection: SortDirection
+    status: String
+  ): KnowledgeBaseArticlesPaginated
+  """
+  Retrieve a single knowledge base article by ID.
+  """
+  knowledgeBaseArticleDetail(_id: String!): KnowledgeBaseArticle
+  """
+  Return the total number of articles matching the given filters.
+  """
+  knowledgeBaseArticlesTotalCount(
+    categoryIds: [String]
+    codes: [String]
+    articleIds: [String]
+    topicIds: [String]
+    status: String
+  ): Int
+  """
+  Perform a semantic search across knowledge base articles using vector similarity.
+  """
+  knowledgeBaseSearch(
+    query: String!
+    kbTopicId: String!
+    topK: Int
+    filters: JSON
+    rerank: Boolean
+    rerankMethod: String
+    hybridAlpha: Float
+  ): KnowledgeBaseSearchResult!
+}
+
+"""
+Breakdown of a user's score across different activity categories.
+"""
+type ScoreCategories {
+  speed: ScoreCategoryEntry
+  quality: ScoreCategoryEntry
+  productivity: ScoreCategoryEntry
+  training: ScoreCategoryEntry
+  engagement: ScoreCategoryEntry
+}
+
+"""
+Individual score category tracking (speed, quality, productivity, training, engagement).
+"""
+type ScoreCategoryEntry {
+  score: Float
+  actions: Int
+}
+
+enum SortDirection {
+  asc
+  desc
+}
+
+"""
+Payload for status_changed action.
+"""
+type StatusChangedPayload {
+  from: String
+  to: String
+  status: String
+  performedBy: String
+  viaAutomation: Boolean
+  """
+  Resolved user who performed the status change.
+  """
+  performedByUser: User
+}
+
+type Submission {
+  _id: String!
+  contentTypeId: String
+  customerId: String
+  customer: Customer
+  createdAt: Date
+  customFieldsData: JSON
+  submissions: [FormSubmission]
+}
+
+input SubmissionFilter {
+  operator: String
+  value: JSON
+  formFieldId: String
+}
+
+type SuccessResult {
+  success: Boolean
+}
+
+"""
+Tag used for categorizing entities across the system.
+"""
+type Tag {
+  _id: String!
+  name: String
+  type: String
+  colorCode: String
+  createdAt: Date
+  objectCount: Int
+  totalObjectCount: Int
+  parentId: String
+  order: String
+  relatedIds: [String]
+  childTags: [Tag]
+}
+
+"""
+Payload for tagged action.
+"""
+type TaggedPayload {
+  tagName: String
+}
+
+"""
+Payload for tags_changed action.
+"""
+type TagsChangedPayload {
+  addedTagIds: [String]
+  removedTagIds: [String]
+  performedBy: String
+  viaAutomation: Boolean
+  """
+  Resolved user who performed the tags change.
+  """
+  performedByUser: User
+}
+
+type TagsPaginatedResponse {
+  data: [Tag!]!
+  pagination: PaginationInfo!
+}
+
+"""
+Rendered snapshot of a template message.
+"""
+type TemplateRendered {
+  header: TemplateRenderedHeader
+  body: String
+  footer: String
+  buttons: [TemplateRenderedButton]
+  carousel: [TemplateRenderedCarouselCard]
+  lto: TemplateRenderedLTO
+}
+
+type TemplateRenderedButton {
+  type: String
+  text: String
+  url: String
+  phone_number: String
+  coupon_code: String
+}
+
+type TemplateRenderedCarouselCard {
+  header: TemplateRenderedHeader
+  body: String
+  buttons: [TemplateRenderedButton]
+}
+
+type TemplateRenderedHeader {
+  type: String
+  text: String
+  url: String
+  product_retailer_id: String
+  catalog_id: String
+  latitude: Float
+  longitude: Float
+  name: String
+  address: String
+}
+
+type TemplateRenderedLTO {
+  expiration_time_ms: Float
+}
+
+type Throughput {
+  level: String
+}
+
+"""
+Payload for unassigned action.
+"""
+type UnassignedPayload {
+  assignedTo: String
+  assignedUserId: String
+  assignedDepartmentId: String
+  assignedBy: String
+  performedBy: String
+  """
+  Resolved user who was unassigned from.
+  """
+  assignedToUser: User
+  """
+  Resolved user who was unassigned (by assignedUserId).
+  """
+  assignedUser: User
+  """
+  Resolved user who performed the unassignment.
+  """
+  assignedByUser: User
+  """
+  Resolved user who performed the action.
+  """
+  performedByUser: User
+  """
+  Resolved department the conversation was unassigned from.
+  """
+  assignedDepartment: Department
+}
+
+"""
+Payload for untagged action.
+"""
+type UntaggedPayload {
+  tagName: String
+}
+
+"""
+Team member account with permissions, preferences, and structure assignments.
+"""
+type User {
+  _id: String!
+  createdAt: Date
+  username: String
+  email: String
+  userPreferences: JSON
+  availability: UserChatStatus
+  isActive: Boolean
+  details: UserDetailsType
+  links: JSON
+  status: String
+  emailSignatures: JSON
+  groupIds: [String]
+  workspaceIds: [String]
+  isSubscribed: String
+  customFieldsData: JSON
+  workspaces: [Workspace]
+  isOwner: Boolean
+  permissionActions: JSON
+  configs: JSON
+  configsConstants: [JSON]
+  onboardingHistory: OnboardingHistory
+  departmentIds: [String]
+  departments: [Department]
+  branchIds: [String]
+  branches: [Branch]
+  positionIds: [String]
+  positions: [Position]
+  score: Float
+  scoreCategories: ScoreCategories
+  leaderBoardPosition: Int
+  employeeId: String
+  isOnline: Boolean
+}
+
+"""
+Presence state used for routing conversations and workload.
+"""
+enum UserChatStatus {
+  """
+  User is offline or signed out.
+  """
+  offline
+  """
+  User is available for new work.
+  """
+  online
+  """
+  User is active but prefers no new assignments.
+  """
+  busy
+  """
+  User is on a break and should not receive new work.
+  """
+  break
+}
+
+type UserDetailsType {
+  """
+  Profile avatar URL.
+  """
+  avatar: String
+  """
+  Cover photo or header background.
+  """
+  coverPhoto: String
+  """
+  Full display name used in the UI.
+  """
+  fullName: String
+  """
+  Short name or nickname.
+  """
+  shortName: String
+  """
+  Birth date; used for anniversaries.
+  """
+  birthDate: Date
+  """
+  Job title or position.
+  """
+  position: String
+  """
+  Employment start date.
+  """
+  workStartedDate: Date
+  """
+  Primary working location.
+  """
+  location: String
+  """
+  Short bio or description.
+  """
+  description: String
+  """
+  Direct phone number for operators.
+  """
+  operatorPhone: String
+  """
+  Given name.
+  """
+  firstName: String
+  """
+  Family name.
+  """
+  lastName: String
+  """
+  Internal employee identifier.
+  """
+  employeeId: String
+}
+
+"""
+Paginated response wrapper for user list queries.
+"""
+type UserListResponse {
+  data: [User]
+  pagination: PaginationInfo!
+}
+
+"""
+Option selection on a specific variant.
+"""
+type VariantOptionValue {
+  optionId: String!
+  optionName: String!
+  valueId: String!
+  value: String!
+}
+
+"""
+A shared contact from a WhatsApp contacts message.
+"""
+type WAContact {
+  """
+  Contact name.
+  """
+  name: WAContactName
+  """
+  Phone numbers.
+  """
+  phones: [JSON]
+  """
+  Email addresses.
+  """
+  emails: [JSON]
+  """
+  URLs.
+  """
+  urls: [JSON]
+  """
+  Organization info.
+  """
+  org: JSON
+  """
+  Birthday (YYYY-MM-DD).
+  """
+  birthday: String
+  """
+  Postal addresses.
+  """
+  addresses: [JSON]
+}
+
+"""
+A contact name structure (vCard-like).
+"""
+type WAContactName {
+  """
+  Full formatted name.
+  """
+  formatted_name: String
+  """
+  First name.
+  """
+  first_name: String
+  """
+  Last name.
+  """
+  last_name: String
+  """
+  Middle name.
+  """
+  middle_name: String
+  """
+  Name prefix (e.g. 'Dr.').
+  """
+  prefix: String
+  """
+  Name suffix (e.g. 'Jr.').
+  """
+  suffix: String
+}
+
+"""
+Location message content.
+"""
+type WALocation {
+  """
+  Latitude.
+  """
+  latitude: Float
+  """
+  Longitude.
+  """
+  longitude: Float
+  """
+  Location name/label.
+  """
+  name: String
+  """
+  Street address.
+  """
+  address: String
+  """
+  URL to open in maps.
+  """
+  url: String
+}
+
+"""
+WhatsApp ad referral data (click-to-WhatsApp ads).
+"""
+type WAReferral {
+  """
+  Source URL of the ad.
+  """
+  source_url: String
+  """
+  Source type (e.g. 'ad').
+  """
+  source_type: String
+  """
+  Source identifier.
+  """
+  source_id: String
+  """
+  Ad headline text.
+  """
+  headline: String
+  """
+  Ad body text.
+  """
+  body: String
+  """
+  Media type of the ad ('image' or 'video').
+  """
+  media_type: String
+  """
+  Image URL from the ad.
+  """
+  image_url: String
+  """
+  Video URL from the ad.
+  """
+  video_url: String
+  """
+  Thumbnail URL from the ad.
+  """
+  thumbnail_url: String
+  """
+  Meta click ID for CTWA attribution.
+  """
+  ctwa_clid: String
+  """
+  Greeting configured on the ad.
+  """
+  welcome_message: WAReferralWelcomeMessage
+  """
+  Welcome Message Sequence reference from partner-app CTWA ads.
+  """
+  ref: String
+  """
+  Sequence name resolved locally from ref.
+  """
+  sequence_name: String
+}
+
+"""
+Greeting text attached to a CTWA ad referral.
+"""
+type WAReferralWelcomeMessage {
+  """
+  Greeting text shown to the customer.
+  """
+  text: String
+}
+
+"""
+Sticker message content.
+"""
+type WASticker {
+  """
+  Media ID.
+  """
+  id: String
+  """
+  Direct link to the sticker file.
+  """
+  link: String
+  """
+  Resolved URL for the sticker.
+  """
+  url: String
+  """
+  MIME type (e.g. 'image/webp').
+  """
+  mime_type: String
+  """
+  SHA-256 hash.
+  """
+  sha256: String
+  """
+  Whether this is an animated sticker.
+  """
+  animated: Boolean
+}
+
+type WhatsappBusinessPhone {
+  id: String
+  status: String
+  quality_rating: String
+  platform_type: String
+  whatsappBusinessManagerMessagingLimit: String
+  messaging_limit_tier: String
+  is_pin_enabled: Boolean
+  display_phone_number: String
+  name_status: String
+  account_mode: String
+  is_official_business_account: Boolean
+  code_verification_status: String
+  verified_name: String
+  new_name_status: String
+  throughput: Throughput
+  health_status: WhatsappHealthStatus
+}
+
+type WhatsappBusinessProfile {
+  about: String
+  email: String
+  description: String
+  websites: [String]
+  vertical: String
+  address: String
+  messaging_product: String
+  profile_picture_url: String
+  status: String!
+  error: String
+}
+
+type WhatsappHealthStatus {
+  can_send_message: String
+  entities: [HealthEntity]
+}
+
+type WhatsappIntegration {
+  _id: String!
+  accountId: String
+  kind: String
+  provider: String
+  phoneNumberId: String
+  wabaId: String
+  error: String
+  healthStatus: String
+  accountMode: String
+  profile: WhatsappBusinessProfile
+  businessPhoneNumber: WhatsappBusinessPhone
+}
+
+"""
+Workspace entity used for multi-workspace configurations (email, assets, member assignments).
+"""
+type Workspace {
+  _id: String!
+  name: String
+  description: String
+  code: String
+  userId: String
+  createdAt: Date
+  memberIds: [String]
+}
