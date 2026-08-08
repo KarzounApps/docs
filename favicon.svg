@@ -1,7 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none" role="img" aria-label="Karzoun">
-  <rect width="40" height="40" rx="8" fill="#0A1322"/>
-  <path d="M7.5 9.5h11.5l-2.8 7.5H9.5L7.5 9.5z" fill="#E03C28"/>
-  <path d="M10.5 19h9.5l-1.9 6.5H12L10.5 19z" fill="#2CA04C"/>
-  <path d="M9.5 27.5h13.5l-3.8 6.5H11.5L9.5 27.5z" fill="#F0B400"/>
-  <path d="M21 8.5l15.5 7.5v19.5L21 28V8.5z" fill="#387CEC"/>
+  <path d="M5.5 7.5h11.5l-2.8 7.5H7.5L5.5 7.5z" fill="#E03C28"/>
+  <path d="M8.5 17h9.5l-1.9 6.5H10L8.5 17z" fill="#2CA04C"/>
+  <path d="M7.5 25.5h13.5l-3.8 6.5H9.5L7.5 25.5z" fill="#F0B400"/>
+  <path d="M19 6.5l15.5 7.5v19.5L19 26V6.5z" fill="#387CEC"/>
 </svg>

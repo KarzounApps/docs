@@ -16,8 +16,7 @@
 | Tab | Audience | Path prefix |
 | --- | --- | --- |
 | Home | Everyone | `/`, `/changelog`, `/legal` |
-| Developers | Integrators | `/developers` |
-| GraphQL API | Integrators | `/api-reference` (generated, English nav only) |
+| GraphQL API | Integrators | `/developers` guides + `/api-reference` schema (one tab) |
 | Partners | Agencies / platforms | `/partners` |
 | MCP | AI / agent builders | `/mcp-server` |
 | SDK | Frontend / analytics | `/sdk` |

@@ -533,6 +533,34 @@ html[dir="rtl"] #content .border-l-0 {
 }
 
 /* =============================================================================
+   HOME — AI promo banner (“Did you know? / هل تعلم؟”)
+   ============================================================================= */
+
+.karzoun-ai-promo {
+  margin-block: 1.25rem 1.75rem;
+  padding: 0.15rem;
+  border-radius: 1rem;
+  background: linear-gradient(
+    135deg,
+    rgb(56 124 236 / 0.2),
+    rgb(91 155 255 / 0.12),
+    rgb(37 99 199 / 0.18)
+  );
+}
+
+.karzoun-ai-promo > * {
+  border-radius: 0.9rem !important;
+  border-color: rgb(56 124 236 / 0.35) !important;
+  background: rgb(255 255 255 / 0.92) !important;
+  box-shadow: 0 8px 28px rgb(37 99 199 / 0.1);
+}
+
+:is(html.dark) .karzoun-ai-promo > * {
+  background: rgb(15 23 42 / 0.92) !important;
+  border-color: rgb(91 155 255 / 0.35) !important;
+}
+
+/* =============================================================================
    MOBILE
    ============================================================================= */
 

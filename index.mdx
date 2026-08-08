@@ -1,46 +1,110 @@
 ---
-title: "Build on Karzoun"
-description: "Developer API, partner integrations, MCP tools, SDKs, MiniApps, and customer Help Center — one documentation platform."
+title: "Conversations run. Automation works. Sales grow."
+description: "Karzoun Docs for teams, partners, and builders — Help Center, Partners, and Developer guides in one place."
 ---
 
-Karzoun Chat is the omnichannel workspace for sales, support, and marketing. These docs help you integrate, extend, and operate it.
+**Karzoun Chat** is the conversation and growth operating system for businesses in Saudi Arabia and the region. It brings customer channels — led by official WhatsApp Business — together with your team, automations, campaigns, Karzoun Pixel, AI, and messaging commerce in one workspace that non-technical teams can run, and that scales from a small shop to an enterprise.
+
+One place to operate customer conversations — platform power, team-friendly clarity.
+
+<Info>
+  Prefer Arabic Help Center articles? Switch language to **عربي**, or open [مركز المساعدة](/ar/help-center).
+</Info>
+
+<div className="karzoun-ai-promo">
+  <Card title="Did you know? You can manage your Karzoun account from Claude" icon="sparkles" href="/mcp-server/setup/claude-desktop">
+    Connect Claude to your workspace: ask about conversations, customers, and reports — and take action with your permissions, right from the chat.
+    **Try it now →**
+  </Card>
+</div>
+
+## Who is this for?
+
+Pick the door that matches how you work with Karzoun.
 
 <Columns cols={2}>
-  <Card title="Developers" icon="code-2" href="/developers">
-    GraphQL public API, app tokens, webhooks, and playground.
+  <Card title="I use Karzoun every day" icon="life-buoy" href="/help-center">
+    Inbox, WhatsApp, campaigns, automations, billing — practical guides for your team.
   </Card>
-  <Card title="GraphQL API" icon="brackets" href="/api-reference">
-    Full schema reference for queries, mutations, and types.
+  <Card title="I’m a Karzoun partner" icon="handshake" href="/partners">
+    Partners are a top priority — explore the partner reference we built for you.
   </Card>
-  <Card title="Partners" icon="handshake" href="/partners">
-    Onboarding, whitelabel, and embedded apps for Salla, Zid, and more.
+  <Card title="I build integrations" icon="brackets" href="/developers">
+    GraphQL API, webhooks, playground, and guides for engineers and agencies.
   </Card>
-  <Card title="MCP" icon="bot" href="/mcp-server">
-    Connect Cursor, Claude, or agents to live Karzoun data.
-  </Card>
-  <Card title="SDK" icon="package" href="/sdk">
-    Dashboard SDK and tracking pixel for custom integrations.
-  </Card>
-  <Card title="MiniApps" icon="puzzle" href="/miniapps">
-    JSON Marketplace integrations — build locally, submit for review.
-  </Card>
-  <Card title="Help Center" icon="life-buoy" href="/help-center">
-    End-user guides for inbox, WhatsApp, automations, and billing.
-  </Card>
-  <Card title="Changelog" icon="newspaper" href="/changelog">
-    Product and API updates as they ship.
+  <Card title="I connect AI tools" icon="bot" href="/mcp-server">
+    Give Cursor, Claude, or your agents live, permissioned access to Karzoun.
   </Card>
 </Columns>
 
-## Try a request
+## What you can do with Karzoun
 
-```bash
-curl -X POST 'https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql' \
-  -H 'Content-Type: application/json' \
-  -H 'x-app-token: YOUR_APP_TOKEN' \
-  -d '{"query":"query { tags(page: 1, perPage: 3) { data { name } } }"}'
-```
+Six systems that share one customer record, one inbox, and the same context — deep enough to stand alone, stronger together.
+
+| Focus | What it means for your team |
+| --- | --- |
+| **Unified inbox** | WhatsApp, Instagram, TikTok, Messenger, email, and webchat in one queue — with customer context beside every conversation |
+| **WhatsApp Business** | Official API, templates, flows, commerce in the chat, and calling from the conversation |
+| **Automation** | Visual no-code paths: welcome, follow-up, assign, recover carts, sync with your store |
+| **Growth** | Karzoun Pixel, segments, and campaigns on WhatsApp, email, and push — reach the right person |
+| **AI** | Copilot for your team and agents for customers — with knowledge, skills, and clear escalation |
+| **Team workspace** | Tasks, internal chat, meetings, attendance, roles, and reporting as you scale |
+
+<Columns cols={3}>
+  <Card title="Answer customers faster" icon="inbox" href="/ar/help-center/guides/inbox/doc-1889759">
+    Master the shared inbox and assignment.
+  </Card>
+  <Card title="Run WhatsApp properly" icon="message-circle" href="/ar/help-center/guides/whatsapp/doc-1890487">
+    Templates, flows, QR, and WhatsApp manager.
+  </Card>
+  <Card title="Launch a campaign" icon="megaphone" href="/ar/help-center/guides/broadcasts/doc-1890617">
+    Broadcasts your marketing team can operate.
+  </Card>
+  <Card title="Automate the repeatable" icon="workflow" href="/ar/help-center/guides/automations/flow-builder-1890495">
+    Build your first flow without code.
+  </Card>
+  <Card title="Connect the store" icon="shopping-bag" href="/ar/help-center/guides/store/doc-2278814">
+    Salla, Zid, and commerce-linked journeys.
+  </Card>
+  <Card title="Work as one team" icon="users" href="/ar/help-center/guides/settings/doc-1890610">
+    Members, roles, and workspace settings.
+  </Card>
+</Columns>
+
+## Grow with partners & agencies
+
+Agencies and resellers run Karzoun under their own brand, onboard client workspaces, and embed commerce apps — without rebuilding the product.
+
+<Columns cols={2}>
+  <Card title="Partner program" icon="handshake" href="/partners">
+    Onboarding, whitelabel, and how partnership works.
+  </Card>
+  <Card title="White-label workspace" icon="palette" href="/partners/whitelabel">
+    Domains, branding, billing, and client accounts.
+  </Card>
+</Columns>
+
+## For developers
+
+Building on Karzoun? Open the **GraphQL API** tab — guides, playground, and the live schema live together there. MCP, SDK, and MiniApps have their own tabs.
+
+<Card title="GraphQL API & guides" icon="brackets" href="/developers">
+  Quickstart, authentication, webhooks, playground, and schema reference.
+</Card>
+
+## Spotlight: what’s new
+
+Not a changelog dump — two product moments worth knowing about right now.
+
+<Columns cols={2}>
+  <Card title="WhatsApp Calling" icon="phone" href="/help-center/guides/whatsapp/whatsapp-calling">
+    Talk to customers from the same conversation — voice in the inbox, not a separate PBX.
+  </Card>
+  <Card title="Ads that open a WhatsApp chat" icon="megaphone" href="/help-center/guides/whatsapp/whatsapp-ctwa-ads">
+    Turn Meta ads into inbox conversations your team can automate and measure.
+  </Card>
+</Columns>
 
 <Tip>
-  Prefer a visual editor? Open the [GraphQL Playground](https://karzoun.chat/developer/playground) in your developer dashboard.
+  Need the full release history? See the [Changelog](/changelog). Prefer hands-on help? Email [developers@karzoun.chat](mailto:developers@karzoun.chat) or open your [workspace](https://karzoun.chat).
 </Tip>

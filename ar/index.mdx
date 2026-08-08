@@ -1,46 +1,110 @@
 ---
-title: "ابنِ على كرزون"
-description: "واجهة GraphQL للمطوّرين، وتكاملات الشركاء، وأدوات MCP، وSDK، وMiniApps، ومركز المساعدة للعملاء — منصة توثيق واحدة."
+title: "محادثات تُدار، وأتمتة تعمل، ومبيعات تنمو"
+description: "توثيق كرزون للفرق والشركاء والمطوّرين — مركز المساعدة والشركاء وتوثيق المطوّرين في مكان واحد."
 ---
 
-كرزون شات مساحة عمل متعددة القنوات للمبيعات والدعم والتسويق. يساعدك هذا التوثيق على التكامل والتوسيع والتشغيل.
+**كرزون شات** نظام تشغيل المحادثات والنمو للشركات في السعودية والمنطقة: تجمع قنوات العملاء — وفي مقدمتها واتساب للأعمال الرسمي — مع الفريق والأتمتة والحملات وKarzoun Pixel والذكاء والتجارة عبر المحادثة، في منصة واحدة يفهمها غير التقني، وتكبر معك من نشاط صغير إلى مؤسسة.
+
+مكان واحد يشغّل محادثات عملائك — بقوة منصة، ببساطة يفهمها فريقك.
+
+<Info>
+  معظم مقالات مركز المساعدة بالعربية. هذا هو المكان الأنسب لفريق التشغيل.
+</Info>
+
+<div className="karzoun-ai-promo">
+  <Card title="هل تعلم؟ يمكنك إدارة حساب كرزون الخاص بك من Claude" icon="sparkles" href="/ar/mcp-server/setup/claude-desktop">
+    اربط Claude بمساحة عملك: اسأل عن المحادثات والعملاء والتقارير، ونفّذ المهام بصلاحياتك — مباشرة من المحادثة.
+    **جرّب الآن ←**
+  </Card>
+</div>
+
+## لمن هذا التوثيق؟
+
+اختر المدخل الذي يطابق علاقتك بكرزون.
 
 <Columns cols={2}>
-  <Card title="المطوّرون" icon="code-2" href="/ar/developers">
-    واجهة GraphQL العامة، ورموز التطبيقات، وWebhooks، وساحة التجربة.
+  <Card title="أستخدم كرزون يومياً" icon="life-buoy" href="/ar/help-center">
+    الوارد، واتساب، الحملات، الأتمتة، والفوترة — أدلة عملية لفريقك.
   </Card>
-  <Card title="GraphQL API" icon="brackets" href="/api-reference">
-    مرجع المخطط الكامل للاستعلامات والطفرات والأنواع.
+  <Card title="أنا شريك لكرزون" icon="handshake" href="/ar/partners">
+    شركاؤنا أولوية عالية — تصفّح مرجع الشركاء الذي جهّزناه لك.
   </Card>
-  <Card title="الشركاء" icon="handshake" href="/ar/partners">
-    الانضمام، والعلامة البيضاء، والتطبيقات المضمّنة لـ Salla وZid والمزيد.
+  <Card title="أبني تكاملات" icon="brackets" href="/ar/developers">
+    GraphQL وWebhooks وساحة التجربة والأدلة للمهندسين والوكالات.
   </Card>
-  <Card title="MCP" icon="bot" href="/ar/mcp-server">
-    اربط Cursor أو Claude أو الوكلاء ببيانات كرزون الحية.
-  </Card>
-  <Card title="SDK" icon="package" href="/ar/sdk">
-    SDK للوحة التحكم وبكسل التتبع للتكاملات المخصصة.
-  </Card>
-  <Card title="MiniApps" icon="puzzle" href="/ar/miniapps">
-    تكاملات Marketplace بصيغة JSON — ابنِ محلياً وقدّم للمراجعة.
-  </Card>
-  <Card title="مركز المساعدة" icon="life-buoy" href="/ar/help-center">
-    أدلة المستخدم للبريد الوارد وواتساب والأتمتة والفوترة.
-  </Card>
-  <Card title="سجل التغييرات" icon="newspaper" href="/ar/changelog">
-    تحديثات المنتج وواجهة البرمجة عند إصدارها.
+  <Card title="أربط أدوات الذكاء" icon="bot" href="/ar/mcp-server">
+    امنح Cursor أو Claude أو وكيلك وصولاً حياً بصلاحياتك.
   </Card>
 </Columns>
 
-## جرّب طلباً
+## ماذا تفعل بكروزون؟
 
-```bash
-curl -X POST 'https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql' \
-  -H 'Content-Type: application/json' \
-  -H 'x-app-token: YOUR_APP_TOKEN' \
-  -d '{"query":"query { tags(page: 1, perPage: 3) { data { name } } }"}'
-```
+ستة أنظمة تتشارك ملف عميل واحداً ووارداً واحداً والسياق نفسه — عميقة بما يكفي لتعمل وحدها، وأقوى معاً.
+
+| المحور | ماذا يعني لفريقك |
+| --- | --- |
+| **صندوق الوارد الموحّد** | واتساب وإنستغرام وتيك توك وماسنجر والبريد ودردشة الموقع في طابور واحد — مع سياق العميل بجانب كل محادثة |
+| **واتساب للأعمال** | الواجهة الرسمية، القوالب، الفلو، التجارة داخل المحادثة، والمكالمات من نفس الحوار |
+| **الأتمتة** | مسارات مرئية بلا كود: ترحيب، متابعة، إسناد، استرداد سلة، وربط بالمتجر |
+| **النمو** | Karzoun Pixel والشرائح والحملات على واتساب والبريد وPush — وصول للشخص الصحيح |
+| **الذكاء الاصطناعي** | Copilot لفريقك ووكلاء للعملاء — بمعرفة ومهارات وتصعيد واضح |
+| **مساحة عمل الفريق** | مهام، شات داخلي، اجتماعات، حضور، أدوار، وتقارير كلما كبرت |
+
+<Columns cols={3}>
+  <Card title="أردّ على العملاء أسرع" icon="inbox" href="/ar/help-center/guides/inbox/doc-1889759">
+    مركز المحادثات والتعيين الذكي.
+  </Card>
+  <Card title="شغّل واتساب كما يجب" icon="message-circle" href="/ar/help-center/guides/whatsapp/doc-1890487">
+    القوالب والفلو وQR ومدير واتساب.
+  </Card>
+  <Card title="أطلق حملة" icon="megaphone" href="/ar/help-center/guides/broadcasts/doc-1890617">
+    رسائل جماعية يفهمها فريق التسويق.
+  </Card>
+  <Card title="أتمت المتكرر" icon="workflow" href="/ar/help-center/guides/automations/flow-builder-1890495">
+    ابنِ أول رد آلي بلا كود.
+  </Card>
+  <Card title="اربط المتجر" icon="shopping-bag" href="/ar/help-center/guides/store/doc-2278814">
+    سلة وزد ورحلات التجارة.
+  </Card>
+  <Card title="اعمل كفريق واحد" icon="users" href="/ar/help-center/guides/settings/doc-1890610">
+    الأعضاء والأدوار وإعدادات مساحة العمل.
+  </Card>
+</Columns>
+
+## للشركاء والوكالات
+
+الوكالات والموزّعون يشغّلون كرزون بعلامتهم، ويفتحون مساحات عمل للعملاء، ويدمجون تطبيقات التجارة — دون إعادة بناء المنتج.
+
+<Columns cols={2}>
+  <Card title="برنامج الشركاء" icon="handshake" href="/ar/partners">
+    الانضمام، العلامة البيضاء، وكيف تعمل الشراكة.
+  </Card>
+  <Card title="اللوحة البيضاء" icon="palette" href="/ar/partners/whitelabel">
+    النطاقات، الهوية، الفوترة، وحسابات العملاء.
+  </Card>
+</Columns>
+
+## للمطوّرين
+
+تبني على كرزون؟ افتح تبويب **GraphQL API** — الأدلة وساحة التجربة والمخطط الحي في مكان واحد. MCP وSDK وMiniApps لها تبويباتها الخاصة.
+
+<Card title="GraphQL والأدلة" icon="brackets" href="/ar/developers">
+  البداية السريعة، المصادقة، Webhooks، الساحة، ومرجع المخطط.
+</Card>
+
+## أبرز الجديد
+
+ليست قائمة تغييرات — لحظتان في المنتج تستحقان الانتباه الآن.
+
+<Columns cols={2}>
+  <Card title="مكالمات واتساب" icon="phone" href="/ar/help-center/guides/whatsapp/whatsapp-calling">
+    تحدّث مع العميل من نفس المحادثة — صوت داخل الوارد، لا سنترال منفصل.
+  </Card>
+  <Card title="إعلانات تفتح محادثة واتساب" icon="megaphone" href="/ar/help-center/guides/whatsapp/whatsapp-ctwa-ads">
+    حوّل إعلانات ميتا إلى محادثات في الوارد يمكن أتمتتها وقياسها.
+  </Card>
+</Columns>
 
 <Tip>
-  تفضّل محرراً مرئياً؟ افتح [ساحة GraphQL](https://karzoun.chat/developer/playground) من لوحة المطوّرين.
+  تريد سجل الإصدارات الكامل؟ راجع [سجل التغييرات](/ar/changelog). تحتاج مساعدة؟ راسل [developers@karzoun.chat](mailto:developers@karzoun.chat) أو افتح [مساحة العمل](https://karzoun.chat).
 </Tip>

@@ -13,7 +13,7 @@
     "dark": "/logo/dark.svg",
     "href": "/"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/favicon.png",
   "appearance": {
     "default": "system"
   },
@@ -46,19 +46,10 @@
   "navbar": {
     "links": [
       {
-        "label": "Playground",
-        "href": "https://karzoun.chat/developer/playground"
-      },
-      {
         "label": "Support",
         "href": "mailto:developers@karzoun.chat"
       }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Open Karzoun",
-      "href": "https://karzoun.chat"
-    }
+    ]
   },
   "footer": {
     "links": [
@@ -66,33 +57,54 @@
         "header": "Product",
         "items": [
           {
-            "label": "Open Karzoun",
+            "label": "Karzoun workspace",
             "href": "https://karzoun.chat"
           },
           {
-            "label": "Developer Dashboard",
-            "href": "https://karzoun.chat/developer"
-          },
-          {
-            "label": "Playground",
+            "label": "GraphQL Playground",
             "href": "https://karzoun.chat/developer/playground"
           }
         ]
       },
       {
-        "header": "Docs",
+        "header": "Build",
         "items": [
           {
-            "label": "Developers",
+            "label": "GraphQL API",
             "href": "/developers"
           },
           {
-            "label": "GraphQL API",
-            "href": "/api-reference"
+            "label": "MCP",
+            "href": "/mcp-server"
           },
+          {
+            "label": "SDK",
+            "href": "/sdk"
+          },
+          {
+            "label": "MiniApps",
+            "href": "/miniapps"
+          },
+          {
+            "label": "Partners",
+            "href": "/partners"
+          }
+        ]
+      },
+      {
+        "header": "Learn",
+        "items": [
           {
             "label": "Help Center",
             "href": "/help-center"
+          },
+          {
+            "label": "Quickstart",
+            "href": "/developers/getting-started/quickstart"
+          },
+          {
+            "label": "Webhooks",
+            "href": "/developers/guides/webhooks"
           },
           {
             "label": "Changelog",
@@ -101,8 +113,12 @@
         ]
       },
       {
-        "header": "Legal",
+        "header": "Company",
         "items": [
+          {
+            "label": "Support",
+            "href": "mailto:developers@karzoun.chat"
+          },
           {
             "label": "Terms",
             "href": "/legal/terms"
@@ -150,15 +166,6 @@
     "display": "header"
   },
   "navigation": {
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Playground",
-          "icon": "terminal",
-          "href": "https://karzoun.chat/developer/playground"
-        }
-      ]
-    },
     "languages": [
       {
         "language": "en",
@@ -174,29 +181,17 @@
                   "index",
                   "changelog"
                 ]
-              },
-              {
-                "group": "Legal",
-                "pages": [
-                  "legal/terms",
-                  "legal/responsible-use"
-                ]
               }
             ]
           },
           {
-            "tab": "Developers",
-            "icon": "code-2",
+            "tab": "GraphQL API",
+            "icon": "brackets",
             "groups": [
-              {
-                "group": "Overview",
-                "pages": [
-                  "developers/index"
-                ]
-              },
               {
                 "group": "Getting started",
                 "pages": [
+                  "developers/index",
                   "developers/getting-started/quickstart",
                   "developers/getting-started/authentication"
                 ]
@@ -208,12 +203,14 @@
                   "developers/guides/webhooks",
                   "developers/guides/errors"
                 ]
+              },
+              {
+                "group": "Try it",
+                "pages": [
+                  "api-reference/playground"
+                ]
               }
-            ]
-          },
-          {
-            "tab": "GraphQL API",
-            "icon": "brackets",
+            ],
             "graphql": {
               "source": "public-api.graphql",
               "directory": "api-reference"
@@ -357,19 +354,10 @@
         "navbar": {
           "links": [
             {
-              "label": "ساحة التجربة",
-              "href": "https://karzoun.chat/developer/playground"
-            },
-            {
               "label": "الدعم",
               "href": "mailto:developers@karzoun.chat"
             }
-          ],
-          "primary": {
-            "type": "button",
-            "label": "فتح كرزون",
-            "href": "https://karzoun.chat"
-          }
+          ]
         },
         "footer": {
           "links": [
@@ -377,33 +365,54 @@
               "header": "المنتج",
               "items": [
                 {
-                  "label": "فتح كرزون",
+                  "label": "مساحة عمل كرزون",
                   "href": "https://karzoun.chat"
                 },
                 {
-                  "label": "لوحة المطوّرين",
-                  "href": "https://karzoun.chat/developer"
-                },
-                {
-                  "label": "ساحة التجربة",
+                  "label": "ساحة GraphQL",
                   "href": "https://karzoun.chat/developer/playground"
                 }
               ]
             },
             {
-              "header": "التوثيق",
+              "header": "ابنِ",
               "items": [
                 {
-                  "label": "المطوّرون",
+                  "label": "GraphQL API",
                   "href": "/ar/developers"
                 },
                 {
-                  "label": "GraphQL API",
-                  "href": "/api-reference"
+                  "label": "MCP",
+                  "href": "/ar/mcp-server"
                 },
+                {
+                  "label": "SDK",
+                  "href": "/ar/sdk"
+                },
+                {
+                  "label": "MiniApps",
+                  "href": "/ar/miniapps"
+                },
+                {
+                  "label": "الشركاء",
+                  "href": "/ar/partners"
+                }
+              ]
+            },
+            {
+              "header": "تعلّم",
+              "items": [
                 {
                   "label": "مركز المساعدة",
                   "href": "/ar/help-center"
+                },
+                {
+                  "label": "البداية السريعة",
+                  "href": "/ar/developers/getting-started/quickstart"
+                },
+                {
+                  "label": "Webhooks",
+                  "href": "/ar/developers/guides/webhooks"
                 },
                 {
                   "label": "سجل التغييرات",
@@ -412,8 +421,12 @@
               ]
             },
             {
-              "header": "قانوني",
+              "header": "الشركة",
               "items": [
+                {
+                  "label": "الدعم",
+                  "href": "mailto:developers@karzoun.chat"
+                },
                 {
                   "label": "الشروط",
                   "href": "/ar/legal/terms"
@@ -432,34 +445,22 @@
             "icon": "house",
             "groups": [
               {
-                "group": "ابدأ من هنا",
+                "group": "هلا والله في كرزون!!",
                 "pages": [
                   "ar/index",
                   "ar/changelog"
-                ]
-              },
-              {
-                "group": "قانوني",
-                "pages": [
-                  "ar/legal/terms",
-                  "ar/legal/responsible-use"
                 ]
               }
             ]
           },
           {
-            "tab": "المطوّرون",
-            "icon": "code-2",
+            "tab": "GraphQL API",
+            "icon": "brackets",
             "groups": [
-              {
-                "group": "نظرة عامة",
-                "pages": [
-                  "ar/developers/index"
-                ]
-              },
               {
                 "group": "البداية",
                 "pages": [
+                  "ar/developers/index",
                   "ar/developers/getting-started/quickstart",
                   "ar/developers/getting-started/authentication"
                 ]
@@ -471,12 +472,14 @@
                   "ar/developers/guides/webhooks",
                   "ar/developers/guides/errors"
                 ]
+              },
+              {
+                "group": "جرّب",
+                "pages": [
+                  "ar/api-reference/playground"
+                ]
               }
-            ]
-          },
-          {
-            "tab": "GraphQL API",
-            "icon": "brackets",
+            ],
             "graphql": {
               "source": "public-api.graphql",
               "directory": "api-reference"
@@ -603,7 +606,7 @@
             "icon": "life-buoy",
             "groups": [
               {
-                "group": "ابدأ من هنا",
+                "group": "انطلق من هنا",
                 "pages": [
                   "ar/help-center/index",
                   "ar/help-center/guides/getting-started/doc-1861353",

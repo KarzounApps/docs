@@ -1,44 +1,80 @@
 ---
-title: "Developer API"
-description: "Build integrations with the Karzoun public GraphQL API — app tokens, webhooks, and 75+ operations."
+title: "Overview"
+description: "Build integrations with the Karzoun public GraphQL API — app tokens, webhooks, MCP, SDK, and MiniApps."
 ---
 
-Welcome to Karzoun developer documentation — quickstarts, schema reference, webhooks, MCP, and SDK guides for anyone building on the platform.
+Welcome to the Karzoun **GraphQL API** docs — guides, playground, and schema for partner app builders, integration engineers, and teams wiring AI agents that need live, permissioned access to workspace data.
+
+Sales, support, and marketing already share one Karzoun workspace. Your integration inherits that unity: one app token model, one permission story, one customer record across channels.
 
 <Info>
-  **Who is this for?** Partner app developers (Salla, Zid, embedded commerce), integration engineers, and teams wiring AI agents that need live access to customer data.
+  Looking for day-to-day product how-tos? Start from the [docs home](/) or [Help Center](/help-center) — this section is for builders.
 </Info>
 
-Sales, support, and marketing run on one workspace in Karzoun — your integration inherits that unity. One app token, one permission model, one customer record across channels.
-
-Use **GraphQL** when you query or mutate on demand, **webhooks** when your service reacts to events, and **MCP** when an AI client needs tool access.
+## Choose your path
 
 <Columns cols={2}>
   <Card title="Quickstart" icon="rocket" href="/developers/getting-started/quickstart">
-    Make your first authenticated GraphQL request in minutes.
+    First authenticated GraphQL call in minutes.
   </Card>
   <Card title="Authentication" icon="key" href="/developers/getting-started/authentication">
-    Create apps, manage tokens, and understand scopes.
+    Apps, tokens, and how requests are authorized.
   </Card>
   <Card title="GraphQL API" icon="brackets" href="/api-reference">
-    Browse queries, mutations, and types from the live schema.
+    Schema reference — queries, mutations, and types.
   </Card>
   <Card title="Webhooks" icon="webhook" href="/developers/guides/webhooks">
-    Subscribe to conversation, contact, and app events.
+    React to conversation, contact, and app events.
+  </Card>
+  <Card title="MCP" icon="bot" href="/mcp-server">
+    Tool access for Cursor, Claude, and agents.
+  </Card>
+  <Card title="MiniApps" icon="puzzle" href="/miniapps">
+    JSON Marketplace apps — build locally, submit for review.
   </Card>
 </Columns>
 
-## What Karzoun powers
+## When to use what
 
-| Module | What you can reach |
+| Need | Prefer | Why |
+| --- | --- | --- |
+| Read/write data on demand | **GraphQL** | Full schema, playground, precise queries |
+| React when something happens | **Webhooks** | Push events to your server with signatures |
+| AI client needs tools | **MCP** | Permissioned tools over the same workspace data |
+| Embed UI in the inbox | **Dashboard SDK** | iframe apps calling `executeMiniAppAction` |
+| Ship a reusable connector | **MiniApps** | Marketplace JSON definition + review |
+
+## Security checklist
+
+- Store app tokens on the server — never in client JavaScript or public repos
+- Verify webhook signatures (`x-karzoun-signature-256`) before trusting payloads
+- Scope each app to the least privileges your integration needs
+- Rotate tokens when people leave or integrations are retired
+
+## Try it
+
+```bash
+curl -X POST 'https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql' \
+  -H 'Content-Type: application/json' \
+  -H 'x-app-token: YOUR_APP_TOKEN' \
+  -d '{"query":"query { tags(page: 1, perPage: 3) { data { name } } }"}'
+```
+
+<Tip>
+  Prefer a visual editor? Open the [GraphQL Playground](/api-reference/playground).
+</Tip>
+
+## What your integration can touch
+
+| Area | Examples |
 | --- | --- |
 | Shared inbox | Omnichannel conversations — WhatsApp, email, webchat, Messenger, Instagram |
-| CRM & segments | Customers, companies, tags, custom fields, and dynamic segments |
+| CRM & segments | Customers, companies, tags, custom fields, dynamic segments |
 | Automations | Triggers, conditions, and actions across inbox and channels |
-| AI agents | Copilot and agents grounded in CRM and conversation context |
-| Marketing | WhatsApp and email broadcasts, templates, and analytics |
-| Operations | Tasks, orders, meetings, files, and team chat |
+| AI | Copilot and agents grounded in CRM and conversation context |
+| Marketing | Broadcasts, templates, and campaign analytics |
+| Operations | Tasks, orders, meetings, files, team chat |
 
 <Note>
-  Field descriptions live in the [GraphQL reference](/api-reference) (synced from the gateway). Start with [Quickstart](/developers/getting-started/quickstart), then browse the schema or test queries in the [Playground](https://karzoun.chat/developer/playground).
+  Field-level docs live in the [GraphQL reference](/api-reference). Non-technical product guides live in the [Help Center](/help-center).
 </Note>
