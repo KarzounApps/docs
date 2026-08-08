@@ -685,11 +685,42 @@
                 ]
               },
               {
-                "group": "مركز المحادثات",
+                "group": "خدمة العملاء",
                 "pages": [
-                  "ar/help-center/guides/inbox/doc-1889759",
-                  "ar/help-center/guides/inbox/doc-1889760",
-                  "ar/help-center/guides/inbox/doc-1889764"
+                  "ar/help-center/guides/inbox/overview",
+                  {
+                    "group": "خدمة العملاء",
+                    "pages": [
+                      "ar/help-center/guides/inbox/agent-day",
+                      "ar/help-center/guides/inbox/list-and-filters",
+                      "ar/help-center/guides/inbox/reply-and-composer",
+                      "ar/help-center/guides/inbox/response-and-escalation",
+                      "ar/help-center/guides/inbox/collaboration",
+                      "ar/help-center/guides/inbox/statuses",
+                      "ar/help-center/guides/inbox/customer-panel",
+                      "ar/help-center/guides/inbox/shortcuts"
+                    ]
+                  },
+                  {
+                    "group": "التعيين والتنظيم",
+                    "pages": [
+                      "ar/help-center/guides/inbox/assign",
+                      "ar/help-center/guides/inbox/smart-assignment",
+                      "ar/help-center/guides/inbox/bulk-actions"
+                    ]
+                  },
+                  {
+                    "group": "الأدوات والتكامل",
+                    "pages": [
+                      "ar/help-center/guides/inbox/quick-responses",
+                      "ar/help-center/guides/inbox/macros-and-handoff",
+                      "ar/help-center/guides/inbox/search-and-notifications",
+                      "ar/help-center/guides/inbox/channels-in-inbox",
+                      "ar/help-center/guides/inbox/social-comments",
+                      "ar/help-center/guides/inbox/tasks-from-conversation",
+                      "ar/help-center/guides/inbox/calls-in-inbox"
+                    ]
+                  }
                 ]
               },
               {
@@ -938,6 +969,18 @@
     {
       "source": "/ar/sdk/pixel",
       "destination": "/ar/help-center/guides/pixel/overview"
+    },
+    {
+      "source": "/ar/help-center/guides/inbox/doc-1889759",
+      "destination": "/ar/help-center/guides/inbox/overview"
+    },
+    {
+      "source": "/ar/help-center/guides/inbox/doc-1889760",
+      "destination": "/ar/help-center/guides/inbox/quick-responses"
+    },
+    {
+      "source": "/ar/help-center/guides/inbox/doc-1889764",
+      "destination": "/ar/help-center/guides/inbox/smart-assignment"
     }
   ]
 }
