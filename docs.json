@@ -718,6 +718,29 @@
                 ]
               },
               {
+                "group": "كرزون بكسل",
+                "pages": [
+                  "ar/help-center/guides/pixel/overview",
+                  {
+                    "group": "كرزون بكسل",
+                    "pages": [
+                      "ar/help-center/guides/pixel/install",
+                      "ar/help-center/guides/pixel/verify",
+                      "ar/help-center/guides/pixel/events",
+                      "ar/help-center/guides/pixel/on-contact-profile"
+                    ]
+                  },
+                  {
+                    "group": "الاستخدام مع التسويق",
+                    "pages": [
+                      "ar/help-center/guides/pixel/with-segments",
+                      "ar/help-center/guides/pixel/with-automations",
+                      "ar/help-center/guides/pixel/faq"
+                    ]
+                  }
+                ]
+              },
+              {
                 "group": "الحملات التسويقية",
                 "pages": [
                   "ar/help-center/guides/broadcasts/overview",
@@ -907,6 +930,14 @@
     {
       "source": "/ar/help-center/guides/broadcasts/doc-1890621",
       "destination": "/ar/help-center/guides/broadcasts/livechat"
+    },
+    {
+      "source": "/ar/help-center/guides/developers/karzoun-pixel-2279094",
+      "destination": "/ar/help-center/guides/pixel/overview"
+    },
+    {
+      "source": "/ar/sdk/pixel",
+      "destination": "/ar/help-center/guides/pixel/overview"
     }
   ]
 }
