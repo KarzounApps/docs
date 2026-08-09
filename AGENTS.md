@@ -6,7 +6,8 @@
 - Product name: **Karzoun** (also stylized Karzoun Chat)
 - Pages are MDX with YAML frontmatter
 - Configuration lives in `docs.json`
-- GraphQL public API schema: `public-api.graphql` → generated under `api-reference/`
+- GraphQL public API schema: live SDL at `https://dev.api.karzoun.chat/public-api.graphql` (gateway `GET /public-api.graphql`) → Mintlify generates `api-reference/`
+- Do **not** treat a checked-in `public-api.graphql` as source of truth; `docs.json` graphql `source` must be that HTTPS URL
 - Source of truth for content migration: `octobots/docs` (legacy Redocly Realm)
 - Prefer Mintlify components (`Steps`, `Card`, `Tip`, `Note`, `Info`, `Warning`, `Tabs`, `CodeGroup`) over custom HTML
 - Use the Mintlify docs at https://www.mintlify.com/docs (and MCP `https://www.mintlify.com/docs/mcp` when available)
@@ -49,6 +50,7 @@
 - Prefer **MiniApps** (one word, capital A) for marketplace JSON apps
 - Prefer **MCP** for Model Context Protocol tooling
 - GraphQL endpoint pattern: `https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql`
+- Public SDL (unauthenticated): `https://YOUR_SUBDOMAIN.api.karzoun.chat/public-api.graphql` — docs/CI canonical: `https://dev.api.karzoun.chat/public-api.graphql`
 - Playground: `https://karzoun.chat/developer/playground`
 - Developer dashboard: `https://karzoun.chat/developer`
 
@@ -74,7 +76,7 @@
 
 - **Do** document public GraphQL API, webhooks, MCP, SDK, MiniApps, partner flows, and Help Center
 - **Do not** document internal MiniApps team-only ops (`miniapps/internal/*`) unless explicitly asked — keep those out of public nav
-- **Do not** invent API fields; prefer schema descriptions from `public-api.graphql`
+- **Do not** invent API fields; prefer schema descriptions from the live SDL / generated `api-reference/`
 - Help Center articles are largely Arabic; plan `navigation.languages` with `en` + `ar` before bulk-migrating that tab
 - When migrating from Redocly Markdoc/MD, convert to Mintlify MDX components and fix asset paths under `/images`
 

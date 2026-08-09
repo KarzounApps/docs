@@ -7,7 +7,7 @@ Documentation for [Karzoun Chat](https://karzoun.chat) — GraphQL API, partners
 - **Platform:** [Mintlify](https://mintlify.com)
 - **Config:** `docs.json`
 - **Pages:** MDX with YAML frontmatter
-- **API reference:** GraphQL SDL in `public-api.graphql` (auto-generated under `api-reference/`)
+- **API reference:** GraphQL SDL from `https://dev.api.karzoun.chat/public-api.graphql` (auto-generated under `api-reference/`)
 
 This site replaces the previous Redocly Realm docs in `octobots/docs`.
 
@@ -42,7 +42,7 @@ Connect the GitHub app from the [Mintlify dashboard](https://dashboard.mintlify.
 | Area | Status |
 | --- | --- |
 | Branding, theme, SEO, nav | Done |
-| GraphQL schema wiring | Done (`public-api.graphql`) |
+| GraphQL schema wiring | Done (live `GET /public-api.graphql`) |
 | Developers | Done |
 | MCP (+ tool catalog) | Done |
 | SDK | Done |
