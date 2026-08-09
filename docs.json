@@ -212,7 +212,7 @@
               }
             ],
             "graphql": {
-              "source": "https://dev.api.karzoun.chat/public-api.graphql",
+              "source": "public-api.graphql",
               "directory": "api-reference"
             }
           },
@@ -480,7 +480,7 @@
               }
             ],
             "graphql": {
-              "source": "https://dev.api.karzoun.chat/public-api.graphql",
+              "source": "public-api.graphql",
               "directory": "api-reference"
             }
           },

@@ -1,0 +1,4226 @@
+# Offline cache only — runtime source of truth is GET /public-api.graphql
+# Prefer: curl https://dev.api.karzoun.chat/public-api.graphql
+# Note: local compose may omit subgraphs (tasks/engages/webhooks); prod has the full surface.
+
+"""Union type for all action payloads."""
+union ActionsPayload = AssignedPayload | UnassignedPayload | StatusChangedPayload | TaggedPayload | UntaggedPayload | TagsChangedPayload | ParticipantAddedPayload | ParticipantRemovedPayload | ConvertedToCardPayload | PriorityChangedPayload | CustomerPhoneChangedPayload | LinkClickedPayload
+
+type actionsResponse {
+  description: String
+  form: JSON
+  name: String
+  source: JSON
+  title: String
+  requests: JSON
+  parameters: JSON
+  renderStrategy: String
+}
+
+"""
+A single business event captured in the activity timeline.
+Events are immutable and append-only.
+"""
+type ActivityEvent {
+  _id: String!
+  createdAt: Date!
+  source: String!
+  action: String!
+  contentType: String!
+  contentId: String!
+  performedById: String
+  performedBy: User
+  payload: JSON
+}
+
+type ActivityEventList {
+  data: [ActivityEvent]!
+  pagination: PaginationInfo!
+}
+
+"""
+Third-party or internal app credential allowing scoped access for user groups.
+Tokens are never exposed via queries — only returned once at creation.
+"""
+type App {
+  _id: String
+  isEnabled: Boolean
+  createdAt: Date
+  lastUsedAt: Date
+  name: String
+  userGroupId: String
+  workspaceId: String
+  expireDate: Date
+  allowAllPermission: Boolean
+  noExpire: Boolean
+  accessToken: String
+  userGroupName: String
+}
+
+"""
+Paginated response wrapper for app list queries.
+Uses standard Pagination type from permission schema.
+"""
+type AppListResponse {
+  data: [App]
+  pagination: PaginationInfo!
+}
+
+"""
+Returned only from the appsAdd mutation.
+Contains the access token which is shown once and never again.
+"""
+type AppTokenResult {
+  _id: String
+  accessToken: String
+}
+
+"""Payload for assigned action."""
+type AssignedPayload {
+  assignedTo: String
+  assignedUserId: String
+  assignedDepartmentId: String
+  assignedBy: String
+  performedBy: String
+  viaAutomation: Boolean
+  automationNs: String
+  nodeNs: String
+  executionId: String
+  """Resolved user who was assigned to."""
+  assignedToUser: User
+  """Resolved user who was assigned (by assignedUserId)."""
+  assignedUser: User
+  """Resolved user who performed the assignment."""
+  assignedByUser: User
+  """Resolved user who performed the action."""
+  performedByUser: User
+  """Resolved department the conversation was assigned to."""
+  assignedDepartment: Department
+}
+
+type Attachment {
+  url: String
+  name: String
+  type: String
+  size: Float
+  duration: Float
+  locationData: LocationData
+}
+
+input AttachmentInput {
+  url: String!
+  name: String!
+  type: String
+  size: Float
+  duration: Float
+  locationData: LocationDataInput
+}
+
+type AuthResponse {
+  type: String
+  form: JSON
+  category: String
+  expiresAt: Date
+  authenticatedAt: Date
+  isAuthenticated: Boolean
+  userInput: JSON
+}
+
+type Automation {
+  _id: String!
+  ns: String
+  name: String
+  status: String
+  draftOf: String
+  hasDraft: Boolean
+  createdAt: Date
+  updatedAt: Date
+  createdBy: String
+  updatedBy: String
+  createdUser: User
+  updatedUser: User
+  triggers: [Trigger]
+  nodes: [Node]
+  startNodeNs: String
+  tagIds: [String]
+  tags: [Tag]
+  templateDescription: String
+  templateCategory: String
+  version: Int
+  publishedAt: Date
+  publishedBy: String
+  archivedAt: Date
+  previousStatus: String
+}
+
+input AutomationCatalogInput {
+  view: AutomationCatalogView!
+  searchValue: String
+  triggerType: String
+  eventType: String
+  actionType: String
+}
+
+enum AutomationCatalogView {
+  index
+  trigger
+  action
+}
+
+type AutomationHistoriesPaginated {
+  data: [AutomationHistory]!
+  pagination: PaginationInfo!
+}
+
+type AutomationHistory {
+  _id: String
+  executionId: String
+  automationNs: String
+  triggerNs: String
+  triggerType: String
+  triggerEvent: String
+  targetId: String
+  targetType: String
+  status: String
+  startedAt: Date
+  completedAt: Date
+  duration: Int
+  waitingNodeNs: String
+  waitingReason: String
+  resumeAt: Date
+  nodeCount: Int
+  errorMessage: String
+  modifiedAt: Date
+  parentExecutionId: String
+  steps: [ExecutionStep]
+  customerPhone: String
+  customerName: String
+}
+
+type AutomationHistoryDetail {
+  _id: String
+  executionId: String
+  automationNs: String
+  triggerNs: String
+  triggerType: String
+  triggerEvent: String
+  targetId: String
+  targetType: String
+  status: String
+  startedAt: Date
+  completedAt: Date
+  duration: Int
+  waitingNodeNs: String
+  waitingReason: String
+  resumeAt: Date
+  nextNodeNs: String
+  executionContext: JSON
+  steps: [ExecutionStep]
+  nodeCount: Int
+  errorMessage: String
+  modifiedAt: Date
+  parentExecutionId: String
+  customerPhone: String
+  customerName: String
+}
+
+type AutomationNote {
+  _id: String
+  description: String
+  triggerNs: String
+  nodeNs: String
+  createdUser: User
+  createdAt: Date
+}
+
+type AutomationsListResponse {
+  list: [Automation]
+  totalCount: Float
+}
+
+type AutomationsPaginatedResponse {
+  data: [Automation]!
+  pagination: PaginationInfo!
+}
+
+type automationsTotalCountResponse {
+  total: Int
+  byStatus: Int
+}
+
+type AutomationVersion {
+  _id: String!
+  ns: String
+  name: String
+  status: String
+  version: Int
+  publishedAt: Date
+  publishedBy: String
+  publishedUser: User
+  archivedAt: Date
+  nodeCount: Int
+  triggerCount: Int
+}
+
+type AutomationVersionList {
+  data: [AutomationVersion]!
+  pagination: PaginationInfo!
+}
+
+type BatchSavePositionsResponse {
+  updatedNodeIds: [String]
+  updatedTriggerIds: [String]
+}
+
+type Branch {
+  _id: String!
+  title: String
+  parentId: String
+  supervisorId: String
+  supervisor: User
+  code: String
+  order: String
+  users: [User]
+  userIds: [String]
+  userCount: Int
+  parent: Branch
+  children: [Branch]
+  status: String
+  address: String
+  hasChildren: Boolean
+}
+
+type BranchListQueryResponse {
+  data: [Branch]
+  pagination: PaginationInfo!
+  totalUsersCount: Int
+}
+
+type BulkFlowResponse {
+  successCount: Int!
+  failedCount: Int!
+  results: [BulkFlowResult]!
+}
+
+type BulkFlowResult {
+  flowId: String!
+  name: String
+  success: Boolean!
+  error: String
+}
+
+type ColumnConfigItem {
+  name: String
+  label: String
+  order: Int
+}
+
+"""Paginated company list response."""
+type CompaniesListResponse {
+  data: [Company]
+  pagination: PaginationInfo!
+}
+
+"""
+Company (account) entity that aggregates contacts, contact details, and CRM metadata.
+"""
+type Company {
+  createdAt: Date
+  modifiedAt: Date
+  avatar: String
+  size: Int
+  website: String
+  industry: String
+  plan: String
+  parentCompanyId: String
+  ownerId: String
+  mergedIds: [String]
+  names: [String]
+  primaryName: String
+  emails: [String]
+  primaryEmail: String
+  phones: [String]
+  primaryPhone: String
+  primaryAddress: JSON
+  addresses: [JSON]
+  businessType: String
+  description: String
+  isSubscribed: String
+  links: JSON
+  owner: User
+  parentCompany: Company
+  tagIds: [String]
+  customFieldsData: JSON
+  customFieldsDataByFieldCode: JSON
+  customers: [Customer]
+  getTags: [Tag]
+  code: String
+  location: String
+  score: Float
+  _id: String!
+}
+
+type Conformity {
+  _id: String!
+  mainType: String
+  mainTypeId: String
+  relType: String
+  relTypeId: String
+}
+
+type Contacts {
+  _id: String
+  fullName: String
+  primaryEmail: String
+  primaryPhone: String
+  avatar: String
+  createdAt: String
+  status: String
+  contentType: String
+}
+
+type ContactsResponse {
+  data: [Contacts]
+  pagination: PaginationInfo!
+}
+
+"""
+A conversation in the inbox representing a communication thread between
+a customer and the support team. Conversations are created from integrations
+(messenger, email, WhatsApp, etc.) and managed through the inbox workflow.
+"""
+type Conversation {
+  _id: String!
+  """The latest text content or snippet of the conversation."""
+  content: String
+  """The integration (channel) this conversation originated from."""
+  integrationId: String
+  """The customer participating in this conversation."""
+  customerId: String
+  """The department this conversation is routed to."""
+  departmentId: String
+  """The user/agent who created or owns this conversation."""
+  userId: String
+  """The user/agent currently assigned to handle this conversation."""
+  assignedUserId: String
+  """User IDs of agents participating in this conversation."""
+  participatedUserIds: [String]
+  """User IDs of agents who have read this conversation."""
+  readUserIds: [String]
+  """When this conversation was created."""
+  createdAt: Date
+  """When this conversation was last updated."""
+  updatedAt: Date
+  """
+  SLA elapsed idle time in minutes (time since customer started waiting for a response).
+  """
+  slaTime: Float
+  """Configured SLA threshold in minutes."""
+  slaConfig: Float
+  """Idle time in minutes (deprecated — use slaTime)."""
+  idleTime: Float
+  """
+  Configured idle time threshold in minutes (deprecated — use slaConfig).
+  """
+  idleTimeConfig: Float
+  """Whether the customer sent the most recent message."""
+  isCustomerRespondedLast: Boolean
+  """Timestamp of the last customer message."""
+  lastCustomerMessageAt: Date
+  """Timestamp of the last agent message."""
+  lastUserMessageAt: Date
+  """When the customer started waiting for a response."""
+  customerWaitingStartTime: Date
+  """Average agent response time in seconds."""
+  averageResponseTime: Float
+  """Total cumulative response time in seconds."""
+  totalResponseTime: Float
+  """Number of agent responses in this conversation."""
+  responseCount: Int
+  """
+  Current workflow status: 'open', 'closed', 'pending', 'snoozed', or 'bot'.
+  """
+  status: String
+  """
+  When a snoozed conversation will auto-reopen (null if indefinite or not snoozed).
+  """
+  snoozedUntil: Date
+  """Total number of messages in this conversation."""
+  messageCount: Int
+  """Auto-incremented conversation number for display."""
+  number: Int
+  """Tag IDs applied to this conversation."""
+  tagIds: [String]
+  """
+  The most recent message in this conversation, resolved from the appropriate service (inbox, whatsapp, facebook, etc.).
+  """
+  messages: [ConversationMessage]
+  """Resolved tags applied to this conversation."""
+  tags: [Tag]
+  """The customer associated with this conversation."""
+  customer: Customer
+  """The integration (channel) this conversation came from."""
+  integration: Integration
+  """The user/agent who owns this conversation."""
+  user: User
+  """The agent currently assigned to this conversation."""
+  assignedUser: User
+  """The department this conversation is routed to."""
+  assignedDepartment: Department
+  """Users participating in this conversation."""
+  participatedUsers: [User]
+  """Users who have read this conversation."""
+  readUsers: [User]
+  """Number of participants in this conversation."""
+  participatorCount: Int
+  customFieldsData: JSON
+}
+
+"""Paginated list of conversations."""
+type ConversationListResponse {
+  """The list of conversations for the current page."""
+  data: [Conversation]
+  """Pagination metadata."""
+  pagination: PaginationInfo!
+}
+
+"""
+A single message within a conversation. Uses a discriminated-union pattern
+where the `type` field determines which content sub-object is populated.
+"""
+type ConversationMessage {
+  _id: String!
+  """Message type discriminator."""
+  type: String
+  """Who sent this message."""
+  sender: MessageSender
+  """Visibility level: 'public', 'internal', or 'hidden'."""
+  visibility: String
+  """Text content (when type='text')."""
+  text: MessageText
+  """Media content (image, audio, video, document — single or multiple)."""
+  media: MessageMedia
+  """Template content (when type='template')."""
+  template: MessageTemplate
+  """Interactive content (when type='interactive')."""
+  interactive: MessageInteractive
+  """Tool call data (when type='tool_call')."""
+  toolCalls: JSON
+  """Email envelope and body (when type='email')."""
+  email: MessageEmail
+  """Threading, forwarding, mention context."""
+  context: MessageContext
+  """Delivery status and error info."""
+  delivery: MessageDelivery
+  """Reactions on this message."""
+  reactions: [MessageReaction]
+  """External origin tracking."""
+  origin: MessageOrigin
+  """Message edit history."""
+  editHistory: [MessageEditEntry]
+  """Extensible metadata bucket."""
+  metadata: JSON
+  """The resolved original message being replied to."""
+  replyForMsg: JSON
+  """The resolved customer who sent this message."""
+  customer: Customer
+  """The resolved agent who sent this message."""
+  user: User
+  """The parent conversation."""
+  conversation: Conversation
+  """The conversation this message belongs to."""
+  conversationId: String
+  """When this message was created."""
+  createdAt: Date
+  """Sticker attachment (when type='sticker')."""
+  sticker: WASticker
+  """Location data (when type='location')."""
+  location: WALocation
+  """Contact cards (when type='contacts')."""
+  contacts: [WAContact]
+  """CTWA ad referral attached to the message."""
+  referral: WAReferral
+  """System event content (when type='system')."""
+  system: MessageSystem
+  """Form submission content (when type='form')."""
+  form: MessageForm
+  """Engage/campaign content (when type='engage')."""
+  engage: MessageEngage
+  """Video call content (when type='videoCall')."""
+  videoCall: MessageVideoCall
+  """Order/commerce content (when type='order')."""
+  order: MessageOrder
+  """When this message was last updated."""
+  updatedAt: Date
+  """Live WhatsApp call card (when type='whatsapp_call')."""
+  whatsappCall: MessageWhatsappCall
+}
+
+"""Paginated list of conversation messages."""
+type ConversationMessageListResponse {
+  """The list of messages for the current page."""
+  data: [ConversationMessage]
+  """Pagination metadata."""
+  pagination: PaginationInfo!
+}
+
+"""
+Status of a conversation in the inbox.
+Determines the conversation's workflow state and visibility.
+"""
+enum ConversationStatus {
+  """Conversation is actively being handled"""
+  open
+  """Conversation has been resolved and closed"""
+  closed
+  """Conversation is on hold, awaiting customer action"""
+  pending
+  """Conversation is snoozed until a later time, awaiting team action"""
+  snoozed
+  """Conversation currently handled by the automation bot/ai agents"""
+  bot
+  """Conversations that was never closed/reopned"""
+  new
+}
+
+"""Payload for converted_to_card action."""
+type ConvertedToCardPayload {
+  cardType: String
+  performedBy: String
+  """Resolved user who performed the conversion."""
+  performedByUser: User
+}
+
+type createFlowResponse {
+  id: String
+  success: Boolean
+  validation_errors: [FlowValidationError]
+}
+
+"""
+Customer/contact entity capturing personal details, subscription status, and engagement metadata.
+"""
+type Customer {
+  state: String
+  createdAt: Date
+  modifiedAt: Date
+  avatar: String
+  integrationId: String
+  firstName: String
+  lastName: String
+  birthDate: Date
+  sex: Int
+  email: String
+  primaryEmail: String
+  emails: [String]
+  primaryPhone: String
+  phones: [String]
+  primaryAddress: JSON
+  addresses: [JSON]
+  phone: String
+  tagIds: [String]
+  customFieldsData: JSON
+  customFieldsDataByFieldCode: JSON
+  ownerId: String
+  leadStatus: String
+  leadStageHistory: [LeadStageHistoryEntry]
+  description: String
+  isSubscribed: String
+  code: String
+  emailValidationStatus: String
+  phoneValidationStatus: String
+  links: JSON
+  companies: [Company]
+  getTags: [Tag]
+  integration: Integration
+  owner: User
+  score: Float
+  """
+  Active segments-v2 memberships for this customer (active version only).
+  """
+  segmentsV2: [CustomerSegmentV2Membership]
+  _id: String!
+  conversations: [Conversation]
+}
+
+"""Computed behavioral summary for a customer (from event aggregations)"""
+type CustomerBehavioralSummary {
+  """Total number of behavioral events"""
+  eventCount: Int!
+  """Timestamp of the most recent event"""
+  lastSeenAt: String
+  """Timestamp of the earliest event"""
+  firstSeenAt: String
+  """Number of unique sessions"""
+  sessionCount: Int!
+  """Number of page_view events"""
+  pageViewCount: Int!
+  """URL of the most recent page view"""
+  lastPageUrl: String
+  """Most frequent event name"""
+  topEvent: String
+}
+
+input CustomerInput {
+  _id: String
+  code: String
+  phone: String
+  email: String
+  firstName: String
+  lastName: String
+  isSubscribed: Boolean
+}
+
+"""Payload for customer_phone_changed action (WhatsApp)."""
+type CustomerPhoneChangedPayload {
+  oldPhone: String
+  newPhone: String
+}
+
+"""A customer's membership in a segments-v2 segment (active version)."""
+type CustomerSegmentV2Membership {
+  segmentId: String!
+  name: String!
+  status: String!
+  enteredAt: Date
+  source: String
+}
+
+"""Paginated customers response."""
+type CustomersListResponse {
+  data: [Customer]
+  pagination: PaginationInfo!
+}
+
+type CustomerTimelineResponse {
+  entries: [TimelineEntry!]!
+  totalCount: Int!
+  hasMore: Boolean!
+}
+
+scalar Date
+
+type Department {
+  _id: String!
+  title: String
+  description: String
+  parentId: String
+  supervisorIds: [String]
+  supervisors: [User]
+  code: String
+  order: String
+  parent: Department
+  children: [Department]
+  childCount: Int
+  users: [User]
+  userCount: Int
+  userIds: [String]
+}
+
+type DepartmentListQueryResponse {
+  data: [Department]
+  pagination: PaginationInfo!
+  totalUsersCount: Int
+}
+
+"""An email address with optional display name."""
+type EmailAddress {
+  """Display name (e.g. 'John Doe')."""
+  name: String
+  """Email address (e.g. 'john@example.com')."""
+  address: String!
+}
+
+"""Email-specific attachment metadata."""
+type EmailAttachment {
+  """Original filename."""
+  filename: String
+  """MIME type."""
+  mimeType: String
+  """File size in bytes."""
+  size: Int
+  """Content-ID for inline/embedded images."""
+  contentId: String
+  """Server-side storage ID for download."""
+  attachmentId: String
+}
+
+"""Stored email template used for outbound communications."""
+type EmailTemplate {
+  _id: String!
+  name: String!
+  content: String
+  blocksJson: String
+  globalStyles: String
+  status: String
+  createdBy: String
+  createdAt: Date
+  modifiedAt: Date
+  createdUser: User
+}
+
+type EmailTemplateListResponse {
+  data: [EmailTemplate!]!
+  pagination: PaginationInfo!
+}
+
+"""Input for date range filtering"""
+input EventDateRangeInput {
+  """Start date (ISO 8601 or relative: 'now-7d')"""
+  gte: String
+  """End date (ISO 8601 or relative: 'now')"""
+  lte: String
+}
+
+type ExecutionStep {
+  nodeNs: String
+  actionType: String
+  status: String
+  reason: String
+  startedAt: Date
+  completedAt: Date
+  duration: Int
+  metadata: JSON
+}
+
+type Field {
+  _id: String!
+  contentType: String!
+  contentTypeId: String
+  name: String
+  isVisible: Boolean
+  isVisibleInDetail: Boolean
+  canHide: Boolean
+  groupId: String
+  lastUpdatedUser: User
+  lastUpdatedUserId: String
+  associatedField: Field
+  locationOptions: [LocationOption]
+  objectListConfigs: [ObjectListConfig]
+  optionsValues: String
+  subFieldIds: [String]
+  subFields: [Field]
+  products: [Product]
+  logics: [Logic]
+  description: String
+  options: [String]
+  type: String
+  validation: String
+  regexValidation: String
+  text: String
+  content: String
+  isRequired: Boolean
+  order: Int
+  associatedFieldId: String
+  logicAction: String
+  column: Int
+  pageNumber: Int
+  code: String
+  searchable: Boolean
+  showInCard: Boolean
+  isVisibleToCreate: Boolean
+  productCategoryId: String
+  field: String
+  isDefinedByKarzoun: Boolean
+}
+
+type FieldsGroup {
+  _id: String!
+  name: String
+  contentType: String
+  order: Int
+  code: String
+  parentId: String
+  description: String
+  isMultiple: Boolean
+  isVisible: Boolean
+  isVisibleInDetail: Boolean
+  alwaysOpen: Boolean
+  isDefinedByKarzoun: Boolean
+  fields: [Field]
+  lastUpdatedUserId: String
+  lastUpdatedUser: User
+  config: JSON
+  logicAction: String
+  logics: [Logic]
+}
+
+type FlowAsset {
+  name: String!
+  type: String!
+  url: String!
+  placeholder_key: String
+}
+
+input FlowAssetInput {
+  name: String
+  type: String
+  url: String
+  placeholder_key: String
+}
+
+enum FlowCategories {
+  SIGN_UP
+  SIGN_IN
+  APPOINTMENT_BOOKING
+  LEAD_GENERATION
+  CONTACT_US
+  CUSTOMER_SUPPORT
+  SURVEY
+  OTHER
+}
+
+type FlowPagination {
+  currentPage: Int!
+  perPage: Int!
+  totalCount: Int!
+  totalPages: Int!
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
+type FlowPreview {
+  preview_url: String
+  expires_at: Date
+}
+
+type FlowPreviewResponse {
+  preview_url: String!
+  expires_at: Date!
+}
+
+type FlowRuntimeConfig {
+  auto_populate_fields: [String]
+  save_responses: Boolean
+  response_webhook: String
+  timeout_minutes: Int
+  max_attempts: Int
+  redirect_url: String
+}
+
+input FlowRuntimeConfigInput {
+  auto_populate_fields: [String]
+  save_responses: Boolean
+  response_webhook: String
+  timeout_minutes: Int
+  max_attempts: Int
+  redirect_url: String
+}
+
+enum FlowStatus {
+  DRAFT
+  PUBLISHED
+  DEPRECATED
+}
+
+type FlowSyncResponse {
+  status: String!
+  message: String
+  synced_count: Int
+  deleted_count: Int
+  data: [WhatsappFlow]
+  pagination: FlowPagination
+}
+
+type FlowValidationError {
+  error: String
+  error_type: String
+  error_message: String
+  message: String
+  line_start: Int
+  line_end: Int
+  line_number: Int
+  column_start: Int
+  column_end: Int
+  field_name: String
+  pointers: [FlowValidationPointer]
+}
+
+type FlowValidationPointer {
+  line_start: Int
+  line_end: Int
+  column_start: Int
+  column_end: Int
+  path: String
+}
+
+type Form {
+  _id: String!
+  name: String!
+  title: String
+  code: String
+  type: String
+  description: String
+  buttonText: String
+  createdUserId: String
+  createdUser: User
+  createdDate: Date
+  numberOfPages: Int
+  status: String
+  googleMapApiKey: String
+  fields: [Field]
+  visibility: String
+  leadData: JSON
+  languageCode: String
+  departmentIds: [String]
+  tagIds: [String]
+  tags: [Tag]
+  workspaceId: String
+  workspace: Workspace
+  integrationId: String
+}
+
+"""A form code linking a brand to a form within a knowledge base article."""
+type FormCode {
+  workspaceId: String
+  formId: String
+}
+
+"""Input for associating a form code with a knowledge base article."""
+input FormCodeInput {
+  workspaceId: String
+  formId: String
+}
+
+type FormsResponse {
+  data: [Form]
+  pagination: PaginationInfo!
+}
+
+type FormsTotalCount {
+  total: Int
+  byTag: JSON
+  byWorkspace: JSON
+  byStatus: JSON
+}
+
+type FormSubmission {
+  _id: String!
+  customerId: String
+  formId: String
+  formFieldId: String
+  text: String
+  formFieldText: String
+  value: JSON
+  submittedAt: Date
+}
+
+type FormSubmissionListResponse {
+  data: [Submission]
+  pagination: PaginationInfo!
+}
+
+type HealthEntity {
+  entity_type: String
+  id: String
+  can_send_message: String
+  additional_info: [String]
+}
+
+type ImportIssueReconcileResult {
+  brokenNodeCount: Int!
+  healedNodeCount: Int!
+  pendingWaTemplateCount: Int!
+  pendingWaFlowCount: Int!
+}
+
+"""Available custom field definitions for inbox entities."""
+type InboxField {
+  """Custom fields available on customer records."""
+  customer: [Field]
+  """Custom fields available on conversations."""
+  conversation: [Field]
+  """Custom fields available on device/browser data."""
+  device: [Field]
+}
+
+type Integration {
+  _id: String!
+  kind: String!
+  name: String!
+  languageCode: String
+  code: String
+  formId: String
+  tagIds: [String]
+  createdAt: Date
+  workspaceId: String
+  tags: [Tag]
+  leadData: JSON
+  messengerData: JSON
+  whatsappData: WhatsappIntegration
+  uiOptions: JSON
+  isActive: Boolean
+  isConnected: Boolean
+  webhookData: JSON
+  form: Form
+  departmentId: String
+  department: Department
+  workspace: Workspace
+  websiteMessengerApps: [MessengerApp]
+  knowledgeBaseMessengerApps: [MessengerApp]
+  leadMessengerApps: [MessengerApp]
+  healthStatus: JSON
+  visibility: String
+  departmentIds: [String]
+  details: JSON
+}
+
+type IntegrationListResponse {
+  data: [Integration]!
+  pagination: PaginationInfo!
+}
+
+type integrationsGetUsedTypes {
+  _id: String
+  name: String
+}
+
+type integrationsTotalCount {
+  total: Int
+  byTag: JSON
+  byDepartment: JSON
+  byKind: JSON
+  byStatus: JSON
+}
+
+scalar JSON
+
+"""
+A knowledge base article containing help content, documentation, or guides.
+Articles belong to categories within topics and support rich content, attachments, and reactions.
+"""
+type KnowledgeBaseArticle {
+  _id: String!
+  """Unique code identifier for programmatic access."""
+  code: String
+  """The article title."""
+  title: String
+  """Brief summary or excerpt of the article content."""
+  summary: String
+  """
+  Full article content (HTML). Present on detail queries; omitted from list responses.
+  """
+  content: String
+  """Publication status: 'draft', 'publish', or 'scheduled'."""
+  status: String
+  """Whether this article is only visible to team members."""
+  isPrivate: Boolean
+  """Available emoji reaction types for this article."""
+  reactionChoices: [String]
+  """Count of each reaction type received."""
+  reactionCounts: JSON
+  """User ID of the article creator."""
+  createdBy: String
+  """The resolved user who created this article."""
+  createdUser: User
+  """When this article was created."""
+  createdDate: Date
+  """User ID of the last modifier."""
+  modifiedBy: String
+  """When this article was last modified."""
+  modifiedDate: Date
+  """The topic this article belongs to."""
+  topicId: String
+  """The category this article belongs to."""
+  categoryId: String
+  """Total number of times this article has been viewed."""
+  viewCount: Int
+  """File attachments included with this article."""
+  attachments: [Attachment]
+  """Featured image for the article."""
+  image: Attachment
+  """PDF attachment with extracted page images."""
+  pdfAttachment: PdfAttachment
+  """User ID of who published this article."""
+  publishedUserId: String
+  """The resolved user who published this article."""
+  publishedUser: User
+  """Scheduled publication date (for status 'scheduled')."""
+  scheduledDate: Date
+  """Forms embedded in this article."""
+  forms: [FormCode]
+}
+
+"""Input for creating or editing a knowledge base article."""
+input KnowledgeBaseArticleDoc {
+  """Unique code identifier."""
+  code: String
+  """The article title (required)."""
+  title: String!
+  """Brief summary or excerpt."""
+  summary: String
+  """Full article content in HTML (required)."""
+  content: String!
+  """Publication status: 'draft', 'publish', or 'scheduled' (required)."""
+  status: String!
+  """Whether this article is only visible to team members."""
+  isPrivate: Boolean
+  """Available emoji reaction types."""
+  reactionChoices: [String]
+  """Category IDs to assign this article to."""
+  categoryIds: [String]
+  """The topic this article belongs to."""
+  topicId: String
+  """The primary category this article belongs to."""
+  categoryId: String
+  """Featured image for the article."""
+  image: AttachmentInput
+  """File attachments."""
+  attachments: [AttachmentInput]
+  """PDF attachment with page images."""
+  pdfAttachment: PdfAttachmentInput
+  """Scheduled publication date."""
+  scheduledDate: Date
+  """Forms to embed in this article."""
+  forms: [FormCodeInput]
+}
+
+"""Paginated list of knowledge base articles."""
+type KnowledgeBaseArticlesPaginated {
+  """The list of articles for the current page."""
+  data: [KnowledgeBaseArticle]
+  """Pagination metadata."""
+  pagination: PaginationInfo
+}
+
+"""Paginated list of knowledge base categories."""
+type KnowledgeBaseCategoriesPaginated {
+  """The list of categories for the current page."""
+  data: [KnowledgeBaseCategory]
+  """Pagination metadata."""
+  pagination: PaginationInfo
+}
+
+"""
+A category that groups related knowledge base articles together.
+Categories can be nested under parent categories for hierarchical organization.
+"""
+type KnowledgeBaseCategory {
+  _id: String
+  """Unique code identifier for programmatic access."""
+  code: String
+  """The category title."""
+  title: String
+  """Description of what this category covers."""
+  description: String
+  """Articles in this category, optionally filtered by status."""
+  articles(status: String): [KnowledgeBaseArticle]
+  """Icon identifier for the category."""
+  icon: String
+  """User ID of the category creator."""
+  createdBy: String
+  """When this category was created."""
+  createdDate: Date
+  """User ID of the last modifier."""
+  modifiedBy: String
+  """When this category was last modified."""
+  modifiedDate: Date
+  """Parent category ID for nested categorization."""
+  parentCategoryId: String
+  """The first topic this category belongs to."""
+  firstTopic: KnowledgeBaseTopic
+  """Users who have authored articles in this category."""
+  authors: [User]
+  """Count of articles in this category, optionally filtered by status."""
+  numOfArticles(status: String): Float
+  """Total article count in this category."""
+  countArticles: Int
+}
+
+"""Input for creating or editing a knowledge base category."""
+input KnowledgeBaseCategoryDoc {
+  """Unique code identifier."""
+  code: String
+  """The category title (required)."""
+  title: String!
+  """Description of what this category covers."""
+  description: String
+  """Article IDs to include in this category."""
+  articleIds: [String]
+  """Icon identifier (required)."""
+  icon: String!
+  """Topic IDs this category belongs to."""
+  topicIds: [String]
+  """Primary topic ID."""
+  topicId: String
+  """Parent category ID for nesting."""
+  parentCategoryId: String
+}
+
+"""A category with its nested child categories included."""
+type KnowledgeBaseParentCategory {
+  _id: String
+  """Unique code identifier."""
+  code: String
+  """The category title."""
+  title: String
+  """Description of what this category covers."""
+  description: String
+  """Articles directly in this parent category."""
+  articles: [KnowledgeBaseArticle]
+  """Icon identifier."""
+  icon: String
+  """User ID of the creator."""
+  createdBy: String
+  """When this category was created."""
+  createdDate: Date
+  """User ID of the last modifier."""
+  modifiedBy: String
+  """When this category was last modified."""
+  modifiedDate: Date
+  """Parent category ID (for deeper nesting)."""
+  parentCategoryId: String
+  """The first topic this category belongs to."""
+  firstTopic: KnowledgeBaseTopic
+  """Users who have authored articles in this category."""
+  authors: [User]
+  """Count of articles, optionally filtered by status."""
+  numOfArticles(status: String): Float
+  """Nested child categories."""
+  childrens: [KnowledgeBaseCategory]
+}
+
+"""A single search result hit from the knowledge base vector search."""
+type KnowledgeBaseSearchHit {
+  """The article ID that matched."""
+  id: String!
+  """Relevance score (higher is better)."""
+  score: Float
+  """Additional metadata about the match."""
+  metadata: JSON
+  """Highlighted text snippet showing the matching content."""
+  highlight: String
+}
+
+"""Results from a knowledge base semantic search query."""
+type KnowledgeBaseSearchResult {
+  """The original search query."""
+  query: String!
+  """Total number of matching results."""
+  totalResults: Int!
+  """The search result hits, ordered by relevance."""
+  results: [KnowledgeBaseSearchHit!]!
+  """Source citations for the results."""
+  citations: [JSON!]
+}
+
+"""
+A knowledge base topic — the top-level organizational unit.
+Topics are associated with a brand and contain categories of articles.
+They can be styled with custom colors and background images.
+"""
+type KnowledgeBaseTopic {
+  _id: String!
+  """Unique code identifier for programmatic access."""
+  code: String
+  """The topic title."""
+  title: String
+  """Description of the topic."""
+  description: String
+  """Categories within this topic."""
+  categories: [KnowledgeBaseCategory]
+  workspace: Workspace
+  color: String
+  """URL of the background image for the topic page."""
+  backgroundImage: String
+  """ISO language code for the topic content (e.g. 'en', 'ar')."""
+  languageCode: String
+  """User ID of the topic creator."""
+  createdBy: String
+  """When this topic was created."""
+  createdDate: Date
+  """User ID of the last modifier."""
+  modifiedBy: String
+  """When this topic was last modified."""
+  modifiedDate: Date
+  """Top-level parent categories within this topic."""
+  parentCategories: [KnowledgeBaseParentCategory]
+}
+
+"""Input for creating or editing a knowledge base topic."""
+input KnowledgeBaseTopicDoc {
+  """Unique code identifier."""
+  code: String
+  """The topic title (required)."""
+  title: String!
+  """Description of the topic."""
+  description: String
+  """Category IDs to include in this topic."""
+  categoryIds: [String]
+  color: String
+  """Background image URL."""
+  backgroundImage: String
+  """ISO language code."""
+  languageCode: String
+}
+
+"""Paginated list of knowledge base topics."""
+type KnowledgeBaseTopicsPaginated {
+  """The list of topics for the current page."""
+  data: [KnowledgeBaseTopic]
+  """Pagination metadata."""
+  pagination: PaginationInfo
+}
+
+"""Single entry in a lead's stage-change history."""
+type LeadStageHistoryEntry {
+  stageCode: String!
+  at: Date!
+  byUserId: String
+  note: String
+}
+
+"""Payload for link_clicked action (WhatsApp URL tracking)."""
+type LinkClickedPayload {
+  url: String
+  linkId: String
+  viaAutomation: Boolean
+  automationNs: String
+  nodeNs: String
+  resumePortId: String
+}
+
+type LocationData {
+  latitude: Float
+  longitude: Float
+  name: String
+  address: String
+}
+
+input LocationDataInput {
+  latitude: Float!
+  longitude: Float!
+  name: String
+  address: String
+}
+
+type LocationOption {
+  lat: Float
+  lng: Float
+  description: String
+}
+
+input LocationOptionInput {
+  lat: Float
+  lng: Float
+  description: String
+}
+
+type Logic {
+  fieldId: String!
+  logicOperator: String
+  logicValue: JSON
+}
+
+input LogicInput {
+  fieldId: String
+  tempFieldId: String
+  logicOperator: String
+  logicValue: JSON
+}
+
+"""Threading and forwarding context for a message."""
+type MessageContext {
+  """The message ID this is replying to."""
+  replyTo: String
+  """Whether this message was forwarded."""
+  isForwarded: Boolean
+  """User IDs mentioned in this message."""
+  mentions: [String]
+}
+
+"""Input for threading and mention context."""
+input MessageContextInput {
+  """The message ID this is replying to."""
+  replyTo: String
+  """Whether this message was forwarded."""
+  isForwarded: Boolean
+  """User IDs mentioned in this message."""
+  mentions: [String]
+}
+
+"""Delivery status tracking for a message."""
+type MessageDelivery {
+  """Delivery status: 'sending', 'sent', 'delivered', 'seen', 'failed'."""
+  status: String!
+  """Error message if delivery failed."""
+  error: String
+}
+
+"""A single edit in a message's edit history."""
+type MessageEditEntry {
+  """The previous content before this edit."""
+  content: String
+  """When the edit was made."""
+  editedAt: Date
+}
+
+"""Email-specific envelope and body data."""
+type MessageEmail {
+  """Email subject line."""
+  subject: String
+  """Integration ID this email belongs to."""
+  integrationId: String
+  """Sender address(es)."""
+  from: [EmailAddress]
+  """To recipients."""
+  to: [EmailAddress]
+  """CC recipients."""
+  cc: [EmailAddress]
+  """BCC recipients (only visible to sender)."""
+  bcc: [EmailAddress]
+  """RFC 5322 References header chain for threading."""
+  references: [String]
+  """Sanitized HTML body."""
+  htmlBody: String
+  """Plain-text fallback body."""
+  textBody: String
+  """Short preview snippet."""
+  snippet: String
+  """Email-native attachment metadata."""
+  attachments: [EmailAttachment]
+  """Extracted new content (stripped of quoted/replied text)."""
+  newContent: String
+  """The quoted/replied portion of the email body."""
+  quotedContent: String
+  """Detected email signature block."""
+  signature: String
+}
+
+"""Engage/campaign message content."""
+type MessageEngage {
+  """The engage message ID."""
+  messageId: String
+  """The workspace associated with the engage campaign."""
+  workspaceId: String
+  """Campaign title (broadcast title)."""
+  title: String
+  """The campaign content/body."""
+  content: String
+  """The user who initiated the campaign."""
+  fromUserId: String
+  """Campaign kind."""
+  kind: String
+  """How the campaign was sent."""
+  sentAs: String
+  """Campaign targeting rules."""
+  rules: JSON
+}
+
+"""Form submission content."""
+type MessageForm {
+  """The raw form submission data."""
+  data: JSON
+}
+
+"""
+Interactive message (buttons, quick replies, lists, carousels, flows, etc.).
+"""
+type MessageInteractive {
+  """
+  Interactive type discriminator (button, list, cta_url, carousel, quickReplies, button_reply, list_reply, nfm_reply, etc.).
+  """
+  type: String
+  """Optional header (text, image, video, document)."""
+  header: JSON
+  """Body content."""
+  body: JSON
+  """Footer text."""
+  footer: JSON
+  """Action configuration (buttons, sections, cards, parameters, etc.)."""
+  action: JSON
+  """Customer button tap reply (incoming)."""
+  button_reply: JSON
+  """Customer list selection reply (incoming)."""
+  list_reply: JSON
+  """Customer WA Flow / native form submission (incoming)."""
+  nfm_reply: JSON
+}
+
+"""Media content attached to a message."""
+type MessageMedia {
+  """List of file attachments."""
+  attachments: [Attachment]
+  """Optional caption for the media."""
+  caption: String
+}
+
+"""Input for media message content."""
+input MessageMediaInput {
+  """File attachments."""
+  attachments: [AttachmentInput]
+  """Optional caption."""
+  caption: String
+}
+
+"""Order/commerce message content (WhatsApp order flow)."""
+type MessageOrder {
+  """Commerce catalog identifier."""
+  catalogId: String
+  """Products in this order."""
+  productItems: [MessageOrderProductItem]
+  """Order summary text."""
+  text: String
+}
+
+"""A single product item in an order message."""
+type MessageOrderProductItem {
+  """
+  Product retailer identifier (catalog external id: product.code or variant.id).
+  """
+  productRetailerId: String
+  """Parent storefront product code for deep-links (Product.code)."""
+  productCode: String
+  """Quantity ordered."""
+  quantity: Int
+  """Unit price of the item (as reported by WhatsApp)."""
+  itemPrice: Float
+  """Currency code (e.g. 'AED', 'USD')."""
+  currency: String
+  """Resolved product name, or null when no matching product exists."""
+  name: String
+  """
+  Resolved product attachment ({ url, name, type }), or null when no matching product exists.
+  """
+  attachment: Attachment
+}
+
+"""External origin tracking for a message."""
+type MessageOrigin {
+  """External message ID from the integration platform."""
+  externalId: String
+  """Origin application identifier."""
+  app: String
+}
+
+"""A reaction on a message."""
+type MessageReaction {
+  """The emoji string."""
+  emoji: String!
+  """Who reacted: 'user', 'customer', etc."""
+  fromKind: String!
+  """The ID of the person who reacted."""
+  fromId: String
+}
+
+"""Identifies who sent a message."""
+type MessageSender {
+  """
+  Sender kind: 'user', 'customer', 'bot', 'ai_assistant', 'system', 'visitor', 'engage'.
+  """
+  kind: String!
+  """The sender's ID (user, customer, bot, etc.)."""
+  id: String
+}
+
+"""Input for identifying the message sender."""
+input MessageSenderInput {
+  """
+  Sender kind: 'user', 'customer', 'bot', 'ai_assistant', 'system', 'visitor'.
+  """
+  kind: String!
+  """The sender's platform ID."""
+  id: String
+}
+
+"""System-generated event shown inline in the conversation."""
+type MessageSystem {
+  """
+  The action that occurred (e.g. 'assigned', 'status_changed', 'tagged').
+  """
+  action: String!
+  """Structured action-specific payload based on action type."""
+  payload: ActionsPayload
+  """Human-readable label for the event."""
+  label: String
+}
+
+"""Template message content."""
+type MessageTemplate {
+  """Template name."""
+  name: String
+  """Template parameters (resolved key-value pairs)."""
+  params: JSON
+  """Template language code."""
+  language: JSON
+  """Template category (MARKETING, UTILITY, AUTHENTICATION)."""
+  category: String
+  """Pre-rendered snapshot of what the customer received."""
+  rendered: TemplateRendered
+}
+
+"""Plain-text or rich-text message body."""
+type MessageText {
+  """The message body content."""
+  body: String!
+  """An optional short preview for long messages."""
+  preview: String
+}
+
+"""Input for text message content."""
+input MessageTextInput {
+  """The message body."""
+  body: String!
+  """Optional short preview."""
+  preview: String
+}
+
+"""Video call message content."""
+type MessageVideoCall {
+  """URL to join the video call."""
+  url: String
+  """Current call status."""
+  status: String
+  """Provider name (e.g. 'dailyco')."""
+  provider: String
+}
+
+"""Live WhatsApp call card content (when type='whatsapp_call')."""
+type MessageWhatsappCall {
+  callId: String
+  status: String
+  claimedByUserId: String
+  duration: Int
+  mode: String
+  direction: String
+  customerPhone: String
+  integrationId: String
+  voicemailUrl: String
+}
+
+type MessengerApp {
+  _id: String!
+  kind: String!
+  name: String!
+  showInInbox: Boolean
+  credentials: JSON
+  accountId: String
+}
+
+"""
+A single action available in a miniapp for the dashboard iframe bridge.
+"""
+type MiniAppDashboardAction {
+  """Unique action identifier"""
+  name: String!
+  """Display title for the action"""
+  title: String!
+  """Description of what this action does"""
+  description: String
+  """JSON-stringified form schema for the action inputs"""
+  formSchema: String
+  """Whether this action requires user input before execution"""
+  requiresInput: Boolean!
+}
+
+"""
+Dashboard configuration for a miniapp.
+Returned to the host bridge so it can populate app_capabilities.
+"""
+type MiniAppDashboardConfig {
+  """The miniapp namespace"""
+  appNs: String!
+  """Display name of the miniapp"""
+  appName: String!
+  """Whether the miniapp is installed and has valid credentials"""
+  isAuthenticated: Boolean!
+  """Available actions with their form definitions"""
+  actions: [MiniAppDashboardAction!]!
+}
+
+type miniAppDetailResponse {
+  source: JSON
+  actions: [actionsResponse]
+  label: String
+  description: String
+  shortDescription: String
+  userGuide: String
+  features: String
+  screenShots: JSON
+  icon: String
+  logo: String
+  version: String
+}
+
+type MiniAppGeneralInfoResponse {
+  ns: String
+  title: String
+  label: String
+  name: String
+  description: String
+  shortDescription: String
+  userGuide: String
+  features: String
+  categories: [String]
+  category: String
+  screenShots: JSON
+  icon: String
+  logo: String
+  docsUrl: String
+  youtubeId: String
+  price: JSON
+  version: String
+  type: String
+  status: String
+  installStatus: String
+  installationCount: Int
+  auth: AuthResponse
+  author: JSON
+}
+
+type MiniAppRegistry {
+  appId: String!
+  key: String!
+  ns: String
+  title: String!
+  label: String
+  visibility: String
+  ownerOrganizationId: String
+  publishedVersionId: String
+  latestVersionId: String
+  publishedVersion: String
+  versionCount: Int
+  description: String
+  shortDescription: String
+  category: String
+  icon: String
+  logo: String
+  installationCount: Int
+  status: String
+}
+
+type Mutation {
+  automationsAdd(name: String, status: String, draftOf: String, triggers: [String], nodes: [String], startNodeNs: String, tagIds: [String]): Automation
+  automationsPublish(_id: String!): Automation
+  automationsReconcileImportIssues(_id: String!): ImportIssueReconcileResult
+  automationsDiscardDraft(_id: String!): JSON
+  draftAutomationDetail(_id: String!): Automation
+  nodesAdd(_id: String, ns: String, type: String, automationId: String, automationNs: String, automationName: String, style: JSON, status: String, connections: JSON, messages: JSON, question: JSON, conditions: JSON, aiAssistant: JSON, copilotAgent: JSON, split: JSON, actions: JSON, sendEmail: JSON, goto: JSON, note: JSON, icon: String, label: String, description: String, position: JSON, workflowId: String, nextNodeNs: String, isMacro: Boolean, metadata: JSON, createdAt: Date, updatedAt: Date, createdBy: String, updatedBy: String): Node
+  nodesEdit(nodes: [NodeInput!]!): [Node]
+  triggersAdd(_id: String, ns: String, type: String, event: String, automationId: String, automationNs: String, startNodeNs: String, config: JSON, style: JSON, icon: String, isCustom: Boolean, position: JSON, workflowId: String, isActive: Boolean, integrationIds: [String], integrationId: String, integrationKind: String): Trigger
+  triggersEdit(triggers: [TriggerInput!]!): [Trigger]
+  automationsEdit(_id: String, name: String, status: String, draftOf: String, triggers: [String], nodes: [String], startNodeNs: String, tagIds: [String]): Automation
+  archiveAutomations(automationIds: [String], isRestore: Boolean): [String]
+  automationsToggleOffline(_id: String!): Automation
+  automationsSaveAsTemplate(_id: String!, name: String, description: String, category: String): Automation
+  automationsDuplicate(_id: String!): Automation
+  automationsCreateFromTemplate(_id: String!, name: String): Automation
+  automationsRevert(automationId: String!, targetVersionId: String!): Automation
+  nodesRemove(nodeIds: [String]): [String]
+  triggersRemove(triggerIds: [String]): [String]
+  batchSavePositions(nodePositions: [PositionInput], triggerPositions: [PositionInput]): BatchSavePositionsResponse
+  automationsAddNote(automationNs: String, triggerNs: String, nodeNs: String, description: String): AutomationNote
+  automationsEditNote(_id: String!, automationNs: String, triggerNs: String, nodeNs: String, description: String): AutomationNote
+  automationsRemoveNote(_id: String!): AutomationNote
+  runFlow(automationNs: String, nodeNs: String, conversationId: String, integrationId: String, customer: CustomerInput, payload: JSON): JSON
+  automationImportFromPAF(pafJson: String!, name: String, resolutions: [PAFResolutionInput!], autoResolve: Boolean, source: String): PAFImportResult
+  automationsSetTags(ns: String!, tagIds: [String]!): Automation
+  conformityAdd(mainType: String, mainTypeId: String, relType: String, relTypeId: String): Conformity
+  conformityEdit(mainType: String, mainTypeId: String, relType: String, relTypeIds: [String]): SuccessResult
+  """
+  Create a new app credential scoped to a user group with optional expiry.
+  Returns the access token once — it will never be queryable again.
+  """
+  appsAdd(name: String, userGroupId: String, workspaceId: String, expireDate: Date, allowAllPermission: Boolean, noExpire: Boolean): AppTokenResult
+  """
+  Update app name and expiration only.
+  Permissions (userGroupId, allowAllPermission) are locked after creation.
+  """
+  appsEdit(_id: String!, name: String, expireDate: Date, noExpire: Boolean): App
+  """Remove an app credential by id."""
+  appsRemove(_id: String!): JSON
+  """Create a new tag."""
+  tagsAdd(name: String!, type: String!, colorCode: String, parentId: String): Tag
+  """Edit a tag by id."""
+  tagsEdit(_id: String!, name: String!, type: String!, colorCode: String, parentId: String): Tag
+  """Remove a tag by id."""
+  tagsRemove(_id: String!): JSON
+  """Attach/detach tags to target entities."""
+  tagsTag(type: String!, targetIds: [String!]!, tagIds: [String!]!): String
+  """Merge two tags (source into destination)."""
+  tagsMerge(sourceId: String!, destId: String!): Tag
+  """ Save a draft segment-v2 (creates definition + draft version, validates rule). 
+  """
+  segmentV2SaveDraft(segmentId: String, name: String!, description: String, type: String, rule: JSON, emitsMembershipEvents: Boolean, usageState: String): JSON
+  """ Publish a draft version: re-validates, inserts a rebuild run, and emits the rebuild trigger. 
+  """
+  segmentV2PublishVersion(segmentId: String!, draftVersion: Int!): JSON
+  segmentV2Archive(segmentId: String!): JSON
+  segmentV2Unarchive(segmentId: String!): JSON
+  """ Add customers to a static segment. Rejects on dynamic segments. """
+  segmentV2AddStaticMembers(segmentId: String!, customerIds: [String!]!, source: String, importId: String): JSON
+  """ Remove customers from a static segment. """
+  segmentV2RemoveStaticMembers(segmentId: String!, customerIds: [String!]!, source: String, importId: String): JSON
+  """ GDPR: request cascade deletion of a customer's v2 data. """
+  segmentV2RequestCustomerDeletion(customerId: String!, requestId: String): JSON
+  """ Preview member count for an unsaved rule (validates + ES count). """
+  segmentV2PreviewCount(rule: JSON!): JSON
+  formSubmissionsSave(formId: String, contentTypeId: String, contentType: String, formSubmissions: JSON): Boolean
+  fieldsAdd(contentType: String!, contentTypeId: String, type: String, validation: String, regexValidation: String, text: String, description: String, code: String, options: [String], locationOptions: [LocationOptionInput], isRequired: Boolean, order: Int, groupId: String, isVisible: Boolean, canHide: Boolean, associatedFieldId: String, logicAction: String, logics: [LogicInput], searchable: Boolean, showInCard: Boolean, objectListConfigs: [objectListConfigInput], isVisibleToCreate: Boolean): Field
+  fieldsEdit(_id: String!, type: String, validation: String, regexValidation: String, text: String, description: String, code: String, options: [String], locationOptions: [LocationOptionInput], isRequired: Boolean, order: Int, groupId: String, isVisible: Boolean, canHide: Boolean, associatedFieldId: String, logicAction: String, logics: [LogicInput], searchable: Boolean, showInCard: Boolean, objectListConfigs: [objectListConfigInput], isVisibleToCreate: Boolean): Field
+  fieldsRemove(_id: String!): Field
+  fieldsGroupsAdd(name: String, contentType: String, order: Int, description: String, parentId: String, code: String, isMultiple: Boolean, isVisible: Boolean, alwaysOpen: Boolean, isVisibleInDetail: Boolean, config: JSON, logicAction: String, logics: [LogicInput]): FieldsGroup
+  fieldsGroupsEdit(_id: String!, name: String, contentType: String, order: Int, description: String, parentId: String, code: String, isMultiple: Boolean, isVisible: Boolean, alwaysOpen: Boolean, isVisibleInDetail: Boolean, config: JSON, logicAction: String, logics: [LogicInput]): FieldsGroup
+  fieldsGroupsRemove(_id: String!): JSON
+  """
+  Create a new company record with core contact, address, and classification fields.
+  """
+  companiesAdd(avatar: String, primaryName: String, names: [String], primaryPhone: String, phones: [String], primaryEmail: String, emails: [String], primaryAddress: JSON, addresses: [JSON], size: Int, website: String, industry: String, parentCompanyId: String, email: String, ownerId: String, businessType: String, description: String, isSubscribed: String, links: JSON, tagIds: [String], customFieldsData: JSON, code: String, location: String): Company
+  """
+  Update an existing company by id; supports partial edits of contact and CRM fields.
+  """
+  companiesEdit(_id: String!, avatar: String, primaryName: String, names: [String], primaryPhone: String, phones: [String], primaryEmail: String, emails: [String], primaryAddress: JSON, addresses: [JSON], size: Int, website: String, industry: String, parentCompanyId: String, email: String, ownerId: String, businessType: String, description: String, isSubscribed: String, links: JSON, tagIds: [String], customFieldsData: JSON, code: String, location: String): Company
+  """Patch company fields by selector for bulk or conditional updates."""
+  companiesEditByField(selector: JSON, doc: JSON): Company
+  """Remove one or more companies; returns removed ids."""
+  companiesRemove(companyIds: [String]): [String]
+  """
+  Merge multiple companies into a primary record, applying provided field overrides.
+  """
+  companiesMerge(companyIds: [String], companyFields: JSON): Company
+  """
+  Create a new customer/contact. The optional state can denote lead vs. customer pipelines.
+  """
+  customersAdd(state: String, avatar: String, firstName: String, lastName: String, primaryEmail: String, emails: [String], primaryPhone: String, phones: [String], primaryAddress: JSON, addresses: [JSON], ownerId: String, tagIds: [String], leadStatus: String, description: String, isSubscribed: String, links: JSON, customFieldsData: JSON, code: String, sex: Int, birthDate: Date, emailValidationStatus: String, phoneValidationStatus: String): Customer
+  """Update a customer by id with profile or CRM attributes."""
+  customersEdit(_id: String!, avatar: String, firstName: String, lastName: String, primaryEmail: String, emails: [String], primaryPhone: String, phones: [String], primaryAddress: JSON, addresses: [JSON], ownerId: String, tagIds: [String], leadStatus: String, description: String, isSubscribed: String, links: JSON, customFieldsData: JSON, code: String, sex: Int, birthDate: Date, emailValidationStatus: String, phoneValidationStatus: String): Customer
+  """Patch customer fields by selector for conditional/bulk edits."""
+  customersEditByField(selector: JSON, doc: JSON): Customer
+  """Merge several customers into one, applying provided override fields."""
+  customersMerge(customerIds: [String], customerFields: JSON): Customer
+  """Remove one or more customers; returns removed ids."""
+  customersRemove(customerIds: [String]): [String]
+  """
+  Change the lifecycle state for a customer (e.g., lead → customer); value expects a known state key.
+  """
+  customersChangeState(_id: String!, value: String!): Customer
+  """Create a new product with pricing, taxonomy, and media."""
+  productsAdd(name: String, shortName: String, slug: String, categoryId: String, type: String, description: String, barcodes: [String], unitPrice: Float, salePrice: Float, compareAtPrice: Float, code: String, costPrice: Float, currency: String, mpn: String, gtin: String, requireShipping: Boolean, channels: [String], unlimitedQuantity: Boolean, saleStart: Date, saleEnd: Date, maxPerOrder: Int, maxPerCustomer: Int, isAvailable: Boolean, hideQuantity: Boolean, customFieldsData: JSON, attachment: AttachmentInput, attachmentMore: [AttachmentInput], media: [AttachmentInput], vendorId: String, uom: String, subUoms: JSON, taxType: String, taxCode: String, sku: String, externalUrl: String, source: String, status: String, productOptions: JSON, productVariants: JSON, priceRange: JSON, hasVariants: Boolean, weight: Float, weightUnit: String, dimensions: JSON, inventory: JSON, seo: JSON): Product
+  """Update an existing product by id."""
+  productsEdit(_id: String!, name: String, shortName: String, slug: String, categoryId: String, type: String, description: String, barcodes: [String], unitPrice: Float, salePrice: Float, compareAtPrice: Float, code: String, costPrice: Float, currency: String, mpn: String, gtin: String, requireShipping: Boolean, channels: [String], unlimitedQuantity: Boolean, saleStart: Date, saleEnd: Date, maxPerOrder: Int, maxPerCustomer: Int, isAvailable: Boolean, hideQuantity: Boolean, customFieldsData: JSON, attachment: AttachmentInput, attachmentMore: [AttachmentInput], media: [AttachmentInput], vendorId: String, uom: String, subUoms: JSON, taxType: String, taxCode: String, sku: String, externalUrl: String, source: String, status: String, productOptions: JSON, productVariants: JSON, priceRange: JSON, hasVariants: Boolean, weight: Float, weightUnit: String, dimensions: JSON, inventory: JSON, seo: JSON): Product
+  """Remove products by ids; returns status string."""
+  productsRemove(productIds: [String!]): String
+  """Create a product category."""
+  productCategoriesAdd(name: String!, code: String!, description: String, parentId: String, slug: String, attachment: AttachmentInput, status: String, seo: JSON): ProductCategory
+  """Edit a product category by id."""
+  productCategoriesEdit(_id: String!, name: String!, code: String!, description: String, parentId: String, slug: String, attachment: AttachmentInput, status: String, seo: JSON): ProductCategory
+  """Remove a product category by id."""
+  productCategoriesRemove(_id: String!): JSON
+  """Create a new email template with name and optional content."""
+  emailTemplatesAdd(name: String!, content: String, blocksJson: String, globalStyles: String): EmailTemplate
+  """Update an existing email template by id."""
+  emailTemplatesEdit(_id: String!, name: String!, content: String, blocksJson: String, globalStyles: String): EmailTemplate
+  """Remove an email template by id."""
+  emailTemplatesRemove(_id: String!): JSON
+  """Change the status (e.g., draft/published) of an email template."""
+  emailTemplatesChangeStatus(_id: String!, status: String): EmailTemplate
+  """Duplicate an email template by id."""
+  emailTemplatesDuplicate(_id: String!): EmailTemplate
+  """
+  Adds a new message to a conversation.
+  Use this to send replies, internal notes, or bot messages.
+  Set visibility='internal' for team-only notes invisible to customers.
+  """
+  conversationMessageAdd(
+    """The conversation ID to add the message to."""
+    conversationId: String
+    """Message type discriminator: 'text', 'media', 'template', etc."""
+    type: String
+    """Text content of the message."""
+    text: MessageTextInput
+    """Media content (attachments)."""
+    media: MessageMediaInput
+    """Who is sending this message."""
+    sender: MessageSenderInput
+    """Visibility level: 'public', 'internal', or 'hidden'."""
+    visibility: String
+    """Threading, forwarding, and mention context."""
+    context: MessageContextInput
+    """Template content for template messages."""
+    template: JSON
+    """Additional metadata as JSON."""
+    metadata: JSON
+    """
+    Interactive message payload (buttons, lists, carousels) for WhatsApp/Instagram/Facebook.
+    """
+    interactive: JSON
+  ): ConversationMessage
+  """
+  Updates an existing conversation message.
+  Can add reactions or change visibility.
+  """
+  conversationMessageUpdate(
+    """The message ID to update."""
+    _id: String
+    """The conversation ID containing the message."""
+    conversationId: String
+    """V2 reactions array as JSON (e.g., [{ emoji, fromKind, fromId }])."""
+    reactions: JSON
+    """Visibility level: 'public', 'internal', or 'hidden'."""
+    visibility: String
+  ): ConversationMessage
+  """
+  Assigns one or more conversations to a user or department.
+  Use this to route conversations to the appropriate agent or team.
+  """
+  conversationsAssign(
+    """List of conversation IDs to assign"""
+    conversationIds: [String]!
+    """The user ID to assign the conversations to"""
+    assignedUserId: String
+    """The department ID to assign the conversations to"""
+    assignedDepartmentId: String
+  ): [Conversation]
+  """
+  Removes assignment from conversations, making them unassigned.
+  Conversations return to the general inbox queue.
+  """
+  conversationsUnassign(
+    """List of conversation IDs to unassign"""
+    _ids: [String]!
+  ): [Conversation]
+  """
+  Changes the status of one or more conversations.
+  Use 'closed' to resolve conversations, 'open' to reopen them.
+  When setting status to 'snoozed', optionally provide snoozedUntil to auto-reopen at that time.
+  """
+  conversationsChangeStatus(
+    """List of conversation IDs to update"""
+    _ids: [String]!
+    """New status for the conversations"""
+    status: ConversationStatus!
+    """
+    Optional auto-reopen datetime (only used when status is 'snoozed'). Conversation will auto-reopen after this time.
+    """
+    snoozedUntil: Date
+  ): [Conversation]
+  """
+  Marks a conversation as read by the current user.
+  Clears unread indicators and updates read receipts.
+  """
+  conversationMarkAsRead(
+    """The conversation ID to mark as read"""
+    _id: String
+  ): Conversation
+  """
+  Resolves (closes) all conversations matching the filter criteria.
+  Use with caution as this performs a bulk status change.
+  Returns the count of conversations resolved.
+  """
+  conversationResolveAll(
+    """Filter by department ID"""
+    departmentId: String
+    """Filter by conversation status"""
+    status: ConversationStatus
+    """
+    Filter unassigned conversations only ('true' to get unassigned, 'false' to get assigned, keep empty for no filter)
+    """
+    unAssigned: Boolean
+    """Filter by tag ID or name"""
+    tag: String
+    """
+    Filter by integration type (e.g., 'messenger', 'email', 'facebook', 'whatsapp')
+    """
+    integrationType: String
+    """Filter by specific integration ID"""
+    integrationId: String
+    """
+    Filter conversations where current user is participating ('true'/'false')
+    """
+    participating: String
+    """Filter conversations where customer awaiting response ('true'/'false')"""
+    awaitingResponse: String
+    """Filter starred/favorited conversations ('true'/'false')"""
+    starred: String
+    """Filter by start date (ISO date string)"""
+    startDate: String
+    """Filter by end date (ISO date string)"""
+    endDate: String
+    """Filter by customer segment ID"""
+    segment: String
+    """Filter by assigned user/agent ID"""
+    assignedUserId: String
+    """Field to sort results by (e.g., 'createdAt', 'updatedAt')"""
+    sortField: String
+    """Sort direction: 'asc' for ascending, 'desc' for descending"""
+    sortDirection: SortDirection
+  ): Int
+  """
+  Converts a conversation into a card (deal, ticket, task, or purchase).
+  Creates a new card in the specified pipeline stage with conversation context.
+  Use this to escalate customer issues or create follow-up tasks.
+  """
+  conversationConvertToCard(
+    """The conversation ID to convert"""
+    _id: String!
+    """
+    Target card type to convert to: 'deal', 'ticket', 'task', or 'purchase'
+    """
+    type: String!
+    """Existing item ID if linking to an existing card"""
+    itemId: String
+    """Name for the new card item"""
+    itemName: String
+    """Pipeline stage ID where the card will be created"""
+    stageId: String
+    """Custom field values as JSON object"""
+    customFieldsData: JSON
+    """Priority level: 'Critical', 'High', 'Normal', or 'Low'"""
+    priority: String
+    """User IDs to assign to the new card"""
+    assignedUserIds: [String]
+    """Label IDs to apply to the new card"""
+    labelIds: [String]
+    """Start date for the card"""
+    startDate: Date
+    """Due/close date for the card"""
+    closeDate: Date
+    """File attachments to include"""
+    attachments: [AttachmentInput]
+    """Description text for the card"""
+    description: String
+  ): String
+  """
+  Updates custom field values on a conversation.
+  Use this to add or modify custom metadata on conversations.
+  """
+  conversationEditCustomFields(
+    """The conversation ID to update"""
+    _id: String!
+    """Custom field values as JSON object with field IDs as keys"""
+    customFieldsData: JSON
+  ): Conversation
+  responseTemplatesAdd(name: String!, content: String, files: JSON): ResponseTemplate
+  responseTemplatesEdit(_id: String!, name: String!, content: String, files: JSON): ResponseTemplate
+  responseTemplatesRemove(_id: String!): JSON
+  teamChatCreate(type: TeamChatType!, name: String, description: String, memberIds: [String]!, isPublic: Boolean, avatar: String): TeamChat
+  teamChatUpdate(_id: String!, name: String, description: String, avatar: String): TeamChat
+  teamChatArchive(_id: String!): TeamChat
+  teamChatUnarchive(_id: String!): TeamChat
+  teamChatDelete(_id: String!): String
+  teamChatAddMembers(_id: String!, memberIds: [String]!): TeamChat
+  teamChatRemoveMembers(_id: String!, memberIds: [String]!): TeamChat
+  teamChatLeave(_id: String!): String
+  teamChatJoin(_id: String!): TeamChat
+  teamChatSetRole(_id: String!, userId: String!, role: String!): TeamChat
+  teamMessageSend(teamChatId: String!, content: String, contentType: String, attachments: [TeamChatAttachmentInput], mentionedUserIds: [String], mentionedAll: Boolean, threadParentId: String, quote: TeamMessageQuoteInput): TeamMessage
+  teamChatShareInboxMessage(conversationId: String!, messageId: String, description: String, targetChatIds: [String!], targetUserIds: [String!]): [TeamMessage]
+  teamMessageEdit(_id: String!, content: String!, mentionedUserIds: [String], mentionedAll: Boolean): TeamMessage
+  teamMessageDelete(_id: String!): String
+  teamMessagePin(_id: String!): TeamMessage
+  teamMessageUnpin(_id: String!): TeamMessage
+  teamMessageReact(messageId: String!, emoji: String!): TeamMessage
+  teamChatMarkAsRead(teamChatId: String!, lastReadMessageId: String): TeamChatMember
+  teamChatMute(_id: String!, muted: Boolean!): TeamChatMember
+  teamChatPin(_id: String!, pinned: Boolean!): TeamChatMember
+  teamChatActivityMarkAsRead(activityType: TeamChatActivityType, activityIds: [String!], actorUserIds: [String], teamChatId: String, mentionedAll: Boolean): String
+  """Create a new knowledge base topic."""
+  knowledgeBaseTopicsAdd(doc: KnowledgeBaseTopicDoc!): KnowledgeBaseTopic
+  """Update an existing knowledge base topic."""
+  knowledgeBaseTopicsEdit(_id: String!, doc: KnowledgeBaseTopicDoc!): KnowledgeBaseTopic
+  """Delete a knowledge base topic and disassociate its categories."""
+  knowledgeBaseTopicsRemove(_id: String!): JSON
+  """Create a new knowledge base category."""
+  knowledgeBaseCategoriesAdd(doc: KnowledgeBaseCategoryDoc!): KnowledgeBaseCategory
+  """Update an existing knowledge base category."""
+  knowledgeBaseCategoriesEdit(_id: String!, doc: KnowledgeBaseCategoryDoc!): KnowledgeBaseCategory
+  """Delete a knowledge base category and unlink its articles."""
+  knowledgeBaseCategoriesRemove(_id: String!): JSON
+  """Create a new knowledge base article."""
+  knowledgeBaseArticlesAdd(doc: KnowledgeBaseArticleDoc!): KnowledgeBaseArticle
+  """Update an existing knowledge base article."""
+  knowledgeBaseArticlesEdit(_id: String!, doc: KnowledgeBaseArticleDoc!): KnowledgeBaseArticle
+  """Delete a knowledge base article."""
+  knowledgeBaseArticlesRemove(_id: String!): JSON
+  whatsappCreateFlow(flowData: WhatsappFlowCreateInput!): createFlowResponse
+  whatsappUpdateFlow(flowId: String!, updateData: WhatsappFlowUpdateInput!): createFlowResponse
+  whatsappDeleteFlow(flowId: String!): JSON
+  whatsappPublishFlow(flowId: String!): JSON
+  whatsappDeprecateFlow(flowId: String!): JSON
+  whatsappSyncFlows(integrationId: String!): FlowSyncResponse
+  whatsappDuplicateFlow(flowId: String!, newName: String!): WhatsappFlow
+  whatsappBulkDeleteFlows(flowIds: [String!]!): BulkFlowResponse
+  whatsappBulkPublishFlows(flowIds: [String!]!): BulkFlowResponse
+  whatsappBulkDeprecateFlows(flowIds: [String!]!): BulkFlowResponse
+  whatsappSyncMessageTemplates(integrationId: String!): JSON
+  whatsappTemplatesAdd(newWaTemplate: JSON!): JSON
+  whatsappTemplatesUpdate(templateId: String!, updateWaTemplate: JSON!): JSON
+  whatsappUpdateBusinessProfile(integrationId: String!, profileData: WhatsappBusinessProfileInput!): WhatsappBusinessProfile
+  whatsappSendTemplateMessage(integrationId: String!, conversationId: String, customerId: String, recipient: String, recipientName: String, templateId: String, templateName: String, language: String, params: JSON, statusOnCreate: String): [WhatsappMessageTemplateResponse]
+  whatsappDeleteTemplate(integrationId: String!, templateName: String!, templateId: String): JSON
+  whatsappBulkDeleteTemplates(integrationId: String!, templateIds: [String!]!): JSON
+  whatsappCheckIntegrationHealth(integrationId: String!): JSON
+  whatsappCreateQRCode(integrationId: String!, prefilledMessage: String!, generateQrImage: String): WhatsappQRCode!
+  whatsappUpdateQRCode(integrationId: String!, code: String!, prefilledMessage: String!): WhatsappQRCode!
+  whatsappDeleteQRCode(integrationId: String!, code: String!): JSON
+  whatsappUpdateCallSettings(integrationId: String!, status: String, callIconVisibility: String, callIconRestrictToUserCountries: [String], callbackPermissionStatus: String, callHours: WhatsappCallHoursInput, callRecording: WhatsappCallRecordingInput, callTranscription: WhatsappCallTranscriptionInput, callCenter: WhatsappCallCenterInput): JSON
+  whatsappSendCallButtonMessage(integrationId: String!, to: String!, bodyText: String!, displayText: String, ttlMinutes: Int, payload: String): JSON
+  whatsappSendCallPermissionRequest(integrationId: String!, to: String!, bodyText: String): JSON
+  whatsappSyncCatalogProducts(integrationId: String!): JSON
+}
+
+type Node {
+  _id: String
+  ns: String
+  type: String
+  automationId: String
+  automationNs: String
+  automationName: String
+  style: JSON
+  status: String
+  connections: JSON
+  messages: JSON
+  question: JSON
+  conditions: JSON
+  aiAssistant: JSON
+  copilotAgent: JSON
+  split: JSON
+  actions: JSON
+  sendEmail: JSON
+  goto: JSON
+  note: JSON
+  icon: String
+  label: String
+  description: String
+  position: JSON
+  workflowId: String
+  nextNodeNs: String
+  isMacro: Boolean
+  metadata: JSON
+  createdAt: Date
+  updatedAt: Date
+  createdBy: String
+  updatedBy: String
+}
+
+input NodeInput {
+  _id: String
+  ns: String
+  type: String
+  automationId: String
+  automationNs: String
+  automationName: String
+  style: JSON
+  status: String
+  connections: JSON
+  messages: JSON
+  question: JSON
+  conditions: JSON
+  aiAssistant: JSON
+  copilotAgent: JSON
+  split: JSON
+  actions: JSON
+  sendEmail: JSON
+  goto: JSON
+  note: JSON
+  icon: String
+  label: String
+  description: String
+  position: JSON
+  workflowId: String
+  nextNodeNs: String
+  isMacro: Boolean
+  metadata: JSON
+  createdAt: Date
+  updatedAt: Date
+  createdBy: String
+  updatedBy: String
+}
+
+type NodesPaginatedResponse {
+  data: [Node]!
+  pagination: PaginationInfo!
+}
+
+type ObjectListConfig {
+  key: String
+  label: String
+  type: String
+}
+
+input objectListConfigInput {
+  key: String
+  label: String
+  type: String
+}
+
+"""User-level onboarding history and progress"""
+type OnboardingHistory {
+  _id: String
+  userId: String
+  isCompleted: Boolean
+  completedSteps: [String]
+  sections: OnboardingSections
+  dismissedAt: Date
+  firstLoginAt: Date
+  lastActivityAt: Date
+}
+
+"""Section-level completion status for user onboarding"""
+type OnboardingSection {
+  completed: Boolean
+  completedAt: Date
+}
+
+"""Section-level completion tracking for user onboarding"""
+type OnboardingSections {
+  essential: OnboardingSection
+  roleBased: OnboardingSection
+  discovery: OnboardingSection
+}
+
+type PAFCandidate {
+  _id: String!
+  label: String!
+  """Additional info for disambiguation"""
+  detail: String
+}
+
+type PAFEntityDescriptor {
+  originalId: String!
+  entityType: String!
+  label: String!
+  kind: String
+  name: String
+  email: String
+  fullName: String
+  title: String
+  text: String
+  type: String
+  contentType: String
+  namespace: String
+  automationNs: String
+  colorCode: String
+  options: [String]
+  groupName: String
+  content: String
+  language: String
+  category: String
+  brandId: String
+  retailerId: String
+  parentIntegrationId: String
+  installStatus: String
+  phone: String
+  key: String
+  tagTypeLabel: String
+  status: String
+}
+
+type PAFExportResult {
+  """Complete PAF JSON bundle as a string"""
+  pafJson: String!
+  """Automation name (for download filename)"""
+  automationName: String!
+}
+
+type PAFImportEntity {
+  """Original entity ID from the source workspace"""
+  originalId: String!
+  """Entity type category"""
+  entityType: String!
+  """Human-readable label for the entity"""
+  label: String!
+  """Suggested resolution status"""
+  suggestedStatus: String!
+  """ID of auto-matched entity in target workspace (if found)"""
+  suggestedResolvedId: String
+  """Full descriptor metadata for display"""
+  descriptor: PAFEntityDescriptor!
+  """Available candidates in the target workspace"""
+  candidates: [PAFCandidate!]
+}
+
+type PAFImportPreview {
+  """Automation name from the PAF bundle"""
+  automationName: String!
+  """Number of nodes in the bundle"""
+  nodeCount: Int!
+  """Number of triggers in the bundle"""
+  triggerCount: Int!
+  """All entities that need resolution (matching/creation/user input)"""
+  entities: [PAFImportEntity!]!
+}
+
+type PAFImportResult {
+  """The newly created automation"""
+  automation: Automation
+  """Summary of entity resolutions"""
+  resolvedCount: Int!
+  autoCreatedCount: Int!
+  unresolvedCount: Int!
+  skippedCount: Int!
+  """Nodes marked broken due to pending/unresolved WA templates or flows"""
+  brokenNodeCount: Int
+  pendingWaTemplateCount: Int
+  pendingWaFlowCount: Int
+}
+
+input PAFResolutionInput {
+  """Original entity ID from the PAF bundle"""
+  originalId: String!
+  """Resolved entity ID in the target workspace"""
+  resolvedId: String
+  """
+  Manual value for non-ID entities such as recipient phones or product SKUs
+  """
+  resolvedValue: String
+  """Optional secondary manual value such as recipient name"""
+  resolvedName: String
+  """Resolution action: 'resolve', 'auto-create', 'skip'"""
+  action: String!
+}
+
+"""Standard pagination metadata returned with all paginated list queries."""
+type PaginationInfo {
+  """The current page number (1-based)."""
+  currentPage: Int!
+  """Number of items per page."""
+  perPage: Int!
+  """Total number of items matching the query."""
+  totalCount: Int!
+  """Total number of pages."""
+  totalPages: Int!
+  """Whether there are more pages after the current one."""
+  hasNextPage: Boolean!
+  """Whether there are pages before the current one."""
+  hasPreviousPage: Boolean!
+}
+
+"""Payload for participant_added action."""
+type ParticipantAddedPayload {
+  addedUserId: String
+  addedUserIds: [String]
+  viaMention: Boolean
+  """Resolved user who was added (by addedUserId)."""
+  addedUser: User
+  """Resolved users who were added (by addedUserIds)."""
+  addedUsers: [User]
+}
+
+"""Payload for participant_removed action."""
+type ParticipantRemovedPayload {
+  removedUserIds: [String]
+  performedBy: String
+  """Resolved users who were removed (by removedUserIds)."""
+  removedUsers: [User]
+  """Resolved user who performed the removal."""
+  performedByUser: User
+}
+
+"""A PDF attachment with its individual page images."""
+type PdfAttachment {
+  """The full PDF file."""
+  pdf: Attachment
+  """Individual page images extracted from the PDF."""
+  pages: [Attachment]
+}
+
+"""Input for uploading a PDF attachment with page images."""
+input PdfAttachmentInput {
+  """The full PDF file."""
+  pdf: AttachmentInput
+  """Individual page images for the PDF."""
+  pages: [AttachmentInput]
+}
+
+type Position {
+  _id: String!
+  title: String
+  code: String
+  order: String
+  parentId: String
+  parent: Position
+  status: String
+  children: [Position]
+  users: [User]
+  userIds: [String]
+  userCount: Int
+}
+
+input PositionInput {
+  _id: String!
+  position: JSON!
+}
+
+"""Min/max price summary for variants."""
+type PriceRange {
+  min: Float
+  max: Float
+  currency: String
+}
+
+"""Payload for priority_changed action."""
+type PriorityChangedPayload {
+  priority: String
+}
+
+"""Product entity including variants, pricing, and metadata."""
+type Product {
+  _id: String!
+  name: String
+  shortName: String
+  slug: String
+  status: String
+  code: String
+  type: String
+  description: String
+  barcodes: [String]
+  unitPrice: Float
+  salePrice: Float
+  costPrice: Float
+  currency: String
+  categoryId: String
+  customFieldsData: JSON
+  customFieldsDataByFieldCode: JSON
+  createdAt: Date
+  updatedAt: Date
+  publishedAt: Date
+  createdBy: String
+  updatedBy: String
+  getTags: [Tag]
+  tagIds: [String]
+  attachment: Attachment
+  attachmentMore: [Attachment]
+  media: [Attachment]
+  vendorId: String
+  workspaceId: String
+  uom: String
+  subUoms: JSON
+  category: ProductCategory
+  vendor: Company
+  taxType: String
+  taxCode: String
+  sku: String
+  externalUrl: String
+  source: String
+  mpn: String
+  gtin: String
+  requireShipping: Boolean
+  channels: [String]
+  unlimitedQuantity: Boolean
+  saleStart: Date
+  saleEnd: Date
+  maxPerOrder: Int
+  maxPerCustomer: Int
+  isAvailable: Boolean
+  hideQuantity: Boolean
+  productOptions: [ProductOption]
+  productVariants: [ProductVariant]
+  priceRange: PriceRange
+  hasVariants: Boolean
+  hasCatalogWarning: Boolean
+  weight: Float
+  weightUnit: String
+  dimensions: ProductDimensions
+  inventory: ProductInventory
+  seo: ProductSEO
+}
+
+"""Category (taxonomy) for products."""
+type ProductCategory {
+  _id: String!
+  name: String
+  description: String
+  parentId: String
+  code: String!
+  order: String!
+  slug: String
+  workspaceId: String
+  attachment: Attachment
+  status: String
+  isRoot: Boolean
+  productCount: Int
+  seo: ProductSEO
+  createdAt: Date
+  updatedAt: Date
+}
+
+type ProductCategoryListResponse {
+  data: [ProductCategory]
+  pagination: PaginationInfo!
+}
+
+"""Physical dimensions of a product."""
+type ProductDimensions {
+  length: Float
+  width: Float
+  height: Float
+  unit: String
+}
+
+"""Inventory tracking for a product."""
+type ProductInventory {
+  tracked: Boolean
+  quantity: Int
+  lowStockThreshold: Int
+  allowBackorder: Boolean
+}
+
+type ProductListResponse {
+  data: [Product]
+  pagination: PaginationInfo!
+}
+
+type ProductOption {
+  id: String!
+  name: String!
+  slug: String
+  displayOrder: Int
+  type: String
+  displayType: String
+  required: Boolean
+  values: [ProductOptionValue]
+}
+
+"""Option value for a product option (e.g., color: red)."""
+type ProductOptionValue {
+  id: String!
+  value: String!
+  slug: String
+  displayOrder: Int
+  image: Attachment
+  priceAdjustment: Float
+  currency: String
+  isDefault: Boolean
+  isOutOfStock: Boolean
+}
+
+"""SEO metadata for products and categories."""
+type ProductSEO {
+  title: String
+  description: String
+  slug: String
+  keywords: [String]
+}
+
+"""Variant of a product with pricing and option values."""
+type ProductVariant {
+  id: String!
+  sku: String
+  barcode: String
+  name: String
+  optionValues: [VariantOptionValue]
+  unitPrice: Float
+  salePrice: Float
+  costPrice: Float
+  quantity: Int
+  unlimitedQuantity: Boolean
+  weight: Float
+  weightUnit: String
+  image: Attachment
+  status: String
+  externalId: String
+  source: String
+}
+
+type Query {
+  liveAutomations: AutomationsListResponse
+  automationsMain(page: Int, perPage: Int, ids: [String], excludeIds: Boolean, searchValue: String, sortField: String, sortDirection: SortDirection, status: String, tagIds: [String], untagged: Boolean, folderTagId: String): AutomationsPaginatedResponse
+  automations(page: Int, perPage: Int, ids: [String], excludeIds: Boolean, searchValue: String, sortField: String, sortDirection: SortDirection, status: String, tagIds: [String], untagged: Boolean, folderTagId: String): [Automation]
+  automationDetail(_id: String!): Automation
+  automationDetailByNs(ns: String!, preferDraft: Boolean): Automation
+  automationByNs(ns: String!, page: Int, perPage: Int, ids: [String], excludeIds: Boolean, searchValue: String, sortField: String, sortDirection: SortDirection, status: String, tagIds: [String], untagged: Boolean, folderTagId: String): Automation
+  automationNotes(automationNs: String!, triggerNs: String, nodeNs: String): [AutomationNote]
+  automationHistories(automationNs: String!, page: Int, perPage: Int, statuses: [String], triggerNs: String, triggerTypes: [String], beginDate: Date, endDate: Date, targetIds: [String]): AutomationHistoriesPaginated
+  automationHistoriesTotalCount(automationNs: String!, page: Int, perPage: Int, statuses: [String], triggerNs: String, triggerTypes: [String], beginDate: Date, endDate: Date, targetIds: [String]): Int
+  automationsTotalCount(status: String): automationsTotalCountResponse
+  automationConstants: JSON
+  automationCatalog(input: AutomationCatalogInput!): JSON
+  automationTemplates(page: Int, perPage: Int, searchValue: String, category: String): AutomationsPaginatedResponse
+  automationVersions(ns: String!, page: Int, perPage: Int): AutomationVersionList
+  automationHistoryDetail(_id: String!): AutomationHistoryDetail
+  nodes(page: Int, perPage: Int, searchValue: String, isMacro: Boolean): NodesPaginatedResponse
+  nodesMain(page: Int, perPage: Int, ids: [String], excludeIds: Boolean, searchValue: String, sortField: String, sortDirection: SortDirection, status: String, tagIds: [String], untagged: Boolean, folderTagId: String): NodesPaginatedResponse
+  macros(page: Int, perPage: Int, searchValue: String): NodesPaginatedResponse
+  nodeDetail(_id: String!): Node
+  nodeByNs(ns: String!, page: Int, perPage: Int, ids: [String], excludeIds: Boolean, searchValue: String, sortField: String, sortDirection: SortDirection, status: String, tagIds: [String], untagged: Boolean, folderTagId: String): Node
+  triggers(page: Int, perPage: Int, searchValue: String, isActive: Boolean, automationStatuses: [String]): TriggersPaginated
+  triggerDetail(_id: String!): Trigger
+  automationExportPAF(_id: String!): PAFExportResult
+  automationImportPreview(pafJson: String!): PAFImportPreview
+  """
+  Paginated users list with filters for workspaces, departments, branches, status, and availability.
+  Returns { list, totalCount } in a single response using paginateQuery.
+  """
+  users(sortField: String, sortDirection: SortDirection, page: Int, perPage: Int, status: String, excludeIds: Boolean, searchValue: String, isActive: Boolean, requireUsername: Boolean, ids: [String], workspaceIds: [String], branchIds: [String], departmentIds: [String], availability: UserChatStatus): UserListResponse
+  """Load a single user with extended details by identifier."""
+  userDetail(_id: String): User
+  """Resolve the profile of the currently authenticated user."""
+  currentUser: User
+  """
+  Paginated departments with optional status/parent filters, returns list + counts.
+  """
+  departments(ids: [String], excludeIds: Boolean, perPage: Int, page: Int, searchValue: String, status: String, onlyFirstLevel: Boolean, parentId: String, withoutUserFilter: Boolean): DepartmentListQueryResponse
+  departmentDetail(_id: String!): Department
+  """
+  Paginated branches with optional status/parent filters, returns list + counts.
+  """
+  branches(ids: [String], excludeIds: Boolean, perPage: Int, page: Int, searchValue: String, status: String, onlyFirstLevel: Boolean, parentId: String, withoutUserFilter: Boolean): BranchListQueryResponse
+  branchDetail(_id: String!): Branch
+  """
+  Paginated apps list with optional search filter.
+  Returns { data, pagination } using paginateQuery.
+  """
+  apps(page: Int, perPage: Int, searchValue: String): AppListResponse
+  """Fetch a single app credential by id."""
+  appDetail(_id: String): App
+  """Paginated tags with search and hierarchical filters."""
+  tags(type: String, searchValue: String, tagIds: [String], parentId: String, ids: [String], excludeIds: Boolean, page: Int, perPage: Int): TagsPaginatedResponse!
+  """Fetch tag details by id."""
+  tagDetail(_id: String!): Tag
+  """Count tags for a given type/search."""
+  tagsQueryCount(type: String, searchValue: String): Int
+  """
+  List segments-v2 definitions for the current tenant. Read-only shadow surface.
+  """
+  segmentsV2(status: String, q: String, limit: Int, skip: Int): SegmentV2List
+  """ Fetch a single segment-v2 definition by id. """
+  segmentV2(_id: String!): SegmentV2
+  """ Active-version member count for a segment-v2. """
+  segmentV2Count(_id: String!): SegmentV2Count
+  """ Membership existence check. """
+  segmentV2IsInSegment(_id: String!, customerId: String!): Boolean
+  """ All v2 memberships for one customer (across segments). """
+  segmentV2MembershipsByCustomer(customerId: String!): [SegmentV2Membership]
+  """ Fetch the rule tree for a specific segment version (draft or active). 
+  """
+  segmentV2VersionRule(segmentId: String!, version: Int!): JSON
+  """ Check whether segments are ready for campaign targeting (not rebuilding). 
+  """
+  segmentV2AssertReadyForCampaign(segmentIds: [String!]!): JSON
+  formDetail(_id: String!): Form
+  forms(page: Int, perPage: Int, type: String, tagId: String, status: String, searchValue: String): FormsResponse
+  formsTotalCount(type: String, tagId: String, status: String, searchValue: String): FormsTotalCount
+  formSubmissions(tagId: String, formId: String, customerId: String, contentTypeIds: [String], filters: [SubmissionFilter], page: Int, perPage: Int): FormSubmissionListResponse
+  formSubmissionsTotalCount(tagId: String, formId: String, customerId: String, contentTypeIds: [String], filters: [SubmissionFilter]): Int
+  formSubmissionDetail(contentTypeId: String!): Submission
+  fieldsGetTypes: [JSON]
+  fieldsCombinedByContentType(contentType: String!, usageType: String, excludedNames: [String], segmentId: String, config: JSON, onlyDates: Boolean): JSON
+  fieldsDefaultColumnsConfig(contentType: String!): [ColumnConfigItem]
+  fieldsGroups(contentType: String, isDefinedByKarzoun: Boolean, codes: [String], config: JSON): [FieldsGroup]
+  fieldsGetDetail(_id: String, code: String): Field
+  contacts(page: Int, perPage: Int, searchValue: String, fieldsMustExist: [String], sortField: String, sortDirection: SortDirection, usageType: String): ContactsResponse
+  """
+  Fetch paginated companies with filters, segmentation, and conformity context; returns paginated list.
+  """
+  companies(page: Int, perPage: Int, tag: String, ids: [String], excludeIds: Boolean, searchValue: String, autoCompletion: Boolean, autoCompletionType: String, sortField: String, sortDirection: SortDirection, dateFilters: String, conformityMainType: String, conformityMainTypeId: String, conformityRelType: String, conformityIsRelated: Boolean, conformityIsSaved: Boolean): CompaniesListResponse
+  """
+  Return counts for companies matching the supplied filters (optionally scoped by "only").
+  """
+  companyCounts(page: Int, perPage: Int, tag: String, ids: [String], excludeIds: Boolean, searchValue: String, autoCompletion: Boolean, autoCompletionType: String, sortField: String, sortDirection: SortDirection, dateFilters: String, conformityMainType: String, conformityMainTypeId: String, conformityRelType: String, conformityIsRelated: Boolean, conformityIsSaved: Boolean, only: String): JSON
+  """Load detailed company data by id including contacts, owners, and tags."""
+  companyDetail(_id: String!): Company
+  """
+  Fetch paginated customers with filtering, segmentation, and conformity context; returns paginated list.
+  """
+  customers(page: Int, perPage: Int, segmentV2Id: String, type: String, types: [String], tag: String, ids: [String], excludeIds: Boolean, searchValue: String, autoCompletion: Boolean, autoCompletionType: String, integration: String, form: String, startDate: String, endDate: String, leadStatus: String, sortField: String, sortDirection: SortDirection, sex: Int, birthDate: Date, dateFilters: String, emailValidationStatus: String, conformityMainType: String, conformityMainTypeId: String, conformityRelType: String, conformityIsRelated: Boolean, conformityIsSaved: Boolean): CustomersListResponse
+  """
+  Return aggregated counts for customers matching filters (optionally scoped by "only" or source).
+  """
+  customerCounts(page: Int, perPage: Int, segmentV2Id: String, type: String, types: [String], tag: String, ids: [String], excludeIds: Boolean, searchValue: String, autoCompletion: Boolean, autoCompletionType: String, integration: String, form: String, startDate: String, endDate: String, leadStatus: String, sortField: String, sortDirection: SortDirection, sex: Int, birthDate: Date, dateFilters: String, emailValidationStatus: String, conformityMainType: String, conformityMainTypeId: String, conformityRelType: String, conformityIsRelated: Boolean, conformityIsSaved: Boolean, only: String, source: String): JSON
+  """
+  Load a customer by id with full profile, ownership, tags, and integration info.
+  """
+  customerDetail(_id: String!): Customer
+  """
+  List product categories with optional workspace filter and tree traversal.
+  """
+  productCategories(ids: [String], parentId: String, withChild: Boolean, searchValue: String, status: String, page: Int, perPage: Int): ProductCategoryListResponse
+  """Fetch single product category detail by id."""
+  productCategoryDetail(_id: String): ProductCategory
+  """List products with filtering, segmentation, and pagination."""
+  products(type: String, status: String, categoryId: String, searchValue: String, vendorId: String, tag: String, ids: [String], codes: [String], excludeIds: Boolean, excludeCodes: Boolean, image: String, page: Int, perPage: Int, sortField: String, sortDirection: SortDirection): ProductListResponse
+  """Detailed product by id."""
+  productDetail(_id: String): Product
+  """Count products grouped by tag."""
+  productCountByTags: JSON
+  """Paginated email templates with optional search and status filter."""
+  emailTemplates(page: Int, perPage: Int, searchValue: String, status: String): EmailTemplateListResponse
+  """Fetch a single email template by id."""
+  emailTemplate(_id: String): EmailTemplate
+  """
+  Paginated activity events for a specific entity.
+  Supports filtering by actions and source.
+  """
+  activityEvents(contentType: String!, contentId: String!, actions: [String], source: String, page: Int, perPage: Int): ActivityEventList
+  """
+  Paginated activity events for all entities of a content type.
+  Supports filtering by actions, source, and performer.
+  """
+  activityEventsByContentType(contentType: String!, actions: [String], source: String, performedById: String, page: Int, perPage: Int): ActivityEventList
+  customerTimeline(customerId: String!, page: Int, perPage: Int, sources: [TimelineEntrySource!], dateRange: EventDateRangeInput): CustomerTimelineResponse!
+  customerBehavioralSummary(customerId: String!): CustomerBehavioralSummary
+  """
+  Retrieves a single conversation message by its ID.
+  Use this to get full details of a specific message.
+  """
+  conversationMessage(
+    """The unique message ID"""
+    _id: String!
+  ): ConversationMessage
+  """
+  Searches and retrieves a paginated list of conversations based on filters.
+  Use this to find conversations by status, assignment, date range, or other criteria.
+  Returns conversations sorted by the specified field or by last activity.
+  """
+  conversations(
+    """Filter by specific conversation IDs"""
+    ids: [String]
+    """Filter by department ID"""
+    departmentId: String
+    """Filter by conversation status"""
+    status: ConversationStatus
+    """
+    Filter unassigned conversations only ('true' to get unassigned, 'false' to get assigned, keep empty for no filter)
+    """
+    unAssigned: Boolean
+    """Filter by tag ID or name"""
+    tag: String
+    """
+    Filter by integration type (e.g., 'messenger', 'email', 'facebook', 'whatsapp')
+    """
+    integrationType: String
+    """Filter by specific integration ID"""
+    integrationId: String
+    """
+    Filter conversations where current user is participating ('true'/'false')
+    """
+    participating: String
+    """Filter conversations where customer awaiting response ('true'/'false')"""
+    awaitingResponse: String
+    """Filter starred/favorited conversations ('true'/'false')"""
+    starred: String
+    """Filter by start date (ISO date string)"""
+    startDate: String
+    """Filter by end date (ISO date string)"""
+    endDate: String
+    """Filter by customer segment ID"""
+    segment: String
+    """Filter by assigned user/agent ID"""
+    assignedUserId: String
+    """Field to sort results by (e.g., 'createdAt', 'updatedAt')"""
+    sortField: String
+    """Sort direction: 'asc' for ascending, 'desc' for descending"""
+    sortDirection: SortDirection
+    """Page number (1-based, default: 1)"""
+    page: Int
+    """Number of items per page (default: 20, max: 100)"""
+    perPage: Int
+  ): ConversationListResponse
+  """
+  Retrieves a paginated list of messages within a specific conversation.
+  Returns messages in reverse chronological order by default.
+  """
+  conversationMessages(
+    """The conversation ID to get messages from"""
+    conversationId: String!
+    """Page number (1-based, default: 1)"""
+    page: Int
+    """Number of messages per page (default: 20, max: 100)"""
+    perPage: Int
+    """
+    If true, returns messages in chronological order (oldest first); if false, reverse chronological (newest first)
+    """
+    getFirst: Boolean
+  ): ConversationMessageListResponse
+  """
+  Returns aggregated counts of conversations grouped by various criteria.
+  Useful for dashboard statistics and inbox counters.
+  """
+  conversationCounts(
+    """Filter by specific conversation IDs"""
+    ids: [String]
+    """Filter by department ID"""
+    departmentId: String
+    """Filter by conversation status"""
+    status: ConversationStatus
+    """
+    Filter unassigned conversations only ('true' to get unassigned, 'false' to get assigned, keep empty for no filter)
+    """
+    unAssigned: Boolean
+    """Filter by tag ID or name"""
+    tag: String
+    """
+    Filter by integration type (e.g., 'messenger', 'email', 'facebook', 'whatsapp')
+    """
+    integrationType: String
+    """Filter by specific integration ID"""
+    integrationId: String
+    """
+    Filter conversations where current user is participating ('true'/'false')
+    """
+    participating: String
+    """Filter conversations where customer awaiting response ('true'/'false')"""
+    awaitingResponse: String
+    """Filter starred/favorited conversations ('true'/'false')"""
+    starred: String
+    """Filter by start date (ISO date string)"""
+    startDate: String
+    """Filter by end date (ISO date string)"""
+    endDate: String
+    """Filter by customer segment ID"""
+    segment: String
+    """Filter by assigned user/agent ID"""
+    assignedUserId: String
+    """Field to sort results by (e.g., 'createdAt', 'updatedAt')"""
+    sortField: String
+    """Sort direction: 'asc' for ascending, 'desc' for descending"""
+    sortDirection: SortDirection
+    """
+    Specify which count to return: 'byChannels', 'byIntegrationTypes', 'byWorkspaces', 'byTags', or null for all
+    """
+    only: String
+  ): JSON
+  """
+  Retrieves complete details of a specific conversation by ID.
+  Includes customer info, assigned agent, tags, and metadata.
+  """
+  conversationDetail(
+    """The unique conversation ID"""
+    _id: String!
+  ): Conversation
+  """
+  Returns the total count of unread conversations for the current user.
+  Used for notification badges and alerts.
+  """
+  conversationsTotalUnreadCount: Int
+  """
+  Retrieves available custom fields for inbox entities.
+  Returns field definitions for customers, conversations, and devices.
+  """
+  inboxFields: InboxField
+  integrations(page: Int, perPage: Int, kind: String, searchValue: String, departmentId: String, excludeDepartmentId: String, tag: String, status: String, formLoadType: String, sortField: String, sortDirection: SortDirection): IntegrationListResponse
+  integrationsGetUsedTypes: [integrationsGetUsedTypes]
+  integrationDetail(_id: String!): Integration
+  integrationsTotalCount(kind: String, tag: String, departmentId: String, status: String, formLoadType: String): integrationsTotalCount
+  responseTemplates(page: Int, perPage: Int, searchValue: String): ResponseTemplateListResponse
+  teamChats(type: TeamChatType, search: String, isArchived: Boolean, page: Int, perPage: Int): TeamChatListResponse
+  teamChatDetail(_id: String!): TeamChat
+  teamChatPublicChannels(search: String, page: Int, perPage: Int): TeamChatListResponse
+  teamMessages(teamChatId: String!, page: Int, perPage: Int): TeamMessageListResponse
+  teamThreadMessages(threadParentId: String!, page: Int, perPage: Int): TeamMessageListResponse
+  teamChatUnreadCount: Int
+  teamChatActivities(activityType: TeamChatActivityType, teamChatId: String, actorUserIds: [String], isRead: Boolean, mentionedAll: Boolean, page: Int, perPage: Int): TeamChatActivityListResponse
+  teamChatActivityUnreadCounts: TeamChatActivityUnreadCounts
+  knowledgeBaseTopics(page: Int, perPage: Int, workspaceId: String, codes: [String]): KnowledgeBaseTopicsPaginated
+  knowledgeBaseTopicDetail(_id: String!): KnowledgeBaseTopic
+  """Return the total number of knowledge base topics."""
+  knowledgeBaseTopicsTotalCount: Int
+  """
+  List knowledge base categories with pagination. Filter by topic, code, or icon.
+  """
+  knowledgeBaseCategories(page: Int, perPage: Int, ids: [String], topicIds: [String], codes: [String], icon: String): KnowledgeBaseCategoriesPaginated
+  """Retrieve a single knowledge base category by ID."""
+  knowledgeBaseCategoryDetail(_id: String!): KnowledgeBaseCategory
+  """Return the total number of categories matching the given filters."""
+  knowledgeBaseCategoriesTotalCount(topicIds: [String], codes: [String]): Int
+  """Return the most recently created knowledge base category."""
+  knowledgeBaseCategoriesGetLast: KnowledgeBaseCategory
+  """
+  List knowledge base articles with pagination, search, sorting, and filtering. Does not return full article content — use summary or knowledgeBaseArticleDetail for the body.
+  """
+  knowledgeBaseArticles(searchValue: String, page: Int, perPage: Int, categoryIds: [String], articleIds: [String], codes: [String], topicIds: [String], sortField: String, sortDirection: SortDirection, status: String): KnowledgeBaseArticlesPaginated
+  """
+  Retrieve a single knowledge base article by ID, including full content.
+  """
+  knowledgeBaseArticleDetail(_id: String!): KnowledgeBaseArticle
+  """Return the total number of articles matching the given filters."""
+  knowledgeBaseArticlesTotalCount(categoryIds: [String], codes: [String], articleIds: [String], topicIds: [String], status: String): Int
+  """
+  Perform a semantic search across knowledge base articles using vector similarity.
+  """
+  knowledgeBaseSearch(query: String!, kbTopicId: String!, topK: Int, filters: JSON, rerank: Boolean, rerankMethod: String, hybridAlpha: Float): KnowledgeBaseSearchResult!
+  listMiniAppsGeneralInfo(installStatus: String, search: String): [MiniAppGeneralInfoResponse]
+  miniAppGeneralInfo(ns: String): MiniAppGeneralInfoResponse
+  myMiniApps: [MiniAppRegistry]
+  miniAppGetConfigs: JSON
+  miniAppDetail(miniAppNs: String!): miniAppDetailResponse
+  miniApps(search: String, skip: Int, limit: Int): [JSON]
+  miniAppsActionSources(miniAppNs: String!, sourceKey: String!, sourceRef: String, params: JSON): [JSON]
+  """
+  Get dashboard configuration for a miniapp.
+  Returns available actions, connection status, and form schemas for the iframe bridge.
+  """
+  miniAppDashboardConfig(appNs: String!, allowedActions: [String]): MiniAppDashboardConfig
+  whatsappGetAllFlows(integrationId: String!, page: Int, perPage: Int, searchValue: String, status: FlowStatus, category: FlowCategories): WhatsappFlowList
+  whatsappGetFlowById(flowId: String!): WhatsappFlow
+  whatsappValidateFlowSchema(flowSchema: JSON!): Boolean
+  whatsappGenerateFlowPreview(flowId: String!): FlowPreviewResponse
+  whatsappConversationDetail(_id: String!): JSON
+  whatsappConversationMessages(conversationId: String!, getFirst: Boolean, page: Int, perPage: Int): WhatsappConversationMessageListResponse
+  whatsappConversationMessage(_id: String!): ConversationMessage
+  whatsappGetTemplates(integrationId: String!, template_id: String, name: String, status: String, category: String, page: Int, perPage: Int, searchValue: String): WhatsappTemplateList
+  whatsappGetMessageTemplateDetail(integrationId: String!, templateId: String!): WhatsappTemplate
+  whatsappIntegrationById(_id: String!): whatsappIntegrationByIdResponse
+  whatsappAnalyticsByField(integrationId: String!, params: whatsappAnalyticsByFieldParams!): JSON
+  whatsappGetOBAStatus(integrationId: String!): WhatsappOBAStatusResponse!
+  whatsappGetQRCodes(integrationId: String!): WhatsappQRCodeListResponse!
+  whatsappGetSyncStatus(integrationId: String!): WhatsappHistorySync
+  whatsappGetCallSettings(integrationId: String!, syncFromMeta: Boolean): WhatsappCallSettings
+  whatsappGetCallPermission(integrationId: String!, customerPhone: String!): WhatsappCallPermission
+  whatsappCallHistories(integrationId: String, customerPhone: String, direction: String, status: String, waCallId: String, startDate: Date, endDate: Date, page: Int, perPage: Int): WhatsappCallHistoryList
+  whatsappCatalogSyncStatus(integrationId: String!): JSON
+  whatsappCatalogPermissionStatus(integrationId: String!): JSON
+  whatsappBusinessesList: JSON
+  whatsappBusinessDetails(businessPortfolioId: String!): JSON
+}
+
+type ResponseTemplate {
+  _id: String!
+  name: String!
+  workspaceId: String
+  content: String
+  workspace: Workspace
+  files: JSON
+}
+
+type ResponseTemplateListResponse {
+  data: [ResponseTemplate]!
+  pagination: PaginationInfo!
+}
+
+"""Breakdown of a user's score across different activity categories."""
+type ScoreCategories {
+  speed: ScoreCategoryEntry
+  quality: ScoreCategoryEntry
+  productivity: ScoreCategoryEntry
+  training: ScoreCategoryEntry
+  engagement: ScoreCategoryEntry
+}
+
+"""
+Individual score category tracking (speed, quality, productivity, training, engagement).
+"""
+type ScoreCategoryEntry {
+  score: Float
+  actions: Int
+}
+
+"""Segments-v2 definition row. Mirrors segment_definitions_v1."""
+type SegmentV2 {
+  _id: String!
+  tenantId: String!
+  name: String!
+  description: String
+  status: String!
+  type: String!
+  activeVersion: Int!
+  draftVersion: Int
+  buildingVersion: Int
+  dependencyKeys: [String]
+  evaluator: SegmentV2EvaluatorState
+  usageState: String!
+  lastReadAt: Date
+  emitsMembershipEvents: Boolean!
+  createdBy: String
+  createdAt: Date
+  updatedBy: String
+  updatedAt: Date
+  """
+  True when segment has a published active version and is not rebuilding.
+  """
+  readyForCampaign: Boolean
+}
+
+type SegmentV2Count {
+  segmentVersion: Int!
+  count: Int!
+}
+
+"""
+Segments-v2 evaluator state (shadow rollout, gated by SEGMENTS_V2_ENABLED).
+"""
+type SegmentV2EvaluatorState {
+  refreshMode: String
+  lastFullEvalAt: Date
+  lastIncrementalAt: Date
+  nextScheduledAt: Date
+  timeDecayStrategy: String
+  fullRefreshCadenceMinutes: Int
+  priorityTier: String
+}
+
+type SegmentV2List {
+  items: [SegmentV2]!
+  total: Int!
+}
+
+type SegmentV2Membership {
+  tenantId: String!
+  segmentId: String!
+  segmentVersion: Int!
+  customerId: String!
+  enteredAt: Date
+  source: String
+}
+
+enum SortDirection {
+  asc
+  desc
+}
+
+"""Payload for status_changed action."""
+type StatusChangedPayload {
+  from: String
+  to: String
+  status: String
+  performedBy: String
+  viaAutomation: Boolean
+  automationNs: String
+  nodeNs: String
+  executionId: String
+  """Resolved user who performed the status change."""
+  performedByUser: User
+}
+
+type Submission {
+  _id: String!
+  contentTypeId: String
+  customerId: String
+  customer: Customer
+  createdAt: Date
+  customFieldsData: JSON
+  submissions: [FormSubmission]
+}
+
+input SubmissionFilter {
+  operator: String
+  value: JSON
+  formFieldId: String
+}
+
+type SuccessResult {
+  success: Boolean
+}
+
+"""Tag used for categorizing entities across the system."""
+type Tag {
+  _id: String!
+  name: String
+  type: String
+  colorCode: String
+  createdAt: Date
+  objectCount: Int
+  totalObjectCount: Int
+  parentId: String
+  order: String
+  relatedIds: [String]
+  childTags: [Tag]
+}
+
+"""Payload for tagged action."""
+type TaggedPayload {
+  tagName: String
+}
+
+"""Payload for tags_changed action."""
+type TagsChangedPayload {
+  addedTagIds: [String]
+  removedTagIds: [String]
+  performedBy: String
+  viaAutomation: Boolean
+  automationNs: String
+  nodeNs: String
+  executionId: String
+  """Resolved user who performed the tags change."""
+  performedByUser: User
+}
+
+type TagsPaginatedResponse {
+  data: [Tag!]!
+  pagination: PaginationInfo!
+}
+
+type TeamChat {
+  _id: String!
+  type: TeamChatType!
+  name: String
+  slug: String
+  description: String
+  avatar: String
+  createdByUserId: String!
+  memberIds: [String]!
+  adminIds: [String]
+  isPublic: Boolean!
+  isArchived: Boolean!
+  lastMessageAt: Date
+  lastMessageContent: String
+  lastMessageUserId: String
+  pinnedMessageIds: [String]
+  createdAt: Date!
+  updatedAt: Date!
+  createdByUser: User
+  members: [User]
+  admins: [User]
+  lastMessageUser: User
+  unreadCount: Int
+  membershipState: TeamChatMember
+  memberCount: Int
+}
+
+type TeamChatActivity {
+  _id: String!
+  activityType: TeamChatActivityType!
+  userId: String!
+  recipientUserId: String!
+  teamChatId: String!
+  messageId: String
+  metadata: JSON
+  isRead: Boolean!
+  createdAt: Date!
+  user: User
+  teamChat: TeamChat
+  message: TeamMessage
+  mentionedUsers: [User]
+}
+
+type TeamChatActivityListResponse {
+  data: [TeamChatActivity]!
+  pagination: PaginationInfo!
+}
+
+enum TeamChatActivityType {
+  mention
+  thread_reply
+  dm
+  message
+  message_edit
+}
+
+type TeamChatActivityUnreadCounts {
+  all: Int!
+  dms: Int!
+  mentions: Int!
+  threads: Int!
+  messages: Int!
+  edits: Int!
+}
+
+type TeamChatAttachment {
+  name: String!
+  type: String!
+  url: String!
+  size: Int
+  duration: Float
+}
+
+input TeamChatAttachmentInput {
+  name: String!
+  type: String!
+  url: String!
+  size: Int
+  duration: Float
+}
+
+type TeamChatListResponse {
+  data: [TeamChat]!
+  pagination: PaginationInfo!
+}
+
+type TeamChatMember {
+  _id: String!
+  teamChatId: String!
+  userId: String!
+  lastReadAt: Date
+  lastReadMessageId: String
+  unreadCount: Int!
+  isMuted: Boolean!
+  isPinned: Boolean!
+  role: String!
+  joinedAt: Date!
+  followedThreadIds: [String]
+  user: User
+}
+
+type TeamChatReaction {
+  emoji: String!
+  userIds: [String]!
+  users: [User]
+}
+
+enum TeamChatType {
+  dm
+  group
+  channel
+}
+
+type TeamMessage {
+  _id: String!
+  teamChatId: String!
+  content: String
+  contentType: String!
+  userId: String!
+  attachments: [TeamChatAttachment]
+  mentionedUserIds: [String]
+  mentionedAll: Boolean
+  reactions: [TeamChatReaction]
+  threadParentId: String
+  threadReplyCount: Int
+  threadLastReplyAt: Date
+  threadParticipantIds: [String]
+  readByUserIds: [String]
+  isEdited: Boolean!
+  isPinned: Boolean!
+  isDeleted: Boolean!
+  quote: TeamMessageQuote
+  sharedInbox: TeamMessageSharedInbox
+  createdAt: Date!
+  updatedAt: Date!
+  user: User
+  mentionedUsers: [User]
+  threadParticipants: [User]
+  teamChat: TeamChat
+  threadParent: TeamMessage
+}
+
+type TeamMessageListResponse {
+  data: [TeamMessage]!
+  pagination: PaginationInfo!
+}
+
+type TeamMessageQuote {
+  messageId: String
+  content: String!
+  authorId: String!
+  sourceChatId: String
+  author: User
+  sourceChat: TeamChat
+}
+
+input TeamMessageQuoteInput {
+  messageId: String
+  content: String!
+  authorId: String!
+  sourceChatId: String
+}
+
+type TeamMessageSharedInbox {
+  conversationId: String!
+  messageId: String
+  integrationId: String
+  integrationKind: String
+  integrationName: String
+  customerId: String
+  customerName: String
+  content: String
+  attachments: [TeamChatAttachment]
+  messageCreatedAt: Date
+}
+
+type TemplateAnalytics {
+  data: [TemplateAnalyticsData]
+  paging: JSON
+}
+
+type TemplateAnalyticsData {
+  granularity: String
+  product_type: String
+  data_points: [TemplateDataPoint]
+}
+
+type TemplateBenchmarks {
+  read_rate_benchmark: Float
+  click_rate_benchmark: Float
+}
+
+type TemplateClickData {
+  type: String
+  button_content: String
+  count: Int
+}
+
+type TemplateConversions {
+  website_purchase_values: Float
+  website_purchases: Int
+  website_add_to_cart: Int
+  website_initiate_checkout: Int
+}
+
+type TemplateCostData {
+  type: String
+  value: Float
+}
+
+type TemplateDataPoint {
+  template_id: String
+  start: Float
+  end: Float
+  sent: Int
+  delivered: Int
+  read: Int
+  clicked: [TemplateClickData]
+  cost: [TemplateCostData]
+  performance_rates: TemplatePerformanceRates
+  benchmarks: TemplateBenchmarks
+  conversions: TemplateConversions
+}
+
+type TemplatePerformanceRates {
+  delivery_rate: Float
+  read_rate: Float
+  click_rate: Float
+}
+
+"""Rendered snapshot of a template message."""
+type TemplateRendered {
+  header: TemplateRenderedHeader
+  body: String
+  footer: String
+  buttons: [TemplateRenderedButton]
+  carousel: [TemplateRenderedCarouselCard]
+  lto: TemplateRenderedLTO
+}
+
+type TemplateRenderedButton {
+  type: String
+  text: String
+  url: String
+  phone_number: String
+  coupon_code: String
+}
+
+type TemplateRenderedCarouselCard {
+  header: TemplateRenderedHeader
+  body: String
+  buttons: [TemplateRenderedButton]
+}
+
+type TemplateRenderedHeader {
+  type: String
+  text: String
+  url: String
+  product_retailer_id: String
+  catalog_id: String
+  latitude: Float
+  longitude: Float
+  name: String
+  address: String
+}
+
+type TemplateRenderedLTO {
+  expiration_time_ms: Float
+}
+
+type Throughput {
+  level: String
+}
+
+type TimelineEntry {
+  id: String!
+  timestamp: String!
+  source: TimelineEntrySource!
+  action: String
+  contentType: String
+  contentId: String
+  performer: JSON
+  payload: JSON
+  eventName: String
+  eventType: String
+  sessionId: String
+  pageUrl: String
+  pageTitle: String
+  device: JSON
+  campaign: JSON
+  properties: JSON
+  noteContent: String
+  noteCreatedBy: JSON
+}
+
+enum TimelineEntrySource {
+  activity
+  behavioral
+  note
+}
+
+type Trigger {
+  _id: String
+  ns: String
+  type: String
+  event: String
+  automationId: String
+  automationNs: String
+  startNodeNs: String
+  config: JSON
+  style: JSON
+  icon: String
+  isCustom: Boolean
+  position: JSON
+  workflowId: String
+  isActive: Boolean
+  integrationIds: [String]
+  integrationId: String
+  integrationKind: String
+  count: Int
+  automation: TriggerAutomation
+}
+
+type TriggerAutomation {
+  _id: String
+  name: String
+  status: String
+  ns: String
+}
+
+input TriggerInput {
+  _id: String
+  ns: String
+  type: String
+  event: String
+  automationId: String
+  automationNs: String
+  startNodeNs: String
+  config: JSON
+  style: JSON
+  icon: String
+  isCustom: Boolean
+  position: JSON
+  workflowId: String
+  isActive: Boolean
+  integrationIds: [String]
+  integrationId: String
+  integrationKind: String
+}
+
+type TriggersPaginated {
+  data: [Trigger]!
+  pagination: PaginationInfo!
+}
+
+"""Payload for unassigned action."""
+type UnassignedPayload {
+  assignedTo: String
+  assignedUserId: String
+  assignedDepartmentId: String
+  assignedBy: String
+  performedBy: String
+  viaAutomation: Boolean
+  automationNs: String
+  nodeNs: String
+  executionId: String
+  """Resolved user who was unassigned from."""
+  assignedToUser: User
+  """Resolved user who was unassigned (by assignedUserId)."""
+  assignedUser: User
+  """Resolved user who performed the unassignment."""
+  assignedByUser: User
+  """Resolved user who performed the action."""
+  performedByUser: User
+  """Resolved department the conversation was unassigned from."""
+  assignedDepartment: Department
+}
+
+"""Payload for untagged action."""
+type UntaggedPayload {
+  tagName: String
+}
+
+"""
+Team member account with permissions, preferences, and structure assignments.
+"""
+type User {
+  _id: String!
+  createdAt: Date
+  username: String
+  email: String
+  userPreferences: JSON
+  availability: UserChatStatus
+  isActive: Boolean
+  details: UserDetailsType
+  links: JSON
+  status: String
+  emailSignatures: JSON
+  groupIds: [String]
+  workspaceIds: [String]
+  isSubscribed: String
+  customFieldsData: JSON
+  workspaces: [Workspace]
+  isOwner: Boolean
+  permissionActions: JSON
+  configs: JSON
+  configsConstants: [JSON]
+  onboardingHistory: OnboardingHistory
+  departmentIds: [String]
+  departments: [Department]
+  branchIds: [String]
+  branches: [Branch]
+  positionIds: [String]
+  positions: [Position]
+  score: Float
+  scoreCategories: ScoreCategories
+  leaderBoardPosition: Int
+  employeeId: String
+  isOnline: Boolean
+}
+
+"""Presence state used for routing conversations and workload."""
+enum UserChatStatus {
+  """User is offline or signed out."""
+  offline
+  """User is available for new work."""
+  online
+  """User is active but prefers no new assignments."""
+  busy
+  """User is on a break and should not receive new work."""
+  break
+}
+
+type UserDetailsType {
+  """Profile avatar URL."""
+  avatar: String
+  """Cover photo or header background."""
+  coverPhoto: String
+  """Full display name used in the UI."""
+  fullName: String
+  """Short name or nickname."""
+  shortName: String
+  """Birth date; used for anniversaries."""
+  birthDate: Date
+  """Job title or position."""
+  position: String
+  """Employment start date."""
+  workStartedDate: Date
+  """Primary working location."""
+  location: String
+  """Short bio or description."""
+  description: String
+  """Direct phone number for operators."""
+  operatorPhone: String
+  """Given name."""
+  firstName: String
+  """Family name."""
+  lastName: String
+  """Internal employee identifier."""
+  employeeId: String
+}
+
+"""Paginated response wrapper for user list queries."""
+type UserListResponse {
+  data: [User]
+  pagination: PaginationInfo!
+}
+
+"""Option selection on a specific variant."""
+type VariantOptionValue {
+  optionId: String!
+  optionName: String!
+  valueId: String!
+  value: String!
+}
+
+"""A shared contact from a WhatsApp contacts message."""
+type WAContact {
+  """Contact name."""
+  name: WAContactName
+  """Phone numbers."""
+  phones: [JSON]
+  """Email addresses."""
+  emails: [JSON]
+  """URLs."""
+  urls: [JSON]
+  """Organization info."""
+  org: JSON
+  """Birthday (YYYY-MM-DD)."""
+  birthday: String
+  """Postal addresses."""
+  addresses: [JSON]
+}
+
+"""A contact name structure (vCard-like)."""
+type WAContactName {
+  """Full formatted name."""
+  formatted_name: String
+  """First name."""
+  first_name: String
+  """Last name."""
+  last_name: String
+  """Middle name."""
+  middle_name: String
+  """Name prefix (e.g. 'Dr.')."""
+  prefix: String
+  """Name suffix (e.g. 'Jr.')."""
+  suffix: String
+}
+
+"""Location message content."""
+type WALocation {
+  """Latitude."""
+  latitude: Float
+  """Longitude."""
+  longitude: Float
+  """Location name/label."""
+  name: String
+  """Street address."""
+  address: String
+  """URL to open in maps."""
+  url: String
+}
+
+"""WhatsApp ad referral data (click-to-WhatsApp ads)."""
+type WAReferral {
+  """Source URL of the ad."""
+  source_url: String
+  """Source type (e.g. 'ad')."""
+  source_type: String
+  """Source identifier."""
+  source_id: String
+  """Ad headline text."""
+  headline: String
+  """Ad body text."""
+  body: String
+  """Media type of the ad ('image' or 'video')."""
+  media_type: String
+  """Image URL from the ad."""
+  image_url: String
+  """Video URL from the ad."""
+  video_url: String
+  """Thumbnail URL from the ad."""
+  thumbnail_url: String
+  """Meta click ID for CTWA attribution."""
+  ctwa_clid: String
+  """Greeting configured on the ad."""
+  welcome_message: WAReferralWelcomeMessage
+  """Welcome Message Sequence reference from partner-app CTWA ads."""
+  ref: String
+  """Sequence name resolved locally from ref."""
+  sequence_name: String
+}
+
+"""Greeting text attached to a CTWA ad referral."""
+type WAReferralWelcomeMessage {
+  """Greeting text shown to the customer."""
+  text: String
+}
+
+"""Sticker message content."""
+type WASticker {
+  """Media ID."""
+  id: String
+  """Direct link to the sticker file."""
+  link: String
+  """Resolved URL for the sticker."""
+  url: String
+  """MIME type (e.g. 'image/webp')."""
+  mime_type: String
+  """SHA-256 hash."""
+  sha256: String
+  """Whether this is an animated sticker."""
+  animated: Boolean
+}
+
+input whatsappAnalyticsByFieldParams {
+  field: WhatsappAnalyticsField!
+  start: String!
+  end: String!
+  granularity: WhatsappAnalyticsGranularity!
+  phone_numbers: [String]
+  country_codes: [String]
+  metric_types: [String]
+  conversation_categories: [WhatsappConversationCategory]
+  conversation_types: [WhatsappConversationType]
+  conversation_directions: [WhatsappConversationDirection]
+  dimensions: [String]
+  product_types: [Int]
+  pricing_types: [WhatsappPricingType]
+  pricing_categories: [WhatsappPricingCategory]
+  template_ids: [String]
+  template_group_ids: [String]
+  product_type: WhatsappAnalyticsProductType
+  directions: WhatsappCallDirection
+  """
+  Meta ad object id for Marketing Messages Insights (single-template template_analytics only).
+  """
+  ad_id: String
+}
+
+enum WhatsappAnalyticsField {
+  analytics
+  conversation_analytics
+  pricing_analytics
+  template_analytics
+  template_group_analytics
+  call_analytics
+  ad_insights
+}
+
+enum WhatsappAnalyticsGranularity {
+  HALF_HOUR
+  DAILY
+  MONTHLY
+  DAY
+  MONTH
+}
+
+enum WhatsappAnalyticsProductType {
+  CLOUD_API
+  MARKETING_MESSAGES_LITE_API
+}
+
+type WhatsappBusinessPhone {
+  id: String
+  status: String
+  quality_rating: String
+  platform_type: String
+  whatsappBusinessManagerMessagingLimit: String
+  messaging_limit_tier: String
+  is_pin_enabled: Boolean
+  display_phone_number: String
+  name_status: String
+  account_mode: String
+  is_official_business_account: Boolean
+  code_verification_status: String
+  verified_name: String
+  new_name_status: String
+  throughput: Throughput
+  health_status: WhatsappHealthStatus
+}
+
+type WhatsappBusinessProfile {
+  about: String
+  email: String
+  description: String
+  websites: [String]
+  vertical: String
+  address: String
+  messaging_product: String
+  profile_picture_url: String
+  status: String!
+  error: String
+}
+
+input WhatsappBusinessProfileInput {
+  about: String
+  email: String
+  description: String
+  websites: [String]
+  vertical: String
+  address: String
+  profile_picture_url: String
+}
+
+type WhatsappCallCenterConfig {
+  enabled: Boolean
+  welcomeText: String
+  welcomePromptUrl: String
+  secondText: String
+  secondPromptUrl: String
+  offHoursText: String
+  offHoursPromptUrl: String
+  apologyText: String
+  apologyPromptUrl: String
+  promptLanguage: String
+  promptVoice: String
+  holdMusicUrl: String
+  queueTimeoutSecs: Int
+  voicemailEnabled: Boolean
+  voicemailMaxSecs: Int
+}
+
+input WhatsappCallCenterInput {
+  enabled: Boolean
+  welcomeText: String
+  secondText: String
+  offHoursText: String
+  apologyText: String
+  promptLanguage: String
+  promptVoice: String
+  holdMusicUrl: String
+  queueTimeoutSecs: Int
+  voicemailEnabled: Boolean
+  voicemailMaxSecs: Int
+}
+
+enum WhatsappCallDirection {
+  USER_INITIATED
+  BUSINESS_INITIATED
+}
+
+type WhatsappCallHistory {
+  _id: String!
+  integrationId: String!
+  waCallId: String!
+  phoneNumberId: String!
+  customerPhone: String!
+  customerUserId: String
+  direction: String!
+  status: String!
+  queuedAt: Date
+  queueDeadlineAt: Date
+  missedReason: String
+  callStartTime: Date
+  callEndTime: Date
+  callDuration: Int
+  acceptedByUserId: String
+  initiatedByUserId: String
+  claimedByUserId: String
+  heldByUserId: String
+  holdStartTime: Date
+  mode: String
+  conferenceName: String
+  participants: [WhatsappCallParticipant]
+  callMessageId: String
+  terminatedBy: String
+  terminatedByUserId: String
+  ctaPayload: String
+  deeplinkPayload: String
+  bizOpaqueCallbackData: String
+  conversationId: String
+  customerId: String
+  errorCode: Int
+  errorMessage: String
+  recordingUrl: String
+  recordingMimeType: String
+  transcript: WhatsappCallTranscript
+  transcriptUrl: String
+  voicemailUrl: String
+  createdAt: Date
+  updatedAt: Date
+}
+
+type WhatsappCallHistoryList {
+  data: [WhatsappCallHistory]
+  pagination: PaginationInfo
+}
+
+type WhatsappCallHoursConfig {
+  status: String
+  timezoneId: String
+  weeklyOperatingHours: [WhatsappCallHoursSlot]
+  holidaySchedule: [WhatsappCallHoursHoliday]
+}
+
+type WhatsappCallHoursHoliday {
+  date: String
+  startTime: String
+  endTime: String
+}
+
+input WhatsappCallHoursHolidayInput {
+  date: String!
+  startTime: String!
+  endTime: String!
+}
+
+input WhatsappCallHoursInput {
+  status: String
+  timezoneId: String
+  weeklyOperatingHours: [WhatsappCallHoursSlotInput]
+  holidaySchedule: [WhatsappCallHoursHolidayInput]
+}
+
+type WhatsappCallHoursSlot {
+  dayOfWeek: String
+  openTime: String
+  closeTime: String
+}
+
+input WhatsappCallHoursSlotInput {
+  dayOfWeek: String!
+  openTime: String!
+  closeTime: String!
+}
+
+type WhatsappCallingRestriction {
+  type: String
+  reason: String
+  remediation: String
+  expiration: Float
+}
+
+type WhatsappCallParticipant {
+  userId: String!
+  joinedAt: Date
+  leftAt: Date
+  active: Boolean
+  role: String
+}
+
+type WhatsappCallPermission {
+  status: String!
+  expirationTime: Date
+  actions: [WhatsappCallPermissionAction]
+  responseSource: String
+}
+
+type WhatsappCallPermissionAction {
+  actionName: String
+  canPerformAction: Boolean
+  limits: [WhatsappCallPermissionLimit]
+}
+
+type WhatsappCallPermissionLimit {
+  timePeriod: String
+  maxAllowed: Int
+  currentUsage: Int
+  limitExpirationTime: Float
+}
+
+type WhatsappCallRecordingConfig {
+  enabled: Boolean
+}
+
+input WhatsappCallRecordingInput {
+  enabled: Boolean!
+}
+
+type WhatsappCallSettings {
+  status: String
+  callIconVisibility: String
+  callIconRestrictToUserCountries: [String]
+  callbackPermissionStatus: String
+  callHours: WhatsappCallHoursConfig
+  callRecording: WhatsappCallRecordingConfig
+  callTranscription: WhatsappCallTranscriptionConfig
+  callCenter: WhatsappCallCenterConfig
+  restrictions: [WhatsappCallingRestriction]
+  callingMode: String
+  sipHostname: String
+  sipPort: String
+}
+
+type WhatsappCallTranscript {
+  text: String
+  language: String
+  duration: Float
+  confidence: Float
+  segments: [WhatsappCallTranscriptSegment]
+}
+
+type WhatsappCallTranscriptionConfig {
+  enabled: Boolean
+}
+
+input WhatsappCallTranscriptionInput {
+  enabled: Boolean!
+}
+
+type WhatsappCallTranscriptSegment {
+  id: Int
+  speaker: String
+  channel: Int
+  start: Float
+  end: Float
+  text: String
+  confidence: Float
+}
+
+enum WhatsappConversationCategory {
+  AUTHENTICATION
+  MARKETING
+  SERVICE
+  UTILITY
+  AUTHENTICATION_INTERNATIONAL
+}
+
+enum WhatsappConversationDirection {
+  BUSINESS_INITIATED
+  USER_INITIATED
+  UNKNOWN
+}
+
+"""Paginated list of WhatsApp conversation messages."""
+type WhatsappConversationMessageListResponse {
+  """The list of messages for the current page."""
+  data: [ConversationMessage]
+  """Pagination metadata."""
+  pagination: PaginationInfo!
+}
+
+enum WhatsappConversationType {
+  FREE_ENTRY_POINT
+  FREE_TIER
+  REGULAR
+  UNKNOWN
+}
+
+type WhatsappFlow {
+  _id: String
+  flow_id: String
+  integrationId: String!
+  name: String!
+  status: FlowStatus!
+  categories: [FlowCategories]
+  flow_schema: String
+  runtime_config: FlowRuntimeConfig
+  preview: FlowPreview
+  validation_errors: [FlowValidationError]
+  json_version: String
+  schema_version: String
+  data_api_version: String
+  endpoint_uri: String
+  application_id: String
+  assets: [FlowAsset]
+  business_account_id: String
+  is_active: Boolean
+  last_modified: Date
+  created_by: String
+  updated_by: String
+  createdAt: Date
+  updatedAt: Date
+}
+
+input WhatsappFlowCreateInput {
+  name: String!
+  integrationId: String!
+  categories: [FlowCategories]
+  flow_schema: String
+  runtime_config: FlowRuntimeConfigInput
+  schema_version: String!
+  endpoint_uri: String
+  assets: [FlowAssetInput]
+}
+
+type WhatsappFlowList {
+  data: [WhatsappFlow]!
+  pagination: FlowPagination!
+}
+
+input WhatsappFlowUpdateInput {
+  name: String
+  categories: [FlowCategories]
+  flow_schema: String
+  runtime_config: FlowRuntimeConfigInput
+  endpoint_uri: String
+  assets: [FlowAssetInput]
+  is_active: Boolean
+  schema_version: String
+}
+
+type WhatsappHealthStatus {
+  can_send_message: String
+  entities: [HealthEntity]
+}
+
+type WhatsappHistorySync {
+  _id: String!
+  integrationId: String!
+  phoneNumberId: String!
+  contactsSyncRequestId: String
+  historySyncRequestId: String
+  contactsSyncStatus: String!
+  historySyncStatus: String!
+  historySyncProgress: Int!
+  currentPhase: Int!
+  totalMessagesImported: Int!
+  totalContactsImported: Int!
+  syncStartedAt: Date
+  contactsSyncCompletedAt: Date
+  historySyncCompletedAt: Date
+  error: String
+}
+
+type WhatsappIntegration {
+  _id: String!
+  accountId: String
+  kind: String
+  provider: String
+  phoneNumberId: String
+  wabaId: String
+  error: String
+  healthStatus: String
+  accountMode: String
+  profile: WhatsappBusinessProfile
+  businessPhoneNumber: WhatsappBusinessPhone
+}
+
+type whatsappIntegrationByIdResponse {
+  _id: String!
+  integration: WhatsappIntegration
+  profile: WhatsappBusinessProfile
+  healthStatus: String
+  businessPhoneNumber: WhatsappBusinessPhone
+}
+
+type WhatsappMessageTemplateResponse {
+  _id: String
+  conversationId: String
+  origin: MessageOrigin
+  delivery: MessageDelivery
+  createdAt: Date
+}
+
+type WhatsappOBAStatusResponse {
+  oba_status: String!
+  phone_number_id: String!
+  is_eligible: Boolean
+  last_request_date: String
+  can_reapply: Boolean
+  reapply_date: String
+}
+
+enum WhatsappPricingCategory {
+  AUTHENTICATION
+  AUTHENTICATION_INTERNATIONAL
+  MARKETING
+  SERVICE
+  UTILITY
+  GROUP_MARKETING
+  GROUP_UTILITY
+  GROUP_SERVICE
+  MARKETING_LITE
+  MARKETING_LITE_DYNAMIC
+  GROUP_MARKETING_LITE
+}
+
+enum WhatsappPricingType {
+  FREE_CUSTOMER_SERVICE
+  FREE_ENTRY_POINT
+  REGULAR
+}
+
+type WhatsappQRCode {
+  code: String!
+  prefilled_message: String!
+  deep_link_url: String!
+  qr_image_url: String
+}
+
+type WhatsappQRCodeListResponse {
+  data: [WhatsappQRCode!]!
+}
+
+type WhatsappTemplate {
+  _id: String
+  template_id: String
+  business_account_id: Float
+  category: String
+  components: JSON
+  createdAt: Date
+  language: String
+  mapping: [WhatsappTemplateMapping]
+  name: String
+  parameter_format: String
+  status: String
+  updatedAt: Date
+  analytics: TemplateAnalytics
+  ad_id: String
+  """
+  True when this template has URL click-tracking link records in whatsapp_template_links.
+  """
+  hasTrackingLinks: Boolean
+}
+
+type WhatsappTemplateList {
+  data: [WhatsappTemplate]
+  pagination: PaginationInfo
+}
+
+type WhatsappTemplateMapping {
+  name: String
+  label: String
+  type: String
+  source: String
+  _autoTracking: Boolean
+  isDynamicUrl: Boolean
+}
+
+"""
+Workspace entity used for multi-workspace configurations (email, assets, member assignments).
+"""
+type Workspace {
+  _id: String!
+  name: String
+  description: String
+  code: String
+  userId: String
+  createdAt: Date
+  memberIds: [String]
+}
