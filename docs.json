@@ -25,7 +25,7 @@
     }
   },
   "background": {
-    "decoration": "gradient",
+    "decoration": "windows",
     "color": {
       "light": "#F6F8FB",
       "dark": "#0A1322"
@@ -38,7 +38,8 @@
         "light": "github-light",
         "dark": "github-dark"
       }
-    }
+    },
+    "latex": true
   },
   "icons": {
     "library": "lucide"
@@ -129,7 +130,14 @@
           }
         ]
       }
-    ]
+    ],
+    "socials": {
+      "youtube": "https://karzoun.chat",
+      "instagram": "https://karzoun.chat",
+      "facebook": "https://karzoun.chat",
+      "x": "https://karzoun.chat",
+      "github": "https://karzoun.chat"
+    }
   },
   "seo": {
     "indexing": "navigable",
@@ -1767,5 +1775,21 @@
       "source": "/ar/help-center/guides/whatsapp/getting-started/api-1890475",
       "destination": "/ar/help-center/guides/whatsapp/concepts/connection-methods"
     }
-  ]
+  ],
+  "interaction": {
+    "drilldown": false
+  },
+  "api": {
+    "examples": {
+      "defaults": "required",
+      "autogenerate": true
+    },
+    "mdx": {
+      "auth": {
+        "method": "key",
+        "name": "x-app-token"
+      },
+      "server": "https://{SUBDOMAIN}.api.karzoun.chat/graphql"
+    }
+  }
 }
