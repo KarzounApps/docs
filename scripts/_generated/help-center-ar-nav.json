@@ -100,65 +100,103 @@
         "group": "واتساب",
         "expanded": false,
         "pages": [
-          "ar/help-center/guides/whatsapp/doc-1890487",
-          "ar/help-center/guides/whatsapp/doc-2280953",
-          "ar/help-center/guides/whatsapp/qr-1890488",
-          "ar/help-center/guides/whatsapp/doc-1914556",
-          "ar/help-center/guides/whatsapp/doc-1944863",
-          "ar/help-center/guides/whatsapp/whatsapp-ctwa-ads",
-          "ar/help-center/guides/whatsapp/whatsapp-calling",
+          "ar/help-center/guides/whatsapp/overview",
+          {
+            "group": "الربط والإعداد",
+            "expanded": false,
+            "pages": [
+              "ar/help-center/guides/whatsapp/connect",
+              "ar/help-center/guides/whatsapp/disable-2fa",
+              "ar/help-center/guides/whatsapp/profile",
+              "ar/help-center/guides/whatsapp/qr-codes",
+              "ar/help-center/guides/whatsapp/errors"
+            ]
+          },
           {
             "group": "قوالب الرسائل",
             "expanded": false,
             "pages": [
-              "ar/help-center/guides/whatsapp/templates/doc-1890476",
-              "ar/help-center/guides/whatsapp/templates/doc-1914160",
-              "ar/help-center/guides/whatsapp/templates/doc-1914159",
-              "ar/help-center/guides/whatsapp/templates/doc-1914161",
-              "ar/help-center/guides/whatsapp/templates/doc-1914162",
-              "ar/help-center/guides/whatsapp/templates/carousel-2281153",
-              "ar/help-center/guides/whatsapp/templates/doc-2281156",
-              "ar/help-center/guides/whatsapp/templates/doc-2281157",
-              "ar/help-center/guides/whatsapp/templates/doc-2281158",
-              "ar/help-center/guides/whatsapp/templates/doc-2281159",
-              "ar/help-center/guides/whatsapp/templates/doc-2281160",
-              "ar/help-center/guides/whatsapp/templates/doc-1890479"
+              "ar/help-center/guides/whatsapp/templates/overview",
+              "ar/help-center/guides/whatsapp/templates/manage",
+              "ar/help-center/guides/whatsapp/templates/utility",
+              "ar/help-center/guides/whatsapp/templates/marketing",
+              "ar/help-center/guides/whatsapp/templates/authentication",
+              "ar/help-center/guides/whatsapp/templates/limited-time-offer",
+              "ar/help-center/guides/whatsapp/templates/commerce",
+              "ar/help-center/guides/whatsapp/templates/insights",
+              "ar/help-center/guides/whatsapp/templates/best-practices"
             ]
           },
           {
-            "group": "WhatsApp Flows - واتساب فلو",
+            "group": "التدفقات",
             "expanded": false,
             "pages": [
-              "ar/help-center/guides/whatsapp/flows/doc-1890480",
-              "ar/help-center/guides/whatsapp/flows/doc-1890481",
-              "ar/help-center/guides/whatsapp/flows/doc-2284423",
-              "ar/help-center/guides/whatsapp/flows/doc-1890482"
+              "ar/help-center/guides/whatsapp/flows/overview",
+              "ar/help-center/guides/whatsapp/flows/build",
+              "ar/help-center/guides/whatsapp/flows/in-automations",
+              "ar/help-center/guides/whatsapp/flows/use-cases"
             ]
           },
           {
-            "group": "تسعير الواتساب",
+            "group": "مدير الإعلانات",
             "expanded": false,
             "pages": [
-              "ar/help-center/guides/whatsapp/pricing/doc-1890483",
-              "ar/help-center/guides/whatsapp/pricing/doc-2284478"
+              "ar/help-center/guides/whatsapp/ads/overview"
             ]
           },
           {
-            "group": "تقارير الواتساب",
+            "group": "المكالمات",
             "expanded": false,
             "pages": [
-              "ar/help-center/guides/whatsapp/reports/doc-2284476"
+              "ar/help-center/guides/whatsapp/calls/overview",
+              "ar/help-center/guides/whatsapp/calls/enable-calling",
+              "ar/help-center/guides/whatsapp/calls/call-hours",
+              "ar/help-center/guides/whatsapp/calls/incoming-experience",
+              "ar/help-center/guides/whatsapp/calls/softphone-in-inbox",
+              "ar/help-center/guides/whatsapp/calls/agent-availability",
+              "ar/help-center/guides/whatsapp/calls/missed-calls",
+              "ar/help-center/guides/whatsapp/calls/outbound-permissions",
+              "ar/help-center/guides/whatsapp/calls/call-button-and-deeplink",
+              "ar/help-center/guides/whatsapp/calls/recording-and-transcripts",
+              "ar/help-center/guides/whatsapp/calls/history-and-analytics",
+              "ar/help-center/guides/whatsapp/calls/troubleshooting"
             ]
           },
           {
-            "group": "البدء مع واتساب",
+            "group": "التجارة والكتالوج",
             "expanded": false,
             "pages": [
-              "ar/help-center/guides/whatsapp/getting-started/api-1890472",
-              "ar/help-center/guides/whatsapp/getting-started/api-1890473",
-              "ar/help-center/guides/whatsapp/getting-started/doc-1890474",
-              "ar/help-center/guides/whatsapp/getting-started/api-1890475",
-              "ar/help-center/guides/whatsapp/getting-started/doc-1894809"
+              "ar/help-center/guides/whatsapp/commerce/overview",
+              "ar/help-center/guides/whatsapp/commerce/sync",
+              "ar/help-center/guides/whatsapp/commerce/messages"
+            ]
+          },
+          {
+            "group": "توثيق الأعمال",
+            "expanded": false,
+            "pages": [
+              "ar/help-center/guides/business-verification/overview",
+              "ar/help-center/guides/business-verification/submit",
+              "ar/help-center/guides/business-verification/status"
+            ]
+          },
+          {
+            "group": "التسعير والتحليلات",
+            "expanded": false,
+            "pages": [
+              "ar/help-center/guides/whatsapp/pricing/overview",
+              "ar/help-center/guides/whatsapp/analytics/messages",
+              "ar/help-center/guides/whatsapp/analytics/costs"
+            ]
+          },
+          {
+            "group": "مفاهيم ومرجع",
+            "expanded": false,
+            "pages": [
+              "ar/help-center/guides/whatsapp/concepts/business-api",
+              "ar/help-center/guides/whatsapp/concepts/app-vs-api",
+              "ar/help-center/guides/whatsapp/concepts/account-requirements",
+              "ar/help-center/guides/whatsapp/concepts/connection-methods"
             ]
           }
         ]

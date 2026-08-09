@@ -801,33 +801,30 @@
                   {
                     "group": "قوالب الرسائل",
                     "pages": [
-                      "ar/help-center/guides/whatsapp/templates/doc-1890476",
-                      "ar/help-center/guides/whatsapp/templates/doc-1914160",
-                      "ar/help-center/guides/whatsapp/templates/doc-1914159",
-                      "ar/help-center/guides/whatsapp/templates/doc-1914161",
-                      "ar/help-center/guides/whatsapp/templates/doc-1914162",
-                      "ar/help-center/guides/whatsapp/templates/carousel-2281153",
-                      "ar/help-center/guides/whatsapp/templates/doc-2281156",
-                      "ar/help-center/guides/whatsapp/templates/doc-2281157",
-                      "ar/help-center/guides/whatsapp/templates/doc-2281158",
-                      "ar/help-center/guides/whatsapp/templates/doc-2281159",
-                      "ar/help-center/guides/whatsapp/templates/doc-2281160",
-                      "ar/help-center/guides/whatsapp/templates/doc-1890479"
+                      "ar/help-center/guides/whatsapp/templates/overview",
+                      "ar/help-center/guides/whatsapp/templates/manage",
+                      "ar/help-center/guides/whatsapp/templates/utility",
+                      "ar/help-center/guides/whatsapp/templates/marketing",
+                      "ar/help-center/guides/whatsapp/templates/authentication",
+                      "ar/help-center/guides/whatsapp/templates/limited-time-offer",
+                      "ar/help-center/guides/whatsapp/templates/commerce",
+                      "ar/help-center/guides/whatsapp/templates/insights",
+                      "ar/help-center/guides/whatsapp/templates/best-practices"
                     ]
                   },
                   {
                     "group": "التدفقات",
                     "pages": [
-                      "ar/help-center/guides/whatsapp/flows/doc-1890480",
-                      "ar/help-center/guides/whatsapp/flows/doc-1890481",
-                      "ar/help-center/guides/whatsapp/flows/doc-2284423",
-                      "ar/help-center/guides/whatsapp/flows/doc-1890482"
+                      "ar/help-center/guides/whatsapp/flows/overview",
+                      "ar/help-center/guides/whatsapp/flows/build",
+                      "ar/help-center/guides/whatsapp/flows/in-automations",
+                      "ar/help-center/guides/whatsapp/flows/use-cases"
                     ]
                   },
                   {
                     "group": "مدير الإعلانات",
                     "pages": [
-                      "ar/help-center/guides/whatsapp/whatsapp-ctwa-ads"
+                      "ar/help-center/guides/whatsapp/ads/overview"
                     ]
                   },
                   {
@@ -866,18 +863,18 @@
                   {
                     "group": "التسعير والتحليلات",
                     "pages": [
-                      "ar/help-center/guides/whatsapp/pricing/doc-1890483",
-                      "ar/help-center/guides/whatsapp/pricing/doc-2284478",
-                      "ar/help-center/guides/whatsapp/reports/doc-2284476"
+                      "ar/help-center/guides/whatsapp/pricing/overview",
+                      "ar/help-center/guides/whatsapp/analytics/messages",
+                      "ar/help-center/guides/whatsapp/analytics/costs"
                     ]
                   },
                   {
                     "group": "مفاهيم ومرجع",
                     "pages": [
-                      "ar/help-center/guides/whatsapp/getting-started/api-1890472",
-                      "ar/help-center/guides/whatsapp/getting-started/api-1890473",
-                      "ar/help-center/guides/whatsapp/getting-started/doc-1890474",
-                      "ar/help-center/guides/whatsapp/getting-started/api-1890475"
+                      "ar/help-center/guides/whatsapp/concepts/business-api",
+                      "ar/help-center/guides/whatsapp/concepts/app-vs-api",
+                      "ar/help-center/guides/whatsapp/concepts/account-requirements",
+                      "ar/help-center/guides/whatsapp/concepts/connection-methods"
                     ]
                   }
                 ]
@@ -1673,6 +1670,106 @@
     {
       "source": "/ar/help-center/guides/whatsapp/business-verification/status",
       "destination": "/ar/help-center/guides/business-verification/status"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/templates/doc-1890476",
+      "destination": "/ar/help-center/guides/whatsapp/templates/overview"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/templates/doc-1914160",
+      "destination": "/ar/help-center/guides/whatsapp/templates/utility"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/templates/doc-1914159",
+      "destination": "/ar/help-center/guides/whatsapp/templates/marketing"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/templates/doc-1914161",
+      "destination": "/ar/help-center/guides/whatsapp/templates/limited-time-offer"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/templates/doc-1914162",
+      "destination": "/ar/help-center/guides/whatsapp/templates/authentication"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/templates/carousel-2281153",
+      "destination": "/ar/help-center/guides/whatsapp/templates/commerce"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/templates/doc-2281156",
+      "destination": "/ar/help-center/guides/whatsapp/templates/commerce"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/templates/doc-2281157",
+      "destination": "/ar/help-center/guides/whatsapp/templates/commerce"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/templates/doc-2281158",
+      "destination": "/ar/help-center/guides/whatsapp/templates/commerce"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/templates/doc-2281159",
+      "destination": "/ar/help-center/guides/whatsapp/templates/commerce"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/templates/doc-2281160",
+      "destination": "/ar/help-center/guides/whatsapp/templates/insights"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/templates/doc-1890479",
+      "destination": "/ar/help-center/guides/whatsapp/templates/best-practices"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/flows/doc-1890480",
+      "destination": "/ar/help-center/guides/whatsapp/flows/overview"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/flows/doc-1890481",
+      "destination": "/ar/help-center/guides/whatsapp/flows/build"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/flows/doc-2284423",
+      "destination": "/ar/help-center/guides/whatsapp/flows/in-automations"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/flows/doc-1890482",
+      "destination": "/ar/help-center/guides/whatsapp/flows/use-cases"
+    },
+    {
+      "source": "/ar/help-center/doc-2284423",
+      "destination": "/ar/help-center/guides/whatsapp/flows/in-automations"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/pricing/doc-1890483",
+      "destination": "/ar/help-center/guides/whatsapp/pricing/overview"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/pricing/doc-2284478",
+      "destination": "/ar/help-center/guides/whatsapp/analytics/costs"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/reports/doc-2284476",
+      "destination": "/ar/help-center/guides/whatsapp/analytics/messages"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/whatsapp-ctwa-ads",
+      "destination": "/ar/help-center/guides/whatsapp/ads/overview"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/getting-started/api-1890472",
+      "destination": "/ar/help-center/guides/whatsapp/concepts/business-api"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/getting-started/api-1890473",
+      "destination": "/ar/help-center/guides/whatsapp/concepts/app-vs-api"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/getting-started/doc-1890474",
+      "destination": "/ar/help-center/guides/whatsapp/concepts/account-requirements"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/getting-started/api-1890475",
+      "destination": "/ar/help-center/guides/whatsapp/concepts/connection-methods"
     }
   ]
 }
