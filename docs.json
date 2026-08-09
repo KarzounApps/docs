@@ -609,21 +609,18 @@
                 "pages": [
                   "ar/help-center/index",
                   "ar/help-center/guides/getting-started/overview",
-                  "ar/help-center/guides/getting-started/product-map",
                   "ar/help-center/guides/getting-started/workspace-tour",
                   "ar/help-center/guides/getting-started/home-dashboard",
-                  "ar/help-center/guides/getting-started/first-day-agent",
+                  "ar/help-center/guides/getting-started/first-day-customer-service",
                   "ar/help-center/guides/getting-started/first-week-admin",
                   "ar/help-center/guides/getting-started/by-role",
                   {
-                    "group": "التدريب ولوحة الصدارة",
+                    "group": "مركز التدريب",
                     "pages": [
                       "ar/help-center/guides/training/overview",
                       "ar/help-center/guides/training/training-center",
                       "ar/help-center/guides/training/sections-and-tasks",
-                      "ar/help-center/guides/training/points-and-categories",
-                      "ar/help-center/guides/training/badges",
-                      "ar/help-center/guides/training/team-vs-global"
+                      "ar/help-center/guides/training/points-and-categories"
                     ]
                   }
                 ]
@@ -1495,7 +1492,7 @@
     },
     {
       "source": "/ar/help-center/guides/getting-started/doc-1861362",
-      "destination": "/ar/help-center/guides/getting-started/first-day-agent"
+      "destination": "/ar/help-center/guides/getting-started/first-day-customer-service"
     },
     {
       "source": "/ar/help-center/guides/getting-started/doc-2163846",
@@ -1584,6 +1581,14 @@
     {
       "source": "/ar/help-center/guides/settings/doc-1890608",
       "destination": "/ar/help-center/guides/settings/overview"
+    },
+    {
+      "source": "/ar/help-center/guides/getting-started/product-map",
+      "destination": "/ar/help-center/guides/getting-started/workspace-tour"
+    },
+    {
+      "source": "/ar/help-center/guides/getting-started/first-day-agent",
+      "destination": "/ar/help-center/guides/getting-started/first-day-customer-service"
     }
   ]
 }
