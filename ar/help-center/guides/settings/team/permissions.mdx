@@ -1,0 +1,62 @@
+---
+title: "الصلاحيات ومجموعات الوصول"
+description: "اضبط مجموعات الصلاحيات وقواعد allow/deny — من يرى الوارد، الرؤى، Copilot، والإعدادات."
+---
+
+**مجموعة الصلاحيات** = دور تقني (وكيل، مشرف، مسوّق…). كل [عضو](/ar/help-center/guides/settings/team/invite-and-manage) يجب أن ينتمي لمجموعة واحدة على الأقل عند الدعوة.
+
+> **الجمهور:** مدير / مالك المساحة.  
+> المسار: `/settings/permissions`.
+
+<Info>
+**وسائط مطلوبة:** لوحة الصلاحيات — تبويص «المجموعات» مع جدول المجموعات وأعداد الأعضاء.  
+المسار المقترح: `/images/help/settings/team/permissions-groups.webp`
+</Info>
+
+## تبويبان
+
+| التبويب | الغرض |
+| --- | --- |
+| **المجموعات** | إنشاء/تعديل/نسخ/حذف مجموعة — ربط أعضاء، أقسام، فروع |
+| **قواعد الصلاحيات** | Allow / Deny على **وحدات** (البريد الوارد، الرؤى، Copilot، الأتمتة…) |
+
+## وحدات شائعة في القواعد
+
+| الوحدة | مثال قرار |
+| --- | --- |
+| **أعضاء الفريق** | من يدعو |
+| **التحليلات / الرؤى** | `/insights` |
+| **Copilot** | `/copilot` |
+| **الاجتماعات** | جدولة |
+| **البث / الحملات** | إرسال جماعي |
+
+راجع [المساعد](/ar/help-center/guides/ai/copilot-getting-started) و[الوكلاء](/ar/help-center/guides/ai/agent-studio) — كلاهما يتأثر بقواعد Copilot/Agents.
+
+## إنشاء مجموعة «وكيل» نموذجية
+
+1. **مجموعة جديدة** — اسم «وكيل دعم»  
+2. **قواعد:** Allow `showInbox` · Deny `manageBilling` · Deny `managePermissions`  
+3. Allow `showInsights` **اختياري** — كثير من الوكلاء لا يحتاجون `/insights`  
+4. Assign المجموعة عند الدعوة
+
+## Deny يتغلب على Allow
+
+عند التعارض: **الرفض** أقوى. اختبر بحساب تجريبي قبل تعميم المجموعة.
+
+## الرؤى والخطة
+
+حتى مع Allow للرؤى، ميزة **`insights_dashboard`** في [الخطة](/ar/help-center/guides/settings/billing/plan-and-payment) مطلوبة.
+
+## أخطاء شائعة
+
+| الخطأ | النتيجة |
+| --- | --- |
+| مجموعة واحدة «الكل Admin» | مخاطر فوترة وبيانات |
+| نسيان Deny للفوترة | وكيل يرى `/settings/billing` |
+| تعديل مجموعة دون إخطار | صلاحيات تتغير فوراً |
+
+## ذات صلة
+
+- [دعوة الفريق](/ar/help-center/guides/settings/team/invite-and-manage)
+- [سجلات التدقيق](/ar/help-center/guides/settings/audit)
+- [نظرة عامة على الرؤى](/ar/help-center/guides/insights/overview)
