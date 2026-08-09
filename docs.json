@@ -611,8 +611,8 @@
                   "ar/help-center/guides/getting-started/overview",
                   "ar/help-center/guides/getting-started/workspace-tour",
                   "ar/help-center/guides/getting-started/home-dashboard",
-                  "ar/help-center/guides/getting-started/first-day-customer-service",
                   "ar/help-center/guides/getting-started/first-week-admin",
+                  "ar/help-center/guides/getting-started/first-day-customer-service",
                   "ar/help-center/guides/getting-started/by-role",
                   {
                     "group": "مركز التدريب",
@@ -638,6 +638,14 @@
                     ]
                   },
                   {
+                    "group": "روتين يومي",
+                    "pages": [
+                      "ar/help-center/guides/inbox/routines/shift-start",
+                      "ar/help-center/guides/inbox/routines/escalate",
+                      "ar/help-center/guides/inbox/routines/shift-review"
+                    ]
+                  },
+                  {
                     "group": "للموظفين",
                     "pages": [
                       "ar/help-center/guides/inbox/agent-day",
@@ -646,11 +654,13 @@
                       "ar/help-center/guides/inbox/statuses",
                       "ar/help-center/guides/inbox/customer-panel",
                       "ar/help-center/guides/inbox/collaboration",
+                      "ar/help-center/guides/inbox/response-and-escalation",
                       "ar/help-center/guides/inbox/quick-responses",
-                      "ar/help-center/guides/inbox/tips",
                       "ar/help-center/guides/inbox/social-comments",
                       "ar/help-center/guides/inbox/calls-in-inbox",
-                      "ar/help-center/guides/inbox/tasks-from-conversation"
+                      "ar/help-center/guides/inbox/tasks-from-conversation",
+                      "ar/help-center/guides/inbox/shortcuts",
+                      "ar/help-center/guides/inbox/tips"
                     ]
                   },
                   {
@@ -659,20 +669,81 @@
                       "ar/help-center/guides/inbox/assign",
                       "ar/help-center/guides/inbox/smart-assignment",
                       "ar/help-center/guides/inbox/bulk-actions",
+                      "ar/help-center/guides/inbox/supervise-queue",
                       "ar/help-center/guides/inbox/macros-and-handoff",
                       "ar/help-center/guides/inbox/channels-in-inbox",
-                      "ar/help-center/guides/inbox/supervise-queue",
-                      "ar/help-center/guides/inbox/search-and-notifications",
-                      "ar/help-center/guides/inbox/shortcuts",
-                      "ar/help-center/guides/inbox/response-and-escalation"
+                      "ar/help-center/guides/inbox/search-and-notifications"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "محادثة الفريق",
+                "pages": [
+                  "ar/help-center/guides/team-chat/overview",
+                  {
+                    "group": "ابدأ هنا",
+                    "pages": [
+                      "ar/help-center/guides/team-chat/path-agent",
+                      "ar/help-center/guides/team-chat/path-admin",
+                      "ar/help-center/guides/team-chat/getting-started",
+                      "ar/help-center/guides/team-chat/quick-tour"
                     ]
                   },
                   {
                     "group": "روتين يومي",
                     "pages": [
-                      "ar/help-center/guides/inbox/routines/shift-start",
-                      "ar/help-center/guides/inbox/routines/escalate",
-                      "ar/help-center/guides/inbox/routines/shift-review"
+                      "ar/help-center/guides/team-chat/routines/channel-vs-dm",
+                      "ar/help-center/guides/team-chat/routines/start-from-activity",
+                      "ar/help-center/guides/team-chat/routines/share-customer-context"
+                    ]
+                  },
+                  {
+                    "group": "للموظفين",
+                    "pages": [
+                      "ar/help-center/guides/team-chat/sidebar",
+                      "ar/help-center/guides/team-chat/direct-messages",
+                      "ar/help-center/guides/team-chat/groups",
+                      "ar/help-center/guides/team-chat/channels",
+                      "ar/help-center/guides/team-chat/messages",
+                      "ar/help-center/guides/team-chat/threads",
+                      "ar/help-center/guides/team-chat/mentions",
+                      "ar/help-center/guides/team-chat/activity",
+                      "ar/help-center/guides/team-chat/notifications",
+                      "ar/help-center/guides/team-chat/share-from-inbox",
+                      "ar/help-center/guides/team-chat/private-reply"
+                    ]
+                  },
+                  {
+                    "group": "للمشرفين والمدراء",
+                    "pages": [
+                      "ar/help-center/guides/team-chat/roles",
+                      "ar/help-center/guides/team-chat/channel-governance"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "المهام",
+                "pages": [
+                  "ar/help-center/guides/tasks/overview",
+                  "ar/help-center/guides/tasks/path-agent",
+                  "ar/help-center/guides/tasks/path-supervisor",
+                  {
+                    "group": "للموظفين",
+                    "pages": [
+                      "ar/help-center/guides/tasks/task",
+                      "ar/help-center/guides/tasks/views",
+                      "ar/help-center/guides/tasks/routines/from-inbox-to-done"
+                    ]
+                  },
+                  {
+                    "group": "للمشرفين والمدراء",
+                    "pages": [
+                      "ar/help-center/guides/tasks/boards",
+                      "ar/help-center/guides/tasks/pipelines",
+                      "ar/help-center/guides/tasks/stages",
+                      "ar/help-center/guides/tasks/visibility"
                     ]
                   }
                 ]
@@ -686,8 +757,8 @@
                   {
                     "group": "دليل القنوات",
                     "pages": [
-                      "ar/help-center/guides/channels/messenger",
                       "ar/help-center/guides/channels/whatsapp",
+                      "ar/help-center/guides/channels/messenger",
                       "ar/help-center/guides/channels/facebook-messenger",
                       "ar/help-center/guides/channels/facebook-comments",
                       "ar/help-center/guides/channels/instagram-messenger",
@@ -711,12 +782,17 @@
                 "pages": [
                   "ar/help-center/guides/whatsapp/overview",
                   "ar/help-center/guides/whatsapp/connect",
-                  "ar/help-center/guides/whatsapp/getting-started/api-1890472",
-                  "ar/help-center/guides/whatsapp/getting-started/api-1890473",
-                  "ar/help-center/guides/whatsapp/getting-started/doc-1890474",
-                  "ar/help-center/guides/whatsapp/getting-started/api-1890475",
-                  "ar/help-center/guides/whatsapp/getting-started/doc-1894809",
-                  "ar/help-center/guides/whatsapp/whatsapp-ctwa-ads",
+                  {
+                    "group": "البداية والربط",
+                    "pages": [
+                      "ar/help-center/guides/whatsapp/getting-started/api-1890472",
+                      "ar/help-center/guides/whatsapp/getting-started/api-1890473",
+                      "ar/help-center/guides/whatsapp/getting-started/doc-1890474",
+                      "ar/help-center/guides/whatsapp/getting-started/api-1890475",
+                      "ar/help-center/guides/whatsapp/getting-started/doc-1894809",
+                      "ar/help-center/guides/whatsapp/whatsapp-ctwa-ads"
+                    ]
+                  },
                   {
                     "group": "قوالب الرسائل",
                     "pages": [
@@ -744,28 +820,28 @@
                     ]
                   },
                   {
-                    "group": "التجارة والكتالوج",
-                    "pages": [
-                      "ar/help-center/guides/whatsapp/commerce/overview",
-                      "ar/help-center/guides/whatsapp/commerce/sync",
-                      "ar/help-center/guides/whatsapp/commerce/messages"
-                    ]
-                  },
-                  {
                     "group": "المكالمات",
                     "pages": [
                       "ar/help-center/guides/whatsapp/calls/overview",
                       "ar/help-center/guides/whatsapp/calls/enable-calling",
                       "ar/help-center/guides/whatsapp/calls/call-hours",
                       "ar/help-center/guides/whatsapp/calls/incoming-experience",
-                      "ar/help-center/guides/whatsapp/calls/recording-and-transcripts",
-                      "ar/help-center/guides/whatsapp/calls/outbound-permissions",
                       "ar/help-center/guides/whatsapp/calls/softphone-in-inbox",
                       "ar/help-center/guides/whatsapp/calls/agent-availability",
                       "ar/help-center/guides/whatsapp/calls/missed-calls",
+                      "ar/help-center/guides/whatsapp/calls/outbound-permissions",
                       "ar/help-center/guides/whatsapp/calls/call-button-and-deeplink",
+                      "ar/help-center/guides/whatsapp/calls/recording-and-transcripts",
                       "ar/help-center/guides/whatsapp/calls/history-and-analytics",
                       "ar/help-center/guides/whatsapp/calls/troubleshooting"
+                    ]
+                  },
+                  {
+                    "group": "التجارة والكتالوج",
+                    "pages": [
+                      "ar/help-center/guides/whatsapp/commerce/overview",
+                      "ar/help-center/guides/whatsapp/commerce/sync",
+                      "ar/help-center/guides/whatsapp/commerce/messages"
                     ]
                   },
                   {
@@ -792,12 +868,12 @@
                   "ar/help-center/guides/contacts/overview",
                   "ar/help-center/guides/contacts/path-marketer",
                   {
-                    "group": "جهات الاتصال",
+                    "group": "إدارة السجلات",
                     "pages": [
-                      "ar/help-center/guides/contacts/profile",
                       "ar/help-center/guides/contacts/add",
-                      "ar/help-center/guides/contacts/companies",
+                      "ar/help-center/guides/contacts/profile",
                       "ar/help-center/guides/contacts/leads",
+                      "ar/help-center/guides/contacts/companies",
                       "ar/help-center/guides/contacts/import",
                       "ar/help-center/guides/contacts/merge"
                     ]
@@ -818,7 +894,7 @@
                   "ar/help-center/guides/pixel/overview",
                   "ar/help-center/guides/pixel/path-marketer",
                   {
-                    "group": "كرزون بكسل",
+                    "group": "التثبيت والأحداث",
                     "pages": [
                       "ar/help-center/guides/pixel/install",
                       "ar/help-center/guides/pixel/verify",
@@ -856,8 +932,8 @@
                       "ar/help-center/guides/broadcasts/email",
                       "ar/help-center/guides/broadcasts/email-templates",
                       "ar/help-center/guides/broadcasts/livechat",
-                      "ar/help-center/guides/broadcasts/automation",
-                      "ar/help-center/guides/broadcasts/push"
+                      "ar/help-center/guides/broadcasts/push",
+                      "ar/help-center/guides/broadcasts/automation"
                     ]
                   },
                   {
@@ -904,13 +980,29 @@
                   "ar/help-center/guides/automations/overview",
                   "ar/help-center/guides/automations/path-builder",
                   {
-                    "group": "الأتمتة",
+                    "group": "البناء والنشر",
                     "pages": [
                       "ar/help-center/guides/automations/create-first",
                       "ar/help-center/guides/automations/builder",
                       "ar/help-center/guides/automations/publish-and-status",
-                      "ar/help-center/guides/automations/with-broadcasts",
-                      "ar/help-center/guides/automations/execution-history"
+                      "ar/help-center/guides/automations/execution-history",
+                      "ar/help-center/guides/automations/with-broadcasts"
+                    ]
+                  },
+                  {
+                    "group": "المشغّلات",
+                    "pages": [
+                      "ar/help-center/guides/automations/triggers/overview",
+                      "ar/help-center/guides/automations/triggers/options",
+                      "ar/help-center/guides/automations/triggers/types"
+                    ]
+                  },
+                  {
+                    "group": "الرد الآلي والماكرو",
+                    "pages": [
+                      "ar/help-center/guides/automations/channel-bots",
+                      "ar/help-center/guides/automations/keywords",
+                      "ar/help-center/guides/automations/macros"
                     ]
                   },
                   {
@@ -918,9 +1010,9 @@
                     "pages": [
                       "ar/help-center/guides/automations/nodes/message",
                       "ar/help-center/guides/automations/nodes/question",
-                      "ar/help-center/guides/automations/nodes/email",
                       "ar/help-center/guides/automations/nodes/condition",
                       "ar/help-center/guides/automations/nodes/split",
+                      "ar/help-center/guides/automations/nodes/email",
                       {
                         "group": "الإجراء",
                         "pages": [
@@ -935,8 +1027,8 @@
                           "ar/help-center/guides/automations/nodes/actions/insert-feedback"
                         ]
                       },
-                      "ar/help-center/guides/automations/nodes/goto",
                       "ar/help-center/guides/automations/nodes/ai-agent",
+                      "ar/help-center/guides/automations/nodes/goto",
                       "ar/help-center/guides/automations/nodes/note"
                     ]
                   },
@@ -953,21 +1045,6 @@
                     ]
                   },
                   {
-                    "group": "المشغّلات",
-                    "pages": [
-                      "ar/help-center/guides/automations/triggers/overview",
-                      "ar/help-center/guides/automations/triggers/options",
-                      "ar/help-center/guides/automations/triggers/types"
-                    ]
-                  },
-                  {
-                    "group": "الرد الآلي",
-                    "pages": [
-                      "ar/help-center/guides/automations/channel-bots",
-                      "ar/help-center/guides/automations/keywords"
-                    ]
-                  },
-                  {
                     "group": "التطبيقات",
                     "pages": [
                       "ar/help-center/guides/automations/apps/overview",
@@ -975,12 +1052,6 @@
                       "ar/help-center/guides/automations/apps/ecommerce",
                       "ar/help-center/guides/automations/apps/use-in-automations",
                       "ar/help-center/guides/automations/apps/troubleshooting"
-                    ]
-                  },
-                  {
-                    "group": "الماكرو",
-                    "pages": [
-                      "ar/help-center/guides/automations/macros"
                     ]
                   }
                 ]
@@ -1015,74 +1086,11 @@
                 ]
               },
               {
-                "group": "محادثة الفريق",
+                "group": "الطلبات",
                 "pages": [
-                  "ar/help-center/guides/team-chat/overview",
-                  {
-                    "group": "ابدأ هنا",
-                    "pages": [
-                      "ar/help-center/guides/team-chat/path-agent",
-                      "ar/help-center/guides/team-chat/path-admin",
-                      "ar/help-center/guides/team-chat/getting-started",
-                      "ar/help-center/guides/team-chat/quick-tour"
-                    ]
-                  },
-                  {
-                    "group": "للموظفين",
-                    "pages": [
-                      "ar/help-center/guides/team-chat/sidebar",
-                      "ar/help-center/guides/team-chat/direct-messages",
-                      "ar/help-center/guides/team-chat/groups",
-                      "ar/help-center/guides/team-chat/channels",
-                      "ar/help-center/guides/team-chat/messages",
-                      "ar/help-center/guides/team-chat/threads",
-                      "ar/help-center/guides/team-chat/mentions",
-                      "ar/help-center/guides/team-chat/private-reply",
-                      "ar/help-center/guides/team-chat/activity",
-                      "ar/help-center/guides/team-chat/notifications",
-                      "ar/help-center/guides/team-chat/share-from-inbox"
-                    ]
-                  },
-                  {
-                    "group": "للمشرفين والمدراء",
-                    "pages": [
-                      "ar/help-center/guides/team-chat/roles",
-                      "ar/help-center/guides/team-chat/channel-governance"
-                    ]
-                  },
-                  {
-                    "group": "روتين يومي",
-                    "pages": [
-                      "ar/help-center/guides/team-chat/routines/channel-vs-dm",
-                      "ar/help-center/guides/team-chat/routines/start-from-activity",
-                      "ar/help-center/guides/team-chat/routines/share-customer-context"
-                    ]
-                  }
-                ]
-              },
-              {
-                "group": "المهام",
-                "pages": [
-                  "ar/help-center/guides/tasks/overview",
-                  "ar/help-center/guides/tasks/path-agent",
-                  "ar/help-center/guides/tasks/path-supervisor",
-                  {
-                    "group": "للموظفين",
-                    "pages": [
-                      "ar/help-center/guides/tasks/task",
-                      "ar/help-center/guides/tasks/views",
-                      "ar/help-center/guides/tasks/routines/from-inbox-to-done"
-                    ]
-                  },
-                  {
-                    "group": "للمشرفين والمدراء",
-                    "pages": [
-                      "ar/help-center/guides/tasks/boards",
-                      "ar/help-center/guides/tasks/pipelines",
-                      "ar/help-center/guides/tasks/stages",
-                      "ar/help-center/guides/tasks/visibility"
-                    ]
-                  }
+                  "ar/help-center/guides/orders/overview",
+                  "ar/help-center/guides/orders/views-and-status",
+                  "ar/help-center/guides/orders/sources"
                 ]
               },
               {
@@ -1134,29 +1142,12 @@
                 ]
               },
               {
-                "group": "المتجر والتطبيقات",
-                "pages": [
-                  "ar/help-center/guides/store/overview",
-                  "ar/help-center/guides/store/install-apps",
-                  "ar/help-center/guides/store/ecommerce-apps",
-                  "ar/help-center/guides/store/my-apps"
-                ]
-              },
-              {
                 "group": "قاعدة المعرفة",
                 "pages": [
                   "ar/help-center/guides/knowledge-base/overview",
                   "ar/help-center/guides/knowledge-base/topics-categories",
                   "ar/help-center/guides/knowledge-base/articles",
                   "ar/help-center/guides/knowledge-base/with-ai"
-                ]
-              },
-              {
-                "group": "الطلبات",
-                "pages": [
-                  "ar/help-center/guides/orders/overview",
-                  "ar/help-center/guides/orders/views-and-status",
-                  "ar/help-center/guides/orders/sources"
                 ]
               },
               {
@@ -1169,23 +1160,33 @@
                 ]
               },
               {
+                "group": "المتجر والتطبيقات",
+                "pages": [
+                  "ar/help-center/guides/store/overview",
+                  "ar/help-center/guides/store/install-apps",
+                  "ar/help-center/guides/store/ecommerce-apps",
+                  "ar/help-center/guides/store/my-apps"
+                ]
+              },
+              {
                 "group": "الإعدادات والفوترة",
                 "pages": [
                   "ar/help-center/guides/settings/overview",
-                  "ar/help-center/guides/settings/general",
                   {
                     "group": "الفريق والصلاحيات",
                     "pages": [
                       "ar/help-center/guides/settings/team/overview",
                       "ar/help-center/guides/settings/team/invite-and-manage",
                       "ar/help-center/guides/settings/team/member-profile",
-                      "ar/help-center/guides/settings/team/availability",
                       "ar/help-center/guides/settings/team/departments",
                       "ar/help-center/guides/settings/team/branches",
                       "ar/help-center/guides/settings/team/positions",
-                      "ar/help-center/guides/settings/team/permissions"
+                      "ar/help-center/guides/settings/team/permissions",
+                      "ar/help-center/guides/settings/team/availability"
                     ]
                   },
+                  "ar/help-center/guides/settings/general",
+                  "ar/help-center/guides/settings/branding",
                   {
                     "group": "المنتجات والخدمات",
                     "pages": [
@@ -1203,7 +1204,6 @@
                       "ar/help-center/guides/notifications/desktop-push"
                     ]
                   },
-                  "ar/help-center/guides/settings/branding",
                   "ar/help-center/guides/settings/audit",
                   {
                     "group": "الفوترة",
