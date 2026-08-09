@@ -638,29 +638,27 @@
                     ]
                   },
                   {
-                    "group": "روتين يومي",
-                    "pages": [
-                      "ar/help-center/guides/inbox/routines/shift-start",
-                      "ar/help-center/guides/inbox/routines/escalate",
-                      "ar/help-center/guides/inbox/routines/shift-review"
-                    ]
-                  },
-                  {
                     "group": "للموظفين",
                     "pages": [
                       "ar/help-center/guides/inbox/agent-day",
-                      "ar/help-center/guides/inbox/list-and-filters",
-                      "ar/help-center/guides/inbox/reply-and-composer",
-                      "ar/help-center/guides/inbox/statuses",
-                      "ar/help-center/guides/inbox/customer-panel",
-                      "ar/help-center/guides/inbox/collaboration",
-                      "ar/help-center/guides/inbox/response-and-escalation",
+                      "ar/help-center/guides/inbox/list",
+                      "ar/help-center/guides/inbox/filters",
+                      "ar/help-center/guides/inbox/bulk-actions",
+                      "ar/help-center/guides/inbox/reply",
+                      "ar/help-center/guides/inbox/internal-notes",
+                      "ar/help-center/guides/inbox/attachments",
                       "ar/help-center/guides/inbox/quick-responses",
+                      "ar/help-center/guides/inbox/whatsapp-templates",
+                      "ar/help-center/guides/inbox/interactive-messages",
+                      "ar/help-center/guides/inbox/statuses",
+                      "ar/help-center/guides/inbox/snooze",
+                      "ar/help-center/guides/inbox/tasks-from-conversation",
+                      "ar/help-center/guides/inbox/customer-panel",
+                      "ar/help-center/guides/inbox/ai-summary",
+                      "ar/help-center/guides/inbox/participants",
                       "ar/help-center/guides/inbox/social-comments",
                       "ar/help-center/guides/inbox/calls-in-inbox",
-                      "ar/help-center/guides/inbox/tasks-from-conversation",
-                      "ar/help-center/guides/inbox/shortcuts",
-                      "ar/help-center/guides/inbox/tips"
+                      "ar/help-center/guides/inbox/shortcuts"
                     ]
                   },
                   {
@@ -668,11 +666,20 @@
                     "pages": [
                       "ar/help-center/guides/inbox/assign",
                       "ar/help-center/guides/inbox/smart-assignment",
-                      "ar/help-center/guides/inbox/bulk-actions",
+                      "ar/help-center/guides/inbox/sla",
                       "ar/help-center/guides/inbox/supervise-queue",
-                      "ar/help-center/guides/inbox/macros-and-handoff",
-                      "ar/help-center/guides/inbox/channels-in-inbox",
-                      "ar/help-center/guides/inbox/search-and-notifications"
+                      "ar/help-center/guides/inbox/macros",
+                      "ar/help-center/guides/inbox/bot-handoff",
+                      "ar/help-center/guides/inbox/dashboard-apps",
+                      "ar/help-center/guides/inbox/channels-in-inbox"
+                    ]
+                  },
+                  {
+                    "group": "روتين يومي",
+                    "pages": [
+                      "ar/help-center/guides/inbox/routines/shift-start",
+                      "ar/help-center/guides/inbox/routines/escalate",
+                      "ar/help-center/guides/inbox/routines/shift-review"
                     ]
                   }
                 ]
@@ -781,16 +788,14 @@
                 "group": "واتساب",
                 "pages": [
                   "ar/help-center/guides/whatsapp/overview",
-                  "ar/help-center/guides/whatsapp/connect",
                   {
-                    "group": "البداية والربط",
+                    "group": "الربط والإعداد",
                     "pages": [
-                      "ar/help-center/guides/whatsapp/getting-started/api-1890472",
-                      "ar/help-center/guides/whatsapp/getting-started/api-1890473",
-                      "ar/help-center/guides/whatsapp/getting-started/doc-1890474",
-                      "ar/help-center/guides/whatsapp/getting-started/api-1890475",
-                      "ar/help-center/guides/whatsapp/getting-started/doc-1894809",
-                      "ar/help-center/guides/whatsapp/whatsapp-ctwa-ads"
+                      "ar/help-center/guides/whatsapp/connect",
+                      "ar/help-center/guides/whatsapp/disable-2fa",
+                      "ar/help-center/guides/whatsapp/profile",
+                      "ar/help-center/guides/whatsapp/qr-codes",
+                      "ar/help-center/guides/whatsapp/errors"
                     ]
                   },
                   {
@@ -811,12 +816,18 @@
                     ]
                   },
                   {
-                    "group": "تدفقات واتساب",
+                    "group": "التدفقات",
                     "pages": [
                       "ar/help-center/guides/whatsapp/flows/doc-1890480",
                       "ar/help-center/guides/whatsapp/flows/doc-1890481",
                       "ar/help-center/guides/whatsapp/flows/doc-2284423",
                       "ar/help-center/guides/whatsapp/flows/doc-1890482"
+                    ]
+                  },
+                  {
+                    "group": "مدير الإعلانات",
+                    "pages": [
+                      "ar/help-center/guides/whatsapp/whatsapp-ctwa-ads"
                     ]
                   },
                   {
@@ -853,11 +864,20 @@
                     ]
                   },
                   {
-                    "group": "التسعير والتقارير",
+                    "group": "التسعير والتحليلات",
                     "pages": [
                       "ar/help-center/guides/whatsapp/pricing/doc-1890483",
                       "ar/help-center/guides/whatsapp/pricing/doc-2284478",
                       "ar/help-center/guides/whatsapp/reports/doc-2284476"
+                    ]
+                  },
+                  {
+                    "group": "مفاهيم ومرجع",
+                    "pages": [
+                      "ar/help-center/guides/whatsapp/getting-started/api-1890472",
+                      "ar/help-center/guides/whatsapp/getting-started/api-1890473",
+                      "ar/help-center/guides/whatsapp/getting-started/doc-1890474",
+                      "ar/help-center/guides/whatsapp/getting-started/api-1890475"
                     ]
                   }
                 ]
@@ -1589,6 +1609,70 @@
     {
       "source": "/ar/help-center/guides/getting-started/first-day-agent",
       "destination": "/ar/help-center/guides/getting-started/first-day-customer-service"
+    },
+    {
+      "source": "/ar/help-center/guides/inbox/list-and-filters",
+      "destination": "/ar/help-center/guides/inbox/list"
+    },
+    {
+      "source": "/ar/help-center/guides/inbox/reply-and-composer",
+      "destination": "/ar/help-center/guides/inbox/reply"
+    },
+    {
+      "source": "/ar/help-center/guides/inbox/collaboration",
+      "destination": "/ar/help-center/guides/inbox/internal-notes"
+    },
+    {
+      "source": "/ar/help-center/guides/inbox/macros-and-handoff",
+      "destination": "/ar/help-center/guides/inbox/macros"
+    },
+    {
+      "source": "/ar/help-center/guides/inbox/response-and-escalation",
+      "destination": "/ar/help-center/guides/inbox/routines/escalate"
+    },
+    {
+      "source": "/ar/help-center/guides/inbox/tips",
+      "destination": "/ar/help-center/guides/inbox/agent-day"
+    },
+    {
+      "source": "/ar/help-center/guides/inbox/search-and-notifications",
+      "destination": "/ar/help-center/guides/inbox/overview"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/doc-1944863",
+      "destination": "/ar/help-center/guides/whatsapp/errors"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/doc-2280953",
+      "destination": "/ar/help-center/guides/whatsapp/profile"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/qr-1890488",
+      "destination": "/ar/help-center/guides/whatsapp/qr-codes"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/doc-1914556",
+      "destination": "/ar/help-center/guides/whatsapp/disable-2fa"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/doc-1890487",
+      "destination": "/ar/help-center/guides/whatsapp/overview"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/getting-started/doc-1894809",
+      "destination": "/ar/help-center/guides/business-verification/overview"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/business-verification/overview",
+      "destination": "/ar/help-center/guides/business-verification/overview"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/business-verification/submit",
+      "destination": "/ar/help-center/guides/business-verification/submit"
+    },
+    {
+      "source": "/ar/help-center/guides/whatsapp/business-verification/status",
+      "destination": "/ar/help-center/guides/business-verification/status"
     }
   ]
 }
