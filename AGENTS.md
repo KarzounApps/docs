@@ -8,7 +8,7 @@
 - Configuration lives in `docs.json`
 - GraphQL public API schema: live SDL at `https://dev.api.karzoun.chat/public-api.graphql` (gateway `GET /public-api.graphql`) → Mintlify generates `api-reference/`
 - Do **not** treat a checked-in `public-api.graphql` as source of truth; `docs.json` graphql `source` must be that HTTPS URL
-- Source of truth for content migration: `octobots/docs` (legacy Redocly Realm)
+- This Mintlify site is the current docs source of truth. Legacy sources were Redocly Realm / old `karzounChatDocs` (migration complete for most areas; Help Center still migrating)
 - Prefer Mintlify components (`Steps`, `Card`, `Tip`, `Note`, `Info`, `Warning`, `Tabs`, `CodeGroup`) over custom HTML
 - Use the Mintlify docs at https://www.mintlify.com/docs (and MCP `https://www.mintlify.com/docs/mcp` when available)
 
@@ -39,7 +39,7 @@
 - Prefer CSS logical properties (`inset-inline-*`, `margin-inline-*`, `padding-inline-*`, `border-inline-*`) over physical left/right when overriding Mintlify chrome for RTL
 - `style.css` is the full Arabic RTL audit — update it when new Mintlify chrome breaks under `/ar` (do not wait for per-component reports). Never re-enable `list-style` on prose `ul` (Mintlify uses `li::before` bullets)
 - **Arabic content parity:** every English MDX page (except Help Center articles and generated `api-reference/`) has a matching `ar/…` translation with the same structure; AR nav mirrors EN tabs. Keep internal links under `/ar/…`
-- **Help Center:** protocol + rebuild plan in `HELP-CENTER.md`. Gold standard: `ar/help-center/guides/contacts/`. Active rewrite wave order: Campaigns (broadcasts) → Karzoun Pixel → Inbox → … (see plan in HELP-CENTER.md). Verify `v4UI` + `octobots` packages before rewriting. Images: `images/help/`. Do not put Developers / Partners / stub pages in Help nav.
+- **Help Center:** protocol + rebuild plan in `HELP-CENTER.md`. Gold standard: `ar/help-center/guides/contacts/`. Active rewrite wave order: Campaigns (broadcasts) → Karzoun Pixel → Inbox → … (see plan in HELP-CENTER.md). Verify `v4UI` + monorepo packages before rewriting. Images: `images/help/`. Do not put Developers / Partners / stub pages in Help nav.
 
 ## Terminology
 
@@ -53,6 +53,9 @@
 - Public SDL (unauthenticated): `https://YOUR_SUBDOMAIN.api.karzoun.chat/public-api.graphql` — docs/CI canonical: `https://dev.api.karzoun.chat/public-api.graphql`
 - Playground: `https://karzoun.chat/developer/playground`
 - Developer dashboard: `https://karzoun.chat/developer`
+- Public operation docs live in `packages/core/src/data/schema/descriptions/*.ts` (imported by thin `schema/*.ts`); pilot: Apps (`apps` / `appsAdd`)
+- When authoring or rolling out SDL descriptions, follow the agent skill `.cursor/skills/graphql-sdl-descriptions/SKILL.md` (not human-facing docs). Deep links: `/api-reference/queries/{name}`, `/api-reference/mutations/{name}`, `/api-reference/types/{Name}`
+
 
 ## Brand
 
@@ -84,6 +87,6 @@
 
 1. Keep `docs.json` navigation in sync when adding pages
 2. Convert `.md` → `.mdx`, add frontmatter, replace Redocly-only components
-3. Copy images from `octobots/docs/images` as needed
+3. Copy images from `images/` as needed
 4. Preserve meaning; improve clarity; do not drop warnings/security notes
 5. After large batches, run `mint validate` / `mint dev`

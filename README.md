@@ -9,7 +9,7 @@ Documentation for [Karzoun Chat](https://karzoun.chat) — GraphQL API, partners
 - **Pages:** MDX with YAML frontmatter
 - **API reference:** GraphQL SDL from `https://dev.api.karzoun.chat/public-api.graphql` (auto-generated under `api-reference/`)
 
-This site replaces the previous Redocly Realm docs in `octobots/docs`.
+This repo is the `docs` submodule of the [Karzoun](https://github.com/KarzounApps/octobots) monorepo (`docs/`). It replaces the previous Redocly Realm site (`karzounChatDocs`).
 
 ## Local development
 
