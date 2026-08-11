@@ -44,7 +44,8 @@
 ## Terminology
 
 - Use **Karzoun** or **Karzoun Chat** for the product — not Octobots in customer-facing docs
-- Prefer **workspace** over "tenant" or "organization" when describing a customer account
+- Prefer **workspace** over "tenant" or "organization" in English when describing a customer account
+- In Arabic Help Center / `ar/` prose: use **حساب** / **حسابك في كرزون** / **حساب كرزون** — not **مساحة** / **مساحة العمل**. (حسابك في كرزون = مساحة العمل التي يعمل من خلالها الفريق.) Keep literal «مساحة» only for physical/UI space, namespace, storage, etc.
 - Prefer **app token** / `x-app-token` for public API auth
 - Prefer **Help Center** for end-user docs (not "customers docs")
 - Prefer **MiniApps** (one word, capital A) for marketplace JSON apps

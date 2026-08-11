@@ -633,6 +633,38 @@ type AutomationVersionList {
   pagination: PaginationInfo!
 }
 
+"""
+Workspace-wide average email delivery percentages across all campaigns.
+Returned by [`engageEmailPercentages`](/api-reference/queries/engageEmailPercentages). Compare against a single
+campaign's [`EngageMessage`](/api-reference/types/EngageMessage).`stats` for that campaign's own rates.
+"""
+type AvgEmailStats {
+  avgBouncePercent: Float
+  avgClickPercent: Float
+  avgComplaintPercent: Float
+  avgDeliveryPercent: Float
+  avgOpenPercent: Float
+  avgRejectPercent: Float
+  avgRenderingFailurePercent: Float
+  avgSendPercent: Float
+  total: Float
+}
+
+"""
+Workspace-wide average WhatsApp delivery percentages across all campaigns.
+Returned by [`engageWhatsappPercentages`](/api-reference/queries/engageWhatsappPercentages). Compare against a
+single campaign's [`EngageMessage`](/api-reference/types/EngageMessage).`whatsappStats` for that
+campaign's own rates.
+"""
+type AvgWhatsappStats {
+  avgClickPercent: Float
+  avgDeliveryPercent: Float
+  avgOpenPercent: Float
+  avgFailedPercent: Float
+  avgSendPercent: Float
+  total: Float
+}
+
 type BatchSavePositionsResponse {
   updatedNodeIds: [String]
   updatedTriggerIds: [String]
@@ -1352,6 +1384,62 @@ type CustomerTimelineResponse {
 
 scalar Date
 
+type DateRange {
+  start: Date!
+  end: Date!
+}
+
+input DateRangeInput {
+  start: Date!
+  end: Date!
+}
+
+"""
+A single email delivery event (send, open, click, bounce, etc.) recorded for
+one recipient of one campaign. Returned by [`engageReportsList`](/api-reference/queries/engageReportsList).
+"""
+type DeliveryReport {
+  """Unique delivery report identifier."""
+  _id: String!
+  """Recipient customer id."""
+  customerId: String
+  """
+  Provider message id (e.g. SES/SendGrid/Mailgun), useful for correlating with provider dashboards.
+  """
+  mailId: String
+  """
+  Delivery event status, e.g. `send`, `delivery`, `open`, `click`, `bounce`, `complaint`, `reject`.
+  """
+  status: String
+  """
+  Resolved parent campaign. See [`EngageMessage`](/api-reference/types/EngageMessage).
+  """
+  engage: EngageMessage
+  """When this delivery event was recorded."""
+  createdAt: Date
+  """Resolved recipient display name, for list views."""
+  customerName: String
+  """Recipient email address."""
+  email: String
+}
+
+"""
+Paginated list of email delivery events returned by [`engageReportsList`](/api-reference/queries/engageReportsList).
+
+`data` contains [`DeliveryReport`](/api-reference/types/DeliveryReport) rows. Page shape follows
+[Pagination](/developers/guides/pagination).
+"""
+type DeliveryReportPaginatedResponse {
+  """
+  [`DeliveryReport`](/api-reference/types/DeliveryReport) rows for the current page.
+  """
+  data: [DeliveryReport]!
+  """
+  Standard pagination metadata: `totalCount`, `currentPage`, `totalPages`, `hasNextPage`, `hasPreviousPage`, `perPage`.
+  """
+  pagination: PaginationInfo!
+}
+
 """
 An organizational **department** — a hierarchical grouping of team members
 used for routing, permissions, and reporting.
@@ -1492,6 +1580,418 @@ type EmailTemplateListResponse {
   `hasNextPage`, `hasPreviousPage`, `perPage`.
   """
   pagination: PaginationInfo!
+}
+
+"""
+Lightweight reference to a customer tag used as campaign audience, resolved
+for display on [`EngageMessage`](/api-reference/types/EngageMessage).`customerTags`.
+"""
+type EngageAudienceTag {
+  _id: String
+  name: String
+  colorCode: String
+}
+
+"""
+A single execution log line for one campaign run (e.g. batch progress,
+provider errors). Returned by [`engageLogs`](/api-reference/queries/engageLogs).
+"""
+type EngageLog {
+  """Unique log entry identifier."""
+  _id: String!
+  """Campaign this log entry belongs to."""
+  engageMessageId: String!
+  """When this log entry was recorded."""
+  createdAt: Date
+  """Human-readable log message."""
+  message: String
+  """Log severity/kind, e.g. `info`, `error`."""
+  status: String
+}
+
+"""
+Paginated execution logs for one campaign, returned by [`engageLogs`](/api-reference/queries/engageLogs).
+
+`data` contains [`EngageLog`](/api-reference/types/EngageLog) rows. Page shape follows
+[Pagination](/developers/guides/pagination).
+"""
+type EngageLogPaginatedResponse {
+  """
+  [`EngageLog`](/api-reference/types/EngageLog) rows for the current page.
+  """
+  data: [EngageLog]!
+  """
+  Standard pagination metadata: `totalCount`, `currentPage`, `totalPages`, `hasNextPage`, `hasPreviousPage`, `perPage`.
+  """
+  pagination: PaginationInfo!
+}
+
+"""
+A **broadcast / engage campaign** — a scheduled or one-off message sent to a
+segment, tag, or list of customers over email, messenger, push, or WhatsApp.
+
+Create with [`engageMessageAdd`](/api-reference/mutations/engageMessageAdd), run its lifecycle with
+[`engageMessageStart`](/api-reference/mutations/engageMessageStart) / [`engageMessagePause`](/api-reference/mutations/engageMessagePause) /
+[`engageMessageResume`](/api-reference/mutations/engageMessageResume) / [`engageMessageStop`](/api-reference/mutations/engageMessageStop),
+and inspect delivery with [`engageReportsList`](/api-reference/queries/engageReportsList),
+[`engageWhatsappDeliveries`](/api-reference/queries/engageWhatsappDeliveries), or [`engageLogs`](/api-reference/queries/engageLogs).
+
+<Info>
+Only one of `email`, `messenger`, `push`, or `whatsappMessage` is populated, matching `method`.
+</Info>
+"""
+type EngageMessage {
+  """Unique campaign identifier."""
+  _id: String!
+  """
+  Campaign type, e.g. `auto`, `visitorAuto`, `manual`. See `kind` filter on [`engageMessages`](/api-reference/queries/engageMessages).
+  """
+  kind: String
+  """Conversation/message tags targeted for automation-kind campaigns."""
+  tagIds: [String]
+  """
+  Customer tags used to build the audience. Resolved to names via `customerTags`.
+  """
+  customerTagIds: [String]
+  """
+  Segment v2 ids used to build the audience. Resolved to names via `segments`.
+  """
+  segmentIds: [String]
+  """
+  Explicit customer ids included in the audience, in addition to segments/tags.
+  """
+  customerIds: [String]
+  """
+  Campaign name shown in the dashboard and [`engageMessages`](/api-reference/queries/engageMessages) search.
+  """
+  title: String
+  """Team member id the campaign is sent as. Resolved via `fromUser`."""
+  fromUserId: String
+  """
+  Delivery channel: `email`, `messenger`, `push`, or `whatsapp`. Determines which of `email` / `messenger` / `push` / `whatsappMessage` is set.
+  """
+  method: String
+  """
+  Lifecycle status, e.g. `draft`, `live`, `paused`, `yet`, `failed`. Advance with [`engageMessageStart`](/api-reference/mutations/engageMessageStart) and friends.
+  """
+  status: String
+  """When this campaign was created."""
+  createdAt: Date
+  """Customer ids that have received a messenger-kind campaign so far."""
+  messengerReceivedCustomerIds: [String]
+  """Total audience size resolved at send time."""
+  totalCustomersCount: Int
+  """
+  Audience size after removing invalid / unreachable recipients (e.g. missing email/phone).
+  """
+  validCustomersCount: Int
+  """Number of messages sent so far across all runs."""
+  sentCount: Int
+  """Number of messages that failed to send across all runs."""
+  failedCount: Int
+  """Number of recipients processed so far (sent + failed + skipped)."""
+  processedCount: Int
+  """
+  How many times this campaign has run (relevant for recurring schedules).
+  """
+  runCount: Int
+  """Timestamp of the most recent run."""
+  lastRunAt: Date
+  """When the current or most recent run started."""
+  startedAt: Date
+  """When the most recent run finished successfully."""
+  completedAt: Date
+  """
+  When the campaign was stopped via [`engageMessageStop`](/api-reference/mutations/engageMessageStop).
+  """
+  stoppedAt: Date
+  """Most recent send-time error message, if any."""
+  lastError: String
+  """Total number of send batches for the current run."""
+  totalBatchCount: Int
+  """Number of send batches completed for the current run."""
+  completedBatchCount: Int
+  """
+  Status the campaign was in before it was paused, restored by [`engageMessageResume`](/api-reference/mutations/engageMessageResume).
+  """
+  pausedFrom: String
+  """
+  History of individual run summaries. See [`EngageRunSummary`](/api-reference/types/EngageRunSummary).
+  """
+  runs: [EngageRunSummary]
+  """
+  Email content and headers when `method` is `email`. See [`EngageMessageEmail`](/api-reference/types/EngageMessageEmail) shape (input-only type; returned as `JSON`).
+  """
+  email: JSON
+  """
+  Messenger content and rules when `method` is `messenger` (returned as `JSON`).
+  """
+  messenger: JSON
+  """
+  WhatsApp template configuration when `method` is `whatsapp`. See [`EngageMessageWhatsapp`](/api-reference/types/EngageMessageWhatsapp).
+  """
+  whatsappMessage: EngageMessageWhatsapp
+  """
+  Automation namespace this campaign was created from, if triggered by an automation.
+  """
+  automationNs: String
+  """
+  Push notification content when `method` is `push` (returned as `JSON`).
+  """
+  push: JSON
+  """User id who created the campaign."""
+  createdBy: String
+  """
+  Send schedule — once or recurring. See [`EngageScheduleDate`](/api-reference/types/EngageScheduleDate).
+  """
+  scheduleDate: EngageScheduleDate
+  """
+  Resolved segment names for `segmentIds`. See [`EngageSegment`](/api-reference/types/EngageSegment).
+  """
+  segments: [EngageSegment]
+  """
+  Resolved customer tag names for `customerTagIds`. See [`EngageAudienceTag`](/api-reference/types/EngageAudienceTag).
+  """
+  customerTags: [EngageAudienceTag]
+  """Resolved conversation/message tags for `tagIds`."""
+  getTags: [Tag]
+  """Resolved team member for `fromUserId`."""
+  fromUser: User
+  """
+  Resolved integration used to send WhatsApp/messenger content (returned as `JSON`).
+  """
+  fromIntegration: JSON
+  """Display name of the creator, for list views."""
+  createdUserName: String
+  """
+  Aggregate email delivery stats for this campaign (returned as `JSON`). See [`AvgEmailStats`](/api-reference/types/AvgEmailStats) for the shape of workspace-wide averages.
+  """
+  stats: JSON
+  """
+  Aggregate WhatsApp delivery stats for this campaign (returned as `JSON`). See [`AvgWhatsappStats`](/api-reference/types/AvgWhatsappStats) for the shape of workspace-wide averages.
+  """
+  whatsappStats: JSON
+  """
+  Aggregate push delivery stats for this campaign. See [`EngagePushStats`](/api-reference/types/EngagePushStats).
+  """
+  pushStats: EngagePushStats
+  """
+  Recent execution logs. Prefer [`engageLogs`](/api-reference/queries/engageLogs) for paginated access.
+  """
+  logs: [EngageLog]
+}
+
+"""
+Email content for an `email`-method campaign. Passed to
+[`engageMessageAdd`](/api-reference/mutations/engageMessageAdd) / [`engageMessageEdit`](/api-reference/mutations/engageMessageEdit).
+Preview or verify rendering first with [`engageMessageSendTestEmail`](/api-reference/mutations/engageMessageSendTestEmail).
+"""
+input EngageMessageEmail {
+  """HTML body. Merge tags and templates are resolved server-side."""
+  content: String
+  """Email subject line. **Required.**"""
+  subject: String!
+  """Reply-To header. Defaults to `sender` when omitted."""
+  replyTo: String
+  """Envelope From address."""
+  sender: String
+  """Display name rendered as `"Name <sender>"`."""
+  senderName: String
+  """
+  Attachment descriptors (`{ url, name, type, size }`), returned as `JSON`.
+  """
+  attachments: [JSON]
+  """Optional email template id, for tracking and analytics."""
+  templateId: String
+}
+
+"""
+Messenger (live chat) content and targeting rules for a `messenger`-method
+campaign.
+"""
+input EngageMessageMessenger {
+  """Messenger campaign kind, e.g. `chat`, `popup`."""
+  kind: String
+  """
+  How the message appears in the widget, e.g. `badge`, `popup`, `fullMessage`.
+  """
+  sentAs: String
+  """Message body (HTML/text depending on `sentAs`)."""
+  content: String
+  """
+  Trigger rules controlling when the message shows. See [`InputRule`](/api-reference/types/InputRule).
+  """
+  rules: [InputRule]
+}
+
+"""
+Paginated list of campaigns returned by [`engageMessages`](/api-reference/queries/engageMessages).
+
+`data` contains [`EngageMessage`](/api-reference/types/EngageMessage) rows. Page shape follows
+[Pagination](/developers/guides/pagination).
+"""
+type EngageMessagePaginatedResponse {
+  """
+  [`EngageMessage`](/api-reference/types/EngageMessage) rows for the current page.
+  """
+  data: [EngageMessage]!
+  """
+  Standard pagination metadata: `totalCount`, `currentPage`, `totalPages`, `hasNextPage`, `hasPreviousPage`, `perPage`.
+  """
+  pagination: PaginationInfo!
+}
+
+"""Push notification content for a `push`-method campaign."""
+input EngageMessagePush {
+  """Notification title."""
+  title: String
+  """Notification body text. **Required.**"""
+  body: String!
+  """Optional image shown in the notification."""
+  imageUrl: String
+  """App/URL deep link opened on tap."""
+  deepLink: String
+  """Optional subtitle (iOS)."""
+  subtitle: String
+  """Notification sound name, or `"default"`."""
+  sound: String
+  """App icon badge value (`JSON`; number or provider-specific shape)."""
+  badge: JSON
+  """
+  Groups notifications so newer ones replace older ones with the same key.
+  """
+  collapseKey: String
+  """How long the provider should keep retrying delivery, in seconds."""
+  ttlSeconds: Int
+  """Delivery priority, e.g. `normal`, `high`."""
+  priority: String
+  """iOS interruption level, e.g. `active`, `time-sensitive`."""
+  interruptionLevel: String
+  """
+  When `true`, delivers a silent/background notification with no user-visible alert.
+  """
+  silent: Boolean
+  """Notification accent color (Android)."""
+  accentColor: String
+  """Android notification channel id."""
+  channelId: String
+  """Custom key/value payload delivered with the notification (`JSON`)."""
+  data: JSON
+}
+
+"""
+Resolved WhatsApp template configuration for a `whatsapp`-method campaign.
+Appears on [`EngageMessage`](/api-reference/types/EngageMessage).`whatsappMessage`. Set at create/edit
+time via [`EngageMessageWhatsappInput`](/api-reference/types/EngageMessageWhatsappInput).
+"""
+type EngageMessageWhatsapp {
+  """WhatsApp Business integration used to send."""
+  fromIntegrationId: String
+  """Approved WhatsApp template id. **Required.**"""
+  templateId: String!
+  """Template variable values (returned as `JSON`)."""
+  params: JSON
+  """
+  Field-to-variable mappings used to fill template params per recipient (returned as `JSON`).
+  """
+  mappings: JSON
+  """Department associated with the sending integration, if applicable."""
+  departmentId: String
+}
+
+"""
+WhatsApp template configuration for a `whatsapp`-method campaign. Preview
+with [`engageMessageSendTestWhatsapp`](/api-reference/mutations/engageMessageSendTestWhatsapp) before sending.
+"""
+input EngageMessageWhatsappInput {
+  """WhatsApp Business integration to send from. **Required.**"""
+  fromIntegrationId: String!
+  """Approved WhatsApp template id. **Required.**"""
+  templateId: String!
+  """Template variable values (`JSON`)."""
+  params: JSON
+  """
+  Field-to-variable mappings used to fill template params per recipient (`JSON`).
+  """
+  mappings: JSON
+  """Department associated with the sending integration, if applicable."""
+  departmentId: String
+  """
+  Full template payload as returned by the provider (`JSON`), used to render a live preview.
+  """
+  template: JSON
+}
+
+"""
+Aggregate push notification delivery counts for one campaign.
+Appears on [`EngageMessage`](/api-reference/types/EngageMessage).`pushStats`.
+"""
+type EngagePushStats {
+  total: Int
+  sent: Int
+  failed: Int
+  expired: Int
+}
+
+"""
+Summary of a single execution of a recurring or scheduled campaign.
+Appears in [`EngageMessage`](/api-reference/types/EngageMessage).`runs`.
+"""
+type EngageRunSummary {
+  runNumber: Int
+  startedAt: Date
+  endedAt: Date
+  endStatus: String
+  totalCustomersCount: Int
+  validCustomersCount: Int
+  sentCount: Int
+  failedCount: Int
+  processedCount: Int
+  totalBatchCount: Int
+  completedBatchCount: Int
+  lastError: String
+}
+
+"""
+Send schedule for a campaign — either a one-time send (`once`) or a
+recurring schedule (`recurring`), selected by `mode`.
+"""
+type EngageScheduleDate {
+  """
+  `"once"` or `"recurring"`. Selects whether `once` or `recurring` applies.
+  """
+  mode: String
+  """One-time send time. Set when `mode` is `"once"`."""
+  once: OnceSchedule
+  """Recurrence rule. Set when `mode` is `"recurring"`."""
+  recurring: RecurringSchedule
+}
+
+"""
+Send schedule for a campaign — either a one-time send (`once`) or a
+recurring schedule (`recurring`), selected by `mode`. See
+[`EngageScheduleDate`](/api-reference/types/EngageScheduleDate) for the resolved shape.
+"""
+input EngageScheduleDateInput {
+  """
+  `"once"` or `"recurring"`. Selects whether `once` or `recurring` is used.
+  """
+  mode: String
+  """One-time send time. Required when `mode` is `"once"`."""
+  once: OnceScheduleInput
+  """Recurrence rule. Required when `mode` is `"recurring"`."""
+  recurring: RecurringScheduleInput
+}
+
+"""
+Lightweight reference to a segment (v2) used as campaign audience, resolved
+for display on [`EngageMessage`](/api-reference/types/EngageMessage).`segments`. Manage segments via
+the segments API — not part of this domain.
+"""
+type EngageSegment {
+  _id: String
+  name: String
+  contentType: String
 }
 
 """Internal: ISO date range filter."""
@@ -1875,22 +2375,6 @@ type Form {
   integrationId: String
 }
 
-"""A form embedded in a knowledge base article, scoped to a workspace."""
-type FormCode {
-  """Workspace the linked form belongs to."""
-  workspaceId: String
-  """Id of the linked form."""
-  formId: String
-}
-
-"""
-Input for embedding a form in a knowledge base article. See [`FormCode`](/api-reference/types/FormCode).
-"""
-input FormCodeInput {
-  workspaceId: String
-  formId: String
-}
-
 """
 Paginated list of forms. `data` contains [`Form`](/api-reference/types/Form) rows; page shape
 follows [Pagination](/developers/guides/pagination).
@@ -1985,6 +2469,23 @@ type InboxField {
   conversation: [Field]
   """Custom fields available on device/browser data."""
   device: [Field]
+}
+
+"""
+A single visitor-targeting rule (e.g. "page URL contains …") for a
+messenger-method campaign.
+"""
+input InputRule {
+  """Rule identifier (client-generated)."""
+  _id: String!
+  """Rule subject, e.g. `currentPageUrl`, `numberOfVisits`."""
+  kind: String!
+  """Human-readable label for this rule."""
+  text: String!
+  """Comparison operator, e.g. `contains`, `is`, `greaterThan`."""
+  condition: String!
+  """Value to compare against."""
+  value: String
 }
 
 """
@@ -2091,374 +2592,6 @@ type integrationsTotalCount {
 }
 
 scalar JSON
-
-"""
-A knowledge base article — help content, documentation, or a guide.
-
-Articles belong to a [`KnowledgeBaseTopic`](/api-reference/types/KnowledgeBaseTopic) and one or more
-[`KnowledgeBaseCategory`](/api-reference/types/KnowledgeBaseCategory) rows. Fetch a list with
-[`knowledgeBaseArticles`](/api-reference/queries/knowledgeBaseArticles) or a single article with
-[`knowledgeBaseArticlesAdd`](/api-reference/mutations/knowledgeBaseArticlesAdd).
-
-<Info>
-`content` (full HTML body) is **omitted from list responses** — [`knowledgeBaseArticles`](/api-reference/queries/knowledgeBaseArticles) projects it out for payload size. Only detail-style reads return it.
-</Info>
-"""
-type KnowledgeBaseArticle {
-  _id: String!
-  """
-  Unique code identifier for programmatic access, usable in place of `_id` in most lookups.
-  """
-  code: String
-  """The article title."""
-  title: String
-  """Brief summary or excerpt of the article content."""
-  summary: String
-  """
-  Full article content (HTML).
-  
-  <Info>
-  Not returned by [`knowledgeBaseArticles`](/api-reference/queries/knowledgeBaseArticles) (list). Present on detail-style reads only.
-  </Info>
-  """
-  content: String
-  """Publication status: `draft`, `publish`, or `scheduled`."""
-  status: String
-  """
-  Whether this article is only visible to team members (not exposed on public help pages).
-  """
-  isPrivate: Boolean
-  """Available emoji reaction types for this article."""
-  reactionChoices: [String]
-  """Count of each reaction type received, keyed by reaction choice."""
-  reactionCounts: JSON
-  """User id of the article creator."""
-  createdBy: String
-  """The resolved user who created this article."""
-  createdUser: User
-  """When this article was created."""
-  createdDate: Date
-  """User id of the last modifier."""
-  modifiedBy: String
-  """When this article was last modified."""
-  modifiedDate: Date
-  """
-  The [`KnowledgeBaseTopic`](/api-reference/types/KnowledgeBaseTopic) this article belongs to.
-  """
-  topicId: String
-  """
-  The primary [`KnowledgeBaseCategory`](/api-reference/types/KnowledgeBaseCategory) this article belongs to.
-  """
-  categoryId: String
-  """Total number of times this article has been viewed."""
-  viewCount: Int
-  """File attachments included with this article."""
-  attachments: [Attachment]
-  """Featured image for the article."""
-  image: Attachment
-  """
-  PDF attachment with extracted page images. See [`PdfAttachment`](/api-reference/types/PdfAttachment).
-  """
-  pdfAttachment: PdfAttachment
-  """User id of who published this article."""
-  publishedUserId: String
-  """The resolved user who published this article."""
-  publishedUser: User
-  """Scheduled publication date, used when `status` is `scheduled`."""
-  scheduledDate: Date
-  """
-  Forms embedded in this article. See [`FormCode`](/api-reference/types/FormCode).
-  """
-  forms: [FormCode]
-}
-
-"""
-Input for [`knowledgeBaseArticlesAdd`](/api-reference/mutations/knowledgeBaseArticlesAdd) and [`knowledgeBaseArticlesEdit`](/api-reference/mutations/knowledgeBaseArticlesEdit).
-"""
-input KnowledgeBaseArticleDoc {
-  """Unique code identifier for programmatic access."""
-  code: String
-  """The article title. **Required.**"""
-  title: String!
-  """Brief summary or excerpt."""
-  summary: String
-  """Full article content in HTML. **Required.**"""
-  content: String!
-  """Publication status: `draft`, `publish`, or `scheduled`. **Required.**"""
-  status: String!
-  """Whether this article is only visible to team members."""
-  isPrivate: Boolean
-  """Available emoji reaction types."""
-  reactionChoices: [String]
-  """
-  [`KnowledgeBaseCategory`](/api-reference/types/KnowledgeBaseCategory) ids to assign this article to.
-  """
-  categoryIds: [String]
-  """
-  The [`KnowledgeBaseTopic`](/api-reference/types/KnowledgeBaseTopic) this article belongs to.
-  """
-  topicId: String
-  """
-  The primary [`KnowledgeBaseCategory`](/api-reference/types/KnowledgeBaseCategory) this article belongs to.
-  """
-  categoryId: String
-  """Featured image for the article."""
-  image: AttachmentInput
-  """File attachments."""
-  attachments: [AttachmentInput]
-  """
-  PDF attachment with page images. See [`PdfAttachmentInput`](/api-reference/types/PdfAttachmentInput).
-  """
-  pdfAttachment: PdfAttachmentInput
-  """Scheduled publication date. Used when `status` is `scheduled`."""
-  scheduledDate: Date
-  """
-  Forms to embed in this article. See [`FormCodeInput`](/api-reference/types/FormCodeInput).
-  """
-  forms: [FormCodeInput]
-}
-
-"""
-Paginated list of [`KnowledgeBaseArticle`](/api-reference/types/KnowledgeBaseArticle) rows. Page shape follows [Pagination](/developers/guides/pagination).
-"""
-type KnowledgeBaseArticlesPaginated {
-  """
-  [`KnowledgeBaseArticle`](/api-reference/types/KnowledgeBaseArticle) rows for the current page. `content` is omitted — see [`KnowledgeBaseArticle`](/api-reference/types/KnowledgeBaseArticle).
-  """
-  data: [KnowledgeBaseArticle]
-  """
-  Standard pagination metadata: `totalCount`, `currentPage`, `totalPages`, `hasNextPage`, `hasPreviousPage`, `perPage`.
-  """
-  pagination: PaginationInfo
-}
-
-"""
-Paginated list of [`KnowledgeBaseCategory`](/api-reference/types/KnowledgeBaseCategory) rows.
-
-<Info>
-When both `page` and `perPage` are omitted, [`knowledgeBaseCategories`](/api-reference/queries/knowledgeBaseCategories) returns **all** matching categories with `pagination: null`.
-</Info>
-"""
-type KnowledgeBaseCategoriesPaginated {
-  """
-  [`KnowledgeBaseCategory`](/api-reference/types/KnowledgeBaseCategory) rows for the current page.
-  """
-  data: [KnowledgeBaseCategory]
-  """Pagination metadata, or `null` when `page`/`perPage` were omitted."""
-  pagination: PaginationInfo
-}
-
-"""
-A category that groups related knowledge base articles.
-
-Categories belong to a [`KnowledgeBaseTopic`](/api-reference/types/KnowledgeBaseTopic) and can be nested under a
-parent category. List categories with [`knowledgeBaseCategories`](/api-reference/queries/knowledgeBaseCategories).
-"""
-type KnowledgeBaseCategory {
-  _id: String
-  """Unique code identifier for programmatic access."""
-  code: String
-  """The category title."""
-  title: String
-  """Description of what this category covers."""
-  description: String
-  """Articles in this category. Pass `status` to filter (e.g. `publish`)."""
-  articles(status: String): [KnowledgeBaseArticle]
-  """Icon identifier for the category."""
-  icon: String
-  """User id of the category creator."""
-  createdBy: String
-  """When this category was created."""
-  createdDate: Date
-  """User id of the last modifier."""
-  modifiedBy: String
-  """When this category was last modified."""
-  modifiedDate: Date
-  """
-  Parent category id for nested categorization. `null` for a top-level category.
-  """
-  parentCategoryId: String
-  """
-  The first [`KnowledgeBaseTopic`](/api-reference/types/KnowledgeBaseTopic) this category belongs to.
-  """
-  firstTopic: KnowledgeBaseTopic
-  """Users who have authored articles in this category."""
-  authors: [User]
-  """Count of articles in this category. Pass `status` to filter."""
-  numOfArticles(status: String): Float
-  """Total article count in this category, unfiltered."""
-  countArticles: Int
-}
-
-"""
-Input for [`knowledgeBaseCategoriesAdd`](/api-reference/mutations/knowledgeBaseCategoriesAdd) and [`knowledgeBaseCategoriesEdit`](/api-reference/mutations/knowledgeBaseCategoriesEdit).
-"""
-input KnowledgeBaseCategoryDoc {
-  """Unique code identifier."""
-  code: String
-  """The category title. **Required.**"""
-  title: String!
-  """Description of what this category covers."""
-  description: String
-  """Article ids to include in this category."""
-  articleIds: [String]
-  """Icon identifier. **Required.**"""
-  icon: String!
-  """
-  [`KnowledgeBaseTopic`](/api-reference/types/KnowledgeBaseTopic) ids this category belongs to.
-  """
-  topicIds: [String]
-  """
-  Primary [`KnowledgeBaseTopic`](/api-reference/types/KnowledgeBaseTopic) id.
-  """
-  topicId: String
-  """Parent category id, to nest this category under another."""
-  parentCategoryId: String
-}
-
-"""A category with its nested child categories included."""
-type KnowledgeBaseParentCategory {
-  _id: String
-  """Unique code identifier."""
-  code: String
-  """The category title."""
-  title: String
-  """Description of what this category covers."""
-  description: String
-  """Articles directly in this parent category."""
-  articles: [KnowledgeBaseArticle]
-  """Icon identifier."""
-  icon: String
-  """User ID of the creator."""
-  createdBy: String
-  """When this category was created."""
-  createdDate: Date
-  """User ID of the last modifier."""
-  modifiedBy: String
-  """When this category was last modified."""
-  modifiedDate: Date
-  """Parent category ID (for deeper nesting)."""
-  parentCategoryId: String
-  """The first topic this category belongs to."""
-  firstTopic: KnowledgeBaseTopic
-  """Users who have authored articles in this category."""
-  authors: [User]
-  """Count of articles, optionally filtered by status."""
-  numOfArticles(status: String): Float
-  """Nested child categories."""
-  childrens: [KnowledgeBaseCategory]
-}
-
-"""
-A single search result hit from [`knowledgeBaseSearch`](/api-reference/queries/knowledgeBaseSearch).
-"""
-type KnowledgeBaseSearchHit {
-  """
-  The [`KnowledgeBaseArticle`](/api-reference/types/KnowledgeBaseArticle) id that matched.
-  """
-  id: String!
-  """Relevance score (higher is better)."""
-  score: Float
-  """
-  Additional metadata about the match, as returned by the underlying vector index.
-  """
-  metadata: JSON
-  """Highlighted text snippet showing the matching content."""
-  highlight: String
-}
-
-"""
-Results from a [`knowledgeBaseSearch`](/api-reference/queries/knowledgeBaseSearch) semantic search.
-"""
-type KnowledgeBaseSearchResult {
-  """The original search query."""
-  query: String!
-  """Total number of matching results."""
-  totalResults: Int!
-  """
-  The search result hits, ordered by relevance. See [`KnowledgeBaseSearchHit`](/api-reference/types/KnowledgeBaseSearchHit).
-  """
-  results: [KnowledgeBaseSearchHit!]!
-  """Source citations for the results, when available."""
-  citations: [JSON!]
-}
-
-"""
-A knowledge base topic — the top-level organizational unit.
-
-Topics are associated with a workspace and contain
-[`KnowledgeBaseCategory`](/api-reference/types/KnowledgeBaseCategory) rows, which in turn contain
-[`KnowledgeBaseArticle`](/api-reference/types/KnowledgeBaseArticle) rows. List topics with [`knowledgeBaseTopics`](/api-reference/queries/knowledgeBaseTopics).
-"""
-type KnowledgeBaseTopic {
-  _id: String!
-  """Unique code identifier for programmatic access."""
-  code: String
-  """The topic title."""
-  title: String
-  """Description of the topic."""
-  description: String
-  """
-  Categories within this topic. See [`KnowledgeBaseCategory`](/api-reference/types/KnowledgeBaseCategory).
-  """
-  categories: [KnowledgeBaseCategory]
-  """The workspace this topic belongs to."""
-  workspace: Workspace
-  """Accent color for the topic page."""
-  color: String
-  """URL of the background image for the topic page."""
-  backgroundImage: String
-  """ISO language code for the topic content (e.g. `en`, `ar`)."""
-  languageCode: String
-  """User id of the topic creator."""
-  createdBy: String
-  """When this topic was created."""
-  createdDate: Date
-  """User id of the last modifier."""
-  modifiedBy: String
-  """When this topic was last modified."""
-  modifiedDate: Date
-  """
-  Top-level parent categories within this topic, with their nested children included.
-  """
-  parentCategories: [KnowledgeBaseParentCategory]
-}
-
-"""
-Input for [`knowledgeBaseTopicsAdd`](/api-reference/mutations/knowledgeBaseTopicsAdd) and [`knowledgeBaseTopicsEdit`](/api-reference/mutations/knowledgeBaseTopicsEdit).
-"""
-input KnowledgeBaseTopicDoc {
-  """Unique code identifier."""
-  code: String
-  """The topic title. **Required.**"""
-  title: String!
-  """Description of the topic."""
-  description: String
-  """
-  [`KnowledgeBaseCategory`](/api-reference/types/KnowledgeBaseCategory) ids to include in this topic.
-  """
-  categoryIds: [String]
-  """Accent color for the topic page."""
-  color: String
-  """Background image URL for the topic page."""
-  backgroundImage: String
-  """ISO language code for the topic content (e.g. `en`, `ar`)."""
-  languageCode: String
-}
-
-"""
-Paginated list of [`KnowledgeBaseTopic`](/api-reference/types/KnowledgeBaseTopic) rows. Page shape follows [Pagination](/developers/guides/pagination).
-"""
-type KnowledgeBaseTopicsPaginated {
-  """
-  [`KnowledgeBaseTopic`](/api-reference/types/KnowledgeBaseTopic) rows for the current page.
-  """
-  data: [KnowledgeBaseTopic]
-  """
-  Standard pagination metadata: `totalCount`, `currentPage`, `totalPages`, `hasNextPage`, `hasPreviousPage`, `perPage`.
-  """
-  pagination: PaginationInfo
-}
 
 """
 One recorded transition in a customer's lead pipeline, appended by
@@ -2989,7 +3122,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `automationsAdd`
   
   *Related:* [`automationsEdit`](/api-reference/mutations/automationsEdit), [`automationsPublish`](/api-reference/mutations/automationsPublish), [`Automation`](/api-reference/types/Automation)
   
@@ -3032,7 +3165,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `automationsEdit`
   
   *Related:* [`automationsDiscardDraft`](/api-reference/mutations/automationsDiscardDraft), [`automationsRevert`](/api-reference/mutations/automationsRevert), [`automationVersions`](/api-reference/queries/automationVersions)
   
@@ -3045,7 +3178,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `automationsEdit`
   
   *Related:* [`automationImportFromPAF`](/api-reference/mutations/automationImportFromPAF), [`automationsPublish`](/api-reference/mutations/automationsPublish)
   
@@ -3063,7 +3196,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `automationsEdit`
   
   *Related:* [`draftAutomationDetail`](/api-reference/mutations/draftAutomationDetail), [`automationsPublish`](/api-reference/mutations/automationsPublish)
   
@@ -3079,7 +3212,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `automationsEdit`
   
   *Related:* [`automationsPublish`](/api-reference/mutations/automationsPublish), [`automationsDiscardDraft`](/api-reference/mutations/automationsDiscardDraft), [`Automation`](/api-reference/types/Automation)
   
@@ -3101,7 +3234,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `automationsEdit`
   
   *Related:* [`nodesEdit`](/api-reference/mutations/nodesEdit), [`nodesRemove`](/api-reference/mutations/nodesRemove), [`Node`](/api-reference/types/Node)
   
@@ -3197,7 +3330,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `automationsEdit`
   
   *Related:* [`nodesAdd`](/api-reference/mutations/nodesAdd), [`batchSavePositions`](/api-reference/mutations/batchSavePositions), [`Node`](/api-reference/types/Node)
   
@@ -3214,7 +3347,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `automationsEdit`
   
   *Related:* [`triggersEdit`](/api-reference/mutations/triggersEdit), [`triggersRemove`](/api-reference/mutations/triggersRemove), [`Trigger`](/api-reference/types/Trigger)
   
@@ -3288,7 +3421,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `automationsEdit`
   
   *Related:* [`triggersAdd`](/api-reference/mutations/triggersAdd), [`batchSavePositions`](/api-reference/mutations/batchSavePositions), [`Trigger`](/api-reference/types/Trigger)
   
@@ -3362,7 +3495,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `automationsEdit`
   
   *Related:* [`archiveAutomations`](/api-reference/mutations/archiveAutomations), [`automationDetail`](/api-reference/queries/automationDetail)
   
@@ -3388,7 +3521,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `automationsAdd`
   
   *Related:* [`automationsSaveAsTemplate`](/api-reference/mutations/automationsSaveAsTemplate), [`automationDetail`](/api-reference/queries/automationDetail)
   
@@ -3404,7 +3537,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `automationsAdd`
   
   *Related:* [`automationTemplates`](/api-reference/queries/automationTemplates), [`automationsSaveAsTemplate`](/api-reference/mutations/automationsSaveAsTemplate)
   
@@ -3428,7 +3561,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `automationsEdit`
   
   *Related:* [`automationVersions`](/api-reference/queries/automationVersions), [`automationsPublish`](/api-reference/mutations/automationsPublish)
   
@@ -3444,7 +3577,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `automationsEdit`
   
   *Related:* [`nodesAdd`](/api-reference/mutations/nodesAdd), [`triggersRemove`](/api-reference/mutations/triggersRemove)
   
@@ -3460,7 +3593,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `automationsEdit`
   
   *Related:* [`triggersAdd`](/api-reference/mutations/triggersAdd), [`nodesRemove`](/api-reference/mutations/nodesRemove)
   
@@ -3474,7 +3607,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `automationsEdit`
   
   *Related:* [`nodesEdit`](/api-reference/mutations/nodesEdit), [`triggersEdit`](/api-reference/mutations/triggersEdit), [`BatchSavePositionsResponse`](/api-reference/types/BatchSavePositionsResponse)
   
@@ -3486,7 +3619,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `automationsEdit`
   
   *Related:* [`automationNotes`](/api-reference/queries/automationNotes), [`automationsEditNote`](/api-reference/mutations/automationsEditNote)
   
@@ -3498,7 +3631,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `automationsEdit`
   
   *Related:* [`automationsAddNote`](/api-reference/mutations/automationsAddNote), [`automationsRemoveNote`](/api-reference/mutations/automationsRemoveNote)
   
@@ -3510,7 +3643,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `automationsEdit`
   
   *Related:* [`automationsAddNote`](/api-reference/mutations/automationsAddNote), [`automationNotes`](/api-reference/queries/automationNotes)
   
@@ -3539,7 +3672,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `automationsEdit`
   
   *Related:* [`automationDetail`](/api-reference/queries/automationDetail), [`automationHistories`](/api-reference/queries/automationHistories), [Authentication](/developers/getting-started/authentication)
   
@@ -3595,7 +3728,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `automationsAdd`
   
   *Related:* [`automationImportPreview`](/api-reference/queries/automationImportPreview), [`automationExportPAF`](/api-reference/mutations/automationExportPAF), [`PAFImportResult`](/api-reference/types/PAFImportResult)
   
@@ -3906,7 +4039,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `manageSegments`
   
   *Related:* [`segmentV2PublishVersion`](/api-reference/mutations/segmentV2PublishVersion), [`segmentV2PreviewCount`](/api-reference/mutations/segmentV2PreviewCount)
   
@@ -3942,7 +4075,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `manageSegments`
   
   *Related:* [`segmentV2SaveDraft`](/api-reference/mutations/segmentV2SaveDraft), [`segmentV2AssertReadyForCampaign`](/api-reference/queries/segmentV2AssertReadyForCampaign)
   
@@ -3960,7 +4093,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `manageSegments`
   
   *Related:* [`segmentV2Unarchive`](/api-reference/mutations/segmentV2Unarchive)
   
@@ -3975,7 +4108,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `manageSegments`
   
   *Related:* [`segmentV2Archive`](/api-reference/mutations/segmentV2Archive)
   
@@ -3994,7 +4127,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `manageSegments`
   
   *Related:* [`segmentV2RemoveStaticMembers`](/api-reference/mutations/segmentV2RemoveStaticMembers)
   
@@ -4015,7 +4148,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `manageSegments`
   
   *Related:* [`segmentV2AddStaticMembers`](/api-reference/mutations/segmentV2AddStaticMembers)
   
@@ -4040,7 +4173,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `manageSegments`
   
   *Related:* [`segmentV2MembershipsByCustomer`](/api-reference/queries/segmentV2MembershipsByCustomer)
   
@@ -4061,7 +4194,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showSegments`
   
   *Related:* [`segmentV2SaveDraft`](/api-reference/mutations/segmentV2SaveDraft), [`segmentV2Count`](/api-reference/queries/segmentV2Count)
   
@@ -5187,6 +5320,349 @@ type Mutation {
     _id: String!
   ): EmailTemplate
   """
+  Create a broadcast / engage campaign.
+  
+  Pick a `method` (`email`, `messenger`, `push`, or `whatsapp`) and pass the
+  matching content field. Preview channel content first with
+  [`engageMessageSendTestEmail`](/api-reference/mutations/engageMessageSendTestEmail) or
+  [`engageMessageSendTestWhatsapp`](/api-reference/mutations/engageMessageSendTestWhatsapp) before sending to a real
+  audience.
+  
+  <Info>
+  Estimate reach beforehand with [`engageAudienceUniqueCount`](/api-reference/queries/engageAudienceUniqueCount).
+  </Info>
+  
+  <Note>
+  **Side effects:** When `startImmediately` is `true`, the campaign begins sending right away instead of waiting for its schedule or a later [`engageMessageStart`](/api-reference/mutations/engageMessageStart) call.
+  </Note>
+  
+  <small>
+  
+  *Auth* · `x-app-token` · required permission `engageMessageAdd`
+  
+  *Related:* [`engageMessageEdit`](/api-reference/mutations/engageMessageEdit), [`engageMessageStart`](/api-reference/mutations/engageMessageStart), [`engageMessageCopy`](/api-reference/mutations/engageMessageCopy), [`EngageMessage`](/api-reference/types/EngageMessage)
+  
+  </small>
+  """
+  engageMessageAdd(
+    """Campaign name. **Required.**"""
+    title: String!
+    """Campaign type, e.g. `auto`, `visitorAuto`, `manual`. **Required.**"""
+    kind: String!
+    """
+    Delivery channel: `email`, `messenger`, `push`, or `whatsapp`. **Required** — determines which content field must be set.
+    """
+    method: String!
+    """Team member id to send as."""
+    fromUserId: String
+    """
+    Initial lifecycle status. Usually omitted — defaults to a draft-like state; use `startImmediately` or [`engageMessageStart`](/api-reference/mutations/engageMessageStart) to send.
+    """
+    status: String
+    """
+    Segment v2 ids to target. Combine with `customerTagIds` / `customerIds`.
+    """
+    segmentIds: [String]
+    """Customer tag ids to target."""
+    customerTagIds: [String]
+    """Explicit customer ids to target, in addition to segments/tags."""
+    customerIds: [String]
+    """
+    Email content. **Required when** `method` is `email`. See [`EngageMessageEmail`](/api-reference/types/EngageMessageEmail).
+    """
+    email: EngageMessageEmail
+    """
+    Send schedule (once or recurring). Omit to leave unscheduled until [`engageMessageStart`](/api-reference/mutations/engageMessageStart).
+    """
+    scheduleDate: EngageScheduleDateInput
+    """
+    Messenger content and targeting rules. **Required when** `method` is `messenger`.
+    """
+    messenger: EngageMessageMessenger
+    """Push notification content. **Required when** `method` is `push`."""
+    push: EngageMessagePush
+    """
+    WhatsApp template configuration. **Required when** `method` is `whatsapp`.
+    """
+    whatsappMessage: EngageMessageWhatsappInput
+    """
+    Automation namespace, when this campaign is created from an automation.
+    """
+    automationNs: String
+    """
+    For messenger-method campaigns, force a new conversation per recipient instead of reusing an open one.
+    """
+    forceCreateConversation: Boolean
+    """
+    When `true`, sends immediately after creation instead of waiting for `scheduleDate` or [`engageMessageStart`](/api-reference/mutations/engageMessageStart).
+    """
+    startImmediately: Boolean
+  ): EngageMessage
+  """
+  Update a broadcast / engage campaign.
+  
+  Accepts the same fields as [`engageMessageAdd`](/api-reference/mutations/engageMessageAdd), applied to an
+  existing campaign by `_id`.
+  
+  <Info>
+  Editing a campaign that is already `live` may not affect recipients already processed in the current run. Prefer [`engageMessagePause`](/api-reference/mutations/engageMessagePause) first for in-flight campaigns.
+  </Info>
+  
+  <small>
+  
+  *Auth* · `x-app-token` · required permission `engageMessageEdit`
+  
+  *Related:* [`engageMessageAdd`](/api-reference/mutations/engageMessageAdd), [`engageMessageDetail`](/api-reference/queries/engageMessageDetail), [`EngageMessage`](/api-reference/types/EngageMessage)
+  
+  </small>
+  """
+  engageMessageEdit(
+    """Campaign id to update. **Required.**"""
+    _id: String!
+    """Campaign name. **Required.**"""
+    title: String!
+    """Campaign type, e.g. `auto`, `visitorAuto`, `manual`. **Required.**"""
+    kind: String!
+    """
+    Delivery channel: `email`, `messenger`, `push`, or `whatsapp`. **Required** — determines which content field must be set.
+    """
+    method: String!
+    """Team member id to send as."""
+    fromUserId: String
+    """
+    Initial lifecycle status. Usually omitted — defaults to a draft-like state; use `startImmediately` or [`engageMessageStart`](/api-reference/mutations/engageMessageStart) to send.
+    """
+    status: String
+    """
+    Segment v2 ids to target. Combine with `customerTagIds` / `customerIds`.
+    """
+    segmentIds: [String]
+    """Customer tag ids to target."""
+    customerTagIds: [String]
+    """Explicit customer ids to target, in addition to segments/tags."""
+    customerIds: [String]
+    """
+    Email content. **Required when** `method` is `email`. See [`EngageMessageEmail`](/api-reference/types/EngageMessageEmail).
+    """
+    email: EngageMessageEmail
+    """
+    Send schedule (once or recurring). Omit to leave unscheduled until [`engageMessageStart`](/api-reference/mutations/engageMessageStart).
+    """
+    scheduleDate: EngageScheduleDateInput
+    """
+    Messenger content and targeting rules. **Required when** `method` is `messenger`.
+    """
+    messenger: EngageMessageMessenger
+    """Push notification content. **Required when** `method` is `push`."""
+    push: EngageMessagePush
+    """
+    WhatsApp template configuration. **Required when** `method` is `whatsapp`.
+    """
+    whatsappMessage: EngageMessageWhatsappInput
+    """
+    Automation namespace, when this campaign is created from an automation.
+    """
+    automationNs: String
+    """
+    For messenger-method campaigns, force a new conversation per recipient instead of reusing an open one.
+    """
+    forceCreateConversation: Boolean
+    """
+    When `true`, sends immediately after saving instead of waiting for `scheduleDate` or [`engageMessageStart`](/api-reference/mutations/engageMessageStart).
+    """
+    startImmediately: Boolean
+  ): EngageMessage
+  """
+  Permanently delete a broadcast / engage campaign.
+  
+  <Warning>
+  This does **not** un-send messages already delivered. Delivery history in [`engageReportsList`](/api-reference/queries/engageReportsList) / [`engageWhatsappDeliveries`](/api-reference/queries/engageWhatsappDeliveries) referencing this campaign becomes orphaned. Prefer [`engageMessageStop`](/api-reference/mutations/engageMessageStop) if the campaign is still running and you only want to halt it.
+  </Warning>
+  
+  <small>
+  
+  *Auth* · `x-app-token` · required permission `engageMessageRemove`
+  
+  *Related:* [`engageMessageStop`](/api-reference/mutations/engageMessageStop), [`engageMessages`](/api-reference/queries/engageMessages)
+  
+  </small>
+  """
+  engageMessageRemove(
+    """Campaign id to delete. **Required.**"""
+    _id: String!
+  ): EngageMessage
+  """
+  Start (or immediately send) a campaign.
+  
+  <Warning>
+  Sends live messages to the resolved audience right away — there is no undo for messages already delivered. Estimate reach first with [`engageAudienceUniqueCount`](/api-reference/queries/engageAudienceUniqueCount), and verify content with [`engageMessageSendTestEmail`](/api-reference/mutations/engageMessageSendTestEmail) / [`engageMessageSendTestWhatsapp`](/api-reference/mutations/engageMessageSendTestWhatsapp).
+  </Warning>
+  
+  <small>
+  
+  *Auth* · `x-app-token` · required permission `engageMessageStart`
+  
+  *Related:* [`engageMessagePause`](/api-reference/mutations/engageMessagePause), [`engageMessageStop`](/api-reference/mutations/engageMessageStop), [`engageMessageDetail`](/api-reference/queries/engageMessageDetail)
+  
+  </small>
+  """
+  engageMessageStart(
+    """Campaign id to start. **Required.**"""
+    _id: String!
+  ): EngageMessage
+  """
+  Pause a running campaign. In-flight batches finish; no new batches start
+  until [`engageMessageResume`](/api-reference/mutations/engageMessageResume).
+  
+  <small>
+  
+  *Auth* · `x-app-token` · required permission `engageMessagePause`
+  
+  *Related:* [`engageMessageResume`](/api-reference/mutations/engageMessageResume), [`engageMessageStop`](/api-reference/mutations/engageMessageStop)
+  
+  </small>
+  """
+  engageMessagePause(
+    """Campaign id to pause. **Required.**"""
+    _id: String!
+  ): EngageMessage
+  """
+  Resume a campaign previously paused with [`engageMessagePause`](/api-reference/mutations/engageMessagePause),
+  restoring its prior status from `pausedFrom`.
+  
+  <small>
+  
+  *Auth* · `x-app-token` · required permission `engageMessageResume`
+  
+  *Related:* [`engageMessagePause`](/api-reference/mutations/engageMessagePause), [`engageMessageDetail`](/api-reference/queries/engageMessageDetail)
+  
+  </small>
+  """
+  engageMessageResume(
+    """Campaign id to resume. **Required.**"""
+    _id: String!
+  ): EngageMessage
+  """
+  Stop a campaign, ending its current run permanently (unlike
+  [`engageMessagePause`](/api-reference/mutations/engageMessagePause), it cannot be resumed).
+  
+  <Warning>
+  Stopping does not undo messages already sent. Recipients not yet processed in the current run will not receive the message.
+  </Warning>
+  
+  <small>
+  
+  *Auth* · `x-app-token` · required permission `engageMessageStop`
+  
+  *Related:* [`engageMessagePause`](/api-reference/mutations/engageMessagePause), [`engageMessageRemove`](/api-reference/mutations/engageMessageRemove)
+  
+  </small>
+  """
+  engageMessageStop(
+    """Campaign id to stop. **Required.**"""
+    _id: String!
+  ): EngageMessage
+  """
+  Retry a campaign run that ended with failures, re-attempting only the
+  recipients that previously failed.
+  
+  <small>
+  
+  *Auth* · `x-app-token` · required permission `engageMessageRetry`
+  
+  *Related:* [`engageMessageDetail`](/api-reference/queries/engageMessageDetail), [`engageLogs`](/api-reference/queries/engageLogs)
+  
+  </small>
+  """
+  engageMessageRetry(
+    """Campaign id to retry. **Required.**"""
+    _id: String!
+  ): EngageMessage
+  """
+  Send a one-off test email using the given content, without creating or
+  affecting a campaign. Use to verify rendering, headers, and attachments
+  before running [`engageMessageAdd`](/api-reference/mutations/engageMessageAdd) / [`engageMessageStart`](/api-reference/mutations/engageMessageStart).
+  
+  <Note>
+  **Errors:** `Email content, title, from address or to address is missing` when a required field is omitted.
+  </Note>
+  
+  <small>
+  
+  *Auth* · `x-app-token` · authenticated
+  
+  *Related:* [`engageMessageAdd`](/api-reference/mutations/engageMessageAdd), [`EngageMessageEmail`](/api-reference/types/EngageMessageEmail)
+  
+  </small>
+  """
+  engageMessageSendTestEmail(
+    """Sender (envelope from) email address. **Required.**"""
+    from: String!
+    """Single recipient email address. **Required.**"""
+    to: String!
+    """HTML body content. **Required.**"""
+    content: String!
+    """Email subject line. **Required.**"""
+    title: String!
+    """Optional display name, rendered as `"Name <from>"`."""
+    senderName: String
+    """Optional Reply-To header. Defaults to `from` when omitted."""
+    replyTo: String
+    """Optional email template id used for tracking and analytics."""
+    templateId: String
+    """Optional attachment descriptors (`{ url, name, type, size }`)."""
+    attachments: [JSON]
+  ): String
+  """
+  Send a one-off test WhatsApp template message, without creating or affecting
+  a campaign. Use to verify template rendering and variable mappings before
+  running [`engageMessageAdd`](/api-reference/mutations/engageMessageAdd) / [`engageMessageStart`](/api-reference/mutations/engageMessageStart).
+  
+  <Note>
+  **Errors:** `Either conversationId, customerId or recipient must be provided` when neither `customerId` nor `recipient` is set.
+  </Note>
+  
+  <small>
+  
+  *Auth* · `x-app-token` · authenticated
+  
+  *Related:* [`engageMessageAdd`](/api-reference/mutations/engageMessageAdd), [`EngageMessageWhatsappInput`](/api-reference/types/EngageMessageWhatsappInput)
+  
+  </small>
+  """
+  engageMessageSendTestWhatsapp(
+    """WhatsApp Business integration to send from. **Required.**"""
+    integrationId: String!
+    """Approved WhatsApp template id. **Required.**"""
+    templateId: String!
+    """Template variable values (`JSON`)."""
+    params: JSON
+    """Recipient phone number. **Required unless** `customerId` is set."""
+    recipient: String
+    """Optional display name for the recipient, used in template variables."""
+    recipientName: String
+    """
+    Recipient customer id, used to resolve phone number and variables. **Required unless** `recipient` is set.
+    """
+    customerId: String
+  ): String
+  """
+  Duplicate a broadcast / engage campaign, creating a new draft with the same
+  content, audience, and schedule settings.
+  
+  <small>
+  
+  *Auth* · `x-app-token` · required permission `engageMessageAdd`
+  
+  *Related:* [`engageMessageAdd`](/api-reference/mutations/engageMessageAdd), [`engageMessageDetail`](/api-reference/queries/engageMessageDetail)
+  
+  </small>
+  """
+  engageMessageCopy(
+    """Campaign id to duplicate. **Required.**"""
+    _id: String!
+  ): EngageMessage
+  """
   Add a new message to a conversation — a reply, an internal note, or a
   templated/interactive message.
   
@@ -5239,7 +5715,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `conversationMessageAdd`
   
   *Related:* [`conversationMessageAdd`](/api-reference/mutations/conversationMessageAdd), [`ConversationMessage`](/api-reference/types/ConversationMessage)
   
@@ -5398,7 +5874,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `conversationConvertToCard`
   
   *Related:* [`conversationDetail`](/api-reference/queries/conversationDetail)
   
@@ -5439,7 +5915,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `changeConversationStatus`
   
   *Related:* [`inboxFields`](/api-reference/queries/inboxFields), [`conversationDetail`](/api-reference/queries/conversationDetail)
   
@@ -6031,143 +6507,6 @@ type Mutation {
     mentionedAll: Boolean
   ): String
   """
-  Create a new knowledge base topic.
-  
-  <small>
-  
-  *Auth* · `x-app-token` · required permission `manageKnowledgeBase`
-  
-  *Related:* [`knowledgeBaseTopicsEdit`](/api-reference/mutations/knowledgeBaseTopicsEdit), [`knowledgeBaseTopicsRemove`](/api-reference/mutations/knowledgeBaseTopicsRemove), [`knowledgeBaseTopics`](/api-reference/queries/knowledgeBaseTopics)
-  
-  </small>
-  """
-  knowledgeBaseTopicsAdd(doc: KnowledgeBaseTopicDoc!): KnowledgeBaseTopic
-  """
-  Update an existing knowledge base topic.
-  
-  <small>
-  
-  *Auth* · `x-app-token` · required permission `manageKnowledgeBase`
-  
-  *Related:* [`knowledgeBaseTopicsAdd`](/api-reference/mutations/knowledgeBaseTopicsAdd), [`knowledgeBaseTopicsRemove`](/api-reference/mutations/knowledgeBaseTopicsRemove), [`knowledgeBaseTopics`](/api-reference/queries/knowledgeBaseTopics)
-  
-  </small>
-  """
-  knowledgeBaseTopicsEdit(
-    """Topic id to update. **Required.**"""
-    _id: String!
-    doc: KnowledgeBaseTopicDoc!
-  ): KnowledgeBaseTopic
-  """
-  Delete a knowledge base topic and disassociate its categories.
-  
-  <Warning>
-  Categories previously linked to this topic are **not** deleted — they are unlinked and remain orphaned unless reassigned via [`knowledgeBaseCategoriesEdit`](/api-reference/mutations/knowledgeBaseCategoriesEdit).
-  </Warning>
-  
-  <small>
-  
-  *Auth* · `x-app-token` · required permission `manageKnowledgeBase`
-  
-  *Related:* [`knowledgeBaseTopicsAdd`](/api-reference/mutations/knowledgeBaseTopicsAdd), [`knowledgeBaseTopics`](/api-reference/queries/knowledgeBaseTopics)
-  
-  </small>
-  """
-  knowledgeBaseTopicsRemove(
-    """Topic id to delete. **Required.**"""
-    _id: String!
-  ): JSON
-  """
-  Create a new knowledge base category.
-  
-  <small>
-  
-  *Auth* · `x-app-token` · required permission `manageKnowledgeBase`
-  
-  *Related:* [`knowledgeBaseCategoriesEdit`](/api-reference/mutations/knowledgeBaseCategoriesEdit), [`knowledgeBaseCategoriesRemove`](/api-reference/mutations/knowledgeBaseCategoriesRemove), [`knowledgeBaseCategories`](/api-reference/queries/knowledgeBaseCategories)
-  
-  </small>
-  """
-  knowledgeBaseCategoriesAdd(doc: KnowledgeBaseCategoryDoc!): KnowledgeBaseCategory
-  """
-  Update an existing knowledge base category.
-  
-  <small>
-  
-  *Auth* · `x-app-token` · required permission `manageKnowledgeBase`
-  
-  *Related:* [`knowledgeBaseCategoriesAdd`](/api-reference/mutations/knowledgeBaseCategoriesAdd), [`knowledgeBaseCategoriesRemove`](/api-reference/mutations/knowledgeBaseCategoriesRemove), [`knowledgeBaseCategories`](/api-reference/queries/knowledgeBaseCategories)
-  
-  </small>
-  """
-  knowledgeBaseCategoriesEdit(
-    """Category id to update. **Required.**"""
-    _id: String!
-    doc: KnowledgeBaseCategoryDoc!
-  ): KnowledgeBaseCategory
-  """
-  Delete a knowledge base category and unlink its articles.
-  
-  <Warning>
-  Articles previously in this category are **not** deleted — they are unlinked. Reassign them first with [`knowledgeBaseArticlesEdit`](/api-reference/mutations/knowledgeBaseArticlesEdit) if they should remain organized.
-  </Warning>
-  
-  <small>
-  
-  *Auth* · `x-app-token` · required permission `manageKnowledgeBase`
-  
-  *Related:* [`knowledgeBaseCategoriesAdd`](/api-reference/mutations/knowledgeBaseCategoriesAdd), [`knowledgeBaseCategories`](/api-reference/queries/knowledgeBaseCategories)
-  
-  </small>
-  """
-  knowledgeBaseCategoriesRemove(
-    """Category id to delete. **Required.**"""
-    _id: String!
-  ): JSON
-  """
-  Create a new knowledge base article.
-  
-  <small>
-  
-  *Auth* · `x-app-token` · required permission `manageKnowledgeBase`
-  
-  *Related:* [`knowledgeBaseArticlesEdit`](/api-reference/mutations/knowledgeBaseArticlesEdit), [`knowledgeBaseArticlesRemove`](/api-reference/mutations/knowledgeBaseArticlesRemove), [`knowledgeBaseArticles`](/api-reference/queries/knowledgeBaseArticles)
-  
-  </small>
-  """
-  knowledgeBaseArticlesAdd(doc: KnowledgeBaseArticleDoc!): KnowledgeBaseArticle
-  """
-  Update an existing knowledge base article.
-  
-  <small>
-  
-  *Auth* · `x-app-token` · required permission `manageKnowledgeBase`
-  
-  *Related:* [`knowledgeBaseArticlesAdd`](/api-reference/mutations/knowledgeBaseArticlesAdd), [`knowledgeBaseArticlesRemove`](/api-reference/mutations/knowledgeBaseArticlesRemove), [`knowledgeBaseArticles`](/api-reference/queries/knowledgeBaseArticles)
-  
-  </small>
-  """
-  knowledgeBaseArticlesEdit(
-    """Article id to update. **Required.**"""
-    _id: String!
-    doc: KnowledgeBaseArticleDoc!
-  ): KnowledgeBaseArticle
-  """
-  Delete a knowledge base article.
-  
-  <small>
-  
-  *Auth* · `x-app-token` · required permission `manageKnowledgeBase`
-  
-  *Related:* [`knowledgeBaseArticlesAdd`](/api-reference/mutations/knowledgeBaseArticlesAdd), [`knowledgeBaseArticles`](/api-reference/queries/knowledgeBaseArticles)
-  
-  </small>
-  """
-  knowledgeBaseArticlesRemove(
-    """Article id to delete. **Required.**"""
-    _id: String!
-  ): JSON
-  """
   Create a new WhatsApp Flow in `DRAFT` status.
   
   <Info>
@@ -6176,7 +6515,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `integrationsEdit`
   
   *Related:* [`whatsappValidateFlowSchema`](/api-reference/queries/whatsappValidateFlowSchema), [`whatsappPublishFlow`](/api-reference/mutations/whatsappPublishFlow), [`createFlowResponse`](/api-reference/types/createFlowResponse), [Authentication](/developers/getting-started/authentication)
   
@@ -6196,7 +6535,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `integrationsEdit`
   
   *Related:* [`whatsappDuplicateFlow`](/api-reference/mutations/whatsappDuplicateFlow), [`whatsappGetFlowById`](/api-reference/queries/whatsappGetFlowById), [Authentication](/developers/getting-started/authentication)
   
@@ -6217,7 +6556,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `integrationsEdit`
   
   *Related:* [`whatsappDeprecateFlow`](/api-reference/mutations/whatsappDeprecateFlow), [`whatsappBulkDeleteFlows`](/api-reference/mutations/whatsappBulkDeleteFlows), [Authentication](/developers/getting-started/authentication)
   
@@ -6236,7 +6575,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `integrationsEdit`
   
   *Related:* [`whatsappDeprecateFlow`](/api-reference/mutations/whatsappDeprecateFlow), [`whatsappDuplicateFlow`](/api-reference/mutations/whatsappDuplicateFlow), [`whatsappBulkPublishFlows`](/api-reference/mutations/whatsappBulkPublishFlows), [Authentication](/developers/getting-started/authentication)
   
@@ -6252,7 +6591,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `integrationsEdit`
   
   *Related:* [`whatsappDeleteFlow`](/api-reference/mutations/whatsappDeleteFlow), [`whatsappBulkDeprecateFlows`](/api-reference/mutations/whatsappBulkDeprecateFlows), [Authentication](/developers/getting-started/authentication)
   
@@ -6267,7 +6606,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `integrationsEdit`
   
   *Related:* [`whatsappGetAllFlows`](/api-reference/queries/whatsappGetAllFlows), [`FlowSyncResponse`](/api-reference/types/FlowSyncResponse), [Authentication](/developers/getting-started/authentication)
   
@@ -6283,7 +6622,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `integrationsEdit`
   
   *Related:* [`whatsappUpdateFlow`](/api-reference/mutations/whatsappUpdateFlow), [`whatsappPublishFlow`](/api-reference/mutations/whatsappPublishFlow), [Authentication](/developers/getting-started/authentication)
   
@@ -6304,7 +6643,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `integrationsEdit`
   
   *Related:* [`whatsappDeleteFlow`](/api-reference/mutations/whatsappDeleteFlow), [`BulkFlowResponse`](/api-reference/types/BulkFlowResponse), [Authentication](/developers/getting-started/authentication)
   
@@ -6323,7 +6662,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `integrationsEdit`
   
   *Related:* [`whatsappPublishFlow`](/api-reference/mutations/whatsappPublishFlow), [`BulkFlowResponse`](/api-reference/types/BulkFlowResponse), [Authentication](/developers/getting-started/authentication)
   
@@ -6338,7 +6677,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `integrationsEdit`
   
   *Related:* [`whatsappDeprecateFlow`](/api-reference/mutations/whatsappDeprecateFlow), [`BulkFlowResponse`](/api-reference/types/BulkFlowResponse), [Authentication](/developers/getting-started/authentication)
   
@@ -6356,7 +6695,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `integrationsEdit`
   
   *Related:* [`whatsappGetTemplates`](/api-reference/queries/whatsappGetTemplates), [Authentication](/developers/getting-started/authentication)
   
@@ -6375,7 +6714,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `integrationsEdit`
   
   *Related:* [`whatsappTemplatesUpdate`](/api-reference/mutations/whatsappTemplatesUpdate), [`whatsappDeleteTemplate`](/api-reference/mutations/whatsappDeleteTemplate), [`whatsappGetTemplates`](/api-reference/queries/whatsappGetTemplates), [Authentication](/developers/getting-started/authentication)
   
@@ -6397,7 +6736,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `integrationsEdit`
   
   *Related:* [`whatsappTemplatesAdd`](/api-reference/mutations/whatsappTemplatesAdd), [`whatsappGetMessageTemplateDetail`](/api-reference/queries/whatsappGetMessageTemplateDetail), [Authentication](/developers/getting-started/authentication)
   
@@ -6421,7 +6760,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `integrationsEdit`
   
   *Related:* [`WhatsappBusinessProfile`](/api-reference/types/WhatsappBusinessProfile), [Authentication](/developers/getting-started/authentication)
   
@@ -6455,7 +6794,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `conversationMessageAdd`
   
   *Related:* [`whatsappGetTemplates`](/api-reference/queries/whatsappGetTemplates), [`whatsappGetMessageTemplateDetail`](/api-reference/queries/whatsappGetMessageTemplateDetail), [`WhatsappMessageTemplateResponse`](/api-reference/types/WhatsappMessageTemplateResponse), [Authentication](/developers/getting-started/authentication)
   
@@ -6509,7 +6848,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `integrationsEdit`
   
   *Related:* [`whatsappBulkDeleteTemplates`](/api-reference/mutations/whatsappBulkDeleteTemplates), [`whatsappGetTemplates`](/api-reference/queries/whatsappGetTemplates), [Authentication](/developers/getting-started/authentication)
   
@@ -6534,7 +6873,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `integrationsEdit`
   
   *Related:* [`whatsappDeleteTemplate`](/api-reference/mutations/whatsappDeleteTemplate), [`whatsappGetTemplates`](/api-reference/queries/whatsappGetTemplates), [Authentication](/developers/getting-started/authentication)
   
@@ -6556,7 +6895,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showIntegrations`
   
   *Related:* [`whatsappIntegrationById`](/api-reference/queries/whatsappIntegrationById), [Authentication](/developers/getting-started/authentication)
   
@@ -6571,7 +6910,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `integrationsEdit`
   
   *Related:* [`whatsappUpdateQRCode`](/api-reference/mutations/whatsappUpdateQRCode), [`whatsappDeleteQRCode`](/api-reference/mutations/whatsappDeleteQRCode), [`whatsappGetQRCodes`](/api-reference/queries/whatsappGetQRCodes), [Authentication](/developers/getting-started/authentication)
   
@@ -6594,7 +6933,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `integrationsEdit`
   
   *Related:* [`whatsappCreateQRCode`](/api-reference/mutations/whatsappCreateQRCode), [`whatsappDeleteQRCode`](/api-reference/mutations/whatsappDeleteQRCode), [Authentication](/developers/getting-started/authentication)
   
@@ -6617,7 +6956,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `integrationsEdit`
   
   *Related:* [`whatsappGetQRCodes`](/api-reference/queries/whatsappGetQRCodes), [Authentication](/developers/getting-started/authentication)
   
@@ -6640,7 +6979,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `integrationsEdit`
   
   *Related:* [`whatsappGetCallSettings`](/api-reference/queries/whatsappGetCallSettings), [Authentication](/developers/getting-started/authentication)
   
@@ -6682,7 +7021,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `conversationMessageAdd`
   
   *Related:* [`whatsappSendCallPermissionRequest`](/api-reference/mutations/whatsappSendCallPermissionRequest), [Authentication](/developers/getting-started/authentication)
   
@@ -6716,7 +7055,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `conversationMessageAdd`
   
   *Related:* [`whatsappGetCallPermission`](/api-reference/queries/whatsappGetCallPermission), [Authentication](/developers/getting-started/authentication)
   
@@ -6742,7 +7081,7 @@ type Mutation {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `integrationsEdit`
   
   *Related:* [`whatsappCatalogSyncStatus`](/api-reference/queries/whatsappCatalogSyncStatus), [`whatsappCatalogPermissionStatus`](/api-reference/queries/whatsappCatalogPermissionStatus), [Authentication](/developers/getting-started/authentication)
   
@@ -6969,6 +7308,16 @@ type OnboardingSections {
   discovery: OnboardingSection
 }
 
+type OnceSchedule {
+  at: Date
+  sentAt: Date
+}
+
+input OnceScheduleInput {
+  at: Date!
+  sentAt: Date
+}
+
 """
 One alternative match a user can choose for a [`PAFImportEntity`](/api-reference/types/PAFImportEntity).
 """
@@ -7170,22 +7519,6 @@ type ParticipantRemovedPayload {
   removedUsers: [User]
   """Resolved user who performed the removal."""
   performedByUser: User
-}
-
-"""A PDF attachment with page images pre-extracted for inline rendering."""
-type PdfAttachment {
-  """The full PDF file."""
-  pdf: Attachment
-  """Individual page images extracted from the PDF, in order."""
-  pages: [Attachment]
-}
-
-"""
-Input for uploading a PDF with its page images. See [`PdfAttachment`](/api-reference/types/PdfAttachment).
-"""
-input PdfAttachmentInput {
-  pdf: AttachmentInput
-  pages: [AttachmentInput]
 }
 
 """Internal: a job position/title used for grouping and permissions."""
@@ -7498,7 +7831,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showAutomations`
   
   *Related:* [`automationsMain`](/api-reference/queries/automationsMain), [Authentication](/developers/getting-started/authentication)
   
@@ -7542,7 +7875,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showAutomations`
   
   *Related:* [`automationDetailByNs`](/api-reference/queries/automationDetailByNs), [`automationsEdit`](/api-reference/mutations/automationsEdit), [Authentication](/developers/getting-started/authentication)
   
@@ -7557,7 +7890,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showAutomations`
   
   *Related:* [`automationByNs`](/api-reference/queries/automationByNs), [`draftAutomationDetail`](/api-reference/mutations/draftAutomationDetail), [Authentication](/developers/getting-started/authentication)
   
@@ -7570,7 +7903,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showAutomations`
   
   *Related:* [`automationDetailByNs`](/api-reference/queries/automationDetailByNs), [Authentication](/developers/getting-started/authentication)
   
@@ -7582,7 +7915,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showAutomations`
   
   *Related:* [`automationsAddNote`](/api-reference/mutations/automationsAddNote), [`AutomationNote`](/api-reference/types/AutomationNote), [Authentication](/developers/getting-started/authentication)
   
@@ -7595,7 +7928,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showAutomations`
   
   *Related:* [`automationHistoryDetail`](/api-reference/queries/automationHistoryDetail), [`automationHistoriesTotalCount`](/api-reference/queries/automationHistoriesTotalCount), [Authentication](/developers/getting-started/authentication)
   
@@ -7629,7 +7962,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showAutomations`
   
   *Related:* [`automationHistories`](/api-reference/queries/automationHistories), [Authentication](/developers/getting-started/authentication)
   
@@ -7662,7 +7995,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showAutomations`
   
   *Related:* [`automationsMain`](/api-reference/queries/automationsMain), [Authentication](/developers/getting-started/authentication)
   
@@ -7712,7 +8045,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showAutomations`
   
   *Related:* [`automationsCreateFromTemplate`](/api-reference/mutations/automationsCreateFromTemplate), [`automationsSaveAsTemplate`](/api-reference/mutations/automationsSaveAsTemplate), [Authentication](/developers/getting-started/authentication)
   
@@ -7724,7 +8057,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showAutomations`
   
   *Related:* [`automationsRevert`](/api-reference/mutations/automationsRevert), [`AutomationVersion`](/api-reference/types/AutomationVersion), [Authentication](/developers/getting-started/authentication)
   
@@ -7737,7 +8070,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showAutomations`
   
   *Related:* [`automationHistories`](/api-reference/queries/automationHistories), [`AutomationHistoryDetail`](/api-reference/types/AutomationHistoryDetail), [Authentication](/developers/getting-started/authentication)
   
@@ -7749,7 +8082,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showAutomations`
   
   *Related:* [`nodesMain`](/api-reference/queries/nodesMain), [`macros`](/api-reference/queries/macros), [Authentication](/developers/getting-started/authentication)
   
@@ -7762,7 +8095,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showAutomations`
   
   *Related:* [`nodes`](/api-reference/queries/nodes), [`nodeDetail`](/api-reference/queries/nodeDetail), [Authentication](/developers/getting-started/authentication)
   
@@ -7775,7 +8108,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showAutomations`
   
   *Related:* [`nodes`](/api-reference/queries/nodes), [`Node`](/api-reference/types/Node), [Authentication](/developers/getting-started/authentication)
   
@@ -7787,7 +8120,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showAutomations`
   
   *Related:* [`nodeByNs`](/api-reference/queries/nodeByNs), [`nodesEdit`](/api-reference/mutations/nodesEdit), [Authentication](/developers/getting-started/authentication)
   
@@ -7800,7 +8133,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showAutomations`
   
   *Related:* [`nodeDetail`](/api-reference/queries/nodeDetail), [Authentication](/developers/getting-started/authentication)
   
@@ -7816,7 +8149,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showAutomations`
   
   *Related:* [`triggerDetail`](/api-reference/queries/triggerDetail), [`triggersEdit`](/api-reference/mutations/triggersEdit), [Authentication](/developers/getting-started/authentication)
   
@@ -7828,7 +8161,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showAutomations`
   
   *Related:* [`triggers`](/api-reference/queries/triggers), [`triggersEdit`](/api-reference/mutations/triggersEdit), [Authentication](/developers/getting-started/authentication)
   
@@ -7847,7 +8180,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showAutomations`
   
   *Related:* [`automationImportPreview`](/api-reference/queries/automationImportPreview), [`automationImportFromPAF`](/api-reference/mutations/automationImportFromPAF), [Authentication](/developers/getting-started/authentication)
   
@@ -7865,7 +8198,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showAutomations`
   
   *Related:* [`automationImportFromPAF`](/api-reference/mutations/automationImportFromPAF), [Authentication](/developers/getting-started/authentication)
   
@@ -7924,7 +8257,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showUsers`
   
   *Related:* [`users`](/api-reference/queries/users), [`currentUser`](/api-reference/queries/currentUser), [Authentication](/developers/getting-started/authentication)
   
@@ -8157,7 +8490,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showTags`
   
   *Related:* [`tags`](/api-reference/queries/tags), [`tagsEdit`](/api-reference/mutations/tagsEdit), [`Tag`](/api-reference/types/Tag)
   
@@ -8174,7 +8507,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showTags`
   
   *Related:* [`tags`](/api-reference/queries/tags), [Authentication](/developers/getting-started/authentication)
   
@@ -8194,7 +8527,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showSegments`
   
   *Related:* [`segmentV2`](/api-reference/queries/segmentV2), [`segmentV2SaveDraft`](/api-reference/mutations/segmentV2SaveDraft), [Authentication](/developers/getting-started/authentication)
   
@@ -8215,7 +8548,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showSegments`
   
   *Related:* [`segmentsV2`](/api-reference/queries/segmentsV2), [`SegmentV2`](/api-reference/types/SegmentV2)
   
@@ -8234,7 +8567,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showSegments`
   
   *Related:* [`segmentV2`](/api-reference/queries/segmentV2), [`SegmentV2Count`](/api-reference/types/SegmentV2Count)
   
@@ -8250,7 +8583,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showSegments`
   
   *Related:* [`segmentV2MembershipsByCustomer`](/api-reference/queries/segmentV2MembershipsByCustomer)
   
@@ -8267,7 +8600,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showSegments`
   
   *Related:* [`segmentV2IsInSegment`](/api-reference/queries/segmentV2IsInSegment), [`SegmentV2Membership`](/api-reference/types/SegmentV2Membership)
   
@@ -8286,7 +8619,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showSegments`
   
   *Related:* [`segmentV2SaveDraft`](/api-reference/mutations/segmentV2SaveDraft), [`segmentV2PreviewCount`](/api-reference/mutations/segmentV2PreviewCount)
   
@@ -8308,7 +8641,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showSegments`
   
   *Related:* [`SegmentV2`](/api-reference/types/SegmentV2)
   
@@ -8323,7 +8656,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showForms`
   
   *Related:* [`forms`](/api-reference/queries/forms), [`Form`](/api-reference/types/Form)
   
@@ -8373,7 +8706,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showForms`
   
   *Related:* [`forms`](/api-reference/queries/forms)
   
@@ -8429,7 +8762,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showForms`
   
   *Related:* [`formSubmissions`](/api-reference/queries/formSubmissions)
   
@@ -8460,7 +8793,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showForms`
   
   *Related:* [`formSubmissions`](/api-reference/queries/formSubmissions), [`formSubmissionsSave`](/api-reference/mutations/formSubmissionsSave)
   
@@ -8495,7 +8828,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showForms`
   
   *Related:* [`fieldsGroups`](/api-reference/queries/fieldsGroups), [Authentication](/developers/getting-started/authentication)
   
@@ -8588,7 +8921,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showCustomers`
   
   *Related:* [Pagination](/developers/guides/pagination)
   
@@ -8693,7 +9026,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showCompanies`
   
   *Related:* [`companies`](/api-reference/queries/companies), [Authentication](/developers/getting-started/authentication)
   
@@ -8752,7 +9085,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showCompanies`
   
   *Related:* [`companies`](/api-reference/queries/companies), [`companiesEdit`](/api-reference/mutations/companiesEdit), [`Company`](/api-reference/types/Company), [Authentication](/developers/getting-started/authentication)
   
@@ -8856,7 +9189,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showCustomers`
   
   *Related:* [`customers`](/api-reference/queries/customers), [Authentication](/developers/getting-started/authentication)
   
@@ -8941,7 +9274,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showCustomers`
   
   *Related:* [`customers`](/api-reference/queries/customers), [`customersEdit`](/api-reference/mutations/customersEdit), [`Customer`](/api-reference/types/Customer), [Authentication](/developers/getting-started/authentication)
   
@@ -8989,7 +9322,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showProducts`
   
   *Related:* [`productCategories`](/api-reference/queries/productCategories), [`productCategoriesEdit`](/api-reference/mutations/productCategoriesEdit)
   
@@ -9058,7 +9391,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showProducts`
   
   *Related:* [`products`](/api-reference/queries/products), [`productsEdit`](/api-reference/mutations/productsEdit)
   
@@ -9196,7 +9529,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showCustomers`
   
   *Related:* [`customerBehavioralSummary`](/api-reference/queries/customerBehavioralSummary), [`TimelineEntry`](/api-reference/types/TimelineEntry), [Authentication](/developers/getting-started/authentication)
   
@@ -9223,7 +9556,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showCustomers`
   
   *Related:* [`customerTimeline`](/api-reference/queries/customerTimeline), [`CustomerBehavioralSummary`](/api-reference/types/CustomerBehavioralSummary)
   
@@ -9233,6 +9566,297 @@ type Query {
     """Customer id to summarize."""
     customerId: String!
   ): CustomerBehavioralSummary
+  """
+  List broadcast / engage campaigns for this workspace, with filters and
+  pagination.
+  
+  Each row is an [`EngageMessage`](/api-reference/types/EngageMessage). Use [`engageMessageDetail`](/api-reference/queries/engageMessageDetail)
+  for one campaign, or [`engageMessageAdd`](/api-reference/mutations/engageMessageAdd) to create a new one.
+  
+  <small>
+  
+  *Auth* · `x-app-token` · required permission `showEngagesMessages`
+  
+  *Related:* [`engageMessageDetail`](/api-reference/queries/engageMessageDetail), [`engageMessageCounts`](/api-reference/queries/engageMessageCounts), [`engageMessageAdd`](/api-reference/mutations/engageMessageAdd)
+  
+  </small>
+  """
+  engageMessages(
+    """Filter by campaign `kind` (e.g. `auto`, `visitorAuto`, `manual`)."""
+    kind: String
+    """
+    Filter by delivery channel: `email`, `messenger`, `push`, or `whatsapp`.
+    """
+    method: String
+    """Case-insensitive partial match on campaign `title`."""
+    title: String
+    """Filter by lifecycle `status` (e.g. `draft`, `live`, `paused`)."""
+    status: String
+    """Filter to campaigns targeting this conversation/message tag id."""
+    tag: String
+    """Filter to campaigns targeting this customer tag id."""
+    customerTag: String
+    """When `true`, only return campaigns with no tags."""
+    untagged: Boolean
+    """Filter by tag folder id."""
+    folderTagId: String
+    """
+    Return only campaigns matching these ids, in addition to other filters.
+    """
+    ids: [String]
+    """
+    1-based page index. **Default:** `1`. See [Pagination](/developers/guides/pagination).
+    """
+    page: Int
+    """
+    Page size. **Default:** `20`. See [Pagination](/developers/guides/pagination).
+    """
+    perPage: Int
+    """Case-insensitive partial match on `title` (alias for `title`)."""
+    searchValue: String
+  ): EngageMessagePaginatedResponse
+  """
+  Count campaigns matching the same filters as [`engageMessages`](/api-reference/queries/engageMessages).
+  
+  <Info>
+  **Deprecated** — use [`engageMessages`](/api-reference/queries/engageMessages).`pagination.totalCount` instead. This query is kept only for backward compatibility.
+  </Info>
+  
+  <small>
+  
+  *Auth* · `x-app-token` · required permission `showEngagesMessages`
+  
+  *Related:* [`engageMessages`](/api-reference/queries/engageMessages)
+  
+  </small>
+  """
+  engageMessagesTotalCount(
+    """Filter by campaign `kind` (e.g. `auto`, `visitorAuto`, `manual`)."""
+    kind: String
+    """
+    Filter by delivery channel: `email`, `messenger`, `push`, or `whatsapp`.
+    """
+    method: String
+    """Case-insensitive partial match on campaign `title`."""
+    title: String
+    """Filter by lifecycle `status` (e.g. `draft`, `live`, `paused`)."""
+    status: String
+    """Filter to campaigns targeting this conversation/message tag id."""
+    tag: String
+    """Filter to campaigns targeting this customer tag id."""
+    customerTag: String
+    """When `true`, only return campaigns with no tags."""
+    untagged: Boolean
+    """Filter by tag folder id."""
+    folderTagId: String
+    """
+    Return only campaigns matching these ids, in addition to other filters.
+    """
+    ids: [String]
+    """
+    1-based page index. **Default:** `1`. See [Pagination](/developers/guides/pagination).
+    """
+    page: Int
+    """
+    Page size. **Default:** `20`. See [Pagination](/developers/guides/pagination).
+    """
+    perPage: Int
+    """Case-insensitive partial match on `title` (alias for `title`)."""
+    searchValue: String
+  ): Int @deprecated(reason: "Use engageMessages.pagination.totalCount instead")
+  """
+  Fetch a single [`EngageMessage`](/api-reference/types/EngageMessage) by id.
+  
+  Inspect audience, schedule, channel content, and delivery stats before or
+  after sending.
+  
+  <small>
+  
+  *Auth* · `x-app-token` · required permission `showEngagesMessages`
+  
+  *Related:* [`engageMessages`](/api-reference/queries/engageMessages), [`engageMessageEdit`](/api-reference/mutations/engageMessageEdit), [`EngageMessage`](/api-reference/types/EngageMessage)
+  
+  </small>
+  """
+  engageMessageDetail(
+    """
+    Campaign id ([`EngageMessage`](/api-reference/types/EngageMessage).`_id`).
+    """
+    _id: String
+  ): EngageMessage
+  """
+  Aggregate campaign counts grouped by the given `name` dimension, optionally
+  narrowed by `kind` and/or `status`.
+  
+  Returned as `JSON` — shape depends on `name`; used to power dashboard
+  summary widgets.
+  
+  <small>
+  
+  *Auth* · `x-app-token` · required permission `showEngagesMessages`
+  
+  *Related:* [`engageMessages`](/api-reference/queries/engageMessages)
+  
+  </small>
+  """
+  engageMessageCounts(
+    """
+    Grouping dimension to aggregate by (e.g. `status`, `kind`). **Required.**
+    """
+    name: String!
+    """Optional filter by campaign `kind` before aggregating."""
+    kind: String
+    """Optional filter by lifecycle `status` before aggregating."""
+    status: String
+  ): JSON
+  """
+  Estimate the unique audience size for a given combination of segments,
+  customer tags, and/or explicit customer ids — without creating a campaign.
+  
+  Use before [`engageMessageAdd`](/api-reference/mutations/engageMessageAdd) to preview reach.
+  
+  <small>
+  
+  *Auth* · `x-app-token` · authenticated
+  
+  *Related:* [`engageMessageAdd`](/api-reference/mutations/engageMessageAdd)
+  
+  </small>
+  """
+  engageAudienceUniqueCount(
+    """Segment v2 ids to include in the estimate."""
+    segmentIds: [String]
+    """Customer tag ids to include in the estimate."""
+    customerTagIds: [String]
+    """Explicit customer ids to include in the estimate."""
+    customerIds: [String]
+  ): Int
+  """
+  List email delivery events (send/open/click/bounce/etc.) across campaigns,
+  with filters and pagination.
+  
+  Each row is a [`DeliveryReport`](/api-reference/types/DeliveryReport). Narrow with `engageMessageId` for a
+  single campaign's report, or use [`engageEmailPercentages`](/api-reference/queries/engageEmailPercentages) for
+  workspace-wide averages instead of a single campaign.
+  
+  <small>
+  
+  *Auth* · `x-app-token` · required permission `showEngagesMessages`
+  
+  *Related:* [`engageEmailPercentages`](/api-reference/queries/engageEmailPercentages), [`engageMessageDetail`](/api-reference/queries/engageMessageDetail), [`DeliveryReport`](/api-reference/types/DeliveryReport)
+  
+  </small>
+  """
+  engageReportsList(
+    """
+    1-based page index. **Default:** `1`. See [Pagination](/developers/guides/pagination).
+    """
+    page: Int
+    """
+    Page size. **Default:** `20`. See [Pagination](/developers/guides/pagination).
+    """
+    perPage: Int
+    """Filter to delivery events for one recipient."""
+    customerId: String
+    """Filter by delivery `status` (e.g. `send`, `open`, `click`, `bounce`)."""
+    status: String
+    """Case-insensitive partial match on recipient email."""
+    searchValue: String
+    """Filter to delivery events for one campaign."""
+    engageMessageId: String
+  ): DeliveryReportPaginatedResponse
+  """
+  Average email delivery rates across **all** campaigns in the workspace: open,
+  click, bounce, complaint, reject, and send rates.
+  
+  <Info>
+  No parameters. For a single campaign's rates, use [`engageMessageDetail`](/api-reference/queries/engageMessageDetail) (`stats`) together with [`engageReportsList`](/api-reference/queries/engageReportsList).
+  </Info>
+  
+  <small>
+  
+  *Auth* · `x-app-token` · required permission `showEngagesMessages`
+  
+  *Related:* [`engageReportsList`](/api-reference/queries/engageReportsList), [`engageWhatsappPercentages`](/api-reference/queries/engageWhatsappPercentages)
+  
+  </small>
+  """
+  engageEmailPercentages: AvgEmailStats
+  """
+  Paginated execution logs for one campaign — batch progress, provider errors,
+  and lifecycle transitions.
+  
+  <small>
+  
+  *Auth* · `x-app-token` · required permission `showEngagesMessages`
+  
+  *Related:* [`engageMessageDetail`](/api-reference/queries/engageMessageDetail), [`EngageLog`](/api-reference/types/EngageLog)
+  
+  </small>
+  """
+  engageLogs(
+    """Campaign id to fetch logs for. **Required.**"""
+    engageMessageId: String!
+    """
+    1-based page index. **Default:** `1`. See [Pagination](/developers/guides/pagination).
+    """
+    page: Int
+    """
+    Page size. **Default:** `20`. See [Pagination](/developers/guides/pagination).
+    """
+    perPage: Int
+  ): EngageLogPaginatedResponse
+  """
+  List WhatsApp template message delivery events across campaigns, with
+  filters and pagination.
+  
+  Each row is a [`WhatsappDeliveryReport`](/api-reference/types/WhatsappDeliveryReport). Narrow with
+  `engageMessageId` for a single campaign, or use
+  [`engageWhatsappPercentages`](/api-reference/queries/engageWhatsappPercentages) for workspace-wide averages.
+  
+  <small>
+  
+  *Auth* · `x-app-token` · required permission `showEngagesMessages`
+  
+  *Related:* [`engageWhatsappPercentages`](/api-reference/queries/engageWhatsappPercentages), [`engageMessageDetail`](/api-reference/queries/engageMessageDetail), [`WhatsappDeliveryReport`](/api-reference/types/WhatsappDeliveryReport)
+  
+  </small>
+  """
+  engageWhatsappDeliveries(
+    """Filter to delivery events for one campaign."""
+    engageMessageId: String
+    """Filter by recipient phone number (partial match)."""
+    to: String
+    """
+    Filter by delivery `status` (e.g. `sent`, `delivered`, `read`, `failed`).
+    """
+    status: String
+    """
+    1-based page index. **Default:** `1`. See [Pagination](/developers/guides/pagination).
+    """
+    page: Int
+    """
+    Page size. **Default:** `20`. **Maximum:** `100`. See [Pagination](/developers/guides/pagination).
+    """
+    perPage: Int
+  ): WhatsappDeliveryReportPaginatedResponse
+  """
+  Average WhatsApp delivery rates across **all** campaigns in the workspace:
+  open, click, delivery, and failure rates.
+  
+  <Info>
+  No parameters. For a single campaign's rates, use [`engageMessageDetail`](/api-reference/queries/engageMessageDetail) (`whatsappStats`) together with [`engageWhatsappDeliveries`](/api-reference/queries/engageWhatsappDeliveries).
+  </Info>
+  
+  <small>
+  
+  *Auth* · `x-app-token` · required permission `showEngagesMessages`
+  
+  *Related:* [`engageWhatsappDeliveries`](/api-reference/queries/engageWhatsappDeliveries), [`engageEmailPercentages`](/api-reference/queries/engageEmailPercentages)
+  
+  </small>
+  """
+  engageWhatsappPercentages: AvgWhatsappStats
   """
   Fetch a single [`ConversationMessage`](/api-reference/types/ConversationMessage) by id.
   
@@ -9328,7 +9952,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showConversations`
   
   *Related:* [`conversationMessage`](/api-reference/queries/conversationMessage), [`conversationMessageAdd`](/api-reference/mutations/conversationMessageAdd), [`ConversationMessage`](/api-reference/types/ConversationMessage)
   
@@ -9357,7 +9981,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showConversations`
   
   *Related:* [`conversations`](/api-reference/queries/conversations)
   
@@ -9754,275 +10378,6 @@ type Query {
   """
   teamChatActivityUnreadCounts: TeamChatActivityUnreadCounts
   """
-  List knowledge base topics for this workspace, with pagination.
-  
-  <small>
-  
-  *Auth* · `x-app-token` · required permission `showKnowledgeBase`
-  
-  *Related:* [`knowledgeBaseTopicsTotalCount`](/api-reference/queries/knowledgeBaseTopicsTotalCount), [`knowledgeBaseTopicsAdd`](/api-reference/mutations/knowledgeBaseTopicsAdd), [`KnowledgeBaseTopic`](/api-reference/types/KnowledgeBaseTopic)
-  
-  </small>
-  """
-  knowledgeBaseTopics(
-    """1-based page index. See [Pagination](/developers/guides/pagination)."""
-    page: Int
-    """Page size. See [Pagination](/developers/guides/pagination)."""
-    perPage: Int
-    """
-    Restrict results to a specific workspace id, for multi-workspace tenants.
-    """
-    workspaceId: String
-    """Filter by one or more `code` values."""
-    codes: [String]
-  ): KnowledgeBaseTopicsPaginated
-  """
-  Fetch a single [`KnowledgeBaseTopic`](/api-reference/types/KnowledgeBaseTopic) by id.
-  
-  <Info>
-  `_id` also accepts the topic's `code` — either identifier resolves the same row.
-  </Info>
-  
-  <small>
-  
-  *Auth* · `x-app-token` · authenticated
-  
-  *Related:* [`knowledgeBaseTopics`](/api-reference/queries/knowledgeBaseTopics), [`knowledgeBaseTopicsEdit`](/api-reference/mutations/knowledgeBaseTopicsEdit), [`KnowledgeBaseTopic`](/api-reference/types/KnowledgeBaseTopic)
-  
-  </small>
-  """
-  knowledgeBaseTopicDetail(
-    """Topic `_id` **or** `code`. **Required.**"""
-    _id: String!
-  ): KnowledgeBaseTopic
-  """
-  Return the total number of knowledge base topics for this workspace.
-  
-  <small>
-  
-  *Auth* · `x-app-token` · authenticated
-  
-  *Related:* [`knowledgeBaseTopics`](/api-reference/queries/knowledgeBaseTopics), [Authentication](/developers/getting-started/authentication)
-  
-  </small>
-  """
-  knowledgeBaseTopicsTotalCount: Int
-  """
-  List knowledge base categories. Filter by topic, code, or icon.
-  
-  <Info>
-  Pass **both** `page` and `perPage` for a paginated page; omit both to get every matching category in one response (`pagination: null`).
-  </Info>
-  
-  <small>
-  
-  *Auth* · `x-app-token` · required permission `showKnowledgeBase`
-  
-  *Related:* [`knowledgeBaseCategoriesTotalCount`](/api-reference/queries/knowledgeBaseCategoriesTotalCount), [`knowledgeBaseCategoriesAdd`](/api-reference/mutations/knowledgeBaseCategoriesAdd), [`KnowledgeBaseCategory`](/api-reference/types/KnowledgeBaseCategory)
-  
-  </small>
-  """
-  knowledgeBaseCategories(
-    """
-    1-based page index. See [Pagination](/developers/guides/pagination). Omit together with `perPage` to fetch all categories.
-    """
-    page: Int
-    """
-    Page size. See [Pagination](/developers/guides/pagination). Omit together with `page` to fetch all categories.
-    """
-    perPage: Int
-    """Filter by one or more category `_id` values."""
-    ids: [String]
-    """
-    Filter by one or more parent [`KnowledgeBaseTopic`](/api-reference/types/KnowledgeBaseTopic) ids.
-    """
-    topicIds: [String]
-    """Filter by one or more `code` values."""
-    codes: [String]
-    """Filter by exact icon identifier."""
-    icon: String
-  ): KnowledgeBaseCategoriesPaginated
-  """
-  Fetch a single [`KnowledgeBaseCategory`](/api-reference/types/KnowledgeBaseCategory) by id.
-  
-  <Info>
-  `_id` also accepts the category's `code` — either identifier resolves the same row.
-  </Info>
-  
-  <small>
-  
-  *Auth* · `x-app-token` · authenticated
-  
-  *Related:* [`knowledgeBaseCategories`](/api-reference/queries/knowledgeBaseCategories), [`knowledgeBaseCategoriesEdit`](/api-reference/mutations/knowledgeBaseCategoriesEdit), [`KnowledgeBaseCategory`](/api-reference/types/KnowledgeBaseCategory)
-  
-  </small>
-  """
-  knowledgeBaseCategoryDetail(
-    """Category `_id` **or** `code`. **Required.**"""
-    _id: String!
-  ): KnowledgeBaseCategory
-  """
-  Return the total number of categories matching the given filters.
-  
-  <small>
-  
-  *Auth* · `x-app-token` · authenticated
-  
-  *Related:* [`knowledgeBaseCategories`](/api-reference/queries/knowledgeBaseCategories), [Authentication](/developers/getting-started/authentication)
-  
-  </small>
-  """
-  knowledgeBaseCategoriesTotalCount(
-    """
-    Filter by one or more parent [`KnowledgeBaseTopic`](/api-reference/types/KnowledgeBaseTopic) ids.
-    """
-    topicIds: [String]
-    """Filter by one or more `code` values."""
-    codes: [String]
-  ): Int
-  """
-  Return the most recently created knowledge base category for this workspace.
-  
-  <small>
-  
-  *Auth* · `x-app-token` · authenticated
-  
-  *Related:* [`knowledgeBaseCategories`](/api-reference/queries/knowledgeBaseCategories), [Authentication](/developers/getting-started/authentication)
-  
-  </small>
-  """
-  knowledgeBaseCategoriesGetLast: KnowledgeBaseCategory
-  """
-  List knowledge base articles with pagination, search, sorting, and filtering.
-  
-  <Info>
-  Does **not** return full article `content` — use `summary` for a short preview, or fetch the full body from your internal article-detail flow.
-  </Info>
-  
-  <small>
-  
-  *Auth* · `x-app-token` · required permission `showKnowledgeBase`
-  
-  *Related:* [`knowledgeBaseArticlesTotalCount`](/api-reference/queries/knowledgeBaseArticlesTotalCount), [`knowledgeBaseArticlesAdd`](/api-reference/mutations/knowledgeBaseArticlesAdd), [`KnowledgeBaseArticle`](/api-reference/types/KnowledgeBaseArticle)
-  
-  </small>
-  """
-  knowledgeBaseArticles(
-    """Case-insensitive partial match on `title`, `content`, or `summary`."""
-    searchValue: String
-    """1-based page index. See [Pagination](/developers/guides/pagination)."""
-    page: Int
-    """Page size. See [Pagination](/developers/guides/pagination)."""
-    perPage: Int
-    """
-    Filter by one or more [`KnowledgeBaseCategory`](/api-reference/types/KnowledgeBaseCategory) ids.
-    """
-    categoryIds: [String]
-    """Filter by one or more article `_id` values."""
-    articleIds: [String]
-    """Filter by one or more `code` values."""
-    codes: [String]
-    """
-    Filter by one or more [`KnowledgeBaseTopic`](/api-reference/types/KnowledgeBaseTopic) ids.
-    """
-    topicIds: [String]
-    """Field to sort by. **Default:** `createdDate`."""
-    sortField: String
-    """Sort direction, `asc` or `desc`. Used together with `sortField`."""
-    sortDirection: SortDirection
-    """Filter by publication status: `draft`, `publish`, or `scheduled`."""
-    status: String
-  ): KnowledgeBaseArticlesPaginated
-  """
-  Fetch a single [`KnowledgeBaseArticle`](/api-reference/types/KnowledgeBaseArticle) by id, including full `content`.
-  
-  <Info>
-  `_id` also accepts the article's `code` — either identifier resolves the same row. Unlike [`knowledgeBaseArticles`](/api-reference/queries/knowledgeBaseArticles), this returns the full HTML `content`.
-  </Info>
-  
-  <small>
-  
-  *Auth* · `x-app-token` · authenticated
-  
-  *Related:* [`knowledgeBaseArticles`](/api-reference/queries/knowledgeBaseArticles), [`knowledgeBaseArticlesEdit`](/api-reference/mutations/knowledgeBaseArticlesEdit), [`KnowledgeBaseArticle`](/api-reference/types/KnowledgeBaseArticle)
-  
-  </small>
-  """
-  knowledgeBaseArticleDetail(
-    """Article `_id` **or** `code`. **Required.**"""
-    _id: String!
-  ): KnowledgeBaseArticle
-  """
-  Return the total number of articles matching the given filters.
-  
-  <small>
-  
-  *Auth* · `x-app-token` · authenticated
-  
-  *Related:* [`knowledgeBaseArticles`](/api-reference/queries/knowledgeBaseArticles), [Authentication](/developers/getting-started/authentication)
-  
-  </small>
-  """
-  knowledgeBaseArticlesTotalCount(
-    """
-    Filter by one or more [`KnowledgeBaseCategory`](/api-reference/types/KnowledgeBaseCategory) ids.
-    """
-    categoryIds: [String]
-    """Filter by one or more `code` values."""
-    codes: [String]
-    """Filter by one or more article `_id` values."""
-    articleIds: [String]
-    """
-    Filter by one or more [`KnowledgeBaseTopic`](/api-reference/types/KnowledgeBaseTopic) ids.
-    """
-    topicIds: [String]
-    """Filter by publication status."""
-    status: String
-  ): Int
-  """
-  Run a semantic (vector) search across published articles in a topic.
-  
-  Combines embedding similarity with optional reranking to surface the most
-  relevant [`KnowledgeBaseArticle`](/api-reference/types/KnowledgeBaseArticle) hits for a natural-language query —
-  ideal for AI assistants and in-product help search.
-  
-  <Note>
-  **Errors:** `kbTopicId` must reference an existing, indexed [`KnowledgeBaseTopic`](/api-reference/types/KnowledgeBaseTopic). Empty result sets return `totalResults: 0` rather than erroring.
-  </Note>
-  
-  <small>
-  
-  *Auth* · `x-app-token` · authenticated
-  
-  *Related:* [`knowledgeBaseArticles`](/api-reference/queries/knowledgeBaseArticles), [`KnowledgeBaseSearchResult`](/api-reference/types/KnowledgeBaseSearchResult), [Authentication](/developers/getting-started/authentication)
-  
-  </small>
-  """
-  knowledgeBaseSearch(
-    """Natural-language search query. **Required.**"""
-    query: String!
-    """
-    [`KnowledgeBaseTopic`](/api-reference/types/KnowledgeBaseTopic) id to search within. **Required.**
-    """
-    kbTopicId: String!
-    """Maximum number of hits to return. **Default:** `8`."""
-    topK: Int
-    """
-    Additional metadata filters passed through to the underlying vector index.
-    """
-    filters: JSON
-    """Whether to rerank initial vector hits for improved relevance."""
-    rerank: Boolean
-    """
-    Reranking strategy: `llm`, `bm25`, or `hybrid`. **Default:** `hybrid`. Used only when `rerank` is `true`.
-    """
-    rerankMethod: String
-    """
-    Weight balancing vector vs. keyword scoring when `rerankMethod` is `hybrid` (0–1).
-    """
-    hybridAlpha: Float
-  ): KnowledgeBaseSearchResult!
-  """
   List marketplace miniapps with their general listing info, optionally filtered
   by install status or a text search.
   
@@ -10074,7 +10429,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showMiniAppsConnections`
   
   *Related:* [`myMiniApps`](/api-reference/queries/myMiniApps), [Authentication](/developers/getting-started/authentication)
   
@@ -10087,7 +10442,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showMiniAppsConnections`
   
   *Related:* [`miniAppGeneralInfo`](/api-reference/queries/miniAppGeneralInfo), [`miniAppDashboardConfig`](/api-reference/queries/miniAppDashboardConfig), [`miniAppDetailResponse`](/api-reference/types/miniAppDetailResponse)
   
@@ -10127,7 +10482,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showMiniAppsConnections`
   
   *Related:* [`miniAppDetail`](/api-reference/queries/miniAppDetail), [Authentication](/developers/getting-started/authentication)
   
@@ -10156,7 +10511,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showMiniAppsConnections`
   
   *Related:* [`miniAppDetail`](/api-reference/queries/miniAppDetail), [`MiniAppDashboardConfig`](/api-reference/types/MiniAppDashboardConfig), [Authentication](/developers/getting-started/authentication)
   
@@ -10176,7 +10531,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showIntegrations`
   
   *Related:* [`whatsappGetFlowById`](/api-reference/queries/whatsappGetFlowById), [`whatsappCreateFlow`](/api-reference/mutations/whatsappCreateFlow), [`WhatsappFlowList`](/api-reference/types/WhatsappFlowList), [Authentication](/developers/getting-started/authentication)
   
@@ -10202,7 +10557,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showIntegrations`
   
   *Related:* [`whatsappGetAllFlows`](/api-reference/queries/whatsappGetAllFlows), [`whatsappUpdateFlow`](/api-reference/mutations/whatsappUpdateFlow), [`WhatsappFlow`](/api-reference/types/WhatsappFlow), [Authentication](/developers/getting-started/authentication)
   
@@ -10219,7 +10574,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showIntegrations`
   
   *Related:* [`whatsappCreateFlow`](/api-reference/mutations/whatsappCreateFlow), [`whatsappUpdateFlow`](/api-reference/mutations/whatsappUpdateFlow), [Authentication](/developers/getting-started/authentication)
   
@@ -10235,7 +10590,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showIntegrations`
   
   *Related:* [`whatsappGetFlowById`](/api-reference/queries/whatsappGetFlowById), [`FlowPreviewResponse`](/api-reference/types/FlowPreviewResponse), [Authentication](/developers/getting-started/authentication)
   
@@ -10253,7 +10608,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showConversations`
   
   *Related:* [`WhatsappConversationMessageListResponse`](/api-reference/types/WhatsappConversationMessageListResponse), [Pagination](/developers/guides/pagination), [Authentication](/developers/getting-started/authentication)
   
@@ -10278,7 +10633,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showIntegrations`
   
   *Related:* [`whatsappGetMessageTemplateDetail`](/api-reference/queries/whatsappGetMessageTemplateDetail), [`whatsappSyncMessageTemplates`](/api-reference/mutations/whatsappSyncMessageTemplates), [`WhatsappTemplateList`](/api-reference/types/WhatsappTemplateList), [Authentication](/developers/getting-started/authentication)
   
@@ -10311,7 +10666,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showIntegrations`
   
   *Related:* [`whatsappGetTemplates`](/api-reference/queries/whatsappGetTemplates), [`whatsappSendTemplateMessage`](/api-reference/mutations/whatsappSendTemplateMessage), [`WhatsappTemplate`](/api-reference/types/WhatsappTemplate), [Authentication](/developers/getting-started/authentication)
   
@@ -10333,7 +10688,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showIntegrations`
   
   *Related:* [`whatsappCheckIntegrationHealth`](/api-reference/mutations/whatsappCheckIntegrationHealth), [`WhatsappIntegration`](/api-reference/types/WhatsappIntegration), [Authentication](/developers/getting-started/authentication)
   
@@ -10355,7 +10710,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showIntegrations`
   
   *Related:* [`whatsappAnalyticsByFieldParams`](/api-reference/types/whatsappAnalyticsByFieldParams), [Authentication](/developers/getting-started/authentication)
   
@@ -10375,7 +10730,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showIntegrations`
   
   *Related:* [`WhatsappOBAStatusResponse`](/api-reference/types/WhatsappOBAStatusResponse), [Authentication](/developers/getting-started/authentication)
   
@@ -10390,7 +10745,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showIntegrations`
   
   *Related:* [`whatsappCreateQRCode`](/api-reference/mutations/whatsappCreateQRCode), [`WhatsappQRCodeListResponse`](/api-reference/types/WhatsappQRCodeListResponse), [Authentication](/developers/getting-started/authentication)
   
@@ -10406,7 +10761,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showIntegrations`
   
   *Related:* [`WhatsappHistorySync`](/api-reference/types/WhatsappHistorySync), [Authentication](/developers/getting-started/authentication)
   
@@ -10421,7 +10776,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showIntegrations`
   
   *Related:* [`whatsappUpdateCallSettings`](/api-reference/mutations/whatsappUpdateCallSettings), [`WhatsappCallSettings`](/api-reference/types/WhatsappCallSettings), [Authentication](/developers/getting-started/authentication)
   
@@ -10446,7 +10801,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showIntegrations`
   
   *Related:* [`whatsappSendCallPermissionRequest`](/api-reference/mutations/whatsappSendCallPermissionRequest), [`WhatsappCallPermission`](/api-reference/types/WhatsappCallPermission), [Authentication](/developers/getting-started/authentication)
   
@@ -10464,7 +10819,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showIntegrations`
   
   *Related:* [`WhatsappCallHistoryList`](/api-reference/types/WhatsappCallHistoryList), [Pagination](/developers/guides/pagination), [Authentication](/developers/getting-started/authentication)
   
@@ -10498,7 +10853,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showIntegrations`
   
   *Related:* [`whatsappSyncCatalogProducts`](/api-reference/mutations/whatsappSyncCatalogProducts), [Authentication](/developers/getting-started/authentication)
   
@@ -10514,7 +10869,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showIntegrations`
   
   *Related:* [`whatsappSyncCatalogProducts`](/api-reference/mutations/whatsappSyncCatalogProducts), [Authentication](/developers/getting-started/authentication)
   
@@ -10531,7 +10886,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showIntegrations`
   
   *Related:* [`whatsappBusinessDetails`](/api-reference/queries/whatsappBusinessDetails), [Authentication](/developers/getting-started/authentication)
   
@@ -10544,7 +10899,7 @@ type Query {
   
   <small>
   
-  *Auth* · `x-app-token` · authenticated
+  *Auth* · `x-app-token` · required permission `showIntegrations`
   
   *Related:* [`whatsappBusinessesList`](/api-reference/queries/whatsappBusinessesList), [Authentication](/developers/getting-started/authentication)
   
@@ -10554,6 +10909,52 @@ type Query {
     """Meta Business Portfolio (Business Manager) id."""
     businessPortfolioId: String!
   ): JSON
+}
+
+type RecurrenceOn {
+  weekdays: [Int]
+  monthDays: [Int]
+  months: [Int]
+  weekOfMonth: [Int]
+}
+
+input RecurrenceOnInput {
+  weekdays: [Int]
+  monthDays: [Int]
+  months: [Int]
+  weekOfMonth: [Int]
+}
+
+type RecurringSchedule {
+  frequency: String
+  interval: Int
+  atTimes: [TimeOfDay]
+  atMinutes: [Int]
+  on: RecurrenceOn
+  startAt: Date
+  endAt: Date
+  occurrences: Int
+  timezone: String
+  excludeDates: [Date]
+  excludeRanges: [DateRange]
+  excludeDailyWindows: [TimeWindow]
+  excludeWeeklyWindows: [TimeWindow]
+}
+
+input RecurringScheduleInput {
+  frequency: String!
+  interval: Int
+  atTimes: [TimeOfDayInput]
+  atMinutes: [Int]
+  on: RecurrenceOnInput
+  startAt: Date
+  endAt: Date
+  occurrences: Int
+  timezone: String
+  excludeDates: [Date]
+  excludeRanges: [DateRangeInput]
+  excludeDailyWindows: [TimeWindowInput]
+  excludeWeeklyWindows: [TimeWindowInput]
 }
 
 """
@@ -11242,7 +11643,7 @@ Fields populated depend on `source`: `activity` entries use `action` /
 `contentType` / `contentId` / `performer` / `payload`; `behavioral`
 entries use `eventName` / `eventType` / `sessionId` / `pageUrl` /
 `device` / `campaign` / `properties`; `note` entries use
-`noteContent` / `noteCreatedBy`.
+`noteContent` / `noteCreatedBy` / `noteUpdatedAt` / `noteIsEdited`.
 """
 type TimelineEntry {
   """Unique entry identifier."""
@@ -11285,6 +11686,14 @@ type TimelineEntry {
   noteContent: String
   """Author of the note. Populated for `note` entries."""
   noteCreatedBy: JSON
+  """
+  When the note was last edited (ISO string). Populated for `note` entries that have been edited.
+  """
+  noteUpdatedAt: String
+  """
+  Whether the note has been edited after creation. Populated for `note` entries.
+  """
+  noteIsEdited: Boolean
 }
 
 """
@@ -11295,6 +11704,29 @@ enum TimelineEntrySource {
   activity
   behavioral
   note
+}
+
+""" Scheduling types """
+type TimeOfDay {
+  hour: Int
+  minute: Int
+}
+
+input TimeOfDayInput {
+  hour: Int!
+  minute: Int!
+}
+
+type TimeWindow {
+  start: String
+  end: String
+  weekdays: [Int]
+}
+
+input TimeWindowInput {
+  start: String!
+  end: String!
+  weekdays: [Int]
 }
 
 """
@@ -12149,6 +12581,46 @@ enum WhatsappConversationType {
   FREE_TIER
   REGULAR
   UNKNOWN
+}
+
+"""
+A single WhatsApp template message delivery event for one recipient of one
+campaign. Returned by [`engageWhatsappDeliveries`](/api-reference/queries/engageWhatsappDeliveries).
+"""
+type WhatsappDeliveryReport {
+  """Unique delivery report identifier."""
+  _id: String!
+  """When this delivery event was recorded."""
+  createdAt: Date
+  """Recipient phone number (E.164)."""
+  to: String
+  """Delivery status, e.g. `sent`, `delivered`, `read`, `failed`."""
+  status: String
+  """Campaign this delivery belongs to."""
+  engageMessageId: String!
+  """Recipient customer id."""
+  customerId: String!
+  """Provider (WhatsApp Business API) message id."""
+  mid: String
+  """Provider error code when `status` is `failed`."""
+  errorCode: String
+}
+
+"""
+Paginated WhatsApp delivery events returned by [`engageWhatsappDeliveries`](/api-reference/queries/engageWhatsappDeliveries).
+
+`data` contains [`WhatsappDeliveryReport`](/api-reference/types/WhatsappDeliveryReport) rows. Page shape follows
+[Pagination](/developers/guides/pagination).
+"""
+type WhatsappDeliveryReportPaginatedResponse {
+  """
+  [`WhatsappDeliveryReport`](/api-reference/types/WhatsappDeliveryReport) rows for the current page.
+  """
+  data: [WhatsappDeliveryReport]!
+  """
+  Standard pagination metadata: `totalCount`, `currentPage`, `totalPages`, `hasNextPage`, `hasPreviousPage`, `perPage`.
+  """
+  pagination: PaginationInfo!
 }
 
 """

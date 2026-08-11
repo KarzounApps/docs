@@ -121,6 +121,10 @@
             "href": "mailto:developers@karzoun.chat"
           },
           {
+            "label": "Status",
+            "href": "https://status.karzoun.chat/"
+          },
+          {
             "label": "Terms",
             "href": "/legal/terms"
           },
@@ -191,7 +195,7 @@
               "header": "المنتج",
               "items": [
                 {
-                  "label": "مساحة عمل كرزون",
+                  "label": "حساب كرزون",
                   "href": "https://karzoun.chat"
                 },
                 {
@@ -252,6 +256,10 @@
                 {
                   "label": "الدعم",
                   "href": "mailto:developers@karzoun.chat"
+                },
+                {
+                  "label": "صحة الخدمة",
+                  "href": "https://status.karzoun.chat/"
                 },
                 {
                   "label": "الشروط",
