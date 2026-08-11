@@ -125,6 +125,10 @@
             "href": "https://status.karzoun.chat/"
           },
           {
+            "label": "Meta Business Partner",
+            "href": "/partners"
+          },
+          {
             "label": "Terms",
             "href": "/legal/terms"
           },
@@ -260,6 +264,10 @@
                 {
                   "label": "صحة الخدمة",
                   "href": "https://status.karzoun.chat/"
+                },
+                {
+                  "label": "شريك ميتا للأعمال",
+                  "href": "/ar/partners"
                 },
                 {
                   "label": "الشروط",

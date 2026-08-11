@@ -608,6 +608,48 @@ html[dir="rtl"] #content .border-l-0 {
   box-shadow: 0 6px 20px rgb(0 0 0 / 0.35);
 }
 
+/* Meta Business Partners trust badge (horizontal lockup) */
+.karzoun-meta-badge {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  margin-block: 0.75rem 1.25rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.85rem;
+  border: 1px solid rgb(8 102 255 / 0.18);
+  background: rgb(255 255 255 / 0.92);
+}
+
+.karzoun-meta-badge img {
+  display: block;
+  width: min(220px, 100%);
+  height: auto;
+}
+
+.karzoun-meta-badge p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: rgb(51 65 85);
+}
+
+:is(html.dark) .karzoun-meta-badge {
+  background: rgb(15 23 42 / 0.92);
+  border-color: rgb(8 102 255 / 0.35);
+}
+
+:is(html.dark) .karzoun-meta-badge p {
+  color: rgb(203 213 225);
+}
+
+:is(html.dark) .karzoun-meta-badge img {
+  /* Keep badge readable on dark: light plate behind lockup */
+  background: #fff;
+  border-radius: 0.35rem;
+  padding: 0.35rem 0.5rem;
+}
+
 /* =============================================================================
    MOBILE
    ============================================================================= */
