@@ -574,7 +574,7 @@ html[dir="rtl"] #content .border-l-0 {
   background: linear-gradient(
     135deg,
     rgb(56 124 236 / 0.2),
-    rgb(91 155 255 / 0.12),
+    rgb(193 95 60 / 0.14),
     rgb(37 99 199 / 0.18)
   );
 }
@@ -586,9 +586,26 @@ html[dir="rtl"] #content .border-l-0 {
   box-shadow: 0 8px 28px rgb(37 99 199 / 0.1);
 }
 
+.karzoun-ai-promo img {
+  border-radius: 0.7rem !important;
+}
+
 :is(html.dark) .karzoun-ai-promo > * {
   background: rgb(15 23 42 / 0.92) !important;
   border-color: rgb(91 155 255 / 0.35) !important;
+}
+
+.karzoun-brand-logo {
+  display: block;
+  width: 4.5rem;
+  height: 4.5rem;
+  margin-block: 0.25rem 1.25rem;
+  border-radius: 1rem;
+  box-shadow: 0 6px 20px rgb(193 95 60 / 0.22);
+}
+
+:is(html.dark) .karzoun-brand-logo {
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.35);
 }
 
 /* =============================================================================
