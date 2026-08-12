@@ -1,9 +1,33 @@
 ---
 title: "Dashboard SDK"
-description: "ابنِ تطبيقات لوحات البريد الوارد باستخدام Karzoun Dashboard SDK."
+description: "ابنِ لوحات جانبية في البريد الوارد باستخدام @karzoun/dashboard-sdk — سياق المحادثة وإجراءات MiniApp داخل iframe."
 ---
 
-`@karzoun/dashboard-sdk` — SDK خفيف لتطبيقات **لوحة التحكم** داخل iframe البريد الوارد كرزون.
+`@karzoun/dashboard-sdk` مكتبة خفيفة لتطبيقات **لوحة التحكم** المضمّنة في البريد الوارد كرزون. تُحمَّل صفحتك داخل iframe معزول؛ يتواصل الـ SDK مع المضيف عبر `postMessage`. بيانات اعتماد MiniApps المرتبطة لا تصل أبداً إلى الـ iframe.
+
+<Info>
+  مرجع الـ API الكامل وملاحظات البروتوكول وأمثلة HTML جاهزة في المستودع العام: [KarzounApps/dashboard-sdk](https://github.com/KarzounApps/dashboard-sdk).
+</Info>
+
+## المتطلبات الأساسية
+
+<Steps>
+  <Step title="ثبّت MiniApp (اختياري لكن شائع)">
+    في كرزون: **الإعدادات ← التطبيقات**. اربط بيانات الاعتماد للمنصة المطلوبة (مثل Shopify أو زد أو سلة). يعرّف الـ MiniApp **إجراءات** مسماة تستدعيها لوحتك.
+  </Step>
+  <Step title="استضف صفحة اللوحة">
+    انشر أي صفحة ثابتة (ملف HTML واحد أو واجهة صغيرة) على رابط عام — Vercel أو Cloudflare Pages أو Netlify أو خادمك، أو `localhost` أثناء التطوير.
+  </Step>
+  <Step title="أعلن أو أنشئ تطبيق لوحة تحكم">
+    **من MiniApp:** يمكن للناشر إعلان اللوحات في `definition.dashboardApps[]` (`key`، `name`، `iframeUrl`، …). بعد تثبيت الـ MiniApp، يفتح المستأجر **الإعدادات ← التطبيقات ← {التطبيق}** ويختار اللوحات التي يريد **تثبيتها**. لا يُثبَّت شيء تلقائياً.
+
+    **مخصص:** أنشئ لوحة يدوياً من **المطور ← تطبيقات لوحة التحكم** مع رابط iframe وربط MiniApp اختياري وإسناد أعضاء الفريق.
+  </Step>
+</Steps>
+
+<Note>
+  رفع HTML مستضاف على كرزون للوحات مخطَّط لمرحلة لاحقة. المرحلة 1 تستخدم `iframeUrl` خارجياً فقط.
+</Note>
 
 ## التثبيت
 
@@ -11,31 +35,131 @@ description: "ابنِ تطبيقات لوحات البريد الوارد با�
 npm install @karzoun/dashboard-sdk
 ```
 
+<Warning>
+  إذا لم تكن الحزمة متاحة بعد على npm، ثبّت من GitHub:
+
+  ```bash
+  npm install github:KarzounApps/dashboard-sdk
+  ```
+
+  لملف HTML واحد بدون bundler، استخدم مسار ESM من [README الحزمة](https://github.com/KarzounApps/dashboard-sdk#installation) بعد النشر.
+</Warning>
+
 ## بداية سريعة
 
 ```typescript
 import { createDashboard } from "@karzoun/dashboard-sdk";
 
-const dashboard = createDashboard({
-  miniappId: "YOUR_MINIAPP_ID",
+const dashboard = createDashboard({ debug: false });
+
+dashboard.init({
+  onReady: async () => {
+    const ctx = dashboard.getCustomerContext();
+    const email = ctx?.customer.primaryEmail;
+
+    if (!email) {
+      console.log("لا يوجد بريد للعميل في هذه المحادثة");
+      return;
+    }
+
+    const result = await dashboard.executeAction("listOrders", {
+      email,
+      limit: "10",
+    });
+
+    if (result.success) {
+      console.log(result.data);
+    } else {
+      console.error(result.error?.code, result.error?.message);
+    }
+  },
 });
 
-dashboard.onContext((ctx) => {
-  console.log("Customer:", ctx.customer);
+dashboard.onConversationUpdate(async () => {
+  const ctx = dashboard.getCustomerContext();
+  if (ctx?.customer.primaryEmail) {
+    await dashboard.executeAction("listOrders", {
+      email: ctx.customer.primaryEmail,
+    });
+  }
 });
-
-await dashboard.executeAction("listOrders", { limit: 10 });
 ```
 
-## المتطلبات الأساسية
+## ما يعمل اليوم
 
-1. ثبّت واضبط **MiniApp** ببيانات اعتماد صالحة (الإعدادات ← MiniApps)
-2. أنشئ **تطبيق لوحة تحكم** يشير إلى عنوان iframe المستضاف لديك (الإعدادات ← تطبيقات لوحة التحكم)
+| القدرة | الحالة | ملاحظات |
+| --- | --- | --- |
+| حمولة المحادثة | مدعوم | `getConversation()`، `onConversationUpdate()` |
+| العميل على المحادثة | مدعوم | فضّل `getCustomerContext()` (من `conversation.customer` + إثراء `customer_context`) |
+| `externalCodes` / قيم النماذج المقترحة | مدعوم | المضيف يدفع `dashboardCustomerContext` عند التوفر |
+| تنفيذ إجراءات MiniApp | مدعوم | يتطلب MiniApp مرتبطاً؛ المضيف يوكّل GraphQL `executeMiniAppAction` |
+| قائمة الإجراءات / القدرات | مدعوم | `getActions()`، `getCapabilities()` بعد `config_result` (`miniAppNs` / `form`) |
+| مساعدات واجهة المضيف (`showToast`، `addNote`، `addTag`، `openCustomer`) | مدعوم | يوكّلها مضيف البريد الوارد |
+| مصادر ديناميكية (`getSourceData`) | مدعوم | المضيف يوكّل `miniAppsActionSources` عند ربط MiniApp |
 
-## الميزات
+## الـ API الأساسي
 
-- استقبال سياق المحادثة والعميل من المضيف
-- تنفيذ إجراءات مصادق عليها عبر MiniApp (لا تُعرَض بيانات الاعتماد أبداً داخل iframe)
-- تشغيل واجهة المضيف: إشعارات toast، وملاحظات، ووسوم، وتنقّل
+### دورة الحياة
 
-راجع README الحزمة تحت `v4UI/dashboard-sdk` في مستودع كرزون الأحادي لمرجع API وبروتوكول postMessage والأمثلة.
+- `createDashboard(options?)` — الخيارات: `heartbeatInterval`، `actionTimeout`، `debug`، `onError`
+- `init({ onReady })` — يرسل `app_ready`؛ يُستدعى `onReady` بعد وصول بيانات المحادثة (أو بعد مهلة قصيرة)
+- `destroy()` — إزالة المستمعين والطلبات المعلّقة
+
+### السياق
+
+- `getConversation()` / `onConversationUpdate(cb)`
+- `getCustomerContext()` / `onCustomerContextUpdate(cb)`
+
+شكل `CustomerContext`:
+
+```typescript
+{
+  customerId: string;
+  customer: {
+    firstName?: string;
+    lastName?: string;
+    primaryEmail?: string;
+    primaryPhone?: string;
+    externalCodes: Record<string, string>; // قد يكون فارغاً حتى يصل إثراء المضيف
+  };
+  suggestedFormValues: Record<string, string>;
+}
+```
+
+### الإجراءات
+
+- `getActions()` / `getCapabilities()`
+- `executeAction(actionName, formInput?)` — الـ promise **يُحل دائماً**؛ تحقق من `result.success`
+
+أكواد الخطأ الشائعة: `AUTH_EXPIRED`، `RATE_LIMITED`، `ACTION_NOT_FOUND`، `VALIDATION_ERROR`، `EXTERNAL_API_ERROR`، `INTERNAL_ERROR`، `NOT_INSTALLED`، `NOT_CONFIGURED`.
+
+## كيف تتصل القطع
+
+```
+الـ iframe لديك (Dashboard SDK)
+  → postMessage execute_action
+مضيف البريد الوارد (DashboardAppIframe)
+  → GraphQL executeMiniAppAction
+خلفية MiniApps
+  → حقن بيانات الاعتماد المخزّنة → واجهة خارجية
+```
+
+يمكن للمشرف تقييد الإجراءات لكل تطبيق لوحة. يحدّ المضيف معدل استدعاءات الإجراءات (افتراضياً 30/دقيقة لكل جلسة).
+
+## لوحة بملف HTML فقط
+
+تطبيق لوحة التحكم **لا يحتاج** إطار عمل. ملف HTML واحد يستورد الـ SDK (عبر bundler أو ESM) يكفي — استضف الملف وضع رابطه في **رابط Iframe**.
+
+راجع أمثلة Shopify وزد في [مستودع dashboard-sdk](https://github.com/KarzounApps/dashboard-sdk/tree/main/examples).
+
+## الأمان
+
+- تبقى بيانات الاعتماد على الخادم؛ يرسل الـ iframe أسماء الإجراءات وقيم النماذج فقط
+- يتحقق المضيف من `event.origin` مقابل رابط الـ iframe المسجّل
+- يتضمن sandbox الخاص بالـ iframe السكربتات وsame-origin والنماذج والنوافذ المنبثقة (راجع تنفيذ المضيف لسلسلة السمات الدقيقة)
+
+## ذات صلة
+
+- [MiniApps](/ar/miniapps) — عرّف الإجراءات التي تستدعيها لوحتك
+- [واجهة GraphQL](/ar/developers) — بديل من جانب الخادم للوحات الـ iframe
+- [مركز المساعدة: تطبيقات لوحة التحكم](/ar/help-center/guides/developers/doc-2279095) — إعداد المشرف

@@ -28,6 +28,7 @@ Every MiniApp is a single document with these top-level fields:
 | `sync`             | object | —        | Bulk import + `sync.webhooks` realtime sync — see [Sync](/miniapps/guides/sync)                                                      |
 | `source`           | object | —        | Dynamic data source (RPC) definitions — see [Dynamic data sources](/miniapps/guides/dynamic-data-sources)                            |
 | `functions`        | object | —        | Sandboxed App Functions invoked as pipeline steps — see [Actions → App Functions](/miniapps/guides/actions#app-functions-pipeline-steps) |
+| `dashboardApps`    | array  | —        | Optional inbox sidebar panels. Tenants install them from **Settings → Applications → {app}** (never auto-installed). Each item: `key`, `name`, `iframeUrl`, optional `description`, `icon`, `allowedActions`, `defaultStatus`. See [Dashboard SDK](/sdk/dashboard-sdk). |
 
 <Info>
   **Karzoun team fields** — First-party marketplace seeds may include additional `webhook` fields (`merchantExtraction`, `uninstallEvents`) and a top-level `provisioning` block. These are **not** part of the partner submission schema and are documented separately for internal use.

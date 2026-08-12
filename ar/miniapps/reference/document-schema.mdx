@@ -28,6 +28,7 @@ description: "الحقول العلوية المطلوبة لكل تعريف Min
 | `sync`             | object | —        | الاستيراد الجماعي + مزامنة فورية عبر `sync.webhooks` — انظر [المزامنة](/ar/miniapps/guides/sync)                                                      |
 | `source`           | object | —        | تعريفات مصادر البيانات الديناميكية (RPC) — انظر [مصادر البيانات الديناميكية](/ar/miniapps/guides/dynamic-data-sources)                            |
 | `functions`        | object | —        | دوال تطبيق معزولة تُستدعى كخطوات في المسار — انظر [الإجراءات → دوال التطبيق](/ar/miniapps/guides/actions#app-functions-pipeline-steps) |
+| `dashboardApps`    | array  | —        | لوحات اختيارية في الشريط الجانبي للبريد الوارد. يثبّتها المستأجر من **الإعدادات ← التطبيقات ← {التطبيق}** (لا تثبيت تلقائي). كل عنصر: `key`، `name`، `iframeUrl`، واختياريًا `description`، `icon`، `allowedActions`، `defaultStatus`. انظر [Dashboard SDK](/ar/sdk/dashboard-sdk). |
 
 <Info>
   **حقول فريق كرزون** — قد تتضمن بذور السوق من الطرف الأول حقول `webhook` إضافية (`merchantExtraction` و`uninstallEvents`) وكتلة `provisioning` علوية. هذه **ليست** جزءاً من مخطط تقديم الشركاء وتُوثَّق بشكل منفصل للاستخدام الداخلي.

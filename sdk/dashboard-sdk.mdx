@@ -1,9 +1,33 @@
 ---
 title: "Dashboard SDK"
-description: "Build inbox dashboard panel apps with the Karzoun Dashboard SDK."
+description: "Build inbox sidebar panels with @karzoun/dashboard-sdk — conversation context and MiniApp actions in an iframe."
 ---
 
-`@karzoun/dashboard-sdk` — lightweight SDK for **dashboard panel apps** inside the Karzoun inbox iframe.
+`@karzoun/dashboard-sdk` is a lightweight client for **dashboard panel apps** embedded in the Karzoun inbox. Your page loads in a sandboxed iframe; the SDK talks to the host over `postMessage`. Credentials for linked MiniApps never enter the iframe.
+
+<Info>
+  Full API reference, protocol notes, and working HTML examples live in the public repo: [KarzounApps/dashboard-sdk](https://github.com/KarzounApps/dashboard-sdk).
+</Info>
+
+## Prerequisites
+
+<Steps>
+  <Step title="Install a MiniApp (optional but typical)">
+    In Karzoun: **Settings → Applications**. Connect credentials for the platform you need (for example Shopify, Zid, or Salla). The MiniApp defines named **actions** your panel can call.
+  </Step>
+  <Step title="Host your panel page">
+    Deploy any static page (single HTML file or a small frontend) to a public URL — Vercel, Cloudflare Pages, Netlify, your own server, or `localhost` while developing.
+  </Step>
+  <Step title="Declare or create a Dashboard App">
+    **From a MiniApp:** publishers can declare panels in `definition.dashboardApps[]` (`key`, `name`, `iframeUrl`, …). After the MiniApp is installed, tenants open **Settings → Applications → {app}** and choose which panels to **Install**. Nothing is auto-installed.
+
+    **Custom:** create a panel manually under **Developer → Dashboard Apps** with an iframe URL, optional MiniApp link, and assignees.
+  </Step>
+</Steps>
+
+<Note>
+  Karzoun-hosted HTML upload for panels is planned for a later phase. Phase 1 uses external `iframeUrl` only.
+</Note>
 
 ## Install
 
@@ -11,31 +35,131 @@ description: "Build inbox dashboard panel apps with the Karzoun Dashboard SDK."
 npm install @karzoun/dashboard-sdk
 ```
 
+<Warning>
+  If the package is not yet available on the npm registry, install from GitHub:
+
+  ```bash
+  npm install github:KarzounApps/dashboard-sdk
+  ```
+
+  For a single HTML file without a bundler, use the ESM CDN path from the [package README](https://github.com/KarzounApps/dashboard-sdk#installation) once the package is published.
+</Warning>
+
 ## Quick start
 
 ```typescript
 import { createDashboard } from "@karzoun/dashboard-sdk";
 
-const dashboard = createDashboard({
-  miniappId: "YOUR_MINIAPP_ID",
+const dashboard = createDashboard({ debug: false });
+
+dashboard.init({
+  onReady: async () => {
+    const ctx = dashboard.getCustomerContext();
+    const email = ctx?.customer.primaryEmail;
+
+    if (!email) {
+      console.log("No customer email on this conversation");
+      return;
+    }
+
+    const result = await dashboard.executeAction("listOrders", {
+      email,
+      limit: "10",
+    });
+
+    if (result.success) {
+      console.log(result.data);
+    } else {
+      console.error(result.error?.code, result.error?.message);
+    }
+  },
 });
 
-dashboard.onContext((ctx) => {
-  console.log("Customer:", ctx.customer);
+dashboard.onConversationUpdate(async () => {
+  const ctx = dashboard.getCustomerContext();
+  if (ctx?.customer.primaryEmail) {
+    await dashboard.executeAction("listOrders", {
+      email: ctx.customer.primaryEmail,
+    });
+  }
 });
-
-await dashboard.executeAction("listOrders", { limit: 10 });
 ```
 
-## Prerequisites
+## What works today
 
-1. Install and configure a **MiniApp** with valid credentials (Settings → MiniApps)
-2. Create a **Dashboard App** pointing to your hosted iframe URL (Settings → Dashboard Apps)
+| Capability | Status | Notes |
+| --- | --- | --- |
+| Conversation payload | Supported | `getConversation()`, `onConversationUpdate()` |
+| Customer on conversation | Supported | Prefer `getCustomerContext()` (from `conversation.customer` + enriched `customer_context`) |
+| Enriched `externalCodes` / suggested form values | Supported | Host pushes `dashboardCustomerContext` when available |
+| Execute MiniApp actions | Supported | Requires a linked MiniApp; host proxies to GraphQL `executeMiniAppAction` |
+| List actions / capabilities | Supported | `getActions()`, `getCapabilities()` after `config_result` (`miniAppNs` / `form`) |
+| Host UI helpers (`showToast`, `addNote`, `addTag`, `openCustomer`) | Supported | Proxied by the inbox host |
+| Dynamic sources (`getSourceData`) | Supported | Host proxies `miniAppsActionSources` when a MiniApp is linked |
 
-## Features
+## Core API
 
-- Receive conversation and customer context from the host
-- Execute authenticated actions via MiniApp (credentials never exposed to iframe)
-- Trigger host UI: toasts, notes, tags, navigation
+### Lifecycle
 
-See the package README under `v4UI/dashboard-sdk` in the Karzoun monorepo for API reference, postMessage protocol, and examples.
+- `createDashboard(options?)` — options: `heartbeatInterval`, `actionTimeout`, `debug`, `onError`
+- `init({ onReady })` — sends `app_ready`; `onReady` runs after conversation data arrives (or after a short timeout)
+- `destroy()` — remove listeners and pending requests
+
+### Context
+
+- `getConversation()` / `onConversationUpdate(cb)`
+- `getCustomerContext()` / `onCustomerContextUpdate(cb)`
+
+`CustomerContext` shape:
+
+```typescript
+{
+  customerId: string;
+  customer: {
+    firstName?: string;
+    lastName?: string;
+    primaryEmail?: string;
+    primaryPhone?: string;
+    externalCodes: Record<string, string>; // may be empty until host enrichment ships
+  };
+  suggestedFormValues: Record<string, string>;
+}
+```
+
+### Actions
+
+- `getActions()` / `getCapabilities()`
+- `executeAction(actionName, formInput?)` — promise **always resolves**; check `result.success`
+
+Common error codes: `AUTH_EXPIRED`, `RATE_LIMITED`, `ACTION_NOT_FOUND`, `VALIDATION_ERROR`, `EXTERNAL_API_ERROR`, `INTERNAL_ERROR`, `NOT_INSTALLED`, `NOT_CONFIGURED`.
+
+## How it fits together
+
+```
+Your iframe (Dashboard SDK)
+  → postMessage execute_action
+Host inbox (DashboardAppIframe)
+  → GraphQL executeMiniAppAction
+MiniApps backend
+  → injects stored credentials → external API
+```
+
+Admins can allowlist actions per dashboard app. The host rate-limits action calls (default 30/min per session).
+
+## HTML-only panel
+
+A dashboard app does **not** need a framework. A single HTML file that imports the SDK (bundler or ESM) is enough — host that file and paste its URL into **Iframe URL**.
+
+See the Shopify and Zid examples in the [dashboard-sdk repo](https://github.com/KarzounApps/dashboard-sdk/tree/main/examples).
+
+## Security
+
+- Credentials stay server-side; the iframe only sends action names and form values
+- Host validates `event.origin` against the registered iframe URL
+- Iframe sandbox includes scripts, same-origin, forms, and popups (see host implementation for the exact attribute string)
+
+## Related
+
+- [MiniApps](/miniapps) — define the actions your panel calls
+- [GraphQL API](/developers) — server-side alternative to iframe panels
+- [Help Center: Dashboard apps](/ar/help-center/guides/developers/doc-2279095) — admin setup (Arabic)
