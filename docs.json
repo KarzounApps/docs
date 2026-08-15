@@ -932,8 +932,14 @@
                     "group": "استوديو الوكلاء",
                     "pages": [
                       "ar/help-center/guides/ai/agent-studio",
+                      "ar/help-center/guides/ai/agent-knowledge",
+                      "ar/help-center/guides/ai/agent-tools-access",
+                      "ar/help-center/guides/ai/agent-skills",
                       "ar/help-center/guides/ai/agent-skills-knowledge",
-                      "ar/help-center/guides/ai/agent-responses"
+                      "ar/help-center/guides/ai/agent-responses",
+                      "ar/help-center/guides/ai/agent-recipes",
+                      "ar/help-center/guides/ai/agent-booking-flows",
+                      "ar/help-center/guides/ai/agent-handover"
                     ]
                   },
                   {
