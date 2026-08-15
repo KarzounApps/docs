@@ -1005,9 +1005,24 @@
                 "group": "قاعدة المعرفة",
                 "pages": [
                   "ar/help-center/guides/knowledge-base/overview",
-                  "ar/help-center/guides/knowledge-base/topics-categories",
-                  "ar/help-center/guides/knowledge-base/articles",
-                  "ar/help-center/guides/knowledge-base/with-ai"
+                  {
+                    "group": "قاعدة المعرفة",
+                    "pages": [
+                      "ar/help-center/guides/knowledge-base/explorer",
+                      "ar/help-center/guides/knowledge-base/folders",
+                      "ar/help-center/guides/knowledge-base/write",
+                      "ar/help-center/guides/knowledge-base/markdown",
+                      "ar/help-center/guides/knowledge-base/properties"
+                    ]
+                  },
+                  {
+                    "group": "النشر والعرض",
+                    "pages": [
+                      "ar/help-center/guides/knowledge-base/publish",
+                      "ar/help-center/guides/knowledge-base/on-your-site",
+                      "ar/help-center/guides/knowledge-base/with-ai"
+                    ]
+                  }
                 ]
               },
               {
@@ -1593,7 +1608,15 @@
     },
     {
       "source": "/ar/help-center/guides/knowledge-base/doc-2188091",
-      "destination": "/ar/help-center/guides/knowledge-base/articles"
+      "destination": "/ar/help-center/guides/knowledge-base/write"
+    },
+    {
+      "source": "/ar/help-center/guides/knowledge-base/topics-categories",
+      "destination": "/ar/help-center/guides/knowledge-base/folders"
+    },
+    {
+      "source": "/ar/help-center/guides/knowledge-base/articles",
+      "destination": "/ar/help-center/guides/knowledge-base/write"
     },
     {
       "source": "/ar/help-center/guides/store/doc-2278814",
