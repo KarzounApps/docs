@@ -939,7 +939,8 @@
                       "ar/help-center/guides/ai/agent-responses",
                       "ar/help-center/guides/ai/agent-recipes",
                       "ar/help-center/guides/ai/agent-booking-flows",
-                      "ar/help-center/guides/ai/agent-handover"
+                      "ar/help-center/guides/ai/agent-handover",
+                      "ar/help-center/guides/ai/agent-custom-tools"
                     ]
                   },
                   {
