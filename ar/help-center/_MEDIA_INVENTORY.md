@@ -1,0 +1,1081 @@
+# Help Center media inventory
+Fill these assets; paths are already referenced in MDX.
+
+**988 unique paths** across **24 modules** · Waves A–E complete · excluding `_legacy`.
+
+## by module
+### ai
+- [ ] `/images/help/ai/agent-booking-flow-wire.webp` — scene: عقدة وكيل المساعد مع نية حجز متصلة بعقدة إرسال Flow، ثم شاشة Flow على الجوال.
+- [ ] `/images/help/ai/agent-custom-tool-await-return.webp` — scene: (١) بطاقة نية في وكيل المساعد مع مفتاح «انتظار العودة» مفعّلاً وشارة «أداة مخصصة». (٢) فرع من منفذ النية: ط…
+- [ ] `/images/help/ai/agent-knowledge-tab.webp` — scene: تبويب المعرفة مع موضوعين مختارين وصندوق تعليمات فيه قاعدة تصعيد.
+- [ ] `/images/help/ai/agent-responses-tab.webp` — scene: تبويب الردود مع أنواع منتجات مفعّلة ومستوى إيموجي «خفيف».
+- [ ] `/images/help/ai/agent-studio-gallery.webp` — scene: معرض الاستوديو ببطاقات نظام/مخصص وزر إنشاء.
+- [ ] `/images/help/ai/copilot-in-inbox-tab.webp` — scene: محادثة واتساب مفتوحة مع تبويب المساعد نشطاً في اللوحة الجانبية ومسودة رد ظاهرة. | فيديو (مستحسن): 30 ثانية: فتح التبويب، سؤال «صغ رداً مهذباً»، ثم لصق الرد في المحرّر.
+- [ ] `/images/help/ai/copilot-session-list.webp` — scene: الشريط الجانبي مع تبويبي **نشطة** و**مؤرشفة**، مجموعات «اليوم / أمس / هذا الأسبوع»، ومحادثة مثبّتة.
+- [ ] `/images/help/ai/copilot-share-dialog.webp` — scene: نافذة المشاركة مع خيار «عامة/خاصة» وقائمة أعضاء الفريق.
+- [ ] `/images/help/ai/copilot-welcome.webp` — scene: شاشة الترحيب مع منتقي الوكيل مفتوحاً وزكي مختاراً.
+- [ ] `/images/help/ai/credits-wallet-breakdown.webp` — scene: صفحة **المحفظة** تعرض «المتاح للإنفاق» و«المستهلك هذه الفترة» مع سطر رموز الذكاء الاصطناعي.
+- [ ] `/images/help/ai/deploy-copilot-agent-node.webp` — scene: محرر أتمتة بعقدة وكيل المساعد مفتوحة مع ملف مختار ونية «تحويل لموظف». | فيديو (مستحسن): 45 ثانية من اختيار الملف حتى نشر المسار.
+- [ ] `/images/help/ai/overview-surfaces.webp` — scene: القائمة الجانبية تعرض **المساعد الذكي** و**استوديو الوكلاء**، مع بطاقة زكي وبطاقة وكيل مخصص.
+- [ ] `/images/help/ai/agent-booking-flow-intent.webp` — scene: بطاقة نية حجز في وكيل المساعد بلا معاملات ووصف يمنع جمع الحقول في الدردشة.
+- [ ] `/images/help/ai/agent-booking-flow-phone-gif.webp` — scene: GIF 6ث: رسالة حجز من العميل → وصول Flow على الجوال → إرسال النموذج → رد قصير من الوكيل.
+- [ ] `/images/help/ai/agent-custom-tool-branch-wire.webp` — scene: لوحة أتمتة: منفذ نية track_order → HTTP → العودة إلى الوكيل.
+- [ ] `/images/help/ai/agent-custom-tool-intent-await-gif.webp` — scene: GIF 5ث: تفعيل انتظار العودة على النية → ظهور شارة أداة مخصصة → منفذ النية على اللوحة.
+- [ ] `/images/help/ai/agent-custom-tool-return-action.webp` — scene: إجراء العودة إلى الوكيل مفتوحاً مع حقل نتيجة يشير لمتغير استجابة HTTP.
+- [ ] `/images/help/ai/agent-handover-intent-fields.webp` — scene: بطاقة نية تصعيد في وكيل المساعد بحقول إلزامية: ملخص، آخر رسالة، رمز السبب.
+- [ ] `/images/help/ai/agent-handover-levels.webp` — scene: مقارنة مرئية: تصعيد افتراضي بطابور واحد مقابل تصعيد منظّم بنوايا متعددة وطوابير.
+- [ ] `/images/help/ai/agent-handover-queue-wire.webp` — scene: منفذ نية تصعيد متصل بعقدة تسليم/طابور ثم محادثة مفتوحة لموظف في الوارد.
+- [ ] `/images/help/ai/agent-knowledge-instructions-box.webp` — scene: صندوق التعليمات المخصصة بنص افعل/لا تفعل وقاعدة تصعيد.
+- [ ] `/images/help/ai/agent-knowledge-link-topics-gif.webp` — scene: GIF 5ث: اختيار موضوع منشور → حفظ التبويب → سؤال تجريبي يستشهد بالمقالة.
+- [ ] `/images/help/ai/agent-knowledge-topics-picker.webp` — scene: منتقي مواضيع قاعدة المعرفة مفتوحاً مع موضوعين محددين.
+- [ ] `/images/help/ai/agent-recipes-patterns-table.webp` — scene: بطاقات أنماط: دعم متجر، مبيعات استشارية، استقبال/مواعيد مع أيقونات.
+- [ ] `/images/help/ai/agent-recipes-worksheet.webp` — scene: ورقة عمل: أسئلة النشاط، تصنيف الطلبات، سلم أولويات، شخصية بجملة.
+- [ ] `/images/help/ai/agent-responses-message-types.webp` — scene: مجموعات أنواع الرسائل: تفاعلي ومنتجات ووسائط مع مفاتيح تفعيل.
+- [ ] `/images/help/ai/agent-skills-knowledge-layers.webp` — scene: مخطط ثلاث طبقات: معرفة وتعليمات، قدرات أدوات، مهارات كتيبات — مع سهم «المهارة لا تمنح أدوات».
+- [ ] `/images/help/ai/agent-skills-knowledge-studio-tabs.webp` — scene: محرّر وكيل يظهر تبويبات المعرفة والأدوات والمهارات جنباً إلى جنب.
+- [ ] `/images/help/ai/agent-skills-library-tabs.webp` — scene: مكتبة المهارات مع تبويبات الكل / مخصص / نظام وبطاقة مهارة نظام.
+- [ ] `/images/help/ai/agent-skills-wizard.webp` — scene: معالج المهارة على خطوة Identity مع ملخص جانبي للخطوات الخمس.
+- [ ] `/images/help/ai/agent-studio-create-gif.webp` — scene: GIF 5ث: نقر إنشاء → نموذج هوية جديد → حفظ أولي يظهر البطاقة في المعرض.
+- [ ] `/images/help/ai/agent-studio-create-publish-video.mp4` — scene: فيديو 45ث: من إنشاء وكيل حتى الهوية والمعرفة والأدوات والحفظ.
+- [ ] `/images/help/ai/agent-studio-identity-tab.webp` — scene: تبويب الهوية مفتوحاً مع اسم ودور وجنس لغوي ونبرة.
+- [ ] `/images/help/ai/agent-studio-tools-tab.webp` — scene: تبويب الأدوات بقائمة قدرات ومستويات قراءة/كتابة وجمهور عملاء.
+- [ ] `/images/help/ai/agent-tools-audience-warning.webp` — scene: منطقة قدرات الفريق والإدارة معلّمة كتحذير بجانب قدرات عامة للعملاء.
+- [ ] `/images/help/ai/agent-tools-capabilities-list.webp` — scene: تبويب الأدوات بقائمة قدرات ومستويات قراءة/كتابة ومفاتيح تفعيل.
+- [ ] `/images/help/ai/copilot-getting-started-first-chat-gif.webp` — scene: GIF 5ث: محادثة جديدة → كتابة سؤال → ظهور أول رد من زكي.
+- [ ] `/images/help/ai/copilot-getting-started-first-session-video.mp4` — scene: فيديو 35ث: من فتح المساعد حتى اختيار زكي وأول سؤال ومراجعة أداة.
+- [ ] `/images/help/ai/copilot-getting-started-select-agent-gif.webp` — scene: GIF 4ث: فتح منتقي الوكيل → اختيار زكي → تفعيل محادثة جديدة.
+- [ ] `/images/help/ai/copilot-getting-started-tools-approval.webp` — scene: بطاقة أداة حسّاسة بانتظار الموافقة داخل محادثة المساعد.
+- [ ] `/images/help/ai/copilot-in-inbox-flow-video.mp4` — scene: فيديو 30ث: فتح زكي، سؤال «صغ رداً مهذباً»، ثم استخدم كرد ومراجعة قبل الإرسال.
+- [ ] `/images/help/ai/copilot-in-inbox-open-gif.webp` — scene: GIF 4ث: نقر زكي في الرأس → اختفاء لوحة التفاصيل → ظهور زكي في الشريط الأيمن.
+- [ ] `/images/help/ai/copilot-in-inbox-rail.webp` — scene: محادثة واتساب مفتوحة وزكي يملأ الشريط الجانبي الأيمن مع مسودة رد وزر استخدم كرد.
+- [ ] `/images/help/ai/copilot-in-inbox-use-as-reply-gif.webp` — scene: GIF 5ث: استخدم كرد → إدراج المسودة في المحرّر → إغلاق لوحة زكي.
+- [ ] `/images/help/ai/copilot-sessions-archive-gif.webp` — scene: GIF 4ث: أرشفة محادثة من ⋮ → اختفاؤها من نشطة → ظهورها تحت مؤرشفة.
+- [ ] `/images/help/ai/copilot-sessions-pin-rename.webp` — scene: قائمة ⋮ مفتوحة على محادثة مع خياري تثبيت وإعادة تسمية ظاهرين.
+- [ ] `/images/help/ai/credits-usage-report.webp` — scene: صفحة الاستخدام بتفصيل رموز الذكاء الاصطناعي للفترة الحالية.
+- [ ] `/images/help/ai/deploy-end-to-end-video.mp4` — scene: فيديو 45ث: من اختيار الملف في العقدة حتى نشر المسار وربط القناة واختبار رسالة.
+- [ ] `/images/help/ai/deploy-publish-channel-gif.webp` — scene: GIF 5ث: نشر الأتمتة → فتح الرد الآلي → ربط المسار بالقناة.
+- [ ] `/images/help/ai/deploy-select-profile-gif.webp` — scene: GIF 4ث: فتح منتقي ملف التعريف في عقدة وكيل المساعد → اختيار وكيل مخصص محفوظ.
+- [ ] `/images/help/ai/deploy-wire-intents.webp` — scene: لوحة مسار: مخارج مكتمل وفشل ونية تحويل مربوطة بعقد لاحقة.
+- [ ] `/images/help/ai/known-limitations-context-slider.webp` — scene: إعداد حجم السياق في عقدة وكيل المساعد (شريط ١–٥٠) مع تلميح النافذة.
+- [ ] `/images/help/ai/known-limitations-overview.webp` — scene: بطاقات حدود: سياق، معرفة، تسليم، اختبار، رصيد — كل بطاقة بسطر حل بديل.
+- [ ] `/images/help/ai/overview-zaki-vs-custom.webp` — scene: مقارنة مرئية: زكي للفريق داخل المنصة مقابل وكيل مخصص أمام العميل عبر الأتمتة.
+
+### automations
+- [ ] `/images/help/automations/apps-install-to-connected-gif.webp` — scene: GIF 8ث: تثبيت من المتجر حتى حالة متصل | فيديو: 40ث
+- [ ] `/images/help/automations/assign-tag-note-reorder-gif.webp` — scene: GIF 5ث: إضافة وسم ثم إسناد وإعادة ترتيب الإجراءات داخل عقدة الإجراء | فيديو: 25ث
+- [ ] `/images/help/automations/builder-add-node-gif.webp` — scene: GIF 5ث: سحب عقدة من لوحة العُقد إلى اللوحة
+- [ ] `/images/help/automations/builder-connect-nodes-gif.webp` — scene: GIF 5ث: سحب خط بين عقدتين وظهور مسار التنفيذ
+- [ ] `/images/help/automations/channel-bots-enable-gif.webp` — scene: GIF 6ث: اختيار قناة → تفعيل البوت → اختيار السير الافتراضي | فيديو: 30ث
+- [ ] `/images/help/automations/create-first-connect-node-gif.webp` — scene: GIF 5ث: سحب خط من المشغّل إلى عقدة الرسالة حتى يظهر الربط
+- [ ] `/images/help/automations/create-first-publish-gif.webp` — scene: GIF 4ث: النقر على تشغيل مباشر → شارة مفعّلة أو تنبيه لا يمكن النشر
+- [ ] `/images/help/automations/create-first-trigger-config-gif.webp` — scene: GIF 6ث: إضافة مشغّل → المحادثات → محادثة جديدة → تفعيل نشط | فيديو: 20ث
+- [ ] `/images/help/automations/execution-history-filter-failed-gif.webp` — scene: GIF 5ث: فلترة على فشلت ثم فتح تفاصيل تشغيلة | فيديو: 30ث
+- [ ] `/images/help/automations/handoff-to-human-gif.webp` — scene: GIF 6ث: إضافة تسليم إلى موظف بشري داخل عقدة إجراء ثم ظهور الأثر في الوارد
+- [ ] `/images/help/automations/keywords-add-rule-gif.webp` — scene: GIF 6ث: إضافة قاعدة بعامل يحتوي وربطها بمسار | فيديو: 25ث
+- [ ] `/images/help/automations/macros-run-from-inbox-gif.webp` — scene: GIF 5ث: اختيار ماكرو من لوحة المحادثة → تشغيل → جارٍ التشغيل
+- [ ] `/images/help/automations/node-condition-ports-gif.webp` — scene: GIF 5ث: ربط مخرج تطابق وبدون تطابق بفرعين مختلفين
+- [ ] `/images/help/automations/node-question-options-gif.webp` — scene: GIF 6ث: إضافة خيارات اختيار وظهور مخارج الإجابة على اللوحة
+- [ ] `/images/help/automations/node-split-variants-gif.webp` — scene: GIF 5ث: إضافة متغيّر وضبط النسب على اللوحة
+- [ ] `/images/help/automations/publish-run-live-gif.webp` — scene: GIF 4ث: تشغيل مباشر أو إعادة النشر → تغيّر الشارة إلى مفعّلة
+- [ ] `/images/help/automations/trigger-add-gif.webp` — scene: GIF 5ث: إضافة مشغّل واختيار النوع والحدث ثم الربط | فيديو: 20ث
+- [ ] `/images/help/automations/trigger-options-panel-gif.webp` — scene: GIF 6ث: تفعيل نشط → اختيار حدث → إضافة شرط | فيديو: 25ث
+- [ ] `/images/help/automations/wait-follow-up-schedule-gif.webp` — scene: GIF 6ث: فتح إجراء متابعة وضبط المدة وتجاهل السابق
+- [ ] `/images/help/automations/with-broadcasts-select-flow-gif.webp` — scene: GIF 5ث: اختيار مسار أتمتة داخل معالج الحملة | فيديو: 30ث
+- [ ] `/images/help/automations/action-graphql-form.webp` — scene: محرر GraphQL الداخلي
+- [ ] `/images/help/automations/action-http-request-tabs.webp` — scene: محرر طلب HTTP على تبويب المحتوى والاستجابة
+- [ ] `/images/help/automations/action-insert-feedback-inbox.webp` — scene: مسار ينتهي بسؤال تقييم ثم إجراء تسجيل تقييم، وبجانبه لوحة العميل في البريد الوارد تعرض الأبعاد المحفوظة وال…
+- [ ] `/images/help/automations/action-internal-note.webp` — scene: محادثة في البريد الوارد تظهر فيها ملاحظة داخلية كتبتها الأتمتة، بتمييز واضح عن رسائل العميل.
+- [ ] `/images/help/automations/action-js-function.webp` — scene: محرر دالة JavaScript مفتوحاً بكود بسيط (مثال: تحويل تاريخ لصيغة نصية)، مع معامل دخل واحد وربط مخرج واحد.
+- [ ] `/images/help/automations/action-json-operations.webp` — scene: محرر عمليات JSON مفتوحاً بعملية "استخراج بمسار JSON" على استجابة API حقيقية، يظهر فيها الحقل المصدر والمسار…
+- [ ] `/images/help/automations/action-node-list.webp` — scene: عقدة إجراء مفتوحة وفيها ثلاثة إجراءات مرتّبة مع مفاتيح التفعيل. | فيديو (مستحسن): 25 ثانية: إضافة إجراءين وإعادة ترتيبهما.
+- [ ] `/images/help/automations/action-send-dm-comment-funnel.webp` — scene: مسار في المحرر يبدأ بمشغّل "تعليق جديد على منشور"، متبوعاً بإجراء "رسالة مباشرة" يحتوي رسالة ترحيبية + بطاق… | فيديو (مستحسن): ٤٠ ثانية: تعليق تجريبي على منشور، ثم ظهور الرسالة الخاصة فوراً.
+- [ ] `/images/help/automations/action-set-property.webp` — scene: محرر تحديث خاصية العميل مفتوحاً، يظهر فيه اختيار الحقل الهدف، ثم قائمة العوامل المتاحة حسب نوع الحقل، ثم ال…
+- [ ] `/images/help/automations/action-whatsapp-template.webp` — scene: نافذة اختيار قالب واتساب مفتوحة من داخل الإجراء، تعرض معاينة القالب الحقيقي مع حقول تعبئة المتغيرات ورقم ال…
+- [ ] `/images/help/automations/ai-tools-web-search.webp` — scene: محادثة واتساب تُظهر عميلاً يسأل سؤالاً عاماً، ثم رد الوكيل بمعلومة من أداة بحث — مع تمييز أن الوكيل استخدم …
+- [ ] `/images/help/automations/apps-action-picker-and-form.webp` — scene: منتقي إجراءات التطبيقات مع البحث والفئات، ثم نموذج إجراء Google Sheets مع منتقي الجدول والورقة. | فيديو (مستحسن): 40 ثانية: إضافة إجراء «إضافة صف» واختباره.; عرض تفاعلي (مستحسن): اختبار إجراء بنتيجة ناجحة ثم بأخرى فاشلة وقراءة الرسالة.
+- [ ] `/images/help/automations/apps-ecommerce-connect-salla.webp` — scene: ربط سلة عبر OAuth (نافذة الأذونات) ثم بطاقة التطبيق بحالة «متصل» مع قسم المزامنة. | فيديو (مستحسن): 40 ثانية: ربط متجر ثم تشغيل المزامنة الأولية.
+- [ ] `/images/help/automations/apps-error-states.webp` — scene: صفحة التطبيقات وفيها ثلاثة تطبيقات بشارات مختلفة (متصل، غير متصل، به خطأ)، وبجانبها خطوة فاشلة في سجل التنفيذ.
+- [ ] `/images/help/automations/apps-install-to-connected.webp` — scene: ثلاث لقطات متتابعة: صفحة التطبيق في المتجر مع زر «تثبيت» ← بطاقة التطبيق في الإعدادات بحالة «غير متصل» ← نف… | فيديو (مستحسن): 40 ثانية: رحلة كاملة من المتجر إلى «متصل».; عرض تفاعلي (مستحسن): المقارنة بين «مثبت» و«متصل» وأثر كل منهما على الأتمتة.
+- [ ] `/images/help/automations/apps-marketplace-and-settings.webp` — scene: صورتان متجاورتان: المتجر بشبكة التطبيقات، وصفحة الإعدادات ← التطبيقات بالتطبيقات المثبتة وشارات «متصل» و«غي… | فيديو (مستحسن): 30 ثانية: تصفح المتجر ثم الانتقال للتطبيقات المثبتة.
+- [ ] `/images/help/automations/builder-anatomy.webp` — scene: لقطة كاملة للمحرر مع تظليل الشريط العلوي، لوحة العُقد، اللوحة، ولوحة الإعداد. | فيديو (مستحسن): جولة 40 ثانية في مناطق المحرر الأربع.
+- [ ] `/images/help/automations/builder-readonly-vs-draft.webp` — scene: مقارنة بين وضع «للقراءة فقط» ووضع تحرير المسودة مع شارة الحالة في كل منهما.
+- [ ] `/images/help/automations/channel-bots-page.webp` — scene: صفحة الرد الآلي مع منتقي القناة في الأعلى وقسمي الأتمتة والكلمات المفتاحية. | فيديو (مستحسن): 30 ثانية: اختيار قناة، تفعيل البوت، وربط السير الافتراضي.
+- [ ] `/images/help/automations/create-first-publish.webp` — scene: شريط أدوات المحرر مع تشغيل مباشر
+- [ ] `/images/help/automations/create-first-trigger-config.webp` — scene: لوحة إعداد المشغّل مع محادثة جديدة | فيديو (مستحسن): 20 ثانية
+- [ ] `/images/help/automations/execution-detail-failed-step.webp` — scene: تفاصيل تشغيلة فاشلة مع تمييز الخطوة التي توقف عندها المسار.
+- [ ] `/images/help/automations/execution-history-list.webp` — scene: لوحة سجل التنفيذ مفتوحة وفيها تشغيلات بحالات مختلفة (مكتملة، فشلت، قيد الانتظار، تم تخطيها). | فيديو (مستحسن): 30 ثانية: فتح السجل، الفلترة على «فشلت»، ثم فتح تفاصيل تشغيلة.
+- [ ] `/images/help/automations/follow-up-skipped-vs-sent.webp` — scene: سجل تنفيذ يعرض خطوة متابعة بحالة «تم تخطيها» بسبب رد العميل، بجانب تشغيلة أخرى اكتملت فيها المتابعة. | عرض تفاعلي (مستحسن): سيناريوهان: عميل يرد فتُلغى المتابعة، وعميل يصمت فتصله.
+- [ ] `/images/help/automations/handoff-flow-and-inbox.webp` — scene: مسار تسليم + المحادثة في الوارد
+- [ ] `/images/help/automations/keywords-table.webp` — scene: جدول الكلمات المفتاحية وفيه أربع قواعد بعوامل مختلفة وأولويات مختلفة. | فيديو (مستحسن): 25 ثانية: إضافة كلمة مفتاحية بعامل «يحتوي» وربطها بمسار.
+- [ ] `/images/help/automations/list-filters-and-statuses.webp` — scene: جدول الأتمتات مع الفلاتر مفتوحة وشارات الحالات الأربع ظاهرة.
+- [ ] `/images/help/automations/macro-mark-and-list.webp` — scene: عقدة في المحرر وقد عُلّمت كماكرو، وبجانبها قائمة الماكرو في صفحة `/automations/macros`. | فيديو (مستحسن): 30 ثانية: بناء ماكرو من عقدة إجراء ثم تشغيله من محادثة.
+- [ ] `/images/help/automations/marketing-unsubscribe-flow.webp` — scene: مسار قصير في المحرر (شرط STOP ← إلغاء الاشتراك ← رسالة تأكيد)، وبجانبه بطاقة عميل تظهر خاصية الاشتراك معطّل…
+- [ ] `/images/help/automations/node-actions-list.webp` — scene: عقدة إجراء مفتوحة بثلاثة إجراءات مرتّبة (إسناد، ثم طلب HTTP، ثم وسم)، مع أيقونة سحب لإعادة الترتيب ومفتاح ت…
+- [ ] `/images/help/automations/node-ai-agent-form.webp` — scene: عقدة وكيل المساعد مفتوحة تعرض منتقي ملف التعريف، وقسم "الأدوات واكتشاف النوايا" بأداة واحدة مضافة (مثل "تحو…
+- [ ] `/images/help/automations/node-condition-groups.webp` — scene: عقدة شرط مفتوحة بمجموعتين — الأولى بقاعدتين مرتبطتين بـ«و»، والثانية بقاعدة واحدة — مع ظهور مخرجي التطابق ا…
+- [ ] `/images/help/automations/node-email-form.webp` — scene: عقدة إرسال بريد إلكتروني مفتوحة مع منتقي القالب، حقل الموضوع، وقسم التتبع.
+- [ ] `/images/help/automations/node-goto-target-picker.webp` — scene: عقدة "انتقل إلى" مفتوحة بنوع الهدف "أتمتة" ومنتقي يعرض قائمة الأتمتات المنشورة المتاحة.
+- [ ] `/images/help/automations/node-message-type-picker.webp` — scene: منتقي نوع الرسالة مفتوحاً يعرض المجموعات الثلاث (أساسية، تفاعلية، واتساب) مع أيقونة كل نوع.
+- [ ] `/images/help/automations/node-question-select-ports.webp` — scene: عقدة سؤال بنوع «اختيار» وثلاثة خيارات، مع ظهور مخارج «إجابة» متعددة (واحد لكل خيار) بالإضافة لمخرجي «بدون إ… | عرض تفاعلي (مستحسن): تجربة اختيار خيار، إجابة نص حر إضافي، عدم الرد، وإجابة غير مطابقة — ومشاهدة كل حالة على المسار.
+- [ ] `/images/help/automations/node-split-variants.webp` — scene: عقدة تقسيم A/B مفتوحة بثلاثة متغيّرات (A، B، C) بنسب مختلفة، مع شريط أو شعار يوضح إجمالي النسبة.
+- [ ] `/images/help/automations/node-sticky-note-example.webp` — scene: لوحة مسار تحتوي عقدة أو عقدتين وملاحظة لاصقة بلون مختلف بجانبها تشرح منطق ذلك الجزء من المسار.
+- [ ] `/images/help/automations/notifications-push-example.webp` — scene: عقدة إجراء مفتوحة على «إشعار فوري» مع عنوان ونص ومعرّف موظف واحد، وبجانبها لقطة إشعار على تطبيق الجوال.
+- [ ] `/images/help/automations/operations-actions-flow.webp` — scene: محادثة واتساب حقيقية تُظهر عميلاً يطلب من الوكيل الذكي إضافة منتج للسلة، ثم عرض السلة، ثم بدء الدفع — سلسلة…
+- [ ] `/images/help/automations/overview-http-request-power.webp` — scene: عقدة طلب HTTP مفتوحة
+- [ ] `/images/help/automations/path-builder.webp` — scene: بنّاء أتمتة بمسار بسيط منشور.
+- [ ] `/images/help/automations/publish-validation-error.webp` — scene: رسالة «لا يمكن النشر» مع تمييز العقدة صاحبة المشكلة على اللوحة. | عرض تفاعلي (مستحسن): ترك عقدة بلا إعداد، محاولة النشر، ثم إصلاحها والنشر بنجاح.
+- [ ] `/images/help/automations/status-badges.webp` — scene: شارات الحالات الأربع جنباً إلى جنب في جدول الأتمتات.
+- [ ] `/images/help/automations/trigger-options-panel.webp` — scene: لوحة إعداد مشغّل تعرض الحقول: نشط، نوع المشغّل، الحدث، التكاملات، شروط المشغّل. | فيديو (مستحسن): 25 ثانية: تفعيل المشغّل، اختيار حدث، ثم إضافة شرط واحد.
+- [ ] `/images/help/automations/trigger-overview-anatomy.webp` — scene: لوحة المحرر مع مشغّل موصول بأول عقدة، ولوحة إعداد المشغّل مفتوحة (نشط، النوع، الحدث). | فيديو (مستحسن): 20 ثانية: إضافة مشغّل واختيار النوع والحدث ثم ربطه بعقدة.
+- [ ] `/images/help/automations/trigger-types-conversation.webp` — scene: منتقي نوع المشغّل على «المحادثات» مع حدث مختار ولوحة الشروط.
+- [ ] `/images/help/automations/with-broadcasts-select-flow.webp` — scene: خطوة اختيار مسار الأتمتة داخل خطوات إطلاق الحملة، وبجانبها سجل التنفيذ في الأتمتة يعرض تشغيلات متعددة بدأت … | فيديو (مستحسن): 30 ثانية: إنشاء حملة بقناة الأتمتة ثم متابعة التشغيلات في المحرر.
+
+### broadcasts
+- [ ] `/images/help/broadcasts/analytics-campaign.webp` — scene: تفاصيل حملة مع بطاقات التسليم (مرسل، مفتوح، فاشل…)
+- [ ] `/images/help/broadcasts/analytics-overview.webp` — scene: شاشة تحليلات مجمّعة للرسائل الجماعية إن وُجدت
+- [ ] `/images/help/broadcasts/audience-step.webp` — scene: خطوة الجمهور مع أوضاع الشرائح/الوسوم/جهات محددة وعداد المستلمين
+- [ ] `/images/help/broadcasts/automation-select-flow.webp` — scene: خطوة اختيار مسار الأتمتة داخل خطوات إطلاق الحملة
+- [ ] `/images/help/broadcasts/calendar.webp` — scene: عرض التقويم مع حملة مجدولة على يوم محدد
+- [ ] `/images/help/broadcasts/create-channels.webp` — scene: شاشة الإعداد باختيار القنوات الخمس · فيديو اختياري: إنشاء حملة واتساب من الإعداد حتى المراجعة
+- [ ] `/images/help/broadcasts/create-wizard-steps.webp` — scene: شريط خطوات الإطلاق الخمس ظاهر أعلى المعالج
+- [ ] `/images/help/broadcasts/email-content.webp` — scene: خطوة محتوى البريد: من، اسم المرسل، بريد الرد، الموضوع، اختيار القالب، زر التجريبي
+- [ ] `/images/help/broadcasts/email-template-builder.webp` — scene: بنّاء القالب: كتلة نص وزر إدراج متغير ظاهر
+- [ ] `/images/help/broadcasts/email-templates-gallery.webp` — scene: معرض قوالب البريد مع فلاتر الحالة وزر إنشاء
+- [ ] `/images/help/broadcasts/failures-detail.webp` — scene: تفاصيل حملة بحالة فشل أو بطاقة فاشل موسّعة مع أزرار إعادة المحاولة
+- [ ] `/images/help/broadcasts/livechat-rules.webp` — scene: قواعد استهداف الدردشة المباشرة + معاينة نوع العرض
+- [ ] `/images/help/broadcasts/manage-list.webp` — scene: قائمة الحملات مع فلاتر الحالة والقناة وأزرار الإجراءات
+- [ ] `/images/help/broadcasts/overview-list.webp` — scene: قائمة الرسائل الجماعية مع زر الإضافة وفلاتر الحالة والقناة
+- [ ] `/images/help/broadcasts/path-marketer.webp` — scene: شاشة إنشاء حملة بخطوة الجمهور أو قائمة الحملات كمدخل المسار
+- [ ] `/images/help/broadcasts/push-composer.webp` — scene: منشئ الإشعار: إعدادات سريعة، العنوان والرسالة، معاينة الجوال iOS/أندرويد
+- [ ] `/images/help/broadcasts/replies-handoff.webp` — scene: خطوة محتوى واتساب مع حقل القسم بجانب قالب؛ أو محادثة واردة بعد رد على حملة
+- [ ] `/images/help/broadcasts/schedule-status.webp` — scene: خطوة الجدولة (فوري/مرة/متكرر) أو شارات الحالات في قائمة الحملات
+- [ ] `/images/help/broadcasts/whatsapp-content.webp` — scene: خطوة محتوى واتساب: الرقم، القالب، المتغيرات، القسم، التجريبي · عرض تفاعلي اختياري: من الإضافة حتى النشر
+- [ ] `/images/help/broadcasts/whatsapp-recurring-schedule.webp` — scene: شاشة جدول الحملة المتكررة: التكرار، الأيام، الأوقات، الملخص
+- [ ] `/images/help/broadcasts/analytics-channel-compare.webp` — scene: مقارنة قنوات أو حملات في التحليلات المجمّعة خلال فترة
+- [ ] `/images/help/broadcasts/analytics-open-detail-gif.webp` — scene: GIF 4ث: من القائمة فتح تفاصيل حملة وظهور بطاقات التسليم
+- [ ] `/images/help/broadcasts/audience-count-estimate.webp` — scene: عدّاد التقدير في الخطوة مقابل تذكير أن الإرسال الفعلي أقل بعد فلتر القناة
+- [ ] `/images/help/broadcasts/audience-mode-switch-gif.webp` — scene: GIF 5ث: التبديل بين الشرائح والوسوم وجهات محددة وتفريغ الاختيارات السابقة
+- [ ] `/images/help/broadcasts/audience-segments-ready.webp` — scene: قائمة الشرائح في خطوة الجمهور مع حالات جاهزة مقابل مسودة/قيد البناء
+- [ ] `/images/help/broadcasts/audience-union-select-gif.webp` — scene: GIF 5ث: اختيار شريحتين وظهور عدّاد اتحاد أكبر من أي شريحة وحدها
+- [ ] `/images/help/broadcasts/automation-audience.webp` — scene: خطوة الجمهور لحملة أتمتة مع شريحة أو وسم مختار
+- [ ] `/images/help/broadcasts/automation-complete-vs-flow.webp` — scene: تفاصيل حملة مكتملة مع تذكير بمتابعة سجل الأتمتة لكل عميل
+- [ ] `/images/help/broadcasts/automation-schedule-review-gif.webp` — scene: GIF 5ث: اختيار جدولة ثم مراجعة ونشر حملة الأتمتة
+- [ ] `/images/help/broadcasts/automation-setup-channel-gif.webp` — scene: GIF 4ث: اختيار قناة الأتمتة ونوع الحملة في الإعداد
+- [ ] `/images/help/broadcasts/calendar-click-campaign-gif.webp` — scene: GIF 4ث: النقر على حملة في يوم → الانتقال للتفاصيل
+- [ ] `/images/help/broadcasts/calendar-once-vs-create-date.webp` — scene: يومان موضّحان: حملة بموعد مرة واحدة مقابل حملة تظهر بتاريخ الإنشاء فقط
+- [ ] `/images/help/broadcasts/calendar-open-gif.webp` — scene: GIF 4ث: فتح التقويم من الرسائل الجماعية وظهور شبكة الأيام
+- [ ] `/images/help/broadcasts/create-audience-step.webp` — scene: خطوة الجمهور داخل المعالج مع عدّاد التقدير
+- [ ] `/images/help/broadcasts/create-content-by-channel-gif.webp` — scene: GIF 6ث: التبديل بين قنوات المعالج وظهور حقول المحتوى المناسبة
+- [ ] `/images/help/broadcasts/create-review-publish-gif.webp` — scene: GIF 5ث: مراجعة الملخص ثم نشر مباشر أو حفظ كمسودة
+- [ ] `/images/help/broadcasts/create-schedule-gif.webp` — scene: GIF 5ث: التبديل بين فوري ومرة واحدة ومتكرر وظهور حقول الموعد
+- [ ] `/images/help/broadcasts/create-wizard-video.mp4` — scene: فيديو 45ث: من إضافة رسالة جماعية حتى المراجعة والنشر لحملة واتساب
+- [ ] `/images/help/broadcasts/email-schedule-review.webp` — scene: خطوة الجدولة ثم شاشة المراجعة قبل نشر حملة البريد
+- [ ] `/images/help/broadcasts/email-setup-gif.webp` — scene: GIF 4ث: اختيار قناة البريد الإلكتروني ونوع الحملة في الإعداد
+- [ ] `/images/help/broadcasts/email-template-pick-gif.webp` — scene: GIF 5ث: اختيار قالب من القائمة أو تصميم في المحرر
+- [ ] `/images/help/broadcasts/email-templates-create-gif.webp` — scene: GIF 5ث: إنشاء قالب جديد من المعرض أو من قالب جاهز
+- [ ] `/images/help/broadcasts/email-templates-insert-var-gif.webp` — scene: GIF 5ث: فتح إدراج متغير أو كتابة {{ ثم اختيار firstName
+- [ ] `/images/help/broadcasts/email-templates-link-campaign-gif.webp` — scene: GIF 5ث: من خطوة محتوى الحملة اختيار قالب ثم العودة للملخص
+- [ ] `/images/help/broadcasts/email-test-send-gif.webp` — scene: GIF 4ث: إرسال بريد تجريبي قبل النشر
+- [ ] `/images/help/broadcasts/failures-compare-counts.webp` — scene: بطاقات أرقام المستهدفين والمرسل والفاشل جنباً إلى جنب
+- [ ] `/images/help/broadcasts/failures-open-detail-gif.webp` — scene: GIF 4ث: من صف القائمة فتح التفاصيل وظهور بطاقات التسليم
+- [ ] `/images/help/broadcasts/failures-partial-vs-failed.webp` — scene: مقارنة بصرية: شارة فشل مقابل مكتملة مع عدّاد فاشل مرتفع
+- [ ] `/images/help/broadcasts/failures-retry-gif.webp` — scene: GIF 5ث: إعادة المحاولة على حملة فاشلة أو فتح تكرار لنسخ مسودة
+- [ ] `/images/help/broadcasts/livechat-message-preview-gif.webp` — scene: GIF 6ث: تعديل قاعدة صفحة أو دولة → تغيّر معاينة نوع الرسالة
+- [ ] `/images/help/broadcasts/livechat-publish-gif.webp` — scene: GIF 4ث: مراجعة ثم نشر حملة مشغّل الزائر
+- [ ] `/images/help/broadcasts/livechat-visitor-trigger.webp` — scene: شاشة الإعداد بقناة الدردشة المباشرة ونمط مشغّل الزائر مثبت
+- [ ] `/images/help/broadcasts/manage-actions-menu-gif.webp` — scene: GIF 5ث: فتح قائمة إجراءات الصف → إيقاف مؤقت أو تكرار
+- [ ] `/images/help/broadcasts/manage-detail.webp` — scene: صفحة تفاصيل حملة: إعداد، تسليم، وتقارير
+- [ ] `/images/help/broadcasts/manage-filter-gif.webp` — scene: GIF 5ث: تطبيق فلتر قناة أو حالة وتضييق القائمة
+- [ ] `/images/help/broadcasts/overview-add-campaign-gif.webp` — scene: GIF 4ث: النقر على إضافة رسالة جماعية → فتح معالج الإعداد
+- [ ] `/images/help/broadcasts/overview-channels-strip.webp` — scene: بطاقات أو قائمة توضّح القنوات الخمس في سياق الرسائل الجماعية
+- [ ] `/images/help/broadcasts/path-marketer-launch-gif.webp` — scene: GIF 5ث: من قائمة الحملات → إضافة → خطوة الجمهور ظاهرة
+- [ ] `/images/help/broadcasts/push-preview-ios-android-gif.webp` — scene: GIF 4ث: التبديل بين معاينة iOS وأندرويد أثناء كتابة العنوان
+- [ ] `/images/help/broadcasts/push-quick-settings-gif.webp` — scene: GIF 5ث: التبديل بين تسويقي ومعاملات وتنبيه عاجل وتغيّر خيارات التسليم
+- [ ] `/images/help/broadcasts/push-schedule-recurring.webp` — scene: جدولة متكررة لحملة إشعارات مع تذكير بإعادة التنبيه
+- [ ] `/images/help/broadcasts/push-setup-audience.webp` — scene: خطوة الإعداد بقناة الإشعارات ثم جمهور مع تذكير برموز الأجهزة
+- [ ] `/images/help/broadcasts/replies-handoff-paths.webp` — scene: مخطط مبسّط: حملة → رد → وارد / أتمتة / وكيل
+- [ ] `/images/help/broadcasts/replies-inbox-arrival-gif.webp` — scene: GIF 5ث: محادثة واردة بعد حملة تظهر في قائمة البريد الوارد مع شارة القناة
+- [ ] `/images/help/broadcasts/replies-test-loop-gif.webp` — scene: GIF 7ث: رسالة تجريبية → رد العميل → ظهور المحادثة في البريد الوارد بالقسم المتوقع
+- [ ] `/images/help/broadcasts/replies-whatsapp-section-gif.webp` — scene: GIF 5ث: اختيار القسم في محتوى حملة واتساب قبل المراجعة
+- [ ] `/images/help/broadcasts/schedule-once-vs-recurring.webp` — scene: خطوة الجدولة تعرض فوري ومرة واحدة ومتكرر جنباً إلى جنب
+- [ ] `/images/help/broadcasts/schedule-pause-resume-gif.webp` — scene: GIF 5ث: إيقاف مؤقت لحملة نشطة ثم استئناف وتغيّر الشارة
+- [ ] `/images/help/broadcasts/schedule-status-badges.webp` — scene: قائمة حملات بعدة شارات حالة: مسودة، مجدولة، جارٍ الإرسال، مكتملة، فشل
+- [ ] `/images/help/broadcasts/whatsapp-delivery-stats.webp` — scene: بطاقات إحصائيات التسليم بعد الإطلاق بما فيها النظام البيئي
+- [ ] `/images/help/broadcasts/whatsapp-publish-gif.webp` — scene: GIF 5ث: مراجعة الملخص ثم نشر مباشر
+- [ ] `/images/help/broadcasts/whatsapp-recurring-preview-five-gif.webp` — scene: GIF 5ث: تغيير أيام/أوقات الجدول وتحديث معاينة أقرب خمس مرات
+- [ ] `/images/help/broadcasts/whatsapp-recurring-run-log.webp` — scene: سجل التشغيل في تفاصيل الحملة المتكررة بعد التفعيل
+- [ ] `/images/help/broadcasts/whatsapp-recurring-type-select-gif.webp` — scene: GIF 4ث: اختيار نوع حملة متكررة في خطوة الإعداد
+- [ ] `/images/help/broadcasts/whatsapp-schedule-once-gif.webp` — scene: GIF 4ث: التبديل بين إرسال فوري ومرة واحدة مع حقل الموعد
+- [ ] `/images/help/broadcasts/whatsapp-setup-gif.webp` — scene: GIF 5ث: اختيار قناة واتساب ونوع يدوية لمرة واحدة في الإعداد
+- [ ] `/images/help/broadcasts/whatsapp-template-select-gif.webp` — scene: GIF 6ث: اختيار قالب معتمد → تعبئة متغير → إرسال تجريبي
+
+### channels
+- [ ] `/images/help/channels/add-modal-types.webp` — scene: نافذة إضافة قناة جديدة بشبكة الأنواع وزر متابعة | فيديو (مستحسن): 40 ثانية من إنشاء جديد حتى ظهور القناة في القائمة.
+- [ ] `/images/help/channels/business-email-dns.webp` — scene: خطوة DNS في معالج بريد الأعمال من كرزون وجدول السجلات | فيديو (مستحسن): من إدخال العنوان حتى اكتمال التحقق.
+- [ ] `/images/help/channels/email-choose-two-types.webp` — scene: نافذة إضافة قناة تعرض بطاقتي نوعي البريد جنباً إلى جنب
+- [ ] `/images/help/channels/facebook-comments-wizard.webp` — scene: معالج ربط تعليقات فيسبوك عند اختيار الصفحة
+- [ ] `/images/help/channels/facebook-messenger-wizard.webp` — scene: معالج ميتا في خطوة اختيار صفحة فيسبوك لماسنجر
+- [ ] `/images/help/channels/imap-email-form.webp` — scene: نموذج ربط IMAP/SMTP بالحقول الأساسية
+- [ ] `/images/help/channels/incoming-webhook-wizard.webp` — scene: نافذة إنشاء ويب هوك بالحقول الاسم والرمز والقسم
+- [ ] `/images/help/channels/instagram-comments-wizard.webp` — scene: خطوة اختيار حساب إنستغرام لتعليقات
+- [ ] `/images/help/channels/instagram-messenger-wizard.webp` — scene: معالج ميتا لاختيار حساب إنستغرام لرسائل DM
+- [ ] `/images/help/channels/messenger-create-and-edit.webp` — scene: خطوة إعداد الدردشة المباشرة داخل نافذة الإضافة + شاشة تعديل الماسنجر بخطواتها
+- [ ] `/images/help/channels/overview-channels-list.webp` — scene: صفحة القنوات بقائمة تكاملات متعددة الشارات وزر «إنشاء جديد» | فيديو (مستحسن): 25 ثانية من فتح القنوات حتى نافذة إضافة قناة جديدة.
+- [ ] `/images/help/channels/tiktok-wizard.webp` — scene: معالج توصيل قناة تيك توك في المراجعة قبل الإنشاء | فيديو (مستحسن): من التفويض حتى ظهور أول رسالة في الوارد.
+- [ ] `/images/help/channels/add-actions-menu-gif.webp` — scene: GIF 5ث: فتح قائمة الإجراءات على قناة → تفعيل / إلغاء تفعيل / أرشفة
+- [ ] `/images/help/channels/add-activate-deactivate-gif.webp` — scene: GIF 4ث: إلغاء التفعيل → تغيّر الشارة إلى غير نشط
+- [ ] `/images/help/channels/add-channel-in-list.webp` — scene: القناة الجديدة في القائمة بحالة نشط وشارة النوع
+- [ ] `/images/help/channels/add-choose-type-gif.webp` — scene: GIF 5ث: اختيار نوع → متابعة → ظهور أول خطوة في المعالج
+- [ ] `/images/help/channels/add-e2e-video.mp4` — scene: فيديو 40ث: من إنشاء جديد حتى ظهور القناة في القائمة ورسالة اختبار في الوارد
+- [ ] `/images/help/channels/add-name-department.webp` — scene: حقول اسم القناة والقسم في خطوة المراجعة أو الإنشاء
+- [ ] `/images/help/channels/add-open-channels-gif.webp` — scene: GIF 4ث: الشريط → القنوات → ظهور القائمة وزر إنشاء جديد
+- [ ] `/images/help/channels/business-email-dns-copy-gif.webp` — scene: GIF 5ث: نسخ سجل SPF أو DKIM من الجدول
+- [ ] `/images/help/channels/business-email-settings-tabs.webp` — scene: تبويبات تعديل قناة بريد الأعمال: عامة، بريد، DNS، أمان
+- [ ] `/images/help/channels/business-email-setup-fields.webp` — scene: خطوة الإعداد: الجزء المحلي والنطاق واسم العرض والقسم
+- [ ] `/images/help/channels/business-email-setup-video.mp4` — scene: فيديو 40ث: من إدخال العنوان حتى اكتمال التحقق وإنشاء القناة
+- [ ] `/images/help/channels/business-email-verify-gif.webp` — scene: GIF 5ث: انتظار التحقق ثم تغيّر شارة SPF/DKIM أو MX إلى جاهز
+- [ ] `/images/help/channels/email-choose-add-modal-gif.webp` — scene: GIF 4ث: إنشاء جديد → إبراز بطاقتي البريد في الشبكة
+- [ ] `/images/help/channels/facebook-comments-connect-video.mp4` — scene: فيديو 30ث: من اختيار النوع حتى تعليق اختبار في الوارد
+- [ ] `/images/help/channels/facebook-comments-name-department.webp` — scene: حقلا اسم القناة والقسم قبل إنشاء تعليقات فيسبوك
+- [ ] `/images/help/channels/facebook-comments-pick-page-gif.webp` — scene: GIF 5ث: اختيار صفحة غير متصلة → تفعيل المتابعة
+- [ ] `/images/help/channels/facebook-comments-test-gif.webp` — scene: GIF 5ث: تعليق على منشور → ظهور الخيط في البريد الوارد
+- [ ] `/images/help/channels/facebook-messenger-connect-video.mp4` — scene: فيديو 35ث: من التفويض حتى اختيار الصفحة ورسالة اختبار في الوارد
+- [ ] `/images/help/channels/facebook-messenger-oauth-gif.webp` — scene: GIF 6ث: نافذة تفويض ميتا ثم العودة إلى اختيار الصفحة
+- [ ] `/images/help/channels/facebook-messenger-review.webp` — scene: مراجعة الاسم والقسم وخيارات الترحيب قبل إنشاء قناة ماسنجر فيسبوك
+- [ ] `/images/help/channels/facebook-messenger-test-inbox-gif.webp` — scene: GIF 5ث: رسالة للصفحة → ظهور المحادثة بشارة فيسبوك في الوارد
+- [ ] `/images/help/channels/imap-email-fill-gif.webp` — scene: GIF 6ث: ملء المضيف والمستخدم وكلمة مرور التطبيق ثم الحفظ
+- [ ] `/images/help/channels/imap-email-setup-video.mp4` — scene: فيديو 35ث: من ملء النموذج حتى رسالة اختبار ورد عبر SMTP
+- [ ] `/images/help/channels/imap-email-smtp-fields.webp` — scene: حقول مضيف ومنفذ SMTP مع TLS بجانب IMAP
+- [ ] `/images/help/channels/imap-email-test-inbox-gif.webp` — scene: GIF 5ث: رسالة خارجية → ظهورها في البريد الوارد ثم رد من كرزون
+- [ ] `/images/help/channels/incoming-webhook-copy-token.webp` — scene: شاشة بعد الإنشاء تعرض عنوان الاستقبال والرمز مع زر نسخ
+- [ ] `/images/help/channels/incoming-webhook-form-fill-gif.webp` — scene: GIF 6ث: ملء الاسم والرمز والقسم ثم الحفظ
+- [ ] `/images/help/channels/incoming-webhook-setup-video.mp4` — scene: فيديو 35ث: من إنشاء القناة حتى نسخ الرمز ورسالة اختبار في الوارد
+- [ ] `/images/help/channels/incoming-webhook-test-post-gif.webp` — scene: GIF 5ث: إرسال POST تجريبي → ظهور محادثة في البريد الوارد
+- [ ] `/images/help/channels/instagram-comments-connect-video.mp4` — scene: فيديو 30ث: من اختيار النوع حتى تعليق اختبار في الوارد
+- [ ] `/images/help/channels/instagram-comments-oauth-gif.webp` — scene: GIF 5ث: تفويض ميتا ثم ظهور حساب إنستغرام للاختيار
+- [ ] `/images/help/channels/instagram-comments-test-gif.webp` — scene: GIF 5ث: تعليق على منشور أو ريلز → ظهور الخيط في الوارد
+- [ ] `/images/help/channels/instagram-messenger-connect-video.mp4` — scene: فيديو 35ث: من التفويض حتى اختيار الحساب ورسالة DM في الوارد
+- [ ] `/images/help/channels/instagram-messenger-oauth-gif.webp` — scene: GIF 6ث: تفويض ميتا لصلاحيات رسائل إنستغرام ثم العودة للمعالج
+- [ ] `/images/help/channels/instagram-messenger-review.webp` — scene: مراجعة الاسم والقسم وخيارات الترحيب قبل إنشاء قناة رسائل إنستغرام
+- [ ] `/images/help/channels/instagram-messenger-test-dm-gif.webp` — scene: GIF 5ث: إرسال DM تجريبي → ظهور المحادثة في البريد الوارد
+- [ ] `/images/help/channels/messenger-appearance-step.webp` — scene: خطوة المظهر: لون ونص وشعار مع معاينة الويدجت
+- [ ] `/images/help/channels/messenger-choose-type-gif.webp` — scene: GIF 4ث: إنشاء جديد → اختيار الدردشة المباشرة → متابعة
+- [ ] `/images/help/channels/messenger-install-code.webp` — scene: نافذة تثبيت الكود بمقتطف السكربت وزر النسخ
+- [ ] `/images/help/channels/messenger-install-gif.webp` — scene: GIF 5ث: تثبيت الكود → نسخ المقتطف
+- [ ] `/images/help/channels/messenger-setup-video.mp4` — scene: فيديو 40ث: من إنشاء الدردشة المباشرة حتى المظهر ونسخ الكود وظهور الويدجت
+- [ ] `/images/help/channels/messenger-widget-on-site.webp` — scene: ويدجت كرزون ماسنجر ظاهراً على صفحة موقع تجريبية
+- [ ] `/images/help/channels/overview-after-connect-video.mp4` — scene: فيديو 25ث: من فتح القنوات حتى نافذة الإضافة ثم شارة المصدر في البريد الوارد
+- [ ] `/images/help/channels/overview-open-add-gif.webp` — scene: GIF 4ث: فتح القنوات → إنشاء جديد → ظهور شبكة الأنواع
+- [ ] `/images/help/channels/overview-types-grid.webp` — scene: شبكة أنواع القنوات في نافذة الإضافة كما تظهر في الواجهة
+- [ ] `/images/help/channels/path-admin-add-channel.webp` — scene: نافذة إضافة قناة بجانب بطاقة قناة نشطة في القائمة
+- [ ] `/images/help/channels/path-admin-index.webp` — scene: قائمة القنوات مع تظليل إنشاء جديد كمدخل لمسار المسؤول
+- [ ] `/images/help/channels/tiktok-choose-type-gif.webp` — scene: GIF 4ث: إنشاء جديد → تيك توك → متابعة
+- [ ] `/images/help/channels/tiktok-connect-video.mp4` — scene: فيديو 35ث: من التفويض حتى ظهور أول رسالة في الوارد
+- [ ] `/images/help/channels/tiktok-oauth-gif.webp` — scene: GIF 6ث: نافذة تفويض تيك توك للأعمال ثم العودة إلى كرزون
+- [ ] `/images/help/channels/tiktok-test-inbox-gif.webp` — scene: GIF 5ث: رسالة من تيك توك → ظهور المحادثة بشارة تيك توك في الوارد
+- [ ] `/images/help/channels/whatsapp-connect-e2e-video.mp4` — scene: فيديو 45ث: من إنشاء واتساب حتى المراجعة والإنشاء ورسالة اختبار في الوارد
+- [ ] `/images/help/channels/whatsapp-open-wizard-gif.webp` — scene: GIF 5ث: إنشاء جديد → واتساب → ظهور شريط الخطوات الأربع
+- [ ] `/images/help/channels/whatsapp-test-inbox-gif.webp` — scene: GIF 5ث: رسالة من هاتف → ظهور المحادثة بشارة واتساب في البريد الوارد
+
+### contacts
+- [ ] `/images/help/contacts/add-dialog.webp` — scene: نافذة الإضافة (عميل/محتمل فقط)
+- [ ] `/images/help/contacts/companies-list.webp` — scene: تبويب الشركات مع زر **إضافة شركة**
+- [ ] `/images/help/contacts/company-detail.webp` — scene: صفحة شركة مع قسم العملاء المرتبطين
+- [ ] `/images/help/contacts/import-history.webp` — scene: ورقة سجل الاستيراد مع حالة تقدّم وصفوف فاشلة
+- [ ] `/images/help/contacts/import-mapping.webp` — scene: شاشة الربط مع مثال عمود وسم → Tags وخاصية مخصصة | عرض تفاعلي (اختياري): من الرفع حتى التأكيد مع وسم الدفعة.
+- [ ] `/images/help/contacts/import-tag-column.webp` — scene: صف في CSV فيه عمود وسم موحّد
+- [ ] `/images/help/contacts/import-tag-filter.webp` — scene: فلتر الوسوم في القائمة بعد اكتمال الرفع
+- [ ] `/images/help/contacts/import-tag-mapping.webp` — scene: ربط العمود بـ Tags في نافذة الاستيراد
+- [ ] `/images/help/contacts/import-upload.webp` — scene: خطوة التحميل مع زر تنزيل النموذج
+- [ ] `/images/help/contacts/leads-filter.webp` — scene: فلتر التصنيف على «عميل محتمل» + تبديل جدول/خط الأنابيب.
+- [ ] `/images/help/contacts/leads-kanban.webp` — scene: فلتر التصنيف على «عميل محتمل» + تبديل جدول/خط الأنابيب.
+- [ ] `/images/help/contacts/merge-dialog.webp` — scene: نافذة الدمج مع اختيار السجل الثاني | عرض تفاعلي (اختياري): من ملف مكرر حتى اكتمال الدمج.
+- [ ] `/images/help/contacts/overview-bulk-bar.webp` — scene: الشريط السفلي بعد تحديد عدة صفوف
+- [ ] `/images/help/contacts/overview-filters.webp` — scene: صف الفلاتر مع شريحة أو وسم مفعّل، وقائمة الأعمدة مفتوحة
+- [ ] `/images/help/contacts/overview-header.webp` — scene: لقطة لرأس الصفحة — تبويبا **العملاء** / **الشركات**، فلتر **التصنيف**، وأزرار **سجل الاستيراد** و**استيراد** و**إضافة جهة اتصال**
+- [ ] `/images/help/contacts/path-marketer.webp` — scene: قائمة جهات اتصال مع فلتر شريحة مفعّل
+- [ ] `/images/help/contacts/profile-conversations.webp` — scene: تبويب المحادثات بعدة قنوات
+- [ ] `/images/help/contacts/profile-engagement.webp` — scene: تبويب التفاعل
+- [ ] `/images/help/contacts/profile-hero-full.webp` — scene: لقطة واسعة للملف (الرأس، شريط المؤشرات، التبويبات، الشريط الجانبي) | عرض تفاعلي (اختياري): من محادثة → فتح الملف → نظرة عامة → التفاعل → الوسوم.
+- [ ] `/images/help/contacts/profile-kpi-strip.webp` — scene: شريط المؤشرات بقيم واضحة (ليس شاشة فارغة)
+- [ ] `/images/help/contacts/profile-overview.webp` — scene: تبويب نظرة عامة
+- [ ] `/images/help/contacts/profile-pixel-engagement.webp` — scene: تبويب التفاعل لعميل فيه خريطة نشاط ويب وأحداث واضحة (بعد تفعيل البكسل)
+- [ ] `/images/help/contacts/segment-order-condition.webp` — scene: شجرة شروط مع سجل مرتبط «طلب» | عرض تفاعلي (اختياري): من قالب سلة متروكة حتى النشر.
+- [ ] `/images/help/contacts/segment-publish.webp` — scene: حالة النشر/البناء | عرض تفاعلي (اختياري): من قالب سلة متروكة حتى النشر.
+- [ ] `/images/help/contacts/segment-static-members.webp` — scene: إنشاء ثابت + لوحة إضافة/إزالة الأعضاء
+- [ ] `/images/help/contacts/segment-templates.webp` — scene: معرض قوالب البدء | عرض تفاعلي (اختياري): من قالب سلة متروكة حتى النشر.
+- [ ] `/images/help/contacts/segments-list.webp` — scene: قائمة الشرائح مع تبويبات الحالة (الكل / نشط / مسودة / مؤرشف) وزر إضافة
+- [ ] `/images/help/contacts/tags-filter.webp` — scene: فلتر الوسوم مفعّل في قائمة العملاء
+- [ ] `/images/help/contacts/custom-fields-sidebar.webp` — scene: شريط جانبي لملف عميل يعرض حقولاً مخصصة مملوءة
+- [ ] `/images/help/contacts/overview-bulk-tag-gif.webp` — scene: GIF 5ث: تحديد صفوف → وسم جماعي → استبدال الوسوم على العيّنة
+- [ ] `/images/help/contacts/add-open-gif.webp` — scene: GIF 3ث: النقر على إضافة جهة اتصال → فتح النافذة
+- [ ] `/images/help/contacts/profile-open-from-inbox-gif.webp` — scene: GIF 5ث: من محادثة في البريد الوارد → فتح الملف → تبويب نظرة عامة
+- [ ] `/images/help/contacts/import-confirm-gif.webp` — scene: GIF 4ث: تأكيد الاستيراد → بدء العملية في الخلفية
+- [ ] `/images/help/contacts/merge-confirm-gif.webp` — scene: GIF 5ث: تأكيد الدمج → فتح السجل الناجي بمحادثات موحّدة
+- [ ] `/images/help/contacts/tags-filter-apply-gif.webp` — scene: GIF 4ث: اختيار وسم من الفلتر → تضييق قائمة العملاء
+- [ ] `/images/help/contacts/companies-add-gif.webp` — scene: GIF 4ث: تبويب الشركات → إضافة شركة → نموذج البيانات
+- [ ] `/images/help/contacts/custom-fields-columns-gif.webp` — scene: GIF 4ث: فتح الأعمدة → إظهار حقل مخصص في جدول العملاء
+- [ ] `/images/help/contacts/leads-move-stage-gif.webp` — scene: GIF 5ث: سحب بطاقة محتمل بين مرحلتين → تحديث المرحلة
+- [ ] `/images/help/contacts/segments-filter-customers-gif.webp` — scene: GIF 5ث: فلتر شريحة منشورة على قائمة العملاء → تضييق الصفوف
+- [ ] `/images/help/contacts/segment-create-open-gif.webp` — scene: GIF 4ث: إضافة شريحة → اختيار ديناميكي → شاشة البنّاء
+- [ ] `/images/help/contacts/segment-publish-video.mp4` — scene: فيديو 40ث: من قالب سلة متروكة حتى النشر ومراجعة العدد
+- [ ] `/images/help/contacts/segment-static-add-gif.webp` — scene: GIF 5ث: بحث عن عميل → إضافة للشريحة الثابتة → تحديث العدد
+
+### getting-started
+- [ ] `/images/help/getting-started/account-setup-general.webp` — scene: الإعدادات العامة: اسم المؤسسة والمنطقة الزمنية واللغة والعملة ظاهرة قبل الحفظ
+- [ ] `/images/help/getting-started/account-setup-open-gif.webp` — scene: GIF 4ث: الشريط → الإعدادات → ظهور الإعدادات العامة
+- [ ] `/images/help/getting-started/account-setup-save-gif.webp` — scene: GIF 3ث: الضغط على حفظ → رسالة نجاح للاسم أو المنطقة الزمنية
+- [ ] `/images/help/getting-started/account-setup-timezone.webp` — scene: حقل المنطقة الزمنية مفتوحاً بقائمة مناطق، قبل الحفظ
+- [ ] `/images/help/getting-started/admin-step-channels-video.mp4` — scene: فيديو 45ث: من ربط قناة حتى ظهور رسالة في `/inbox`
+- [ ] `/images/help/getting-started/admin-step-channels.webp` — scene: قائمة قنوات بحالة نشط + محادثة اختبار في الوارد بشارة القناة
+- [ ] `/images/help/getting-started/admin-step-invite.webp` — scene: نافذة دعوة عضو مع حقلي القسم ومجموعة الصلاحيات إلزاميين
+- [ ] `/images/help/getting-started/admin-step-settings.webp` — scene: الإعدادات العامة باسم المؤسسة والمنطقة الزمنية ظاهرين قبل الحفظ
+- [ ] `/images/help/getting-started/admin-step-store-pixel.webp` — scene: تطبيق متجر بحالة متصل، أو شاشة لصق كود البكسل
+- [ ] `/images/help/getting-started/admin-step-tasks.webp` — scene: لوحة مهام بمراحل بسيطة وبطاقة واحدة مفتوحة
+- [ ] `/images/help/getting-started/ask-zaki-ask.webp` — scene: محادثة مع زكي: سؤال تشغيلي وجواب يوجّه إلى شاشة في الحساب
+- [ ] `/images/help/getting-started/ask-zaki-select-gif.webp` — scene: GIF 4ث: فتح منتقي الوكيل → اختيار زكي → تفعيل محادثة جديدة
+- [ ] `/images/help/getting-started/ask-zaki-welcome.webp` — scene: شاشة المساعد الذكي: منتقي الوكيل وزكي مختار واقتراحات ترحيبية ظاهرة
+- [ ] `/images/help/getting-started/by-role-paths.webp` — scene: مخطط أربعة مسارات: موظف، مشرف، مالك، تسويق
+- [ ] `/images/help/getting-started/cs-day1-before-reply.webp` — scene: محادثة مفتوحة مع لوحة عميل ومحرّر يظهر وضع رد مقابل ملاحظة
+- [ ] `/images/help/getting-started/cs-day1-profile-online.webp` — scene: قائمة المستخدم: الحالة متصل ومدخل مركز التدريب ظاهران
+- [ ] `/images/help/getting-started/cs-day1-reply-gif.webp` — scene: GIF 6ث: فتح محادثة → نظرة على اللوحة → إرسال رد قصير أو ملاحظة داخلية
+- [ ] `/images/help/getting-started/cs-day1-status.webp` — scene: قائمة الحالات بجانب محادثة مفتوحة
+- [ ] `/images/help/getting-started/cs-day1-tabs-gif.webp` — scene: GIF 5ث: التبديل من خاصتي إلى غير مسندة ثم الكل وتغيّر القائمة
+- [ ] `/images/help/getting-started/cs-day1-tabs.webp` — scene: قائمة الوارد مع تبويبات خاصتي وغير مسندة والكل، وعدّاد محادثات مفتوحة
+- [ ] `/images/help/getting-started/cs-day1-three-panels-video.mp4` — scene: فيديو 25ث: تنقّل بين القائمة والمحادثة ولوحة العميل
+- [ ] `/images/help/getting-started/cs-day1-three-panels.webp` — scene: البريد الوارد بأسهم على القائمة والمحادثة ولوحة العميل
+- [ ] `/images/help/getting-started/dynamic-variables-email-preview.webp` — scene: معاينة بريد تجريبي بعد الاستبدال: اسم العميل ظاهر بدل {{firstName}}
+- [ ] `/images/help/getting-started/dynamic-variables-insert-gif.webp` — scene: GIF 5ث: كتابة {{ → اختيار firstName → ظهور الرمز في الكتلة
+- [ ] `/images/help/getting-started/dynamic-variables-insert.webp` — scene: منتقي إدراج متغير مع {{ في محرر نص أو بنّاء بريد
+- [ ] `/images/help/getting-started/first-channel-active.webp` — scene: قائمة القنوات بقناة واحدة بحالة نشط مظللة
+- [ ] `/images/help/getting-started/first-channel-add-modal.webp` — scene: نافذة إضافة قناة جديدة بشبكة الأنواع وواتساب أو الدردشة المباشرة مُظلَّل
+- [ ] `/images/help/getting-started/first-channel-connect-video.mp4` — scene: فيديو 45ث: من إنشاء قناة حتى ظهور رسالة اختبار في `/inbox`
+- [ ] `/images/help/getting-started/first-channel-create-gif.webp` — scene: GIF 5ث: إنشاء جديد → اختيار النوع → متابعة
+- [ ] `/images/help/getting-started/first-channel-test-inbox.webp` — scene: البريد الوارد بمحادثة اختبار مفتوحة وشارة واتساب أو ماسنجر ظاهرة على المحادثة
+- [ ] `/images/help/getting-started/first-reply-composer.webp` — scene: البريد الوارد: محادثة اختبار مفتوحة والمحرر في وضع الرد جاهز للإرسال
+- [ ] `/images/help/getting-started/first-reply-e2e-video.mp4` — scene: فيديو 40ث: فتح محادثة اختبار → رد يدوي → اختياري: تفعيل ترحيب قصير واختباره
+- [ ] `/images/help/getting-started/first-reply-send-gif.webp` — scene: GIF 5ث: كتابة رد قصير → إرسال → ظهور الرسالة في الخيط للعميل
+- [ ] `/images/help/getting-started/first-reply-welcome-gif.webp` — scene: GIF 6ث: تفعيل الترحيب → رسالة من الخارج → ظهور الترحيب في الوارد
+- [ ] `/images/help/getting-started/first-reply-welcome.webp` — scene: صفحة الرد الآلي: منتقي القناة ورسالة الترحيب مفعّلة بنص قصير
+- [ ] `/images/help/getting-started/first-week-admin-map.webp` — scene: مخطط بسيط «تأسيس → تشغيل يومي → نمو» فوق لقطة اللوحة الرئيسية `/`
+- [ ] `/images/help/getting-started/get-support-prepare.webp` — scene: مسودة بلاغ منظّمة: نطاق الحساب، الوقت، المسار، ومعرّف محادثة — بلا كلمات مرور
+- [ ] `/images/help/getting-started/get-support-status.webp` — scene: بوابة status.karzoun.chat تعرض حالة المكوّنات (وارد، واتساب، أتمتة، حملات)
+- [ ] `/images/help/getting-started/glossary-reference-nav.webp` — scene: الشريط الجانبي ومجموعة خدمة العملاء مظللة مع البريد الوارد ظاهراً كاسم الميزة
+- [ ] `/images/help/getting-started/glossary-sidebar.webp` — scene: الشريط الجانبي بأسماء الوحدات: البريد الوارد، جهات الاتصال، الأتمتة، الإعدادات
+- [ ] `/images/help/getting-started/home-dashboard-attention.webp` — scene: منطقة يحتاج انتباهاً ظاهرة مع عنصر محادثة معلّقة أو مهمة مستحقة
+- [ ] `/images/help/getting-started/home-dashboard-layout.webp` — scene: الصفحة الرئيسية بعد الدخول: ترحيب، يحتاج انتباهاً، إجراءات سريعة، تقدّم تدريب
+- [ ] `/images/help/getting-started/home-dashboard-training.webp` — scene: بطاقة تقدّم التدريب: المهمة التالية ونسبة الإنجاز مع رابط إلى /training
+- [ ] `/images/help/getting-started/interface-tour-home.webp` — scene: الصفحة الرئيسية `/`: ترحيب، يحتاج انتباهاً، إجراءات سريعة، تقدّم تدريب
+- [ ] `/images/help/getting-started/interface-tour-inbox.webp` — scene: البريد الوارد بثلاث مناطق مظللة: قائمة، محادثة، لوحة عميل
+- [ ] `/images/help/getting-started/interface-tour-shell.webp` — scene: واجهة كرزون بعد الدخول: شريط جانبي، منطقة محتوى، وقائمة مستخدم مفتوحة وفيها مركز التدريب
+- [ ] `/images/help/getting-started/interface-tour-training-gif.webp` — scene: GIF 4ث: فتح قائمة المستخدم → مركز التدريب → قسم البداية
+- [ ] `/images/help/getting-started/invite-team-dialog.webp` — scene: نافذة دعوة أعضاء الفريق: بريد ومجموعة صلاحيات وقسم إلزامية
+- [ ] `/images/help/getting-started/invite-team-permissions.webp` — scene: مجموعة صلاحيات «موظف دعم»: عرض المحادثات مسموح والفوترة وإدارة الصلاحيات مرفوضة
+- [ ] `/images/help/getting-started/invite-team-send-gif.webp` — scene: GIF 5ث: دعوة أعضاء جدد → تعبئة البريد والقسم والمجموعة → إرسال
+- [ ] `/images/help/getting-started/invite-team-status.webp` — scene: جدول أعضاء الفريق وعمود حالة الدعوة (محقق / غير محقق) ظاهر
+- [ ] `/images/help/getting-started/launch-checklist-map.webp` — scene: مخطط بسيط: إعدادات → قسم → قناة → بريد وارد → فريق → أول رد
+- [ ] `/images/help/getting-started/launch-checklist-structure.webp` — scene: الإعدادات ← الهيكل: قسم واحد باسم حقيقي ظاهر في قائمة الأقسام
+- [ ] `/images/help/getting-started/launch-checklist-walkthrough-video.mp4` — scene: فيديو 35ث: من إعدادات عامة محفوظة → قسم → قناة نشطة → رسالة في الوارد
+- [ ] `/images/help/getting-started/overview-home.webp` — scene: الصفحة الرئيسية `/` بعد الدخول: ترحيب، بطاقات مؤشرات، وما يحتاج انتباهاً
+- [ ] `/images/help/getting-started/overview-training-menu-gif.webp` — scene: GIF 4ث: فتح قائمة المستخدم أعلى الصفحة → ظهور مركز التدريب
+- [ ] `/images/help/getting-started/what-is-karzoun-ai-agents.webp` — scene: استوديو الوكلاء: هوية ومعرفة وأدوات لوكيل محادثة
+- [ ] `/images/help/getting-started/what-is-karzoun-automations.webp` — scene: مسار أتمتة بعقد ترحيب وتوجيه وإسناد
+- [ ] `/images/help/getting-started/what-is-karzoun-contacts.webp` — scene: ملف جهة اتصال: بيانات العميل والوسوم والشرائح وخط الأنابيب
+- [ ] `/images/help/getting-started/what-is-karzoun-home.webp` — scene: الصفحة الرئيسية بعد الدخول: ترحيب، بطاقات مؤشرات، واختصارات للوارد والقنوات
+- [ ] `/images/help/getting-started/what-is-karzoun-inbox.webp` — scene: البريد الوارد بقائمة محادثات وشارات قنوات متعددة (واتساب، بريد، دردشة)
+- [ ] `/images/help/getting-started/what-is-karzoun-integrations.webp` — scene: المتجر: بطاقات تطبيقات جاهزة وحالة متصل لتطبيق واحد
+- [ ] `/images/help/getting-started/what-is-karzoun-marketing-retargeting.webp` — scene: حملة رسائل جماعية: شريحة وقنوات وجدولة
+- [ ] `/images/help/getting-started/what-is-karzoun-meetings.webp` — scene: تقويم اجتماعات بعرض أسبوعي ولقاء مجدول
+- [ ] `/images/help/getting-started/what-is-karzoun-pixel.webp` — scene: إعدادات البكسل: كود التتبع وربطه بجهات الاتصال والشرائح
+- [ ] `/images/help/getting-started/what-is-karzoun-tasks.webp` — scene: لوحة مهام بمراحل وبطاقة مفتوحة بمسؤول واستحقاق
+- [ ] `/images/help/getting-started/what-is-karzoun-team-chat.webp` — scene: محادثات الفريق: قنوات ومجموعات ورسائل مباشرة
+- [ ] `/images/help/getting-started/what-is-karzoun-whatsapp-calls.webp` — scene: مكالمة واتساب داخل البريد الوارد: حالة المكالمة وإسناد وتوفر
+- [ ] `/images/help/getting-started/what-is-karzoun-zaki.webp` — scene: زكي في الشريط الجانبي: سؤال تشغيلي ومسودة رد للفريق
+- [ ] `/images/help/getting-started/workspace-tour-menu-gif.webp` — scene: GIF 4ث: النقر على الاسم أعلى الصفحة → فتح القائمة → مركز التدريب
+- [ ] `/images/help/getting-started/workspace-tour-search.webp` — scene: لوحة البحث السريع أو الأوامر مفتوحة مع نتائج صفحات مثل البريد الوارد والإعدادات
+- [ ] `/images/help/getting-started/workspace-tour-shell.webp` — scene: لقطة كاملة للواجهة مع تمييز الشريط الجانبي ومنطقة المحتوى وقائمة المستخدم المفتوحة وفيها مركز التدريب
+- [ ] `/images/help/getting-started/workspace-tour-user-menu.webp` — scene: قائمة المستخدم مفتوحة: الملف، الإعدادات، مركز التدريب، تسجيل الخروج
+
+### inbox
+- [ ] `/images/help/inbox/agent-day-close-loop-gif.webp` — scene: GIF 6ث: إرسال رد → إغلاق أو بانتظار العميل حسب النتيجة
+- [ ] `/images/help/inbox/agent-day-panel-check-gif.webp` — scene: GIF 5ث: فتح محادثة → نظرة على التفاصيل والوسوم والمسؤول
+- [ ] `/images/help/inbox/agent-day-shift-video.mp4` — scene: فيديو 45ث: من غير مسندة حتى أول رد وإغلاق مع مرور سريع على اللوحة
+- [ ] `/images/help/inbox/agent-day-triage.webp` — scene: مسار: غير مسندة، اسناد لي، رد، ثم إغلاق
+- [ ] `/images/help/inbox/ai-summary-open-details-gif.webp` — scene: GIF 4ث: اختيار تبويب التفاصيل وظهور بطاقة الملخص أعلى اللوحة
+- [ ] `/images/help/inbox/ai-summary-panel.webp` — scene: بطاقة ملخص الذكاء الاصطناعي مفتوحة: نص، نية، مشكلات، شارات مشاعر
+- [ ] `/images/help/inbox/ai-summary-refresh-gif.webp` — scene: GIF 4ث: الضغط على تحديث الملخص بعد رد جديد
+- [ ] `/images/help/inbox/assign-agent-department.webp` — scene: لوحة تفاصيل مفتوحة مع إسناد لي وقائمة موظف وقسم
+- [ ] `/images/help/inbox/assign-department-gif.webp` — scene: GIF 5ث: تغيير القسم ثم اختيار موظف من القائمة
+- [ ] `/images/help/inbox/assign-handoff-video.mp4` — scene: فيديو 35ث: تحويل من المبيعات إلى الدعم مع ملاحظة وإسناد موظف
+- [ ] `/images/help/inbox/attachments-attach-gif.webp` — scene: GIF 4ث: اختيار إرفاق ملف → ظهور شريط المرفقات
+- [ ] `/images/help/inbox/attachments-send-after-upload-gif.webp` — scene: GIF 5ث: اكتمال الرفع → تفعيل إرسال → ظهور الملف في الخيط
+- [ ] `/images/help/inbox/attachments-upload-progress.webp` — scene: المحرر يعرض شريط مرفقات بحالة جارٍ الرفع قبل تفعيل الإرسال
+- [ ] `/images/help/inbox/attachments-voice-send-gif.webp` — scene: GIF 5ث: بدء تسجيل → إيقاف → ظهور فقاعة صوت في الخيط
+- [ ] `/images/help/inbox/attachments-voice.webp` — scene: واجهة تسجيل رسالة صوتية في محرر البريد الوارد
+- [ ] `/images/help/inbox/bot-handoff-to-bot-gif.webp` — scene: GIF 4ث: فتح قائمة الحالة → اختيار بوت → تغيّر شارة الحالة
+- [ ] `/images/help/inbox/bot-handoff-to-human-gif.webp` — scene: GIF 5ث: من بوت إلى مفتوح ثم إسناد لي مع ملاحظة
+- [ ] `/images/help/inbox/bulk-actions-apply-gif.webp` — scene: GIF 5ث: اختيار قسم من الشريط → تطبيق → تغيّر صفوف القائمة
+- [ ] `/images/help/inbox/bulk-actions-flow-video.mp4` — scene: فيديو 30ث: فلترة غير مسندة → تحديد → نقل قسم وتطبيق وسم
+- [ ] `/images/help/inbox/bulk-actions-select-gif.webp` — scene: GIF 4ث: تحديد صفوف → ظهور شريط الحالة والإسناد والقسم والوسم
+- [ ] `/images/help/inbox/bulk-actions-toolbar.webp` — scene: قائمة مفلترة مع تحديد عدة محادثات وشريط الإجراءات الجماعية
+- [ ] `/images/help/inbox/calls-list-toggle-gif.webp` — scene: GIF 4ث: التبديل إلى مكالمات ثم فتح بطاقة مكالمة | فيديو: التنقل من سجل مكالمة إلى ملف العميل أو محادثته
+- [ ] `/images/help/inbox/calls-list-toggle.webp` — scene: مفتاح التبديل بين محادثات ومكالمات مع بطاقة مكالمة
+- [ ] `/images/help/inbox/channels-badges-and-details.webp` — scene: قائمة محادثات بشارات واتساب وبريد ودردشة وإنستغرام مع محادثة مفتوحة تظهر اسم القناة
+- [ ] `/images/help/inbox/channels-filter-by-type-gif.webp` — scene: GIF 5ث: فلترة حسب نوع القناة ثم فتح رسالة من مصدر مختلف
+- [ ] `/images/help/inbox/composer-imap-headers.webp` — scene: محادثة بريد IMAP مع شريط Subject و Cc و Bcc موسّعاً فوق محرر HTML
+- [ ] `/images/help/inbox/composer-whatsapp-call-button-gif.webp` — scene: GIF 5ث: فتح اتصال → ضبط نص الزر → إرسال
+- [ ] `/images/help/inbox/composer-whatsapp-call-button.webp` — scene: حوار إرسال زر اتصال فوق محرر واتساب مع نص الرسالة ونص الزر ومدة الصلاحية
+- [ ] `/images/help/inbox/composer-whatsapp-catalog-gif.webp` — scene: GIF 6ث: فتح الكتالوج → تبويب منتج → اختيار → إرسال
+- [ ] `/images/help/inbox/composer-whatsapp-catalog.webp` — scene: شريط المحرر على واتساب مع زر الكتالوج وحوار إرسال رسالة كتالوج مفتوحاً على تبويب منتج
+- [ ] `/images/help/inbox/convert-conversation-to-task-gif.webp` — scene: GIF 6ث: تحويل → اختيار نوع → مسؤول وموعد → حفظ
+- [ ] `/images/help/inbox/convert-conversation-to-task-video.mp4` — scene: فيديو 35ث: طلب عميل → بطاقة لمسؤول مخزون → ظهورها في تفاصيل العميل
+- [ ] `/images/help/inbox/convert-conversation-to-task.webp` — scene: إجراء تحويل إلى بطاقة ونافذة اختيار النوع ثم ظهور البطاقة في اللوحة
+- [ ] `/images/help/inbox/customer-panel-20s-check-gif.webp` — scene: GIF 6ث: نظرة سريعة على المسؤول والوسوم والسجل قبل الكتابة
+- [ ] `/images/help/inbox/customer-panel-explore-video.mp4` — scene: فيديو 40ث: فتح المحادثة → السجل → وسم → ملف العميل
+- [ ] `/images/help/inbox/customer-panel-feedback-and-comment.webp` — scene: لوحة التفاصيل تعرض تقييماً مع الدرجة العامة، الأبعاد السبعة والتعليق، وبجواره مثال لا توجد له تغذية راجعة · فيديو: قراءة تعليق سلبي → مراجعة السجل → إنشاء مهمة متابعة أو تصعيد.
+- [ ] `/images/help/inbox/customer-panel-tabs.webp` — scene: اللوحة الجانبية مع تبويبات التفاصيل والسجل والمشاركون، وتظليل الوسوم والمسؤول والقسم · فيديو: 30–45 ثانية: فتح المحادثة → مراجعة السجل → تعديل وسم → الانتقال إلى ملف العميل.
+- [ ] `/images/help/inbox/customer-panel-zaki-rail-gif.webp` — scene: GIF 5ث: فتح زكي يستبدل الشريط الجانبي ثم إغلاقه لعودة التفاصيل
+- [ ] `/images/help/inbox/dashboard-apps-switch-gif.webp` — scene: GIF 4ث: التبديل من الرسائل إلى تطبيق لوحة التحكم ثم العودة
+- [ ] `/images/help/inbox/dashboard-apps-tabs.webp` — scene: تبويبات الرسائل وتطبيق لوحة تحكم بجانب خيط المحادثة
+- [ ] `/images/help/inbox/filters-awaiting-reply-gif.webp` — scene: GIF 5ث: تفعيل بانتظار الرد → تغيّر العدد والقائمة
+- [ ] `/images/help/inbox/filters-open-panel-gif.webp` — scene: GIF 4ث: النقر على الفلاتر → فتح اللوحة بجانب القائمة
+- [ ] `/images/help/inbox/filters-panel.webp` — scene: لوحة الفلاتر مفتوحة: فلاتر سريعة، قسم، قناة، وسم، وإعادة تعيين
+- [ ] `/images/help/inbox/filters-reset-gif.webp` — scene: GIF 3ث: إعادة تعيين كل الفلاتر → عودة العدد الكامل للتبويب
+- [ ] `/images/help/inbox/global-search-conversation-result.webp` — scene: نافذة البحث العام مع نتيجة رسالة من محادثة ووصلة فتحها في البريد الوارد.
+- [ ] `/images/help/inbox/global-search-open-gif.webp` — scene: GIF 5ث: فتح البحث → كتابة عبارة → فتح المحادثة من النتائج | فيديو اختياري بنفس المسار
+- [ ] `/images/help/inbox/interactive-messages-builder.webp` — scene: حوار بناء رسالة تفاعلية بأزرار فوق محرر الرد
+- [ ] `/images/help/inbox/interactive-messages-send-gif.webp` — scene: GIF 6ث: اختيار أزرار → إضافة خيارين → إرسال وظهور الرسالة في الخيط
+- [ ] `/images/help/inbox/internal-note-mention.webp` — scene: ملاحظة داخلية مع @منشن ثم ظهور المحادثة في شاركت فيها
+- [ ] `/images/help/inbox/internal-note-mode-gif.webp` — scene: GIF 3ث: التبديل من رد إلى ملاحظة في شريحة المحرر
+- [ ] `/images/help/inbox/internal-note-participated-gif.webp` — scene: GIF 5ث: إرسال ملاحظة بمنشن → ظهور المحادثة تحت شاركت فيها
+- [ ] `/images/help/inbox/list-conversations-calls-gif.webp` — scene: GIF 3ث: التبديل بين محادثات ومكالمات أعلى القائمة
+- [ ] `/images/help/inbox/list-open-includes-new-gif.webp` — scene: GIF 5ث: حالة مفتوح تعرض جديد+مفتوح ثم اختيار جديد وحدها
+- [ ] `/images/help/inbox/list-tabs-status-sort.webp` — scene: قائمة بتبويب خاصتي وحالة مفتوح (يشمل جديد) وقائمة ترتيب مفتوحة.
+- [ ] `/images/help/inbox/list-tabs-switch-gif.webp` — scene: GIF 4ث: التنقّل بين غير مسندة وخاصتي والكل مع تغيّر العدد
+- [ ] `/images/help/inbox/macros-run-from-panel.webp` — scene: قسم الماكرو في اللوحة مع بحث وزر تشغيل على محادثة تجريبية
+- [ ] `/images/help/inbox/macros-run-gif.webp` — scene: GIF 6ث: بحث عن ماكرو → تشغيل → جارٍ التشغيل → تغيّر وسم/حالة
+- [ ] `/images/help/inbox/notification-preferences.webp` — scene: إعدادات الإشعارات مع فئة البريد الوارد والمحادثات والأنواع الستة.
+- [ ] `/images/help/inbox/overview-day-in-life-video.mp4` — scene: فيديو 40ث: من فتح الوارد → اختيار غير مسندة → فتح محادثة → نظرة على اللوحات الثلاث
+- [ ] `/images/help/inbox/overview-three-panels.webp` — scene: لقطة كاملة للبريد الوارد بثلاث لوحات مظللة
+- [ ] `/images/help/inbox/overview-unified-inbox.webp` — scene: قائمة وارد بشارات واتساب وبريد ودردشة وسوشيال وفلتر تكامل محدد
+- [ ] `/images/help/inbox/participants-mention-gif.webp` — scene: GIF 5ث: كتابة @ في ملاحظة → اختيار زميل → إرسال
+- [ ] `/images/help/inbox/participants-share-team-gif.webp` — scene: GIF 5ث: فتح قائمة الرسالة → مشاركة في دردشة الفريق → اختيار محادثة
+- [ ] `/images/help/inbox/participants-share-team.webp` — scene: قائمة رسالة مفتوحة على مشاركة في دردشة الفريق
+- [ ] `/images/help/inbox/participants-tab.webp` — scene: تبويب المشاركون يعرض موظفاً بشارة مسند وآخر مشاركاً فقط
+- [ ] `/images/help/inbox/path-agent-index.webp` — scene: شاشة البريد الوارد مع تظليل التبويبات والمحرر كمدخل ليوم الموظف
+- [ ] `/images/help/inbox/path-supervisor-index.webp` — scene: شاشة غير مسندة مع فلاتر قسم وترتيب إلحاح كمدخل لمسار المشرف
+- [ ] `/images/help/inbox/quick-responses-composer-smart-search.webp` — scene: محرر رد كتب فيه الموظف عبارة من داخل قالب مع قائمة اقتراحات تطابق الاسم والمحتوى
+- [ ] `/images/help/inbox/quick-responses-create-use-video.mp4` — scene: فيديو 30ث: إنشاء قالب ثم استخدامه في محادثة
+- [ ] `/images/help/inbox/quick-responses-library-create.webp` — scene: قائمة الردود السريعة، زر قالب جديد، ونافذة إنشاء فيها الاسم والمحتوى والمتغيرات
+- [ ] `/images/help/inbox/quick-responses-suggest-gif.webp` — scene: GIF 7ث: كتابة جزء من المحتوى → ظهور النتائج → Tab → تعديل النص
+- [ ] `/images/help/inbox/quick-tour-customer-region.webp` — scene: تظليل لوحة العميل: تفاصيل وسوم ومسؤول
+- [ ] `/images/help/inbox/quick-tour-list-region.webp` — scene: تظليل منطقة قائمة المحادثات مع تبويبات غير مسندة وخاصتي
+- [ ] `/images/help/inbox/quick-tour-navigate-video.mp4` — scene: فيديو 25ث: تنقّل بين الأجزاء الثلاثة والنقر على محادثة ثم العودة للقائمة
+- [ ] `/images/help/inbox/quick-tour-thread-region.webp` — scene: تظليل خيط الرسائل ومحرر الرد في الوسط
+- [ ] `/images/help/inbox/quick-tour-three-panels.webp` — scene: لقطة كاملة بأسهم مرقّمة 1 قائمة · 2 محادثة · 3 لوحة عميل
+- [ ] `/images/help/inbox/reply-composer.webp` — scene: المحرر في وضع رد مع شريحة الوضع وزر إرسال
+- [ ] `/images/help/inbox/reply-mode-switch-gif.webp` — scene: GIF 4ث: التبديل بين رد وملاحظة ثم العودة لرد قبل الكتابة
+- [ ] `/images/help/inbox/reply-send-status-gif.webp` — scene: GIF 6ث: إرسال رد → اختيار بانتظار العميل من قائمة الحالة
+- [ ] `/images/help/inbox/reply-to-message-gif.webp` — scene: GIF 5ث: اختيار رد على رسالة → ظهور المعاينة → إرسال
+- [ ] `/images/help/inbox/reply-to-message.webp` — scene: معاينة الرد على رسالة محددة فوق المحرر
+- [ ] `/images/help/inbox/routines-escalate-gif.webp` — scene: GIF 6ث: ملاحظة → إسناد مشرف → تحديث حالة
+- [ ] `/images/help/inbox/routines-escalate.webp` — scene: ملاحظة داخلية مع تغيير مسؤول في لوحة العميل
+- [ ] `/images/help/inbox/routines-shift-review-scan-gif.webp` — scene: GIF 6ث: غير مسندة → مفتوح أقدم → عيّنة بانتظار العميل
+- [ ] `/images/help/inbox/routines-shift-review.webp` — scene: فلتر حالات مفتوح مع فرز حسب الأقدم
+- [ ] `/images/help/inbox/routines-shift-start-scan-gif.webp` — scene: GIF 5ث: خاصتي → غير مسندة مع تغيّر العدد
+- [ ] `/images/help/inbox/routines-shift-start.webp` — scene: رأس البريد الوارد مع حالة Online وتبويب خاصتي
+- [ ] `/images/help/inbox/shortcuts-reply-next-gif.webp` — scene: GIF 6ث: رد → Alt+P → محادثة تالية بـ Alt+↓ | فيديو اختياري 20ث بنفس المسار
+- [ ] `/images/help/inbox/shortcuts-status-composer.webp` — scene: قائمة تغيير الحالة مع شارات Alt+P وAlt+E، ومحرر يوضح Enter/Mod+Enter، دون الاعتماد على Alt+B.
+- [ ] `/images/help/inbox/sla-details-timing.webp` — scene: قسم SLA والتوقيت في لوحة العميل مع متوسط الرد وانتظار العميل
+- [ ] `/images/help/inbox/sla-list-urgency.webp` — scene: صف محادثة بشارة إلحاح اتفاقية الخدمة برتقالية وأخرى حمراء بعد التجاوز
+- [ ] `/images/help/inbox/sla-setup.webp` — scene: بطاقة اتفاقية مستوى الخدمة: حقل الدقائق، خيارات الانتهاك الثلاثة، مفتاح الأتمتة، والتحذير الأصفر
+- [ ] `/images/help/inbox/sla-urgency-sort-gif.webp` — scene: GIF 5ث: ترتيب حسب إلحاح اتفاقية الخدمة → صعود الأحمر ثم الأطول انتظاراً
+- [ ] `/images/help/inbox/smart-assignment-capacity-video.mp4` — scene: فيديو 45ث: قراءة السعة قبل رفع الحد أو استدعاء تغطية
+- [ ] `/images/help/inbox/smart-assignment-capacity.webp` — scene: تحليلات السعة مع بطاقة بأقصى سعة وموظف متاح
+- [ ] `/images/help/inbox/smart-assignment-department-active.webp` — scene: بطاقة إعدادات القسم مع قائمة الأقسام ومفتاح نشط مضاء
+- [ ] `/images/help/inbox/smart-assignment-max-load.webp` — scene: حقل الحد الأقصى مع تلميح 0 = بلا حد وبطاقة سعة بأقصى سعة
+- [ ] `/images/help/inbox/smart-assignment-metrics.webp` — scene: لوحة أداء الإسناد بنطاق 7 أيام وبطاقة التزام الاتفاقية
+- [ ] `/images/help/inbox/smart-assignment-on-reopen-gif.webp` — scene: GIF 7ث: عودة من مؤجلة إلى مفتوح مع أثر إعادة إسناد
+- [ ] `/images/help/inbox/smart-assignment-on-reopen.webp` — scene: بطاقة المحادثات المعاد فتحها بالخيارات الأربعة
+- [ ] `/images/help/inbox/smart-assignment-sla-breach.webp` — scene: بطاقة SLA: الدقائق ومفتاح الأتمتة وخيارات الانتهاك والتحذير الأصفر
+- [ ] `/images/help/inbox/smart-assignment-strategies-gif.webp` — scene: GIF 6ث: التبديل بين التناوب والتناوب حسب التوفر ثم حفظ
+- [ ] `/images/help/inbox/smart-assignment-strategies.webp` — scene: بطاقات الاستراتيجيات الثلاث مع تمييز موصى به على التناوب وحالة موظف متصل
+- [ ] `/images/help/inbox/smart-assignment-when-it-runs-video.mp4` — scene: فيديو 40ث: محادثة جديدة تُسند ثم رسالة على مفتوحة لا تغيّر المسؤول
+- [ ] `/images/help/inbox/smart-assignment-when-it-runs.webp` — scene: مخطط: جديد / إلى مفتوح → إسناد ذكي مقابل مفتوحة أصلاً / بوت → بلا إعادة اختيار
+- [ ] `/images/help/inbox/snooze-pick-until-gif.webp` — scene: GIF 5ث: اختيار مؤجلة → حتى الغد → ظهور تلميح حتى التاريخ
+- [ ] `/images/help/inbox/snooze-status-menu.webp` — scene: قائمة الحالة مفتوحة على مؤجلة مع خيارات حتى الرد القادم والساعة والغد والمخصص
+- [ ] `/images/help/inbox/social-comment-private-reply-gif.webp` — scene: GIF 6ث: رد خاص → إرسال → ظهور محادثة المتابعة في الوارد
+- [ ] `/images/help/inbox/social-comment-private-reply.webp` — scene: تعليق على منشور داخل الوارد مع قائمة الإجراء ونافذة إرسال رد خاص
+- [ ] `/images/help/inbox/statuses-bot-return-gif.webp` — scene: GIF 6ث: رسالة على محادثة مغلقة → عودة بوت أو مفتوح حسب إعداد القناة
+- [ ] `/images/help/inbox/statuses-inbound-matrix-video.mp4` — scene: فيديو 35ث: مقارنة سريعة لرسالة واردة على مغلقة مقابل بانتظار العميل
+- [ ] `/images/help/inbox/statuses-menu.webp` — scene: قائمة تغيير الحالة مفتوحة تعرض مفتوح وبانتظار العميل ومؤجلة وبوت وإغلاق
+- [ ] `/images/help/inbox/statuses-snooze-menu.webp` — scene: قائمة تغيير الحالة مع خيار بوت وخيارات التأجيل
+- [ ] `/images/help/inbox/supervise-queue-scan-gif.webp` — scene: GIF 6ث: غير مسندة → فلتر قسم → ترتيب إلحاح اتفاقية الخدمة
+- [ ] `/images/help/inbox/supervise-queue.webp` — scene: تبويب غير مسندة مع عدّاد وفلتر قسم مفعّل
+- [ ] `/images/help/inbox/whatsapp-templates-picker.webp` — scene: محادثة واتساب خارج النافذة مع منتقي القالب مفتوحاً
+- [ ] `/images/help/inbox/whatsapp-templates-send-gif.webp` — scene: GIF 6ث: اختيار قالب → تعبئة متغير → معاينة → إرسال
+
+### insights
+- [ ] `/images/help/insights/charts-and-filters-add-chart.webp` — scene: نافذة «إضافة رسم بياني» مفتوحة تعرض اختيار مصدر البيانات (قالب محادثات) وحقل العرض | فيديو (مستحسن): 30 ثانية: إضافة رسم، سحب ترتيب، فتح فلاتر التاريخ.
+- [ ] `/images/help/insights/contact-insights-dashboard.webp` — scene: لوحة فيها «إجمالي عدد العملاء» + «العملاء المُنشأون حسب الشهر» + «حسب الحالة» — فلتر سنة حالية
+- [ ] `/images/help/insights/conversation-reports-dashboard.webp` — scene: لوحة رؤى فيها ٣ رسوم محادثات: حجم حسب القناة، اتجاه وقت الاستجابة، ومخطط حرارة الذروة — مع فلتر «آخر ٧ أيام»
+- [ ] `/images/help/insights/create-dashboard-wizard.webp` — scene: خطوة «اختر قالباً» ثم خطوة التفاصيل مع رؤية «خاص» وقسم مختار | فيديو (مستحسن): 40 ثانية من القالب حتى فتح اللوحة.
+- [ ] `/images/help/insights/csat-dashboard.webp` — scene: رسم «رضا العملاء (مختصر/متقدم)» مع مقارنة بالفترة السابقة + رسم «حسب الموظف» — فلتر آخر ٣٠ يوماً
+- [ ] `/images/help/insights/live-and-export-csv-menu.webp` — scene: قائمة رسم مفتوحة مع خيار «تصدير CSV» مُظلَّل
+- [ ] `/images/help/insights/live-and-export-refresh-bar.webp` — scene: شريط التحديث التلقائي ظاهر مع «التحديث التالي خلال 30 ثانية» وزر «تحديث الآن»
+- [ ] `/images/help/insights/manage-dashboards-sidebar.webp` — scene: الشريط الجانبي في `/insights` مع مجلد «تشغيل» مفتوح ولوحتين داخله، وقائمة ⋮ على لوحة تُظهر تعديل/تكرار/حذف
+- [ ] `/images/help/insights/overview-dashboard.webp` — scene: شاشة **الرؤى** مع شريط جانبي «لوحات التحكم»، لوحة مفتوحة بعدة رسوم، ومحدّد نطاق التاريخ
+- [ ] `/images/help/insights/charts-add-gif.webp` — scene: GIF 5ث: إضافة رسم → اختيار قالب محادثات → ظهور البطاقة على اللوحة
+- [ ] `/images/help/insights/charts-filters-open-gif.webp` — scene: GIF 4ث: فتح فلاتر سريعة على الرسم → تغيير نطاق التاريخ → تحديث الرسم
+- [ ] `/images/help/insights/charts-reorder-gif.webp` — scene: GIF 3ث: سحب بطاقة رسم إلى موضع جديد
+- [ ] `/images/help/insights/contact-insights-add-chart-gif.webp` — scene: GIF 5ث: إضافة رسم → مصدر عملاء → اختيار حسب الاشتراك
+- [ ] `/images/help/insights/conversation-reports-filter-gif.webp` — scene: GIF 4ث: فتح فلاتر رسم الحجم → آخر ٧ أيام → تغيّر الأعمدة
+- [ ] `/images/help/insights/create-dashboard-template-gif.webp` — scene: GIF 5ث: اختيار قالب تشغيل → تحديد رسوم → التالي
+- [ ] `/images/help/insights/create-dashboard-wizard-video.mp4` — scene: فيديو 40ث: من القالب حتى فتح اللوحة
+- [ ] `/images/help/insights/csat-filter-period-gif.webp` — scene: GIF 4ث: فلاتر سريعة على رسم الرضا → آخر ٣٠ يوماً → تحديث المتوسط
+- [ ] `/images/help/insights/live-export-csv-gif.webp` — scene: GIF 4ث: ⋮ → تصدير CSV → بدء التنزيل
+- [ ] `/images/help/insights/live-reload-page-gif.webp` — scene: GIF 3ث: إعادة تحميل الصفحة → ظهور أرقام محدّثة على الرسوم
+- [ ] `/images/help/insights/manage-duplicate-gif.webp` — scene: GIF 3ث: تكرار لوحة من ⋮ → ظهور نسخة في الشريط
+- [ ] `/images/help/insights/manage-folder-create-gif.webp` — scene: GIF 4ث: إنشاء مجموعة → تسمية «تشغيل» → سحب/تعيين لوحة داخلها
+- [ ] `/images/help/insights/overview-open-sidebar-gif.webp` — scene: GIF 4ث: فتح الرؤى → اختيار لوحة من الشريط → ظهور الرسوم
+
+### knowledge-base
+- [ ] `/images/help/knowledge-base/explorer-anatomy.webp` — scene: تشريح المستكشف بأسهم على الشجرة والوسط والخصائص، مع تبويب مقالة مفتوح | عرض تفاعلي (مستحسن): مناطق النقر الحرجة — شجرة، تبويب، حفظ.
+- [ ] `/images/help/knowledge-base/explorer-rtl.webp` — scene: مجلد عربي موسّع في الشجرة + سطر عربي محاذى يميناً في المحرر
+- [ ] `/images/help/knowledge-base/explorer-search.webp` — scene: نتائج بحث تعرض مقالات من أكثر من مجلد
+- [ ] `/images/help/knowledge-base/explorer-tabs.webp` — scene: شريط تبويبات بمقالتَين، واحدة بنقطة «غير محفوظ»
+- [ ] `/images/help/knowledge-base/folders-move.webp` — scene: نافذة اختيار وجهة النقل لمجلد، مع استبعاد المجلد نفسه وفروعه
+- [ ] `/images/help/knowledge-base/folders-nested.webp` — scene: موضوع مفتوح مع مجلدات متداخلة ومقالات تحت أحدها | فيديو (مستحسن): 25 ثانية إنشاء موضوع ← مجلد ← مجلد فرعي.
+- [ ] `/images/help/knowledge-base/folders-topic-root.webp` — scene: شجرة بعد إنشاء موضوع جديد في الجذر، مع تمييزه كمجلد جذر
+- [ ] `/images/help/knowledge-base/markdown-demo.mp4` — scene: فيديو 30–45 ثانية — لصق المثال، معاينة، حفظ
+- [ ] `/images/help/knowledge-base/markdown-editor-preview.webp` — scene: محرر Markdown بجانب معاينة لنفس المقالة
+- [ ] `/images/help/knowledge-base/markdown-sample-article.webp` — scene: محرر يعرض المثال أعلاه ومعاينة بنفس الهيكل
+- [ ] `/images/help/knowledge-base/on-site-nested-categories.webp` — scene: ويدجت مساعدة بفئة فرعية مفتوحة وقائمة مقالات
+- [ ] `/images/help/knowledge-base/on-site-public-vs-private.webp` — scene: مقارنة جانبية — مقالة Published/Public في المستكشف ونفس المقالة ظاهرة في الويدجت؛ ومقالة Private لا تظهر
+- [ ] `/images/help/knowledge-base/overview-explorer.webp` — scene: شاشة كاملة للمستكشف — شجرة مواضيع في الجذر، شبكة مجلدات/مقالات في الوسط، بدون لوحة خصائص
+- [ ] `/images/help/knowledge-base/properties-media.webp` — scene: اللوحة كاملة مع صورة مميزة وصف مرفق مضغوط
+- [ ] `/images/help/knowledge-base/properties-status.webp` — scene: قسم Status في اللوحة مع Published ومفتاح Public
+- [ ] `/images/help/knowledge-base/publish-status-icons.webp` — scene: شجرة فيها ثلاث مقالات بألوان حالة مختلفة بجانب شارات Draft / Published / Scheduled في اللوحة
+- [ ] `/images/help/knowledge-base/with-ai-agent-kb.webp` — scene: مسار أتمتة فيه عقدة وكيل مساعد، مع إشارة لمعرفة منشورة — وليس شاشة `/knowledge-base/search`
+- [ ] `/images/help/knowledge-base/write-new.webp` — scene: مجلد مفتوح مع زر New article، ثم محرر بمقالة جديدة | فيديو (مستحسن): 30–45 ثانية من مجلد فارغ حتى أول حفظ.
+- [ ] `/images/help/knowledge-base/write-rtl-ltr.webp` — scene: محرر يعرض سطراً عربياً يميناً وسطر Markdown إنجليزي يساراً في نفس المقالة
+- [ ] `/images/help/knowledge-base/write-tabs-dirty.webp` — scene: شريط تبويبات بنقطة غير محفوظ على أحدها
+- [ ] `/images/help/knowledge-base/explorer-open-article-gif.webp` — scene: GIF 5ث: نقر مقالة في الوسط → تبويب + محرر + خصائص
+- [ ] `/images/help/knowledge-base/explorer-search-gif.webp` — scene: GIF 4ث: كتابة في البحث → نتائج مقالات من مجلدات متعددة
+- [ ] `/images/help/knowledge-base/folders-create-nested-video.mp4` — scene: فيديو 25ث: إنشاء موضوع ← مجلد ← مجلد فرعي
+- [ ] `/images/help/knowledge-base/folders-create-topic-gif.webp` — scene: GIF 4ث: إنشاء مجلد في الجذر → ظهور موضوع جديد
+- [ ] `/images/help/knowledge-base/markdown-preview-gif.webp` — scene: GIF 4ث: كتابة عنوان وقائمة → تبديل معاينة → ظهور الهيكل
+- [ ] `/images/help/knowledge-base/on-site-publish-check-gif.webp` — scene: GIF 5ث: نشر عام في المستكشف → فتح الويدجت → ظهور المقالة تحت الفئة
+- [ ] `/images/help/knowledge-base/on-site-topic-link.webp` — scene: إعداد قناة/بكسل مع منتقي موضوع قاعدة المعرفة محدّداً
+- [ ] `/images/help/knowledge-base/overview-open-gif.webp` — scene: GIF 4ث: فتح قاعدة المعرفة من الشريط → ظهور الشجرة والوسط
+- [ ] `/images/help/knowledge-base/properties-save-gif.webp` — scene: GIF 3ث: تعديل حالة → حفظ من أسفل اللوحة → اختفاء نقطة غير محفوظ
+- [ ] `/images/help/knowledge-base/publish-public-toggle-gif.webp` — scene: GIF 3ث: تبديل Public/Private بجانب Published
+- [ ] `/images/help/knowledge-base/publish-schedule-gif.webp` — scene: GIF 4ث: اختيار Scheduled → تعبئة Schedule → حفظ
+- [ ] `/images/help/knowledge-base/with-ai-publish-then-agent-gif.webp` — scene: GIF 5ث: نشر مقالة → فتح تبويب المعرفة في الوكيل → اختيار الموضوع
+- [ ] `/images/help/knowledge-base/write-create-save-gif.webp` — scene: GIF 5ث: New article → عنوان → حفظ → اختفاء نقطة غير محفوظ
+- [ ] `/images/help/knowledge-base/write-preview-gif.webp` — scene: GIF 3ث: التبديل إلى معاينة من لوحة الخصائص
+
+### pixel
+- [ ] `/images/help/pixel/automation-behavioral-triggers.webp` — scene: لوحة مشغّلات الأحداث السلوكية في منشئ الأتمتة
+- [ ] `/images/help/pixel/events-ecommerce.webp` — scene: جدول أو بطاقات أحداث تجارة على ملف عميل متجر
+- [ ] `/images/help/pixel/install-script-manager.webp` — scene: شاشة مدير السكريبتات مع تفعيل Pixel وزر نسخ الكود
+- [ ] `/images/help/pixel/overview-script-manager.webp` — scene: بطاقة مدير السكريبتات من قائمة المطور
+- [ ] `/images/help/pixel/path-marketer.webp` — scene: مدير السكريبتات أو تبويب التفاعل كمدخل لمسار مسؤول التتبع
+- [ ] `/images/help/pixel/profile-engagement.webp` — scene: تبويب التفاعل مع خريطة نشاط وأحداث متجر
+- [ ] `/images/help/pixel/segment-event-condition.webp` — scene: بنّاء شريحة بشروط طلب أو سلة — بدون شرط حدث بكسل في الكتالوج الحالي
+- [ ] `/images/help/pixel/verify-engagement.webp` — scene: تبويب التفاعل بعد زيارة ناجحة مع أحداث واضحة
+- [ ] `/images/help/pixel/automation-commerce-vs-custom.webp` — scene: مقارنة: مشغّل حدث تجارة مقابل حدث مخصص لاسم إضافة السلة
+- [ ] `/images/help/pixel/automation-pick-trigger-gif.webp` — scene: GIF 6ث: إضافة مشغّل → الأحداث السلوكية → اختيار تجارة أو مخصص والاسم
+- [ ] `/images/help/pixel/automation-pixel-flow-video.mp4` — scene: فيديو 40ث: من اختيار المشغّل حتى اختبار السلوك وظهور التشغيلة
+- [ ] `/images/help/pixel/automation-test-run-gif.webp` — scene: GIF 5ث: سلوك على الموقع → ظهور تشغيلة في سجل الأتمتة
+- [ ] `/images/help/pixel/events-browse-session.webp` — scene: نشاط ويب يعرض مشاهدة صفحة وبداية جلسة على ملف عميل
+- [ ] `/images/help/pixel/events-custom-vs-commerce.webp` — scene: مقارنة بصرية: حدث تجارة مقابل حدث مخصص لإضافة السلة
+- [ ] `/images/help/pixel/faq-empty-profile.webp` — scene: تبويب تفاعل فارغ على ملف عميل مع تلميح الزائر المجهول
+- [ ] `/images/help/pixel/faq-script-manager-permission.webp` — scene: قائمة جانبية بلا قسم المطور مقابل ظهور مدير السكريبتات بعد الصلاحية
+- [ ] `/images/help/pixel/install-copy-code-gif.webp` — scene: GIF 3ث: النقر على نسخ الكود
+- [ ] `/images/help/pixel/install-e2e-video.mp4` — scene: فيديو 40ث: من تفعيل البكسل حتى نسخ الكود ولصقه في head
+- [ ] `/images/help/pixel/install-enable-pixel-gif.webp` — scene: GIF 4ث: تفعيل خيار Pixel / التحليلات
+- [ ] `/images/help/pixel/install-head-paste.webp` — scene: موضع لصق السكربت داخل head في قالب الموقع
+- [ ] `/images/help/pixel/install-open-gif.webp` — scene: GIF 4ث: المطور → مدير السكريبتات
+- [ ] `/images/help/pixel/overview-flow-video.mp4` — scene: فيديو 25ث: من مدير السكريبتات حتى تبويب التفاعل على ملف عميل
+- [ ] `/images/help/pixel/overview-open-gif.webp` — scene: GIF 4ث: المطور → مدير السكريبتات → ظهور بطاقة البكسل
+- [ ] `/images/help/pixel/path-marketer-engagement.webp` — scene: تبويب التفاعل كجسر بين التتبع والشرائح أو الأتمتة
+- [ ] `/images/help/pixel/path-marketer-install-verify.webp` — scene: تسلسل: مدير السكريبتات ثم تبويب تفاعل بعد زيارة ناجحة
+- [ ] `/images/help/pixel/profile-activity-web-gif.webp` — scene: GIF 5ث: تبويب النشاط → فلتر نشاط الويب → ظهور الخط الزمني
+- [ ] `/images/help/pixel/profile-empty-tab.webp` — scene: تبويب تفاعل بلا أحداث مع تلميح الزائر غير المعروف بعد
+- [ ] `/images/help/pixel/profile-engagement-heatmap.webp` — scene: خريطة نشاط الويب تقريباً لآخر ٣٠ يوماً داخل تبويب التفاعل
+- [ ] `/images/help/pixel/profile-open-gif.webp` — scene: GIF 4ث: فتح ملف العميل من المحادثة أو جهات الاتصال
+- [ ] `/images/help/pixel/segment-order-cart-conditions.webp` — scene: شجرة شروط شريحة: سلة متروكة ومدينة دون حدث مشاهدة صفحة
+- [ ] `/images/help/pixel/verify-activity-web.webp` — scene: تبويب النشاط بفلتر نشاط الويب وخط زمني للأحداث
+- [ ] `/images/help/pixel/verify-browse-site.webp` — scene: متصفح على صفحات منتج ومتجر أثناء زيارة اختبار
+- [ ] `/images/help/pixel/verify-empty-vs-filled.webp` — scene: مقارنة: تبويب تفاعل فارغ مقابل أحداث واضحة بعد التعرّف
+- [ ] `/images/help/pixel/verify-flow-video.mp4` — scene: فيديو 30ث: تصفّح الموقع → فتح الملف → التفاعل ونشاط الويب
+- [ ] `/images/help/pixel/verify-open-profile-gif.webp` — scene: GIF 4ث: جهات الاتصال → فتح ملف العميل المتوقع
+
+### business-verification
+- [ ] `/images/help/business-verification/overview-connect-business.webp` — scene: زر ربط نشاط تجاري عندما لا يظهر حساب ميتا بعد
+- [ ] `/images/help/business-verification/overview-list.webp` — scene: صفحة توثيق الأعمال ببطاقة نشاط وحالة لم يتم التوثيق وزر بدء التوثيق
+- [ ] `/images/help/business-verification/overview-path-video.mp4` — scene: فيديو 25ث: من صفحة التوثيق حتى بدء المعالج ثم شارة الحالة
+- [ ] `/images/help/business-verification/status-badges.webp` — scene: شارات الحالات أو شريط تقدّم: إرسال → مراجعة → ميتا → مُوثّق
+- [ ] `/images/help/business-verification/status-details.webp` — scene: تفاصيل الطلب: الخط الزمني والتعليقات وشارة الحالة
+- [ ] `/images/help/business-verification/status-returned-gif.webp` — scene: GIF 5ث: شارة مُعاد → فتح الملاحظات → تعديل وإعادة إرسال
+- [ ] `/images/help/business-verification/submit-connect-gif.webp` — scene: GIF 6ث: ربط حساب الأعمال عبر ميتا ثم ظهور بطاقة النشاط
+- [ ] `/images/help/business-verification/submit-send-gif.webp` — scene: GIF 4ث: إرسال الطلب → تغيّر الشارة إلى قيد المراجعة
+- [ ] `/images/help/business-verification/submit-upload-docs.webp` — scene: خطوة رفع المستندات: سجل تجاري وشهادة ضريبية وإثبات عنوان
+- [ ] `/images/help/business-verification/submit-wizard-activity.webp` — scene: خطوة تأكيد النشاط في المعالج مع زر المتابعة
+- [ ] `/images/help/business-verification/submit-wizard-video.mp4` — scene: فيديو 40ث: من ربط الحساب حتى رفع المستندات والإرسال
+
+### popups
+- [ ] `/images/help/popups/confirmation-step.webp` — scene: خطوة التأكيد مع بطاقات الإجراءات الثلاث وإعداد صفحة الشكر مفتوحاً
+- [ ] `/images/help/popups/create-template-dialog.webp` — scene: نافذة اختيار القالب مع بطاقة «فارغة» وأحد القوالب محدّداً | فيديو (مستحسن): 30–45 ثانية من الإنشاء حتى الحفظ مع لمحة عن المعاينة.
+- [ ] `/images/help/popups/display-types-style-step.webp` — scene: شبكة اختيار نوع العرض في خطوة النمط مع نوع واحد محدّد ولون السمة
+- [ ] `/images/help/popups/fields-content-step.webp` — scene: خطوة المحتوى مع قائمة حقول وزر **إضافة حقل** ومعاينة النموذج
+- [ ] `/images/help/popups/fields-logic-editor.webp` — scene: محرّر المنطق الشرطي مفتوحاً بشرط واحد (إظهار عند يساوي)
+- [ ] `/images/help/popups/install-code-dialog.webp` — scene: حوار كود التثبيت مع مقطع السكربت وزر النسخ وزر فتح المعاينة | فيديو (مستحسن): نسخ المحمل → لصق في الموقع → ظهور النافذة.
+- [ ] `/images/help/popups/list-performance.webp` — scene: جدول القائمة مع أعمدة الاسم، الحالة، المشاهدات، التحويل، جهات الاتصال، والقائمة الجانبية للإجراءات
+- [ ] `/images/help/popups/options-step.webp` — scene: خطوة الخيارات مع اسم النموذج، منتقي القسم، ومفتاح **الحفظ كعميل**
+- [ ] `/images/help/popups/overview-list.webp` — scene: صفحة قائمة النوافذ الذكية — العنوان، زر **إنشاء نافذة منبثقة**، أعمدة المشاهدات والتحويل
+- [ ] `/images/help/popups/styling-css-step.webp` — scene: خطوة التنسيق مع مربع CSS ومرجع الأصناف ظاهرين
+- [ ] `/images/help/popups/submissions-page.webp` — scene: صفحة الإدخالات مع البطاقات الأربع والجدول وصف مفتوح في درج التفاصيل
+- [ ] `/images/help/popups/targeting-rules-step.webp` — scene: خطوة القواعد مع قاعدة واحدة على رابط الصفحة وشرط «يحتوي على»
+- [ ] `/images/help/popups/with-pixel-script-manager.webp` — scene: مدير السكريبتات مع خيار النماذج/الأدوات بجانب تفعيل البكسل
+- [ ] `/images/help/popups/confirmation-thankyou-preview-gif.webp` — scene: GIF 4ث: اختيار صفحة شكر → تعبئة العنوان → ظهورها في المعاينة
+- [ ] `/images/help/popups/create-save-gif.webp` — scene: GIF 3ث: حفظ النافذة المنبثقة → العودة للقائمة بصف جديد
+- [ ] `/images/help/popups/create-steps-nav-gif.webp` — scene: GIF 4ث: التنقل بين خطوات النمط والمحتوى والقواعد في الشريط العلوي
+- [ ] `/images/help/popups/create-wizard-video.mp4` — scene: فيديو 40ث: من الإنشاء حتى الحفظ مع لمحة عن المعاينة
+- [ ] `/images/help/popups/display-types-preview-gif.webp` — scene: GIF 4ث: تبديل نوع العرض → تغيّر شكل المعاينة الجانبية
+- [ ] `/images/help/popups/fields-add-field-gif.webp` — scene: GIF 4ث: إضافة حقل بريد → تعيين مطلوب → ظهوره في المعاينة
+- [ ] `/images/help/popups/fields-logic-gif.webp` — scene: GIF 5ث: إضافة شرط إظهار → تغيير قيمة في المعاينة → ظهور الحقل التابع
+- [ ] `/images/help/popups/install-copy-gif.webp` — scene: GIF 4ث: نسخ محمل النموذج من الحوار
+- [ ] `/images/help/popups/install-preview-video.mp4` — scene: فيديو 35ث: نسخ المحمل → لصق في الموقع → ظهور النافذة
+- [ ] `/images/help/popups/list-archive-gif.webp` — scene: GIF 3ث: أرشفة صف → اختفاؤه من فلتر نشط
+- [ ] `/images/help/popups/list-open-actions-gif.webp` — scene: GIF 3ث: فتح قائمة إجراءات الصف → خيارات تعديل وإدخالات وتثبيت
+- [ ] `/images/help/popups/options-save-customer-gif.webp` — scene: GIF 3ث: تفعيل الحفظ كعميل → حفظ الخطوة
+- [ ] `/images/help/popups/overview-create-cta-gif.webp` — scene: GIF 3ث: النقر على إنشاء نافذة منبثقة → فتح اختيار القالب
+- [ ] `/images/help/popups/styling-theme-color-gif.webp` — scene: GIF 3ث: تغيير لون السمة في النمط → تغيّر لون الزر في المعاينة
+- [ ] `/images/help/popups/submissions-filter-gif.webp` — scene: GIF 4ث: إضافة تصفية على حقل بريد → تضييق الجدول
+- [ ] `/images/help/popups/submissions-open-detail-gif.webp` — scene: GIF 4ث: نقر صف → فتح درج التفاصيل → رابط عرض الملف الشخصي
+- [ ] `/images/help/popups/targeting-add-rule-gif.webp` — scene: GIF 5ث: إضافة قاعدة → رابط مطلق → يحتوي على → حفظ الخطوة
+- [ ] `/images/help/popups/with-pixel-enable-forms-gif.webp` — scene: GIF 5ث: تفعيل النماذج → اختيار formIds → حفظ إعدادات المدير
+
+### settings
+- [ ] `/images/help/settings/audit-logs.webp` — scene: صفحة سجلات التدقيق بجدول أحداث وفلتر وحدة
+- [ ] `/images/help/settings/billing-usage-invoices.webp` — scene: مستكشف الاستخدام مع بند رموز الذكاء، وبجانب تبويب الفواتير بقائمة
+- [ ] `/images/help/settings/billing-wallet.webp` — scene: بطاقة المحفظة مع شحن تلقائي ومعاملات أخيرة
+- [ ] `/images/help/settings/billing/activate-recovery.webp` — scene: صفحة /billing/activate بحالة إكمال دفع أو إعادة تفعيل مع نموذج بطاقة Stripe ومبلغ مستحق
+- [ ] `/images/help/settings/billing/plan-and-payment-overview.webp` — scene: صفحة Plan & Billing — «الخطة الحالية»، دورة شهرية/سنوية، وزر «ترقية» أو «إدارة المقاعد»
+- [ ] `/images/help/settings/branding-page.webp` — scene: صفحة الهوية البصرية مع رفع شعار ومعاينة لون
+- [ ] `/images/help/settings/general-org-info.webp` — scene: قسم «معلومات المؤسسة» مع اسم مملوء وزر حفظ
+- [ ] `/images/help/settings/overview-sidebar.webp` — scene: قائمة الإعدادات الجانبية كاملة (عام، الفريق، الهيكل، الصلاحيات، المنتجات، الهوية، الإشعارات، السجلات، الفوترة)
+- [ ] `/images/help/settings/products/add-product-form.webp` — scene: نافذة «إضافة منتج» — تبويب «عام» مع رمز واسم ونوع «منتج» وحالة «نشط»
+- [ ] `/images/help/settings/products/categories-variants-categories.webp` — scene: نافذة إدارة الفئات — شجرة أو جدول بفئتين وزر «إنشاء»
+- [ ] `/images/help/settings/products/import-mapping.webp` — scene: خطوة «ربط الأعمدة» — عمود «name» مربوط بـ «اسم المنتج» وعداد «X من Y أعمدة تم ربطها» | فيديو (مستحسن): 45 ثانية: قالب → رفع → ربط → بدء.
+- [ ] `/images/help/settings/products/overview-catalog.webp` — scene: صفحة المنتجات — عرض جدول مع فلاتر الحالة والنوع وأزرار «إضافة منتج» و«استيراد»
+- [ ] `/images/help/settings/team/availability-status-picker.webp` — scene: قائمة منسدلة للتوفر من رأس التطبيق (Online / Busy / Break / Offline) مع الحالة الحالية مُظلَّلة
+- [ ] `/images/help/settings/team/branches-form.webp` — scene: تبويب الفروع — نموذج «إنشاء فرع» مع عنوان ومشرف
+- [ ] `/images/help/settings/team/departments-table.webp` — scene: تبويب الأقسام في `/settings/structure` — جدول برمز، عنوان، مشرف، عدد الأعضاء
+- [ ] `/images/help/settings/team/invite-and-manage-dialog.webp` — scene: نافذة «دعوة أعضاء الفريق» بصفين: بريد + مجموعة + قسم | فيديو (مستحسن): 40 ثانية من فتح الدعوة حتى «تم إرسال الدعوات».
+- [ ] `/images/help/settings/team/member-profile-overview.webp` — scene: ملف عضو — الشريط الجانبي (صورة، قسم، توفر) + تبويب «نظرة عامة» مع الإسنادات التنظيمية
+- [ ] `/images/help/settings/team/overview-members-list.webp` — scene: قائمة أعضاء الفريق مع فلاتر القسم والفرع وزر «دعوة أعضاء جدد»
+- [ ] `/images/help/settings/team/permissions-groups.webp` — scene: لوحة الصلاحيات — تبويص «المجموعات» مع جدول المجموعات وأعداد الأعضاء
+- [ ] `/images/help/settings/team/positions-table.webp` — scene: جدول المناصب مع رمز وعنوان وعدد أعضاء الفريق
+- [ ] `/images/help/settings/tags-list.webp` — scene: جدول الوسوم مع نوع واستخدام وزر دمج
+- [ ] `/images/help/settings/lead-stages-list.webp` — scene: قائمة مراحل قابلة للسحب مع لون واسم ورمز ونجمة افتراضي
+- [ ] `/images/help/settings/properties-groups.webp` — scene: مجموعات الحقول المخصصة لنوع «عميل» مع أزرار إضافة
+- [ ] `/images/help/settings/overview-setup-order-gif.webp` — scene: GIF 6ث: التنقّل من عام → هيكل → دعوة → فوترة في القائمة الجانبية
+- [ ] `/images/help/settings/general-timezone-gif.webp` — scene: GIF 4ث: فتح منتقي المنطقة الزمنية ثم اختيار منطقة وحفظ
+- [ ] `/images/help/settings/branding-upload-logo-gif.webp` — scene: GIF 5ث: اختيار ملف شعار → ظهور المعاينة → حفظ
+- [ ] `/images/help/settings/audit-filter-unit-gif.webp` — scene: GIF 5ث: اختيار نوع وحدة ثم تضييق جدول السجلات
+- [ ] `/images/help/settings/tags-create-gif.webp` — scene: GIF 5ث: إضافة وسم → اختيار النوع واللون → حفظ وظهور الصف
+- [ ] `/images/help/settings/tags-merge-gif.webp` — scene: GIF 4ث: اختيار دمج وسمين وتأكيد الوجهة
+- [ ] `/images/help/settings/lead-stages-reorder-gif.webp` — scene: GIF 5ث: سحب مرحلة لإعادة الترتيب ثم تعيين نجمة افتراضي
+- [ ] `/images/help/settings/properties-add-field-gif.webp` — scene: GIF 5ث: إضافة خاصية نص/قائمة داخل مجموعة ثم حفظ
+- [ ] `/images/help/settings/team/overview-setup-path-gif.webp` — scene: GIF 6ث: من الهيكل → الصلاحيات → دعوة عضو في القائمة
+- [ ] `/images/help/settings/team/invite-seat-confirm-gif.webp` — scene: GIF 5ث: ظهور نافذة تأكيد المقاعد ثم إكمال الإرسال
+- [ ] `/images/help/settings/team/invite-flow-video.mp4` — scene: فيديو 40ث: من فتح الدعوة حتى تم إرسال الدعوات مع تأكيد مقاعد إن ظهر
+- [ ] `/images/help/settings/team/permissions-rules-gif.webp` — scene: GIF 6ث: تفعيل Allow على showConversations وDeny على الفوترة
+- [ ] `/images/help/settings/team/departments-create-gif.webp` — scene: GIF 5ث: إضافة قسم برمز وعنوان ثم ظهور الصف في الجدول
+- [ ] `/images/help/settings/team/branches-create-gif.webp` — scene: GIF 4ث: تعبئة عنوان ومشرف ثم حفظ الفرع
+- [ ] `/images/help/settings/team/positions-create-gif.webp` — scene: GIF 4ث: إضافة منصب برمز وعنوان ثم ظهوره في الجدول
+- [ ] `/images/help/settings/team/availability-change-gif.webp` — scene: GIF 4ث: التحويل من متصل إلى غير متصل من الرأس
+- [ ] `/images/help/settings/team/member-profile-tabs-gif.webp` — scene: GIF 5ث: التنقّل بين نظرة عامة والمحادثات والحضور
+- [ ] `/images/help/settings/billing/plan-upgrade-seats-gif.webp` — scene: GIF 6ث: فتح ترقية أو إدارة المقاعد من صفحة الخطة
+- [ ] `/images/help/settings/billing/activate-pay-gif.webp` — scene: GIF 6ث: إدخال بطاقة أو اختيار محفوظة ثم تأكيد الدفع عبر Stripe
+- [ ] `/images/help/settings/billing-wallet-topup-gif.webp` — scene: GIF 5ث: اختيار مبلغ شحن وتأكيد الخصم من البطاقة
+- [ ] `/images/help/settings/billing-usage-filter-gif.webp` — scene: GIF 5ث: اختيار فترة تقرير ثم ظهور بنود رموز الذكاء
+- [ ] `/images/help/settings/billing-invoice-download-gif.webp` — scene: GIF 3ث: تنزيل فاتورة من قائمة الفواتير
+- [ ] `/images/help/settings/products/overview-grid-table-gif.webp` — scene: GIF 4ث: التبديل بين عرض شبكة وجدول مع فلتر حالة نشط
+- [ ] `/images/help/settings/products/add-product-pricing-gif.webp` — scene: GIF 4ث: إدخال سعر وعملة ثم الانتقال للمتغيرات أو الحفظ
+- [ ] `/images/help/settings/products/categories-variants-edit-gif.webp` — scene: GIF 6ث: فتح تبويب المتغيرات وإضافة قيمة لون/مقاس وتفعيلها
+- [ ] `/images/help/settings/products/import-upload-gif.webp` — scene: GIF 4ث: سحب ملف CSV أو اختياره من الجهاز
+- [ ] `/images/help/settings/products/import-flow-video.mp4` — scene: فيديو 45ث: قالب → رفع → ربط → بدء الاستيراد
+
+### notifications
+- [ ] `/images/help/notifications/overview-bell-and-center.webp` — scene: قائمة الجرس مفتوحة مع رابط عرض الكل، وبجانبها صفحة مركز الإشعارات
+- [ ] `/images/help/notifications/overview-open-bell-gif.webp` — scene: GIF 4ث: نقر الجرس → القائمة المختصرة → عرض كل الإشعارات
+- [ ] `/images/help/notifications/preferences-table.webp` — scene: جدول التفضيلات بفئة البريد الوارد وقنوات الويب والبريد والفوري
+- [ ] `/images/help/notifications/preferences-toggle-gif.webp` — scene: GIF 5ث: إيقاف البريد لنوع إسناد مع إبقاء الويب والفوري
+- [ ] `/images/help/notifications/desktop-push.webp` — scene: بطاقة إشعارات سطح المكتب بحالة مُفعّل وصوت تشغيل، مع عمود الإشعارات الفورية في الجدول
+- [ ] `/images/help/notifications/desktop-push-enable-gif.webp` — scene: GIF 5ث: منح إذن المتصفح ثم تفعيل الصوت
+- [ ] `/images/help/notifications/desktop-push-test-video.mp4` — scene: فيديو 25ث: منح الإذن ثم استلام تنبيه تجريبي خارج التبويب
+
+### file-manager
+- [ ] `/images/help/file-manager/folders-create.webp` — scene: شجرة مجلدات مع نافذة إنشاء مجلد جديد واسم مملوء
+- [ ] `/images/help/file-manager/folders-upload.webp` — scene: نافذة رفع ملفات داخل مجلد مع تلميح الحد الأقصى 100 ميجابايت
+- [ ] `/images/help/file-manager/overview-folders.webp` — scene: شجرة مجلدات مع شبكة ملفات ومسار تنقل (الجذر ← مجلد)
+- [ ] `/images/help/file-manager/sharing-acknowledgements.webp` — scene: تبويب التأكيدات في تفاصيل الملف مع طلب معلق ومؤكد
+- [ ] `/images/help/file-manager/sharing-modal.webp` — scene: نافذة مشاركة مجلد مع تبديل مستخدمون محددون / قسم وحفظ الصلاحيات
+- [ ] `/images/help/file-manager/uploads-library-list.webp` — scene: مكتبة الرفع مع فلاتر الصور والفيديو والمستندات وشريط بحث
+- [ ] `/images/help/file-manager/overview-two-surfaces.webp` — scene: لقطتان متجاورتان: جميع الملفات مقابل الملفات المرفوعة مع تسمية كل مسار
+- [ ] `/images/help/file-manager/folders-create-gif.webp` — scene: GIF 4ث: مجلد جديد → إدخال الاسم → إنشاء → ظهور المجلد في الشجرة
+- [ ] `/images/help/file-manager/folders-upload-gif.webp` — scene: GIF 5ث: فتح مجلد → رفع → اختيار ملف → ظهوره في الشبكة
+- [ ] `/images/help/file-manager/folders-move-gif.webp` — scene: GIF 5ث: تحديد ملفات → نقل إلى مجلد → اختيار الوجهة → نقل هنا
+- [ ] `/images/help/file-manager/uploads-filter-gif.webp` — scene: GIF 4ث: اختيار فلتر الصور ثم البحث ثم التبديل لعرض الشبكة
+- [ ] `/images/help/file-manager/sharing-mode-toggle-gif.webp` — scene: GIF 5ث: التبديل بين مستخدمون محددون وقسم ثم حفظ الصلاحيات
+- [ ] `/images/help/file-manager/sharing-ack-send-gif.webp` — scene: GIF 5ث: فتح التأكيدات → كتابة رسالة → إرسال → ظهور طلب قيد الانتظار
+
+### orders
+- [ ] `/images/help/orders/overview-list.webp` — scene: صفحة `/orders` بعرض قائمة أو كانبان مع شارات منصة وحالات
+- [ ] `/images/help/orders/sources-platform-badges.webp` — scene: قائمة أو كانبان طلبات مع شارات سلة وزد ومنصة ظاهرة
+- [ ] `/images/help/orders/views-and-status-kanban.webp` — scene: كانبان الطلبات بأعمدة الحالات وبطاقة مفتوحة جزئياً
+- [ ] `/images/help/orders/overview-detail-drawer.webp` — scene: درج تفاصيل طلب مفتوح: بنود، شحن، دفع، سجل حالة، ورابط عرض في المتجر
+- [ ] `/images/help/orders/overview-list-to-detail-video.mp4` — scene: فيديو 20ث: من القائمة حتى فتح درج التفاصيل ونسخ الرابط
+- [ ] `/images/help/orders/views-drag-status-gif.webp` — scene: GIF 5ث: سحب بطاقة طلب بين عمودين وظهور الحالة الجديدة على البطاقة
+- [ ] `/images/help/orders/views-list-status-gif.webp` — scene: GIF 4ث: تبديل إلى قائمة → تغيير الحالة من القائمة المنسدلة في الصف
+- [ ] `/images/help/orders/sources-empty-state.webp` — scene: شاشة طلبات فارغة مع رسالة أن الطلبات تظهر بعد مزامنة منصة التجارة
+- [ ] `/images/help/orders/sources-connect-path-gif.webp` — scene: GIF 6ث: إعدادات متصل → مزامنة → عودة إلى /orders بطلبات جديدة
+
+### store
+- [ ] `/images/help/store/ecommerce-connected.webp` — scene: إعداد تطبيق سلة أو زد بحالة متصل مع إشارة لويب هوك أو مزامنة
+- [ ] `/images/help/store/install-oauth-or-apikey.webp` — scene: صفحة إعداد تطبيق: بطاقة اتصال OAuth2 بجانب نموذج بيانات اعتماد API مع شارة غير متصل
+- [ ] `/images/help/store/install-to-connected.webp` — scene: بطاقة تطبيق في المتجر → شاشة الإعدادات بحالة متصل
+- [ ] `/images/help/store/installations-list.webp` — scene: قائمة التركيبات المثبّتة في المتجر (وليس شاشة البنّاء المتقدمة)
+- [ ] `/images/help/store/overview-browse.webp` — scene: صفحة المتجر بتصنيفات وبطاقة تطبيق (سلة/زد) وزر تثبيت
+- [ ] `/images/help/store/overview-layers.webp` — scene: مخطط ثلاث طبقات: متجر → إعدادات التطبيقات → My Apps مع أسهم ومسارات
+- [ ] `/images/help/store/install-from-marketplace-gif.webp` — scene: GIF 5ث: فتح بطاقة تطبيق → تثبيت → إشعار يوجّه للإعدادات
+- [ ] `/images/help/store/install-settings-open-gif.webp` — scene: GIF 4ث: فتح التطبيقات → بطاقة غير متصل → دخول صفحة الإعداد
+- [ ] `/images/help/store/install-oauth-connect-gif.webp` — scene: GIF 6ث: نقر ربط OAuth → نافذة المنصة → العودة بحالة متصل
+- [ ] `/images/help/store/install-initial-sync-gif.webp` — scene: GIF 5ث: بعد متصل → مراجعة أعداد المزامنة → بدء المزامنة → تمت مسبقاً
+- [ ] `/images/help/store/install-to-connected-video.mp4` — scene: فيديو 35ث: تثبيت من المتجر → إعداد → OAuth أو مفاتيح → متصل → مزامنة أولية إن ظهرت
+- [ ] `/images/help/store/ecommerce-sync-orders-gif.webp` — scene: GIF 6ث: متصل → بدء المزامنة → ظهور طلبات في /orders بشارات المنصة
+- [ ] `/images/help/store/ecommerce-orders-link.webp` — scene: صفحة طلبات بجانب بطاقة تطبيق متصل — سهم يوضح أن المتابعة في /orders
+- [ ] `/images/help/store/my-apps-installations-gif.webp` — scene: GIF 5ث: فتح التركيبات → بطاقة غير متصل → دخول الإعداد
+- [ ] `/images/help/store/my-apps-vs-miniapps.webp` — scene: لقطتان متجاورتان: قائمة تركيبات التشغيل مقابل شاشة My Apps للبنّاء
+
+### meetings
+- [ ] `/images/help/meetings/create-dialog.webp` — scene: حوار الإنشاء مفتوح بالأساسيات، ثم موسّع بالخيارات الإضافية مع منتقي المشاركين | فيديو (مستحسن): 30 ثانية إنشاء اجتماع بثلاثة مشاركين وحفظه.
+- [ ] `/images/help/meetings/detail-actions-to-task.webp` — scene: تبويب الإجراءات مع عنصر مفتوح وقائمة تحويل إلى مهمة ونافذة اختيار المرحلة
+- [ ] `/images/help/meetings/detail-drawer-tabs.webp` — scene: درج تفاصيل اجتماع مفتوح مع تبويبات التفاصيل وجدول الأعمال والملاحظات والإجراءات والمشاركون
+- [ ] `/images/help/meetings/detail-rsvp.webp` — scene: رأس درج التفاصيل مع أزرار قبول وربما ورفض تحت ردّك
+- [ ] `/images/help/meetings/google-calendar-settings.webp` — scene: صفحة إعدادات التقويم مع زر «ربط تقويم Google» وحساب متصل وشارة مزامنة | فيديو (مستحسن): 35 ثانية من الربط حتى ظهور حساب متصل.
+- [ ] `/images/help/meetings/overview-calendar.webp` — scene: شاشة /meetings بعرض الشهر أو الأسبوع، شريط العروض، وزر اجتماع جديد | فيديو (مستحسن): 25 ثانية من فتح الاجتماعات حتى إنشاء موعد بسيط.
+- [ ] `/images/help/meetings/path-organizer-create.webp` — scene: حوار اجتماع جديد مع مشاركين مختارين، ثم درج تفاصيل بأزرار بدء/إنهاء للمنظّم
+- [ ] `/images/help/meetings/path-participant-rsvp.webp` — scene: درج تفاصيل اجتماع مفتوح على تبويب المشاركين مع أزرار قبول / ربما / رفض
+- [ ] `/images/help/meetings/rooms-grid.webp` — scene: صفحة الغرف بعرض شبكة مع بطاقة غرفة (سعة، حالة متاحة) وزر إضافة غرفة
+- [ ] `/images/help/meetings/overview-view-switch-gif.webp` — scene: GIF 5ث: التبديل بين عرض الشهر والأسبوع والقائمة لنفس المجموعة من المواعيد
+- [ ] `/images/help/meetings/create-options-expand-gif.webp` — scene: GIF 5ث: فتح خيارات إضافية → اختيار طريقة حضوري وربط غرفة
+- [ ] `/images/help/meetings/create-views-switch-gif.webp` — scene: GIF 5ث: التبديل بين كانبان وقائمة ويوم لنفس المواعيد
+- [ ] `/images/help/meetings/detail-open-drawer-gif.webp` — scene: GIF 4ث: نقر موعد في التقويم → انزلاق درج التفاصيل من اليمين
+- [ ] `/images/help/meetings/detail-rsvp-gif.webp` — scene: GIF 4ث: اختيار قبول → تغيّر حالة ردّك في الرأس
+- [ ] `/images/help/meetings/detail-actions-to-task-gif.webp` — scene: GIF 6ث: تحويل إلى مهمة → اختيار لوحة ومسار ومرحلة → شارة مرتبط بمهمة
+- [ ] `/images/help/meetings/detail-start-end-gif.webp` — scene: GIF 5ث: بدء الاجتماع → قيد التنفيذ → إنهاء → مكتمل
+- [ ] `/images/help/meetings/path-organizer-start-gif.webp` — scene: GIF 5ث: بدء من الدرج → قيد التنفيذ → ظهور تبويب الحضور
+- [ ] `/images/help/meetings/path-participant-rsvp-gif.webp` — scene: GIF 4ث: قبول الدعوة → تحديث حالة المشارك في القائمة
+- [ ] `/images/help/meetings/rooms-add-gif.webp` — scene: GIF 5ث: إضافة غرفة → ملء الاسم والسعة → حفظ وظهور البطاقة
+- [ ] `/images/help/meetings/rooms-pick-on-create-gif.webp` — scene: GIF 5ث: خيارات إضافية → منتقي الغرفة → اختيار غرفة متاحة للوقت
+- [ ] `/images/help/meetings/google-calendar-connect-gif.webp` — scene: GIF 6ث: ربط تقويم Google → موافقة النافذة → ظهور حساب متصل
+
+### attendance
+- [ ] `/images/help/attendance/absence-types.webp` — scene: تبويب أنواع الغياب في الإعداد مع نوع مفتوح يظهر مدفوع/مرفق مطلوب
+- [ ] `/images/help/attendance/clock-in-out-dashboard.webp` — scene: لوحة التحكم قبل الدخول وبعده (وردية نشطة) مع أزرار الاستراحة وإنهائها | فيديو (مستحسن): 25 ثانية دخول → استراحة → خروج.
+- [ ] `/images/help/attendance/logs-vs-timelogs.webp` — scene: لقطتان متجاورتان أو متتاليتان: سجلات الحضور مقابل سجلات الوقت بنفس الفترة
+- [ ] `/images/help/attendance/overview-dashboard.webp` — scene: لوحة تحكم الحضور بزر تسجيل الدخول وبطاقات ساعات العمل ومعدل الحضور | فيديو (مستحسن): 20 ثانية فتح الوحدة وتسجيل دخول تجريبي.
+- [ ] `/images/help/attendance/path-agent-dashboard.webp` — scene: لوحة التحكم بحالة «وردية نشطة» وأزرار تسجيل الخروج والاستراحة
+- [ ] `/images/help/attendance/path-supervisor-requests.webp` — scene: تبويب الطلبات بفلتر «قيد الانتظار» وصف موافقة ظاهرة للمشرف
+- [ ] `/images/help/attendance/reports-hours.webp` — scene: شاشة التقرير على تبويب ساعات العمل مع فلاتر فترة وتصدير
+- [ ] `/images/help/attendance/requests-new.webp` — scene: نافذة طلب جديد على تبويب طلب غياب مع نوع وتواريخ، وبجانبها تبويب التصحيح
+- [ ] `/images/help/attendance/shifts-schedule.webp` — scene: شاشة الجدول بأسبوع معيّن ووردية ملوّنة لموظف، مع إشارة لإضافة جدول
+- [ ] `/images/help/attendance/overview-nav-surfaces-gif.webp` — scene: GIF 5ث: التنقل بين لوحة التحكم والطلبات والجدول من قائمة الوحدة
+- [ ] `/images/help/attendance/clock-in-gif.webp` — scene: GIF 4ث: تسجيل الدخول → تغيّر الحالة إلى وردية نشطة
+- [ ] `/images/help/attendance/clock-break-gif.webp` — scene: GIF 4ث: استراحة → إنهاء الاستراحة مع بقاء الوردية نشطة
+- [ ] `/images/help/attendance/clock-out-gif.webp` — scene: GIF 4ث: تسجيل الخروج → إغلاق الوردية النشطة
+- [ ] `/images/help/attendance/absence-types-save-gif.webp` — scene: GIF 5ث: تعديل نوع غياب → تفعيل مرفق مطلوب → حفظ
+- [ ] `/images/help/attendance/holidays-tab.webp` — scene: تبويب العطل بقائمة عطل رسمية وتواريخ بداية/نهاية
+- [ ] `/images/help/attendance/logs-attendance-filter-gif.webp` — scene: GIF 5ث: فلترة سجلات الحضور حسب موظف أو فرع → تضييق القائمة
+- [ ] `/images/help/attendance/logs-timelogs-extract-gif.webp` — scene: GIF 5ث: استخراج السجلات من الأجهزة → ظهور صفوف أثر البصمة
+- [ ] `/images/help/attendance/path-agent-request-gif.webp` — scene: GIF 5ث: من لوحة التحكم → الطلبات → طلب جديد لغياب
+- [ ] `/images/help/attendance/path-supervisor-approve-gif.webp` — scene: GIF 5ث: فلتر قيد الانتظار → موافقة على طلب → انتقاله لموافق عليه
+- [ ] `/images/help/attendance/reports-tabs-gif.webp` — scene: GIF 5ث: التبديل بين تبويبات الحضور وساعات العمل والإجازات
+- [ ] `/images/help/attendance/reports-export-gif.webp` — scene: GIF 4ث: تصدير Excel من شاشة التقرير مع نطاق الفترة المحدد
+- [ ] `/images/help/attendance/requests-submit-gif.webp` — scene: GIF 6ث: طلب جديد → اختيار نوع وتواريخ → إرسال → ظهور قيد الانتظار
+- [ ] `/images/help/attendance/requests-status-filter-gif.webp` — scene: GIF 4ث: فلترة الطلبات على قيد الانتظار ثم موافق عليه
+- [ ] `/images/help/attendance/shifts-template-config.webp` — scene: إعدادات الجداول: قالب وردية بأوقات واستراحة وبداية مرنة
+- [ ] `/images/help/attendance/shifts-assign-gif.webp` — scene: GIF 6ث: إضافة جدول → اختيار موظف وقالب وأيام → حفظ على الأسبوع
+
+### training
+- [ ] `/images/help/training/overview.webp` — scene: صفحة /training مع أقسام المهام وشريط تقدم
+- [ ] `/images/help/training/overview-open-gif.webp` — scene: GIF 4ث: قائمة المستخدم → مركز التدريب → ظهور الأقسام
+- [ ] `/images/help/training/training-center-entry.webp` — scene: قائمة مستخدم مفتوحة على «مركز التدريب»
+- [ ] `/images/help/training/training-center-sections.webp` — scene: أقسام التدريب مع قسم واحد مفتوح ومهام ظاهرة
+- [ ] `/images/help/training/training-center-complete-gif.webp` — scene: GIF 5ث: فتح مهمة → زيارة الشاشة → تعليم الإكمال وظهور نقاط
+- [ ] `/images/help/training/sections-and-tasks.webp` — scene: قسمان مفتوحان أحدهما بمهام مكتملة
+- [ ] `/images/help/training/sections-expand-gif.webp` — scene: GIF 4ث: توسيع قسم حسب الدور → ظهور مهام مفلترة للصلاحية
+- [ ] `/images/help/training/points-and-categories-bars.webp` — scene: بطاقة النقاط مع أشرطة الفئات على الصفحة الرئيسية
+- [ ] `/images/help/training/points-training-award-gif.webp` — scene: GIF 5ث: إكمال مهمة تدريب → زيادة فئة التدريب على الأشرطة
+- [ ] `/images/help/training/badges-row.webp` — scene: صف شارات مكتسبة تحت نقاط المستخدم في ويدجت المتصدرين
+- [ ] `/images/help/training/badges-tooltip-gif.webp` — scene: GIF 3ث: تمرير على شارة → ظهور وصف العتبة
+- [ ] `/images/help/training/team-vs-global-tabs.webp` — scene: ويدجت المتصدرين مع تبديل واضح بين «المنافسة ضمن الفريق» و«المنافسة مع الشركات الأخرى»
+- [ ] `/images/help/training/team-vs-global-switch-gif.webp` — scene: GIF 4ث: التبديل من تبويب الفريق إلى العالمي وظهور أسماء المؤسسات
+
+### tasks
+- [ ] `/images/help/tasks/boards-picker-and-settings.webp` — scene: منتقي اللوحات أعلى `/tasks` مع قائمة لوحات وزر إضافة، وإعدادات المهام مفتوحة على تبويب اللوحات
+- [ ] `/images/help/tasks/overview-kanban.webp` — scene: شاشة `/tasks` بكانبان: لوحة مختارة، تبويبات مسارات، أعمدة مراحل، وبطاقات | فيديو (مستحسن): 25 ثانية من فتح المهام حتى سحب بطاقة بين مرحلتين.
+- [ ] `/images/help/tasks/path-agent-start-here.webp` — scene: مسار موظف فوق لقطة كانبان: بطاقات مسندة، عمود مرحلة، وبطاقة تفاصيل مفتوحة
+- [ ] `/images/help/tasks/path-supervisor-start-here.webp` — scene: إعداد لوحة ومسار مع قائمة أعضاء مفتوحة، وشارة عام/خاص ظاهرة
+- [ ] `/images/help/tasks/pipelines-create-dialog.webp` — scene: نافذة إنشاء/تعديل مسار: الاسم، الترقيم، قائمة المراحل، وقسم التحكم في الوصول
+- [ ] `/images/help/tasks/routine-inbox-to-done.webp` — scene: تسلسل من ثلاث لقطات: إجراء التحويل من المحادثة → بطاقة في كانبان → بطاقة بتفاصيل وإكمال مفعّل | فيديو (مستحسن): 40 ثانية من التحويل حتى تعليم الإكمال.
+- [ ] `/images/help/tasks/stages-builder.webp` — scene: بنّاء مراحل المسار مع قائمة مراحل قابلة للسحب، حقل الاحتمالية، ومفتاح «تمييز المهام كمكتملة افتراضياً»
+- [ ] `/images/help/tasks/task-create-and-detail.webp` — scene: نافذة «مهمة جديدة» بالحقول الأساسية و«خيارات أكثر» مفتوحة؛ ثم بطاقة التفاصيل بعد الإنشاء | فيديو (مستحسن): 30 ثانية من إنشاء مهمة بأسند واستحقاق حتى فتح البطاقة.
+- [ ] `/images/help/tasks/task-detail-drawer.webp` — scene: درج التفاصيل بعمودين: خصائص وقوائم تحقق يساراً، ولوحة النشاط يميناً، مع شارة محادثة مرتبطة إن أمكن
+- [ ] `/images/help/tasks/views-switcher.webp` — scene: شريط تبديل العروض (كانبان · قائمة · تقويم · لوحة التحكم · الخط الزمني) مع كانبان نشط وشارة فلاتر | فيديو (مستحسن): 20 ثانية للتبديل بين كانبان وقائمة وتقويم لنفس المسار.
+- [ ] `/images/help/tasks/visibility-pipeline-stage.webp` — scene: إعداد مسار على «خاص» مع منتقي أعضاء وأقسام؛ وإعداد مرحلة بنفس الخيارات وصلاحيات عرض/تعديل/نقل
+- [ ] `/images/help/tasks/boards-create-gif.webp` — scene: GIF 5ث: إعدادات → تبويب اللوحات → إضافة لوحة → تسمية
+- [ ] `/images/help/tasks/overview-hierarchy.webp` — scene: مخطط لوحة → مسار → مرحلة → بطاقة مهمة/بطاقة دعم
+- [ ] `/images/help/tasks/pipelines-create-gif.webp` — scene: GIF 6ث: إضافة مسار → اسم وترقيم ومراحل → حفظ
+- [ ] `/images/help/tasks/routine-inbox-to-done-gif.webp` — scene: GIF 8ث: تحويل من الوارد → كانبان → سحب مرحلة → تعليم إكمال
+- [ ] `/images/help/tasks/stages-done-vs-complete.webp` — scene: مقارنة مرئية: عمود مكتملة مقابل مفتاح/شارة isComplete على البطاقة
+- [ ] `/images/help/tasks/stages-reorder-gif.webp` — scene: GIF 5ث: سحب مرحلة في البنّاء لإعادة الترتيب ثم حفظ
+- [ ] `/images/help/tasks/task-complete-gif.webp` — scene: GIF 4ث: تعليم المهمة مكتملة على البطاقة مع بقاء المرحلة ظاهرة
+- [ ] `/images/help/tasks/task-create-gif.webp` — scene: GIF 5ث: مهمة جديدة → عنوان ومرحلة وأسند → إنشاء
+- [ ] `/images/help/tasks/views-filters-panel.webp` — scene: لوحة فلاتر المهام مفتوحة: معيَّن، أولوية، استحقاق، متأخرة
+- [ ] `/images/help/tasks/views-switch-gif.webp` — scene: GIF 5ث: التبديل بين كانبان وقائمة وتقويم لنفس المسار
+- [ ] `/images/help/tasks/visibility-toggle-gif.webp` — scene: GIF 4ث: تبديل عام/خاص في رأس /tasks وتغيّر تبويبات المسارات الظاهرة
+
+
+### team-chat
+- [ ] `/images/help/team-chat/activity-panel.webp` — scene: لوحة النشاطات مع تبويبات الكل / المحادثات المباشرة / الإشارات ظاهرة
+- [ ] `/images/help/team-chat/channel-governance-list.webp` — scene: قائمة قنوات منظّمة بأسماء واضحة وقناة عامة واحدة على الأقل
+- [ ] `/images/help/team-chat/channels-create.webp` — scene: نافذة إنشاء قناة مع خيار **قناة عامة** ظاهر
+- [ ] `/images/help/team-chat/direct-messages-create.webp` — scene: نافذة **دردشة جديدة** على تبويب رسالة مباشرة مع مستخدم محدد
+- [ ] `/images/help/team-chat/getting-started-open.webp` — scene: أول فتح لـ `/team-chat` مع مؤشر على عنصر **محادثة الفريق** في شريط المنصة
+- [ ] `/images/help/team-chat/groups-create.webp` — scene: نافذة إنشاء مجموعة بالاسم وقائمة الأعضاء
+- [ ] `/images/help/team-chat/mentions-picker.webp` — scene: قائمة المنشن مفتوحة أثناء كتابة رسالة في مجموعة
+- [ ] `/images/help/team-chat/messages-composer.webp` — scene: المحرّر مع مرفق جاهز للإرسال وتلميح Enter ظاهر
+- [ ] `/images/help/team-chat/notifications-mute.webp` — scene: قائمة ⋯ مفتوحة على خيارَي كتم وتثبيت في الأعلى
+- [ ] `/images/help/team-chat/overview-full.webp` — scene: الشاشة الكاملة `/team-chat`: الشريط بأقسام القنوات والمجموعات والمحادثات المباشرة، ومحادثة مفتوحة | فيديو (مستحسن): 20 ثانية من فتح محادثة الفريق حتى إرسال رسالة في مجموعة.
+- [ ] `/images/help/team-chat/private-reply-quote.webp` — scene: قائمة الرسالة تعرض **رد خاص**، ثم محرّر رسالة مباشرة مع شريط اقتباس
+- [ ] `/images/help/team-chat/quick-tour-regions.webp` — scene: لقطة بعناوين مرقّمة على المناطق الأربع أعلاه | فيديو (مستحسن): 25 ثانية تمرير من القائمة إلى المحرّر ثم فتح النشاطات.
+- [ ] `/images/help/team-chat/roles-members.webp` — scene: لوحة الأعضاء تعرض مالك ومسؤول وعضو مع قائمة ترقية
+- [ ] `/images/help/team-chat/routines-channel-vs-dm.webp` — scene: نافذة **دردشة جديدة** تظهر الأنواع الثلاثة جنباً إلى جنب
+- [ ] `/images/help/team-chat/routines-share-customer-context.webp` — scene: بطاقة من البريد الوارد داخل مجموعة مع ملاحظة واضحة فوقها
+- [ ] `/images/help/team-chat/routines-start-from-activity.webp` — scene: تبويب الإشارات مع عناصر غير مقروءة وزر تعليم الكل كمقروء | فيديو (مستحسن): 25 ثانية لمسار وردية مختصر.
+- [ ] `/images/help/team-chat/share-from-inbox-dialog.webp` — scene: نافذة المشاركة تعرض معاينة رسالة الوارد وحقول الأشخاص والمحادثات | فيديو (مستحسن): 30 ثانية من رسالة وارد حتى ظهور البطاقة في مجموعة.
+- [ ] `/images/help/team-chat/sidebar-header.webp` — scene: رأس القائمة مع الجرس وتصفح القنوات و+، والأقسام الثلاثة ظاهرة
+- [ ] `/images/help/team-chat/threads-panel.webp` — scene: لوحة سلسلة مفتوحة بجانب قناة نشطة مع رد واحد على الأقل | فيديو (مستحسن): 20 ثانية من الضغط على رد حتى إرسال أول رد في السلسلة.
+- [ ] `/images/help/team-chat/activity-mark-read-gif.webp` — scene: GIF 3ث: تعليم الكل كمقروء → اختفاء العداد
+- [ ] `/images/help/team-chat/activity-open-gif.webp` — scene: GIF 4ث: نقر الجرس → فتح اللوحة → تبويب الإشارات
+- [ ] `/images/help/team-chat/channel-governance-naming.webp` — scene: أمثلة أسماء قنوات واضحة مع أوصاف قصيرة في القائمة
+- [ ] `/images/help/team-chat/channels-browse-join-gif.webp` — scene: GIF 5ث: تصفح القنوات → انضمام → ظهور القناة في القسم
+- [ ] `/images/help/team-chat/direct-messages-create-gif.webp` — scene: GIF 4ث: + → رسالة مباشرة → اختيار مستخدم → بدء الدردشة
+- [ ] `/images/help/team-chat/getting-started-first-message-gif.webp` — scene: GIF 5ث: فتح رسالة مباشرة → كتابة → Enter للإرسال
+- [ ] `/images/help/team-chat/getting-started-join-channel-gif.webp` — scene: GIF 5ث: تصفح القنوات → بحث → انضمام → فتح القناة
+- [ ] `/images/help/team-chat/groups-create-gif.webp` — scene: GIF 5ث: + → مجموعة → اسم وأعضاء → إنشاء
+- [ ] `/images/help/team-chat/mentions-picker-gif.webp` — scene: GIF 4ث: كتابة @ → اختيار عضو → إرسال الرسالة
+- [ ] `/images/help/team-chat/messages-actions-menu.webp` — scene: قائمة إجراءات الرسالة: تعديل، تثبيت، إعادة توجيه، رد، رد خاص
+- [ ] `/images/help/team-chat/messages-send-gif.webp` — scene: GIF 4ث: كتابة في المحرّر → Enter → ظهور الرسالة في الخط
+- [ ] `/images/help/team-chat/notifications-mute-gif.webp` — scene: GIF 4ث: قائمة ⋯ → كتم → تغيّر حالة المحادثة
+- [ ] `/images/help/team-chat/overview-vs-inbox.webp` — scene: مقارنة مرئية: بريد وارد مع عميل مقابل محادثة فريق داخلية
+- [ ] `/images/help/team-chat/path-admin-start-here.webp` — scene: فهرس مشرف فوق قائمة قنوات منظّمة وشارة مالك/مسؤول
+- [ ] `/images/help/team-chat/private-reply-gif.webp` — scene: GIF 5ث: رد خاص من قائمة الرسالة → رسالة مباشرة مع اقتباس
+- [ ] `/images/help/team-chat/quick-tour-header-actions-gif.webp` — scene: GIF 4ث: النقر على الجرس ثم تصفح القنوات ثم +
+- [ ] `/images/help/team-chat/roles-promote-gif.webp` — scene: GIF 5ث: فتح الأعضاء → ترقية إلى مسؤول → تغيّر الشارة
+- [ ] `/images/help/team-chat/routines-channel-vs-dm-gif.webp` — scene: GIF 4ث: فتح دردشة جديدة والتنقّل بين الأنواع الثلاثة
+- [ ] `/images/help/team-chat/routines-share-customer-context-gif.webp` — scene: GIF 6ث: مشاركة من الوارد → ملاحظة قرار → مجموعة → العودة عبر عرض في البريد الوارد
+- [ ] `/images/help/team-chat/routines-start-from-activity-gif.webp` — scene: GIF 6ث: نشاطات → إشارات → مباشرة → تعليم الكل كمقروء
+- [ ] `/images/help/team-chat/share-from-inbox-gif.webp` — scene: GIF 6ث: مشاركة من رسالة وارد → ملاحظة → اختيار مجموعة → ظهور البطاقة
+- [ ] `/images/help/team-chat/sidebar-pin-mute-gif.webp` — scene: GIF 5ث: تثبيت محادثة في الأعلى ثم كتمها من قائمة الصف
+- [ ] `/images/help/team-chat/threads-open-reply-gif.webp` — scene: GIF 5ث: رد تحت الرسالة → لوحة السلسلة → إرسال أول رد
+
+
+### use-cases
+- [ ] `/images/help/use-cases/conversational-sales-ad-video.mp4` — scene: فيديو 40ث: من نقرة إعلان متخيّلة إلى بطاقة الإعلان في البريد الوارد ثم سحب البطاقة في خط الأنابيب
+- [ ] `/images/help/use-cases/conversational-sales-inbox.webp` — scene: محادثة واتساب فيها بطاقة إعلان + لوحة عميل بحالة عميل محتمل
+- [ ] `/images/help/use-cases/conversational-sales-pipeline.webp` — scene: خط أنابيب عملاء محتملين بمراحل واضحة وبطاقة في مرحلة المتابعة
+- [ ] `/images/help/use-cases/ecommerce-connect-video.mp4` — scene: فيديو 45ث: من بطاقة متجر متصل إلى طلب مفتوح بجانب محادثة في البريد الوارد
+- [ ] `/images/help/use-cases/ecommerce-orders-inbox.webp` — scene: طلب مفتوح في /orders بجانب محادثة في البريد الوارد ولوحة العميل تعرض الطلب
+- [ ] `/images/help/use-cases/ecommerce-path.webp` — scene: مخطط واتساب + سلة/زد → جهات اتصال وطلبات → أتمتة وبكسل فوق لقطة تطبيق متجر بحالة متصل
+- [ ] `/images/help/use-cases/ecommerce-salla-connected.webp` — scene: نافذة أذونات سلة أو زد ثم البطاقة بحالة متصل
+- [ ] `/images/help/use-cases/marketer-week-1-audience-gif.webp` — scene: GIF 5ث: اختيار شريحة تجريبية → ظهور العدد التقديري → المتابعة دون اختيار كل جهات الاتصال
+- [ ] `/images/help/use-cases/marketer-week-1-audience.webp` — scene: خطوة الجمهور في إنشاء حملة مع شريحة تجريبية محددة وعدد تقديري ظاهر
+- [ ] `/images/help/use-cases/marketer-week-1-calendar.webp` — scene: تقويم أسبوع بسبعة صناديق: قاعدة، تنظيف، شريحة، بكسل، حملة تجريبية، أتمتة، تقرير
+- [ ] `/images/help/use-cases/migrate-channel-test.webp` — scene: قناة واتساب متصلة + محادثة اختبار في الوارد بشارة واتساب
+- [ ] `/images/help/use-cases/migrate-cutover-timeline.webp` — scene: خط زمني أفقي: جرد → تأسيس → ربط → استيراد → تشغيل مزدوج → يوم القطع → إيقاف القديم
+- [ ] `/images/help/use-cases/overview-journey-map.webp` — scene: مخطط خمس رحلات تتفرع من حساب كرزون واحد: متجر، مبيعات، دعم، انتقال، تسويق
+- [ ] `/images/help/use-cases/overview-role-vs-journey.webp` — scene: مقارنة بسيطة: مسار دور داخل الوارد مقابل رحلة عمل تجمع قنوات ومتجر وحملات
+- [ ] `/images/help/use-cases/support-at-scale-assign-video.mp4` — scene: فيديو 40ث: محادثة غير مسندة → توزيع تلقائي → ظهور إلحاح الاتفاقية في القائمة
+- [ ] `/images/help/use-cases/support-at-scale-assignment.webp` — scene: شاشة إسناد ذكي لقسم مع حد حمل، وبجانبها قائمة محادثات
+- [ ] `/images/help/use-cases/support-at-scale-sla.webp` — scene: قائمة محادثات مرتّبة بإلحاح اتفاقية الخدمة مع شارات زمنية ظاهرة
+
+### whatsapp
+- [ ] `/images/help/whatsapp/account-requirements.webp` — scene: بطاقة رقم هاتف العمل في الملف الشخصي: الجودة، حد المراسلة، وضع الحساب
+- [ ] `/images/help/whatsapp/ads-first-message.webp` — scene: محرر أول رسالة: ترحيب ثم رسالة جاهزة أو أزرار رد سريع
+- [ ] `/images/help/whatsapp/ads-manager-tab.webp` — scene: تبويب مدير الإعلانات: قائمة الرسائل الأولى والحالة والمعرّف للإعلان
+- [ ] `/images/help/whatsapp/analytics-costs-calls.webp` — scene: تحليلات المكالمات: عدد المكالمات والتكلفة وفلتر الاتجاه والدولة
+- [ ] `/images/help/whatsapp/analytics-costs-pricing.webp` — scene: تحليلات التسعير: إجمالي التكلفة وحجم الرسائل وفلاتر الفئة والدولة
+- [ ] `/images/help/whatsapp/analytics-messages-chart.webp` — scene: رسم بياني لتسليم الرسائل عبر الزمن مع بطاقات الإجماليات
+- [ ] `/images/help/whatsapp/analytics-messages-overview.webp` — scene: تبويب التحليلات: قائمة نوع التحليلات ونطاق زمني وبطاقات مسار التسليم
+- [ ] `/images/help/whatsapp/app-vs-api.webp` — scene: مقارنة مسار تطبيق واتساب بيزنس مع بطاقة Cloud API في خطوات الربط
+- [ ] `/images/help/whatsapp/business-api-overview.webp` — scene: بطاقة رقم هاتف العمل متصلة عبر Cloud API مع شارة الحالة والجودة
+- [ ] `/images/help/whatsapp/calls-agent-availability.webp` — scene: استعداد الموظف لاستقبال مكالمات واتساب
+- [ ] `/images/help/whatsapp/calls-button-and-deeplink.webp` — scene: زر الاتصال والرابط العميق
+- [ ] `/images/help/whatsapp/calls-enable-toggles.webp` — scene: مفاتيح تفعيل المكالمات وإظهار زر الاتصال
+- [ ] `/images/help/whatsapp/calls-history-analytics.webp` — scene: سجل وإحصائيات مكالمات واتساب
+- [ ] `/images/help/whatsapp/calls-hours-slots.webp` — scene: ساعات عمل المكالمات والفترات
+- [ ] `/images/help/whatsapp/calls-incoming-experience.webp` — scene: إعداد تجربة المكالمة الواردة: ترحيب وانتظار وبريد صوتي
+- [ ] `/images/help/whatsapp/calls-missed-badge.webp` — scene: شارة المكالمات الفائتة
+- [ ] `/images/help/whatsapp/calls-outbound-permission.webp` — scene: طلب إذن الاتصال الصادر في واتساب
+- [ ] `/images/help/whatsapp/calls-overview-tab.webp` — scene: تبويب المكالمات في مدير واتساب
+- [ ] `/images/help/whatsapp/calls-recording-toggles.webp` — scene: مفاتيح تسجيل المكالمات والنص المكتوب
+- [ ] `/images/help/whatsapp/calls-softphone-card.webp` — scene: بطاقة المكالمة والهاتف البرمجي في البريد الوارد
+- [ ] `/images/help/whatsapp/calls-troubleshooting-restrictions.webp` — scene: قيود مكالمات واتساب في التبويب
+- [ ] `/images/help/whatsapp/commerce-message-types.webp` — scene: أنواع رسائل منتجات واتساب في الأتمتة
+- [ ] `/images/help/whatsapp/commerce-overview-tab.webp` — scene: تبويب التجارة: صلاحيات الكتالوج ثم تهيئة الكتالوج ثم مفاتيح التفعيل
+- [ ] `/images/help/whatsapp/commerce-init-catalog.webp` — scene: بطاقة تهيئة الكتالوج قبل وبعد الربط: زر تهيئة وشارة جاهز
+- [ ] `/images/help/whatsapp/commerce-sync-cooldown.webp` — scene: مزامنة كتالوج واتساب ورسالة تبريد 15 دقيقة
+- [ ] `/images/help/whatsapp/connect-1-open.webp` — scene: خطوة ربط الحساب: قائمة الحسابات المتصلة + بطاقات المسارات الأربعة
+- [ ] `/images/help/whatsapp/connect-2-steps.webp` — scene: شريط الخطوة الحالية من 4 مع عنوان ربط واتساب
+- [ ] `/images/help/whatsapp/connect-3-account.webp` — scene: اختيار حساب موجود أو بطاقة رقم واتساب جديد عبر كرزون
+- [ ] `/images/help/whatsapp/connect-4-waba-phone.webp` — scene: قوائم WABA ورقم الهاتف مع حالة الجودة والاسم الموثق
+- [ ] `/images/help/whatsapp/connect-5-verify.webp` — scene: حقل رمز التحقق مع أزرار رسالة نصية ومكالمة صوتية
+- [ ] `/images/help/whatsapp/connect-6-review.webp` — scene: شاشة مراجعة التفاصيل: الاسم، القسم، WABA، الرقم، الاسم الموثق
+- [ ] `/images/help/whatsapp/connect-7-success.webp` — scene: شاشة النجاح مع زر إعداد الملف الشخصي ورسالة اختبار في الوارد
+- [ ] `/images/help/whatsapp/connect-coexistence.webp` — scene: بطاقة الاستمرار مع تطبيق واتساب بيزنس وبطاقة تقدم المزامنة: جهات الاتصال وسجل الرسائل مع شارات الحالة
+- [ ] `/images/help/whatsapp/connect-manager-tab.webp` — scene: تبويب مدير واتساب بعد الربط: ملف، QR، قوالب، تدفقات، إعلانات
+- [ ] `/images/help/whatsapp/connect-migrate-1.webp` — scene: قائمة المتطلبات المسبقة للنقل مع خانات التحقق بخطوتين والهاتف والتوثيق واسم العرض
+- [ ] `/images/help/whatsapp/connection-methods-cards.webp` — scene: بطاقات المسارات الأربعة في خطوة ربط الحساب
+- [ ] `/images/help/whatsapp/disable-2fa-1-manager.webp` — scene: مدير أعمال ميتا: حسابات واتساب ثم زر مدير واتساب
+- [ ] `/images/help/whatsapp/disable-2fa-2-phone.webp` — scene: قائمة أرقام الهاتف مع أيقونة إعدادات بجانب الرقم
+- [ ] `/images/help/whatsapp/disable-2fa-3-turn-off.webp` — scene: تبويب المصادقة الثنائية وزر التعطيل
+- [ ] `/images/help/whatsapp/disable-2fa-4-email.webp` — scene: رسالة بريد تأكيد تعطيل التحقق بخطوتين
+- [ ] `/images/help/whatsapp/errors-inbox.webp` — scene: محادثة واتساب في البريد الوارد تظهر فشل تسليم مع كود خطأ
+- [ ] `/images/help/whatsapp/flows-automation-form.webp` — scene: نموذج تهيئة التدفق: تكامل، تدفق، نص، زر، مطابقة
+- [ ] `/images/help/whatsapp/flows-automation-type.webp` — scene: منتقي نوع الرسالة مع تحديد تدفق واتساب
+- [ ] `/images/help/whatsapp/flows-build-editor.webp` — scene: محرر التدفقات بثلاثة أعمدة وشريط تحديث ومعاينة ونشر
+- [ ] `/images/help/whatsapp/flows-build-settings.webp` — scene: لوحة إعدادات التدفق: الاسم والوصف والفئة والإصدار
+- [ ] `/images/help/whatsapp/flows-overview-list.webp` — scene: قائمة التدفقات: الاسم، الفئة، الحالة (مسودة/منشور/متقادم)، أزرار مزامنة وإنشاء
+- [ ] `/images/help/whatsapp/flows-use-cases.webp` — scene: معاينة هاتف لشاشات تدفق: اختيار خدمة ثم تاريخ ثم تأكيد
+- [ ] `/images/help/whatsapp/overview-manager.webp` — scene: تبويب مدير واتساب بعد تعديل القناة: ملف، QR، قوالب، تدفقات، إعلانات، مكالمات، تجارة، تحليلات
+- [ ] `/images/help/whatsapp/pricing-profile-limits.webp` — scene: حد المراسلة وتقييم الجودة على بطاقة رقم هاتف العمل
+- [ ] `/images/help/whatsapp/profile-coexistence-readonly.webp` — scene: نفس التبويب مع تنبيه القراءة فقط وبدون زر حفظ الملف الشخصي
+- [ ] `/images/help/whatsapp/profile-display-name-apply.webp` — scene: تنبيه الموافقة مع زر تطبيق الاسم
+- [ ] `/images/help/whatsapp/profile-display-name-dialog.webp` — scene: حوار طلب تغيير اسم العرض
+- [ ] `/images/help/whatsapp/profile-display-name-pending.webp` — scene: تنبيه قيد المراجعة مع زر تحديث الحالة
+- [ ] `/images/help/whatsapp/profile-screen-marked.webp` — scene: تبويب الملف الشخصي مع مناطق مرقمة: حالة الرقم، الاسم الموثق، الجودة، حد المراسلة، الملف التجاري
+- [ ] `/images/help/whatsapp/qr-codes-create.webp` — scene: حوار إنشاء رمز QR مع حقل الرسالة المسبقة وعداد الأحرف
+- [ ] `/images/help/whatsapp/qr-codes-list.webp` — scene: قائمة رموز QR: الصورة المصغرة، الرسالة، الرابط، الكود
+- [ ] `/images/help/whatsapp/templates-authentication-category.webp` — scene: قائمة الفئة مع اختيار مصادقة
+- [ ] `/images/help/whatsapp/templates-authentication-form.webp` — scene: نموذج OTP: النص، العينة، مدة الانتهاء، إخلاء المسؤولية، شارة زر نسخ الرمز
+- [ ] `/images/help/whatsapp/templates-commerce-carousel.webp` — scene: محرر بطاقات الدوّار مع معاينة أفقية
+- [ ] `/images/help/whatsapp/templates-commerce-category.webp` — scene: قائمة فئات القالب: دوّار، بطاقات المنتجات، كتالوج، منتج واحد، منتجات متعددة
+- [ ] `/images/help/whatsapp/templates-insights.webp` — scene: لوحة تحليلات القوالب: بطاقات الإرسال والتسليم والقراءة والنقر والتكلفة
+- [ ] `/images/help/whatsapp/templates-ad-insights.webp` — scene: لوحة أداء الإعلان بجانب تحليلات قالب واحد مرتبط بـ ad_id
+- [ ] `/images/help/whatsapp/templates-lto-buttons.webp` — scene: زرا نسخ الرمز وزيارة موقع في قالب LTO
+- [ ] `/images/help/whatsapp/templates-lto-offer-text.webp` — scene: حقل نص العرض أعلى نموذج LTO
+- [ ] `/images/help/whatsapp/templates-manage-list.webp` — scene: جدول القوالب مع بحث وتصفية الحالة والفئة
+- [ ] `/images/help/whatsapp/templates-marketing-buttons.webp` — scene: أزرار زيارة موقع ونسخ رمز وبدء تدفق ومكالمة صوتية مع تتبع النقرات
+- [ ] `/images/help/whatsapp/templates-marketing-info.webp` — scene: نموذج القالب التسويقي: الاسم واللغة والفئة تسويق
+- [ ] `/images/help/whatsapp/templates-overview.webp` — scene: تبويب القوالب: قائمة الاسم والفئة واللغة والحالة مع زر إنشاء قالب ومزامنة من ميتا
+- [ ] `/images/help/whatsapp/templates-quality.webp` — scene: شارة تقييم الجودة وحد المراسلة على بطاقة رقم هاتف العمل
+- [ ] `/images/help/whatsapp/templates-utility-buttons.webp` — scene: قسم الأزرار والتذييل في القالب الخدمي: بدء تدفق، مكالمة صوتية، طلب معلومات الاتصال
+- [ ] `/images/help/whatsapp/templates-utility-info.webp` — scene: نموذج معلومات القالب الخدمي: الاسم واللغة والفئة
+- [ ] `/images/help/whatsapp/account-requirements-profile-gif.webp` — scene: GIF: الملف الشخصي → التركيز على حد المراسلة ووضع الحساب بعد الربط
+- [ ] `/images/help/whatsapp/ads-create-first-message-gif.webp` — scene: GIF: إنشاء رسالة → كتابة ترحيب → اختيار أزرار رد سريع → حفظ وظهور المعرّف
+- [ ] `/images/help/whatsapp/ads-inbox-card-gif.webp` — scene: GIF: فتح أول رسالة من نقرة إعلان → ظهور بطاقة الإعلان أعلى المحادثة
+- [ ] `/images/help/whatsapp/analytics-costs-filter-gif.webp` — scene: GIF: تحليلات التسعير → فلتر فئة تسويق → تغيّر الإجماليات
+- [ ] `/images/help/whatsapp/analytics-switch-type-gif.webp` — scene: GIF: نوع التحليلات → رسائل ثم قوالب → تغيّر اللوحة والفلاتر
+- [ ] `/images/help/whatsapp/app-vs-api-cards-gif.webp` — scene: GIF: خطوات الربط → إبراز بطاقة التطبيق ثم بطاقة Cloud API
+- [ ] `/images/help/whatsapp/calls-agent-availability-toggle-gif.webp` — scene: GIF: أيقونة هاتف متوقف → تفعيل القبول → تلميح أن العروض تصل عند الاتصال
+- [ ] `/images/help/whatsapp/calls-button-send-gif.webp` — scene: GIF: المحرر → اتصال → ملء نص الزر → إرسال البطاقة في المحادثة
+- [ ] `/images/help/whatsapp/calls-enable-calling-video.mp4` — scene: فيديو: فتح تبويب المكالمات → تفعيل السماح → إظهار زر الاتصال → حفظ ثم العودة للوارد
+- [ ] `/images/help/whatsapp/calls-enable-countries.webp` — scene: حقل إظهار زر الاتصال في دول محددة مع اختصارات ISO مثل SA, AE
+- [ ] `/images/help/whatsapp/calls-enable-toggle-gif.webp` — scene: GIF: إيقاف → تفعيل السماح بمكالمات واتساب → المفتاح ينتقل إلى شغّال
+- [ ] `/images/help/whatsapp/calls-history-filter-gif.webp` — scene: GIF: فلتر الحالة → فائتة → تضييق صفوف السجل
+- [ ] `/images/help/whatsapp/calls-hours-save-gif.webp` — scene: GIF: إضافة فترة يوم → حفظ ساعات العمل → ظهور الفترات المحفوظة
+- [ ] `/images/help/whatsapp/calls-incoming-preview-gif.webp` — scene: GIF: كتابة ترحيب → معاينة → سماع/تشغيل الصوت قبل الحفظ
+- [ ] `/images/help/whatsapp/calls-missed-open-gif.webp` — scene: GIF: النقر على شارة الفائت → فتح القائمة الحديثة → الانتقال لمحادثة العميل
+- [ ] `/images/help/whatsapp/calls-outbound-request-gif.webp` — scene: GIF: أيقونة هاتف كهرمانية → إرسال طلب إذن → انتظار موافقة العميل
+- [ ] `/images/help/whatsapp/calls-overview-open-gif.webp` — scene: GIF: مدير واتساب → المكالمات → ظهور مفاتيح التفعيل وساعات العمل
+- [ ] `/images/help/whatsapp/calls-recording-toggle-gif.webp` — scene: GIF: تفعيل تسجيل المكالمات تلقائياً → المفتاح ينتقل إلى شغّال ثم حفظ
+- [ ] `/images/help/whatsapp/calls-softphone-accept-gif.webp` — scene: GIF: بطاقة رنين → قبول → تتحول إلى مكالمة نشطة مع مؤقت
+- [ ] `/images/help/whatsapp/calls-softphone-controls-gif.webp` — scene: GIF: مكالمة نشطة → كتم ثم إلغاء كتم → المؤقت مستمر
+- [ ] `/images/help/whatsapp/calls-softphone-outbound-gif.webp` — scene: GIF: أيقونة الهاتف في رأس المحادثة → بطاقة رنين صادر → انتظار رد العميل
+- [ ] `/images/help/whatsapp/commerce-init-catalog-gif.webp` — scene: GIF: تهيئة الكتالوج → انتظار → شارة جاهز والكتالوج مرتبط
+- [ ] `/images/help/whatsapp/commerce-message-type-gif.webp` — scene: GIF: منتقي نوع الرسالة → منتج / قائمة / كاروسيل / كتالوج
+- [ ] `/images/help/whatsapp/commerce-sync-now-gif.webp` — scene: GIF: مزامنة الآن → نجاح → بدء العدّ التنازلي 15 دقيقة وتعطيل الزر
+- [ ] `/images/help/whatsapp/commerce-sync-open-tab-gif.webp` — scene: GIF: مدير واتساب → التجارة → ظهور بطاقة المزامنة تحت شارة جاهز
+- [ ] `/images/help/whatsapp/commerce-sync-ready.webp` — scene: بطاقة مزامنة المنتجات ظاهرة بعد شارة جاهز مع زر مزامنة الآن مفعّل
+- [ ] `/images/help/whatsapp/commerce-toggles-enable-gif.webp` — scene: GIF: بعد شارة جاهز → تفعيل كتالوج المنتجات → المفتاح ينتقل من مقفل إلى شغّال
+- [ ] `/images/help/whatsapp/connect-after-link-video.mp4` — scene: فيديو: من قائمة القنوات بعد الربط → تعديل → مدير واتساب → المرور على الملف والقوالب ثم العودة للوارد
+- [ ] `/images/help/whatsapp/connect-migrate-start-gif.webp` — scene: GIF: اختيار بدء نقل الرقم → ظهور قائمة المتطلبات ثم المتابعة بعد التحقق
+- [ ] `/images/help/whatsapp/connect-open-manager-gif.webp` — scene: GIF: قائمة القنوات → تعديل واتساب → ظهور تبويبات مدير واتساب
+- [ ] `/images/help/whatsapp/connection-methods-select-gif.webp` — scene: GIF: خطوة ربط الحساب → تمرير البطاقات الأربع → تمييز المسار المختار
+- [ ] `/images/help/whatsapp/disable-2fa-turn-off-gif.webp` — scene: GIF: فتح المصادقة الثنائية → تعطيل → انتظار رسالة التأكيد
+- [ ] `/images/help/whatsapp/errors-open-code-gif.webp` — scene: GIF: فتح محادثة فاشلة → ظهور كود الخطأ في خط الزمن
+- [ ] `/images/help/whatsapp/flows-automation-mapping-gif.webp` — scene: GIF: فتح المطابقة → ربط حقل تدفق بحقل كرزون → حفظ المسار عند الإرسال
+- [ ] `/images/help/whatsapp/flows-automation-select-gif.webp` — scene: GIF: اختيار تكامل واتساب → قائمة التدفقات المنشورة → تحديد تدفق
+- [ ] `/images/help/whatsapp/flows-build-add-screen-gif.webp` — scene: GIF: إضافة شاشة → سحب حقل تاريخ → ظهوره في المعاينة
+- [ ] `/images/help/whatsapp/flows-open-list-gif.webp` — scene: GIF: مدير واتساب → التدفقات → ظهور القائمة وزر إنشاء تدفق
+- [ ] `/images/help/whatsapp/flows-publish-gif.webp` — scene: GIF: تحديث التدفق → نشر → تغيّر الحالة من مسودة إلى منشور
+- [ ] `/images/help/whatsapp/overview-open-manager-gif.webp` — scene: GIF: من قائمة القنوات → تعديل واتساب → ظهور تبويب مدير واتساب
+- [ ] `/images/help/whatsapp/pricing-limits-open-gif.webp` — scene: GIF: الملف الشخصي → التركيز على حد المراسلة وتقييم الجودة
+- [ ] `/images/help/whatsapp/profile-display-name-submit-gif.webp` — scene: GIF: فتح تعديل اسم العرض → إدخال الاسم → إرسال للمراجعة → ظهور قيد المراجعة
+- [ ] `/images/help/whatsapp/profile-open-tab-gif.webp` — scene: GIF: مدير واتساب → اختيار الملف الشخصي → ظهور البطاقتين
+- [ ] `/images/help/whatsapp/profile-save-business-gif.webp` — scene: GIF: تعديل الوصف → شارة تغييرات غير محفوظة → حفظ الملف الشخصي → اختفاء الشارة
+- [ ] `/images/help/whatsapp/qr-codes-copy-link-gif.webp` — scene: GIF: نسخ الرابط من الصف → تأكيد النسخ دون حذف الرمز
+- [ ] `/images/help/whatsapp/qr-codes-create-gif.webp` — scene: GIF: إنشاء رمز QR → كتابة رسالة مسبقة → ظهور الصف في القائمة
+- [ ] `/images/help/whatsapp/templates-authentication-create-gif.webp` — scene: GIF: اختيار مصادقة → ضبط المدة وإخلاء المسؤولية → شارة نسخ الرمز ظاهرة
+- [ ] `/images/help/whatsapp/templates-authentication-name-gif.webp` — scene: GIF: إدخال اسم login_otp واختيار اللغة العربية
+- [ ] `/images/help/whatsapp/templates-commerce-carousel-gif.webp` — scene: GIF: إضافة بطاقة دوّار → رفع صورة → ظهور البطاقة في المعاينة الأفقية
+- [ ] `/images/help/whatsapp/templates-commerce-category-gif.webp` — scene: GIF: إنشاء قالب → تمرير فئات الدوّار وبطاقات المنتجات والكتالوج
+- [ ] `/images/help/whatsapp/templates-create-open-gif.webp` — scene: GIF: إنشاء قالب → فتح قائمة الفئة بالأنواع التسعة
+- [ ] `/images/help/whatsapp/templates-first-send-video.mp4` — scene: فيديو: قالب معتمد في القائمة → فتح محادثة في البريد الوارد → اختيار القالب → إرسال أول رسالة قالب
+- [ ] `/images/help/whatsapp/templates-insights-metrics.webp` — scene: بطاقات المعدلات: تسليم وقراءة ونقر بجانب التكلفة لكل تسليم
+- [ ] `/images/help/whatsapp/templates-insights-select-gif.webp` — scene: GIF: نوع التحليلات → قوالب → اختيار قالب معتمد → ظهور البطاقات
+- [ ] `/images/help/whatsapp/templates-lto-create-gif.webp` — scene: GIF: فئة LTO → ملء نص العرض → ظهور زرّي النسخ والرابط
+- [ ] `/images/help/whatsapp/templates-lto-submit-gif.webp` — scene: GIF: إنشاء قالب LTO → الحالة قيد الانتظار في القائمة
+- [ ] `/images/help/whatsapp/templates-manage-create-gif.webp` — scene: GIF: إنشاء قالب → فتح النموذج حسب الفئة من القائمة
+- [ ] `/images/help/whatsapp/templates-manage-filter-gif.webp` — scene: GIF: تصفية جميع الحالات → معتمد → تضييق الصفوف
+- [ ] `/images/help/whatsapp/templates-manage-sync-gif.webp` — scene: GIF: مزامنة من ميتا → مؤشر الجلب → ظهور قالب جديد أو تحديث الحالة
+- [ ] `/images/help/whatsapp/templates-marketing-create-gif.webp` — scene: GIF: اختيار تسويق → ملء النص → إضافة زر زيارة موقع → تفعيل تتبع النقرات
+- [ ] `/images/help/whatsapp/templates-marketing-submit-gif.webp` — scene: GIF: إنشاء القالب → الحالة قيد الانتظار في القائمة
+- [ ] `/images/help/whatsapp/templates-open-list-gif.webp` — scene: GIF: مدير واتساب → القوالب → ظهور القائمة وزر إنشاء قالب
+- [ ] `/images/help/whatsapp/templates-quality-open-gif.webp` — scene: GIF: الملف الشخصي → التركيز على تقييم الجودة وحد المراسلة
+- [ ] `/images/help/whatsapp/templates-utility-create-gif.webp` — scene: GIF: فئة خدمي → ملء النص والمتغيرات النموذجية → إضافة زر زيارة موقع
+- [ ] `/images/help/whatsapp/templates-utility-submit-gif.webp` — scene: GIF: إنشاء القالب الخدمي → الحالة قيد الانتظار في القائمة
+
+## totals
+- 999 unique paths
+- ai: 54
+- attendance: 25
+- automations: 68
+- broadcasts: 77
+- business-verification: 11
+- channels: 66
+- contacts: 42
+- file-manager: 13
+- getting-started: 73
+- inbox: 117
+- insights: 22
+- knowledge-base: 34
+- meetings: 21
+- notifications: 7
+- orders: 9
+- pixel: 35
+- popups: 31
+- settings: 50
+- store: 15
+- tasks: 22
+- team-chat: 42
+- training: 13
+- use-cases: 17
+- whatsapp: 135

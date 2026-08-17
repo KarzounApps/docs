@@ -1,0 +1,92 @@
+---
+title: "أول رد"
+description: "أرسل رسالة للعميل من كرزون: رداً يدوياً من البريد الوارد، أو ترحيباً قصيراً على القناة."
+type: task
+updated: "2026-08-17"
+---
+
+الانطلاق يكتمل عندما **يخرج** شيء للعميل من كرزون. رد يدوياً من **البريد الوارد**، أو اضبط ترحيباً قصيراً على القناة — بلا مسار أتمتة بعشر عُقد.
+
+## قبل أن تبدأ
+
+- محادثة اختبار في `/inbox` بشارة القناة — [ربط أول قناة](/ar/help-center/guides/getting-started/quick-start/first-channel).
+- الوضع **رد** يرسل للعميل؛ **ملاحظة** داخلية لا يراها العميل — [الرد](/ar/help-center/guides/inbox/reply).
+- على واتساب: للاختبار أرسل أثناء نافذة الـ24 ساعة بعد رسالة العميل.
+
+{/* MEDIA: /images/help/getting-started/first-reply-composer.webp | المحرر في وضع الرد على محادثة الاختبار */}
+<Frame caption="المحرّر في وضع الرد على محادثة الاختبار">
+  <img src="/images/help/getting-started/first-reply-composer.webp" alt="محرّر الرد في البريد الوارد على محادثة اختبار" />
+</Frame>
+
+## رد يدوي من البريد الوارد
+
+<Steps>
+  <Step title="افتح المحادثة">
+    في `/inbox` افتح رسالة الاختبار. راجع شارة **القناة** قبل الكتابة.
+  </Step>
+  <Step title="اقرأ السياق">
+    لوحة العميل تعرض الاسم والوسوم والمسؤول. جولة قصيرة: [الشاشات الثلاث](/ar/help-center/guides/inbox/quick-tour).
+  </Step>
+  <Step title="اكتب في وضع الرد">
+    الوضع **رد** يرسل للعميل. استخدم **ملاحظة** للتنسيق الداخلي فقط.
+  </Step>
+  <Step title="أرسل ثم حدّث الحالة">
+    بعد الإرسال: اتركها مفتوحة بانتظار العميل، أو حلّها إن انتهى الطلب.
+
+    {/* MEDIA: /images/help/getting-started/first-reply-send-gif.webp | GIF: كتابة رد → إرسال */}
+    <Frame caption="إرسال أول رد من المحرّر">
+      <img src="/images/help/getting-started/first-reply-send-gif.webp" alt="إرسال رد من محرّر البريد الوارد" />
+    </Frame>
+  </Step>
+</Steps>
+
+## أو: رسالة ترحيب على القناة
+
+في التطبيق: **الأتمتة** ← **الرد الآلي** (`/automations/channel-bots`).
+
+<Steps>
+  <Step title="اختر القناة">
+    من منتقي أعلى الصفحة اختر القناة التي اختبرتها.
+  </Step>
+  <Step title="فعّل رسالة الترحيب">
+    سطران يجيبان: من أنتم، هل الرد آلي الآن، وماذا يفعل العميل بعدها.
+
+    {/* MEDIA: /images/help/getting-started/first-reply-welcome.webp | رسالة الترحيب مفعّلة بنص قصير */}
+    <Frame caption="رسالة ترحيب قصيرة على القناة المختبرة">
+      <img src="/images/help/getting-started/first-reply-welcome.webp" alt="إعداد رسالة الترحيب في صفحة الرد الآلي" />
+    </Frame>
+  </Step>
+  <Step title="اختبر من المصدر الحقيقي">
+    أرسل من الخارج وتأكد أن الترحيب وصل. أطفئه إن كان النص خاطئاً أو مكرراً مع ردّك اليدوي.
+
+    {/* MEDIA: /images/help/getting-started/first-reply-welcome-gif.webp | GIF: تفعيل الترحيب → وصوله من الخارج */}
+    <Frame caption="اختبار الترحيب من المصدر الحقيقي">
+      <img src="/images/help/getting-started/first-reply-welcome-gif.webp" alt="تفعيل رسالة الترحيب ثم وصولها بعد رسالة من الخارج" />
+    </Frame>
+  </Step>
+</Steps>
+
+**تفعيل أتمتة البوت** و**سير الأتمتة الافتراضي** أعمق من الانطلاق. بقيمة تأخير **٠** والفريق متصل قد يسبق البوت الموظفين — اترك المسار الكامل إلى [إعداد الرد الآلي](/ar/help-center/guides/automations/channel-bots).
+
+{/* MEDIA: /images/help/getting-started/first-reply-e2e-video.mp4 | فيديو: من محادثة اختبار حتى أول رسالة تخرج */}
+<Frame caption="من محادثة الاختبار حتى أول رسالة للعميل">
+  <video controls src="/images/help/getting-started/first-reply-e2e-video.mp4" />
+</Frame>
+
+## أخطاء شائعة
+
+| ما تراه | السبب | الصواب |
+| --- | --- | --- |
+| الملاحظة وصلت للعميل | الكتابة في وضع **رد** | استخدم **ملاحظة** للتنسيق الداخلي فقط |
+| الترحيب يكرر ردّك | الترحيب مفعّل أثناء ردك | أطفئه للاختبار اليدوي أو اختصر النص |
+| البوت يرد قبل الموظف | تأخير **٠** مع تفعيل سير الأتمتة | أوقف المسار الكامل حتى يثبت التشغيل |
+
+## الخطوة التالية
+
+- [جولة الواجهة](/ar/help-center/guides/getting-started/quick-start/interface-tour)
+
+## ذات صلة
+
+- [الرد](/ar/help-center/guides/inbox/reply)
+- [إعداد الرد الآلي للقناة](/ar/help-center/guides/automations/channel-bots)
+- [أول يوم كموظف خدمة عملاء](/ar/help-center/guides/getting-started/first-day-customer-service)

@@ -1,9 +1,15 @@
 ---
-title: "نظرة عامة"
+title: "نظرة عامة: كرزون بكسل"
 description: "تعرّف على كرزون بكسل: تتبّع سلوك الزوار على موقعك ومتجرك، واربطه بملف العميل والشرائح والأتمتة والحملات."
+type: overview
+updated: "2026-08-17"
 ---
 
-**كرزون بكسل** سكربت تتبّع تضعه على موقعك أو متجرك. يجمع سلوك الزوّار — صفحات، جلسات، وتفاعل متجر — ثم يظهر هذا السلوك على [ملف جهة الاتصال](/ar/help-center/guides/contacts/profile) بعد أن يتعرّف النظام على الزائر تلقائياً (محادثة، نموذج، تسجيل دخول متجر، …).
+عندما يتصفّح الزائر المتجر ثم يكتب في المحادثة، يفتقد الموظف سياق ما فعله قبل الرسالة.
+
+يجمع **كرزون بكسل** سلوك الموقع والمتجر ويظهره على [ملف جهة الاتصال](/ar/help-center/guides/contacts/profile) بعد أن يتعرّف النظام على الزائر تلقائياً (محادثة، نموذج، تسجيل دخول متجر، …).
+
+يشرح هذا الدليل ماذا يمنحك البكسل، ومساره التشغيلي، ومن أين تبدأ التثبيت والتحقق.
 
 يُدار من **المطور** → **مدير السكريبتات** داخل كرزون.
 
@@ -14,9 +20,9 @@ description: "تعرّف على كرزون بكسل: تتبّع سلوك الز�
 | الفائدة | باختصار |
 | --- | --- |
 | فهم العميل قبل الرد | ترى تصفّحه ونشاطه في تبويب **التفاعل** |
-| جمهور أدق | تغذي [الشرائح](/ar/help-center/guides/contacts/segments/overview) والحملات |
+| جمهور أدق | راقب السلوك على الملف؛ ابنِ الشريحة من طلب/سلة/CRM — شروط حدث البكسل غير في البنّاء اليوم ([الشرائح](/ar/help-center/guides/pixel/with-segments)) |
 | رد فوري على سلوك | [أتمتة على الأحداث السلوكية](/ar/help-center/guides/pixel/with-automations) |
-| متاجر جاهزة | سلة، زد، شوبيفاي، ووكومرس: أحداث تسوّق تلقائية بعد التثبيت غالباً بلا إعداد إضافي |
+| متاجر جاهزة | سلة، زد، شوبيفاي، ووكومرس: أحداث تسوّق تلقائية بعد التثبيت غالباً بلا إعداد إضافي (أحداث السلة تُصنَّف مخصصاً اليوم — [التفاصيل](/ar/help-center/guides/pixel/events)) |
 
 ## المسار التشغيلي
 
@@ -32,17 +38,37 @@ description: "تعرّف على كرزون بكسل: تتبّع سلوك الز�
 2. راجع السلوك على [ملف العميل](/ar/help-center/guides/pixel/on-contact-profile)  
 3. ابنِ جمهوراً أو أتمتة — انظر [الشرائح والجمهور](/ar/help-center/guides/pixel/with-segments) و[الأتمتة](/ar/help-center/guides/pixel/with-automations)
 
-<Info>
-**وسائط مطلوبة:** بطاقة مدير السكريبتات من قائمة المطور.  
-`/images/help/pixel/overview-script-manager.webp`
-</Info>
+{/* MEDIA: /images/help/pixel/overview-script-manager.webp | بطاقة مدير السكريبتات من قائمة المطور */}
+<Frame caption="مدير السكريبتات من قائمة المطور">
+  <img src="/images/help/pixel/overview-script-manager.webp" alt="بطاقة مدير السكريبتات من قائمة المطور" />
+</Frame>
+
+{/* MEDIA: /images/help/pixel/overview-open-gif.webp | GIF 4ث: المطور → مدير السكريبتات → ظهور بطاقة البكسل */}
+<Frame caption="فتح مدير السكريبتات من القائمة">
+  <img src="/images/help/pixel/overview-open-gif.webp" alt="فتح مدير السكريبتات من قائمة المطور" />
+</Frame>
+
+{/* MEDIA: /images/help/pixel/overview-flow-video.mp4 | فيديو 25ث: من مدير السكريبتات حتى تبويب التفاعل على ملف عميل */}
+<Frame caption="من التثبيت حتى ظهور السلوك على الملف">
+  <video controls src="/images/help/pixel/overview-flow-video.mp4" />
+</Frame>
 
 ## لمن هذا الدليل؟
 
 لفرق التسويق والتشغيل. تفاصيل البرمجة المتقدمة (استدعاءات مخصصة للمتاجر غير المدعومة) تبقى للمطوّر عبر تبويب SDK عند الحاجة — هنا نركّز على التثبيت والتحقق والاستخدام اليومي.
 
+## الخطوة التالية
+
+تعلّمت مسار البكسل من الموقع إلى الملف. بعد ذلك:
+
+- ثبّت المقتطف: [تثبيت كود التتبع](/ar/help-center/guides/pixel/install).
+- أو رتّب القراءة من [مسار مسؤول التتبع](/ar/help-center/guides/pixel/path-marketer).
+
 ## ذات صلة
 
 - [تثبيت كود التتبع](/ar/help-center/guides/pixel/install)
-- [ملف جهة الاتصال](/ar/help-center/guides/contacts/profile)
-- [ما هي الشرائح؟](/ar/help-center/guides/contacts/segments/overview)
+- [أحداث الموقع والمتجر](/ar/help-center/guides/pixel/events)
+- [الشرائح والجمهور](/ar/help-center/guides/pixel/with-segments)
+- [إطلاق الحملات التسويقية](/ar/help-center/guides/broadcasts/overview)
+- [ظهور السلوك في ملف العميل](/ar/help-center/guides/pixel/on-contact-profile)
+- [الأتمتة على الأحداث السلوكية](/ar/help-center/guides/pixel/with-automations)

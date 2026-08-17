@@ -1,0 +1,82 @@
+---
+title: "دعوة الفريق"
+description: "أضف موظفين إلى حساب كرزون: قسم ومجموعة صلاحيات ثم دعوة بالبريد — بلا منح الجميع صلاحية مالك."
+type: setup
+updated: "2026-08-17"
+---
+
+كل مقعد جديد = **دعوة** + **قسم** + **مجموعة صلاحيات**. ادعُ بعد أن اختبرت القناة ووصلت رسالة إلى البريد الوارد. **الرفض يتغلب على السماح** عند تعارض الصلاحيات.
+
+{/* MEDIA: /images/help/getting-started/invite-team-dialog.webp | نافذة دعوة: بريد ومجموعة صلاحيات وقسم */}
+<Frame caption="دعوة عضو: بريد ومجموعة صلاحيات وقسم إلزامية">
+  <img src="/images/help/getting-started/invite-team-dialog.webp" alt="نافذة دعوة عضو جديد بحقول البريد والقسم ومجموعة الصلاحيات" />
+</Frame>
+
+## قبل أن تبدأ
+
+- قناة مختبرة ورسالة في الوارد — [ربط أول قناة](/ar/help-center/guides/getting-started/quick-start/first-channel).
+- في التطبيق: **الإعدادات** ← **أعضاء الفريق** (`/settings/team-members`).
+- مرجع الصلاحيات: [الصلاحيات](/ar/help-center/guides/settings/team/permissions).
+
+## الخطوات
+
+<Steps>
+  <Step title="أنشئ قسماً إن لم يوجد">
+    **الإعدادات** ← **الهيكل** (`/settings/structure`) ← تبويب **الأقسام**. أضف قسماً يعكس العمل الحقيقي. التفاصيل: [الأقسام](/ar/help-center/guides/settings/team/departments).
+  </Step>
+  <Step title="جهّز مجموعة صلاحيات للرد">
+    من `/settings/permissions` أنشئ مجموعة مثل «موظف دعم»: Allow على `showConversations`، وDeny للفوترة وإدارة الصلاحيات.
+
+    {/* MEDIA: /images/help/getting-started/invite-team-permissions.webp | مجموعة صلاحيات للرد اليومي */}
+    <Frame caption="مجموعة للرد اليومي بلا فوترة ولا إدارة صلاحيات">
+      <img src="/images/help/getting-started/invite-team-permissions.webp" alt="مجموعة صلاحيات للرد اليومي مع رفض الفوترة وإدارة الصلاحيات" />
+    </Frame>
+  </Step>
+  <Step title="ادعُ بالبريد">
+    في `/settings/team-members` اختر **دعوة أعضاء جدد**. لكل صف: الاسم، البريد، مجموعة الصلاحيات، القسم. إن تجاوزت المقاعد قد تظهر نافذة تأكيد شراء مقاعد.
+
+    {/* MEDIA: /images/help/getting-started/invite-team-send-gif.webp | GIF: تعبئة الدعوة وإرسالها */}
+    <Frame caption="إرسال الدعوة بالبريد">
+      <img src="/images/help/getting-started/invite-team-send-gif.webp" alt="تعبئة نافذة الدعوة وإرسال دعوة بالبريد" />
+    </Frame>
+  </Step>
+  <Step title="أكد الانضمام والمقاعد">
+    راقب عمود **حالة الدعوة** في الجدول (محقق / غير محقق). كل مستخدم **نشط** يحسب في المقاعد. إن لم تصل الرسالة: **إعادة إرسال الدعوة**.
+
+    {/* MEDIA: /images/help/getting-started/invite-team-status.webp | عمود حالة الدعوة في الجدول */}
+    <Frame caption="حالة الدعوة في عمود الجدول">
+      <img src="/images/help/getting-started/invite-team-status.webp" alt="جدول أعضاء الفريق يعرض حالة الدعوة" />
+    </Frame>
+  </Step>
+  <Step title="اضبط التوفر مع أول وردية">
+    اطلب من الموظف ضبط حالته إلى **متصل** أثناء الوردية — [حالة التوفر](/ar/help-center/guides/settings/team/availability).
+  </Step>
+</Steps>
+
+إن كنت ترد وحدك اليوم: أنشئ القسم والمجموعة الآن، وأجّل صف الدعوة.
+
+## قاعدة سريعة للصلاحيات
+
+| المجموعة | تشمل | تُخرج |
+| --- | --- | --- |
+| **موظف يرد** | البريد الوارد، وربما المساعد | الفوترة، الصلاحيات، حذف القنوات |
+| **مشرف تشغيل** | الوارد + الإسناد ومراقبة المحادثات | محفظة الدفع إن لم يكن مسؤولاً مالياً |
+| **مالك الحساب** | الفوترة والقنوات | لا تُوزَّع على وردية الرد |
+
+## أخطاء شائعة
+
+| ما تراه | السبب | الصواب |
+| --- | --- | --- |
+| الموظف لا يرى البريد الوارد | المجموعة بلا `showConversations` | اسمح بعرض المحادثات في مجموعة الرد |
+| نافذة شراء مقاعد | تجاوز حد المقاعد | راجع [الخطة والدفع](/ar/help-center/guides/settings/billing/plan-and-payment) أو أجّل الدعوة |
+| الدعوة لم تصل | بريد خاطئ أو غير مرغوبة | **إعادة إرسال الدعوة** بعد تصحيح البريد |
+
+## الخطوة التالية
+
+- [أول رد](/ar/help-center/guides/getting-started/quick-start/first-reply)
+
+## ذات صلة
+
+- [دعوة الموظفين وإدارتهم](/ar/help-center/guides/settings/team/invite-and-manage)
+- [الصلاحيات ومجموعات الوصول](/ar/help-center/guides/settings/team/permissions)
+- [الأقسام](/ar/help-center/guides/settings/team/departments)

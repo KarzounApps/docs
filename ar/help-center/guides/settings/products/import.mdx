@@ -1,38 +1,55 @@
 ---
 title: "الاستيراد الجماعي"
-description: "استورد منتجاتاً من CSV: رفع، ربط أعمدة، تأكيد — لتجهيز كتalog كبير دون إدخال يدوي."
+description: "استورد منتجات من CSV: رفع، ربط أعمدة، تأكيد — لتجهيز كتالوج كبير دون إدخال يدوي."
+type: task
+updated: "2026-08-17"
 ---
 
-عشرات أو مئات الـ SKU تستحق **استيراد CSV** بدل [إضافة منتج](/ar/help-center/guides/settings/products/add-product) واحداً تلو الآخر.
+عشرات أو مئات الـ SKU تجعل الإدخال اليدوي بطيئاً ومعرّضاً للأخطاء المتكررة.
+
+**استيراد CSV** يمرّ برفع وربط أعمدة وتأكيد قبل بدء الاستيراد — بدل [إضافة منتج](/ar/help-center/guides/settings/products/add-product) واحداً تلو الآخر.
+
+يشرح هذا الدليل الخطوات الثلاث، ما تتحقق منه قبل الرفع، وما تفعله بعد الاستيراد.
 
 > المسار: `/settings/products-services` ← **استيراد**.
 
-<Steps>
-  <Step title="1 — الرفع">
-    **اسحب CSV** أو تصفّح. **حمّل قالب استيراد المنتجات** إن بدأت من الصفر. يدعم **.csv** فقط.
-  </Step>
-  <Step title="2 — ربط الأعمدة">
-    كل **عمود CSV** → **حقل منتج** (اسم، رمز، سعر…) أو **تخطي**.
-  </Step>
-  <Step title="3 — التأكيد">
-    راجع عدد الصفوف والأعمدة المربوطة — **اسم الاستيراد** للتتبع — **بدء الاستيراد**.
-  </Step>
-</Steps>
-
-<Info>
-**وسائط مطلوبة:** خطوة «ربط الأعمدة» — عمود «name» مربوط بـ «اسم المنتج» وعداد «X من Y أعمدة تم ربطها».  
-المسار المقترح: `/images/help/settings/products/import-mapping.webp`  
-**فيديو (مستحسن):** 45 ثانية: قالب → رفع → ربط → بدء.
-</Info>
-
-## قبل الرفع
+## قبل أن تبدأ
 
 | تحقق | لماذا |
 | --- | --- |
 | **رمز/اسم** فريدان | تقليل رفض الصفوف |
-| **عملة** متوافقة مع [الإعدادات العامة](/ar/help-center/guides/settings/general) | أسعار صحيحة |
+| **عملة** لكل صف إن لزم | أسعار صحيحة على مستوى الـ SKU |
 | **UTF-8** للعربية | تجنّب رموز مشوّهة |
 | نسخة احتياطية | الاستيراد يحدّث أو يُنشئ — راجع سياسة التكرار في الواجهة |
+
+## الخطوات
+
+<Steps>
+  <Step title="الرفع">
+    **اسحب CSV** أو تصفّح. **حمّل قالب استيراد المنتجات** إن بدأت من الصفر. يدعم **.csv** فقط.
+
+    {/* MEDIA: /images/help/settings/products/import-upload-gif.webp | GIF 4ث: سحب ملف CSV أو اختياره من الجهاز */}
+    <Frame caption="رفع ملف CSV">
+      <img src="/images/help/settings/products/import-upload-gif.webp" alt="رفع ملف CSV لاستيراد المنتجات" />
+    </Frame>
+  </Step>
+  <Step title="ربط الأعمدة">
+    كل **عمود CSV** → **حقل منتج** (اسم، رمز، سعر…) أو **تخطي**.
+
+    {/* MEDIA: /images/help/settings/products/import-mapping.webp | خطوة «ربط الأعمدة» — عمود «name» مربوط بـ «اسم المنتج» وعداد «X من Y أعمدة تم ربطها» | فيديو (مستحسن): 45 ثانية: قالب → رفع → ربط → بدء. */}
+    <Frame caption="ربط أعمدة CSV بحقول المنتج">
+      <img src="/images/help/settings/products/import-mapping.webp" alt="خطوة ربط الأعمدة مع عداد الأعمدة المربوطة" />
+    </Frame>
+  </Step>
+  <Step title="التأكيد وبدء الاستيراد">
+    راجع عدد الصفوف والأعمدة المربوطة — **اسم الاستيراد** للتتبع — **بدء الاستيراد**.
+  </Step>
+</Steps>
+
+{/* MEDIA: /images/help/settings/products/import-flow-video.mp4 | فيديو 45ث: قالب → رفع → ربط → بدء الاستيراد */}
+<Frame caption="رحلة الاستيراد من القالب حتى البدء">
+  <video src="/images/help/settings/products/import-flow-video.mp4" controls />
+</Frame>
 
 ## أخطاء شائعة
 
@@ -44,11 +61,26 @@ description: "استورد منتجاتاً من CSV: رفع، ربط أعمدة
 
 ## بعد الاستيراد
 
-- راجع **الحالة** (مسودة vs نشط) في [الكتalog](/ar/help-center/guides/settings/products/overview)  
+- راجع **الحالة** (مسودة vs نشط) في [الكتالوج](/ar/help-center/guides/settings/products/overview)  
 - أضف **صوراً** يدوياً — CSV قد لا يتضمن ملفات  
-- للمتجر الم live: قارن مع [مزامنة التطبيق](/ar/help-center/guides/store/ecommerce-apps)
+- للمتجر المتصل: قارن مع [مزامنة التطبيق](/ar/help-center/guides/store/ecommerce-apps)
+
+## أسئلة شائعة
+
+**هل يدعم Excel مباشرة؟**  
+الواجهة تدعم **.csv** فقط — صدّر من Excel إلى CSV بترميز UTF-8.
+
+**هل الاستيراد يستبدل الصور؟**  
+غالباً تحتاج رفع الصور لاحقاً إن لم يتضمن الملف مسارات مدعومة.
+
+## الخطوة التالية
+
+تعلّمت استيراد كتالوج كبير عبر CSV. بعد ذلك:
+
+- راجع النتائج في [نظرة عامة على الكتالوج](/ar/help-center/guides/settings/products/overview).
+- لفكرة مشابهة على العملاء: [استيراد جهات الاتصال](/ar/help-center/guides/contacts/import).
 
 ## ذات صلة
 
 - [نظرة عامة على الكتالوج](/ar/help-center/guides/settings/products/overview)
-- [استيراد جهات الاتصال](/ar/help-center/guides/contacts/import) — نفس الفكرة لعملاء
+- [استيراد جهات الاتصال](/ar/help-center/guides/contacts/import)

@@ -1,24 +1,30 @@
 ---
 title: "نظرة عامة على الكتالوج"
-description: "المنتجات والخدمات في كرزون — كتalog داخلي للأتمتة والردود، مقابل كتalog متجر مزامن من سلة/زد."
+description: "المنتجات والخدمات في كرزون — كتالوج داخلي للأتمتة والردود، مقابل كتالوج متجر مزامن من سلة/زد."
+type: overview
+updated: "2026-08-17"
 ---
 
-**المنتجات والخدمات** في الإعدادات (`/settings/products-services`) كتalog **داخل كرزون** — للإدراج في رسائل، [أتمتة](/ar/help-center/guides/automations/overview)، و[طلبات](/ar/help-center/guides/orders/overview). ليس بالضرورة نفس كتalog **سلة** أو **زد** إن كان متجرك منفصلاً.
+عندما يخلط الفريق بين كتالوج كرزون ومنتجات سلة أو زد، تظهر أسعار أو حالات متعارضة في الرسائل والطلبات.
+
+**المنتجات والخدمات** في الإعدادات (`/settings/products-services`) كتالوج **داخل كرزون** — للإدراج في رسائل، [أتمتة](/ar/help-center/guides/automations/overview)، و[طلبات](/ar/help-center/guides/orders/overview). ليس بالضرورة نفس كتالوج **سلة** أو **زد** إن كان متجرك منفصلاً.
+
+في هذا الدليل تتعلّم الفرق بين المصادر، الأنواع والحالات، وأين يُستخدم الكتالوج.
 
 > **صلاحية:** `manageProducts`.
 
-<Info>
-**وسائط مطلوبة:** صفحة المنتجات — عرض جدول مع فلاتر الحالة والنوع وأزرار «إضافة منتج» و«استيراد».  
-المسار المقترح: `/images/help/settings/products/overview-catalog.webp`
-</Info>
+{/* MEDIA: /images/help/settings/products/overview-catalog.webp | صفحة المنتجات — عرض جدول مع فلاتر الحالة والنوع وأزرار «إضافة منتج» و«استيراد» */}
+<Frame caption="قائمة المنتجات مع فلاتر وإضافة واستيراد">
+  <img src="/images/help/settings/products/overview-catalog.webp" alt="صفحة المنتجات عرض جدول مع فلاتر وإضافة منتج واستيراد" />
+</Frame>
 
-## كتalog كرزون vs متجر متصل
+## كتالوج كرزون vs متجر متصل
 
 | المصدر | متى |
 | --- | --- |
 | **يدوي / استيراد CSV** | `/settings/products-services` |
 | **تطبيق سلة/زد/شوبيفاي** | [المتجر](/ar/help-center/guides/store/overview) — مزامنة منتجات |
-| **واتسApp Commerce** | [تجارة واتسApp](/ar/help-center/guides/whatsapp/commerce/overview) |
+| **واتساب Commerce** | [تجارة واتساب](/ar/help-center/guides/whatsapp/commerce/overview) |
 
 قد ترى **نفس SKU** من مصدرين — حدّد «مصدر الحقيقة» لفريقك لتجنّب أسعار متعارضة.
 
@@ -40,18 +46,38 @@ description: "المنتجات والخدمات في كرزون — كتalog د�
 | **معطل / مخفي / مؤرشف** | لا يُعرض للعملاء أو للاختيار |
 
 <Warning>
-إذا **كل المتغيرات** غير نشطة، تحذير الكتalog: المنتج «غير متوفر» — راجع [الفئات والمتغيرات](/ar/help-center/guides/settings/products/categories-variants).
+إذا **كل المتغيرات** غير نشطة، تحذير الكتالوج: المنتج «غير متوفر» — راجع [الفئات والمتغيرات](/ar/help-center/guides/settings/products/categories-variants).
 </Warning>
 
 ## العرض: شبكة أو جدول
 
 **عرض شبكي** للمعاينة السريعة · **عرض جدول** للفرز والإجراءات الجماعية. فلاتر: **بحث**، **حالة**، **نوع**، **علامة تجارية**.
 
-## أين يُستخدم الكتalog؟
+{/* MEDIA: /images/help/settings/products/overview-grid-table-gif.webp | GIF 4ث: التبديل بين عرض شبكة وجدول مع فلتر حالة نشط */}
+<Frame caption="التبديل بين شبكة وجدول">
+  <img src="/images/help/settings/products/overview-grid-table-gif.webp" alt="التبديل بين عرض شبكة وجدول في صفحة المنتجات" />
+</Frame>
 
-- رسائل [واتسApp Commerce](/ar/help-center/guides/whatsapp/commerce/messages)  
+## أين يُستخدم الكتالوج؟
+
+- رسائل [واتساب Commerce](/ar/help-center/guides/whatsapp/commerce/messages)  
 - إجراءات أتمتة على الطلبات  
 - [الطلبات](/ar/help-center/guides/orders/overview) في المنصة  
+
+## أسئلة شائعة
+
+**هل استيراد CSV يغني عن مزامنة المتجر؟**  
+لكل مسار استخدامه. المتجر المتصل يحدّث من المنصة الخارجية؛ CSV لكتالوج كرزون الداخلي.
+
+**من يدير الصفحة؟**  
+من لديه `manageProducts`.
+
+## الخطوة التالية
+
+تعلّمت خريطة الكتالوج الداخلي. بعد ذلك:
+
+- أضف SKU يدوياً: [إضافة منتج](/ar/help-center/guides/settings/products/add-product).
+- للكميات الكبيرة: [الاستيراد الجماعي](/ar/help-center/guides/settings/products/import).
 
 ## ذات صلة
 

@@ -1,9 +1,15 @@
 ---
 title: "تعليقات إنستغرام"
 description: "اربط تعليقات منشورات وريلز إنستغرام بكرزون لتعالج التفاعل العام من البريد الوارد."
+type: setup
+updated: "2026-08-17"
 ---
 
-قناة **تعليقات إنستغرام** تجمع تعليقات الجمهور على المحتوى إلى البريد الوارد. الرسائل الخاصة تبقى في قناة [رسائل إنستغرام](/ar/help-center/guides/channels/instagram-messenger).
+عندما تبقى تعليقات الريلز والمنشورات في إنستغرام، يصعب مراقبتها مع الرسائل الخاصة في نفس الوارد.
+
+تجمع قناة **تعليقات إنستغرام** تعليقات الجمهور إلى **البريد الوارد**، منفصلة عن قناة [رسائل إنستغرام](/ar/help-center/guides/channels/instagram-messenger).
+
+يشرح هذا الدليل كيف تربط حساب الأعمال وتختبر بتعليق، وأين يُدار الرد بعد الربط.
 
 في الإضافة: **تعليقات إنستغرام** · `/channels?add=instagram-comments`.
 
@@ -17,7 +23,13 @@ description: "اربط تعليقات منشورات وريلز إنستغرام
 | **متى لا** | لا حساب أعمال/محترفين مرتبط بمتطلبات ميتا |
 | **الأثر** | خيوط تعليقات منفصلة عن الـ DM في الفلاتر |
 
-## الربط
+## قبل أن تبدأ
+
+- حساب إنستغرام للأعمال/المحترفين مربوط وفق متطلبات ميتا الحالية
+- صلاحية على الحساب التجاري في ميتا
+- قسم في كرزون لاختياره عند الإنشاء
+
+## الخطوات
 
 <Steps>
   <Step title="اختر تعليقات إنستغرام">
@@ -25,27 +37,65 @@ description: "اربط تعليقات منشورات وريلز إنستغرام
   </Step>
   <Step title="فوض حساب ميتا">
     اربط أو اختر حساباً يملك الوصول لحساب إنستغرام.
+
+    {/* MEDIA: /images/help/channels/instagram-comments-oauth-gif.webp | GIF 5ث: تفويض ميتا ثم ظهور حساب إنستغرام للاختيار */}
+    <Frame caption="تفويض ميتا لحساب إنستغرام">
+      <img src="/images/help/channels/instagram-comments-oauth-gif.webp" alt="تفويض ميتا أثناء ربط تعليقات إنستغرام" />
+    </Frame>
   </Step>
   <Step title="اختر الحساب ثم أنشئ">
     سمِّ القناة، اختر القسم، وأكمل. الحساب المستخدم لنوع التعليقات لا يُختار مرتين.
+
+    {/* MEDIA: /images/help/channels/instagram-comments-wizard.webp | خطوة اختيار حساب إنستغرام لتعليقات */}
+    <Frame caption="اختيار حساب إنستغرام للتعليقات">
+      <img src="/images/help/channels/instagram-comments-wizard.webp" alt="خطوة اختيار حساب إنستغرام لتعليقات" />
+    </Frame>
   </Step>
   <Step title="اختبر بتعليق على منشور">
     انشر أو استخدم منشوراً حديثاً وعلّق من حساب تجريبي.
+
+    {/* MEDIA: /images/help/channels/instagram-comments-test-gif.webp | GIF 5ث: تعليق على منشور أو ريلز → ظهور الخيط في الوارد */}
+    <Frame caption="وصول تعليق الاختبار إلى البريد الوارد">
+      <img src="/images/help/channels/instagram-comments-test-gif.webp" alt="خيط تعليق إنستغرام في البريد الوارد بعد الاختبار" />
+    </Frame>
   </Step>
 </Steps>
 
-<Info>
-**وسائط مطلوبة:** خطوة اختيار حساب إنستغرام لتعليقات.  
-المسار المقترح: `/images/help/channels/instagram-comments-wizard.webp`
-</Info>
+{/* MEDIA: /images/help/channels/instagram-comments-connect-video.mp4 | فيديو 30ث: من اختيار النوع حتى تعليق اختبار في الوارد */}
+<Frame caption="من ربط الحساب حتى تعليق الاختبار">
+  <video controls src="/images/help/channels/instagram-comments-connect-video.mp4" />
+</Frame>
 
-## العمل بعد الوصول
+## بعد الربط
 
 لا تُدار جودة الرد من شاشة الربط. استخدم:
 
 - [تعليقات السوشيال](/ar/help-center/guides/inbox/social-comments)  
 - [القنوات في البريد الوارد](/ar/help-center/guides/inbox/channels-in-inbox)  
 - عند بناء مسار من تعليق إلى خاص: [رسالة مباشرة](/ar/help-center/guides/automations/nodes/actions/send-dm)
+
+## أخطاء شائعة
+
+| العَرَض | التصرف |
+| --- | --- |
+| فشل التفويض | أعد الربط بحساب يملك الوصول لحساب إنستغرام للأعمال |
+| لا تعليقات | القناة غير نشطة، أو المحتوى على حساب غير المربوط |
+| تخلط مع الرسائل الخاصة | الرسائل في [رسائل إنستغرام](/ar/help-center/guides/channels/instagram-messenger) — ليست هذه القناة |
+
+## قبل التصعيد
+
+1. راجع [صحة الخدمة](https://status.karzoun.chat/) — إن كان العطل على مستوى المنصة فلا تفتح بلاغاً مكرراً.
+2. أكّد أنك أنهيت خطوات هذه الصفحة (والتحقق إن وُجد).
+3. جهّز: لقطة الشاشة أو نص الخطأ، الوقت التقريبي، واسم القناة أو التطبيق، وخطوات إعادة الإظهار.
+
+بعد ذلك: [الحصول على الدعم](/ar/help-center/guides/getting-started/get-support).
+
+## الخطوة التالية
+
+تعلّمت كيف تربط تعليقات إنستغرام. بعد ذلك:
+
+- للرد الظاهر والخاص: [تعليقات السوشيال](/ar/help-center/guides/inbox/social-comments).
+- للرسائل المباشرة على نفس الحساب: [رسائل إنستغرام](/ar/help-center/guides/channels/instagram-messenger).
 
 ## ذات صلة
 

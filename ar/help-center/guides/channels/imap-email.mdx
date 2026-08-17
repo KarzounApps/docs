@@ -1,9 +1,15 @@
 ---
 title: "بريد إلكتروني (IMAP/SMTP)"
 description: "اربط بريداً عبر IMAP/SMTP ليظهر في بريد كرزون الوارد دون نقل الاستضافة إلى كرزون."
+type: setup
+updated: "2026-08-17"
 ---
 
-**بريد إلكتروني (IMAP/SMTP)** يصل كرزون بخادم بريدك الحالي: IMAP للمزامنة الواردة وSMTP لإرسال الردود عبر مزوّدك. البريد يبقى عند Google أو Microsoft أو غيرهما — كرزون حساب يجمع عمل الفريق فوق ذلك.
+عندما يريد الفريق رؤية صندوق Gmail أو Microsoft في كرزون دون نقل الاستضافة، تحتاج بيانات IMAP وSMTP الصحيحة.
+
+يربط **بريد إلكتروني (IMAP/SMTP)** كرزون بخادمك الحالي: جلب وارد عبر IMAP وإرسال الردود عبر SMTP.
+
+يشرح هذا الدليل كيف تملأ النموذج وتختبر الاستقبال والرد، وما تفعله عند فشل المصادقة.
 
 إن كنت متردداً بين الخيارين: [أي بريد أختار؟](/ar/help-center/guides/channels/email-choose).
 
@@ -19,7 +25,7 @@ description: "اربط بريداً عبر IMAP/SMTP ليظهر في بريد ك
 | **متى لا** | تريد نطاقاً مُداراً بالكامل داخل كرزون بلا خادم خارجي — استخدم [بريد الأعمال من كرزون](/ar/help-center/guides/channels/business-email) |
 | **الأثر** | نفس الرسالة قد تُرى في Gmail/Outlook **و** في وارد كرزون |
 
-## قبل الربط
+## قبل أن تبدأ
 
 جهّز:
 
@@ -29,7 +35,7 @@ description: "اربط بريداً عبر IMAP/SMTP ليظهر في بريد ك
 - مضيف ومنفذ SMTP (شائع 587 مع TLS)  
 - قسماً في كرزون
 
-## خطوات الربط
+## الخطوات
 
 <Steps>
   <Step title="اختر بريد إلكتروني (IMAP/SMTP)">
@@ -37,16 +43,36 @@ description: "اربط بريداً عبر IMAP/SMTP ليظهر في بريد ك
   </Step>
   <Step title="عبّئ بيانات الخادم">
     اسم القناة، مضيف ومنفذ IMAP مع TLS، مضيف ومنفذ SMTP مع TLS، المستخدم، كلمة المرور، والمستخدم الرئيسي أو الأسماء المستعارة إن لزم، ثم القسم.
+
+    {/* MEDIA: /images/help/channels/imap-email-form.webp | نموذج ربط IMAP/SMTP بالحقول الأساسية */}
+    <Frame caption="نموذج IMAP وSMTP بالحقول الأساسية">
+      <img src="/images/help/channels/imap-email-form.webp" alt="نموذج ربط IMAP/SMTP بالحقول الأساسية" />
+    </Frame>
+
+    {/* MEDIA: /images/help/channels/imap-email-smtp-fields.webp | حقول مضيف ومنفذ SMTP مع TLS بجانب IMAP */}
+    <Frame caption="حقول SMTP بجانب IMAP">
+      <img src="/images/help/channels/imap-email-smtp-fields.webp" alt="حقول مضيف ومنفذ SMTP في نموذج البريد" />
+    </Frame>
+
+    {/* MEDIA: /images/help/channels/imap-email-fill-gif.webp | GIF 6ث: ملء المضيف والمستخدم وكلمة مرور التطبيق ثم الحفظ */}
+    <Frame caption="تعبئة بيانات الخادم وحفظ القناة">
+      <img src="/images/help/channels/imap-email-fill-gif.webp" alt="تعبئة نموذج IMAP/SMTP وحفظ القناة" />
+    </Frame>
   </Step>
   <Step title="احفظ واختبر">
     أرسل رسالة إلى الصندوق من عنوان خارجي، وتأكد أنها ظهرت في البريد الوارد، ثم رد من كرزون وتأكد من وصول الرد عبر SMTP.
+
+    {/* MEDIA: /images/help/channels/imap-email-test-inbox-gif.webp | GIF 5ث: رسالة خارجية → ظهورها في البريد الوارد ثم رد من كرزون */}
+    <Frame caption="اختبار الاستقبال ثم الرد من الوارد">
+      <img src="/images/help/channels/imap-email-test-inbox-gif.webp" alt="رسالة IMAP اختبار في البريد الوارد" />
+    </Frame>
   </Step>
 </Steps>
 
-<Info>
-**وسائط مطلوبة:** نموذج ربط IMAP/SMTP بالحقول الأساسية.  
-المسار المقترح: `/images/help/channels/imap-email-form.webp`
-</Info>
+{/* MEDIA: /images/help/channels/imap-email-setup-video.mp4 | فيديو 35ث: من ملء النموذج حتى رسالة اختبار ورد عبر SMTP */}
+<Frame caption="من النموذج حتى اختبار الاستقبال والرد">
+  <video controls src="/images/help/channels/imap-email-setup-video.mp4" />
+</Frame>
 
 ## بعد الربط
 
@@ -66,6 +92,21 @@ description: "اربط بريداً عبر IMAP/SMTP ليظهر في بريد ك
 | لا رسائل جديدة | القناة غير نشطة، أو مجلد/فلتر عند المزوّد يحجب الجلب |
 | الرد لا يصل | بيانات SMTP أو المنفذ/TLS خاطئة |
 | قفل الحساب | كثرة محاولات فاشلة — أصلح البيانات من لوحة المزوّد أولاً |
+
+## قبل التصعيد
+
+1. راجع [صحة الخدمة](https://status.karzoun.chat/) — إن كان العطل على مستوى المنصة فلا تفتح بلاغاً مكرراً.
+2. أكّد أنك أنهيت خطوات هذه الصفحة (والتحقق إن وُجد).
+3. جهّز: لقطة الشاشة أو نص الخطأ، الوقت التقريبي، واسم القناة أو التطبيق، وخطوات إعادة الإظهار.
+
+بعد ذلك: [الحصول على الدعم](/ar/help-center/guides/getting-started/get-support).
+
+## الخطوة التالية
+
+تعلّمت كيف تربط الصندوق دون نقل الاستضافة. بعد ذلك:
+
+- للرد اليومي: [القنوات في البريد الوارد](/ar/help-center/guides/inbox/channels-in-inbox).
+- لعناوين خدمة على نطاق مُدار: [بريد الأعمال من كرزون](/ar/help-center/guides/channels/business-email).
 
 ## ذات صلة
 
