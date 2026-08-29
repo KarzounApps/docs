@@ -371,6 +371,7 @@
                 "group": "الإعداد",
                 "pages": [
                   "ar/mcp-server/setup/cursor",
+                  "ar/mcp-server/setup/vscode",
                   "ar/mcp-server/setup/claude-desktop",
                   "ar/mcp-server/setup/hosted",
                   "ar/mcp-server/setup/ai-connectors",
@@ -1263,6 +1264,7 @@
                 "group": "Setup",
                 "pages": [
                   "mcp-server/setup/cursor",
+                  "mcp-server/setup/vscode",
                   "mcp-server/setup/claude-desktop",
                   "mcp-server/setup/hosted",
                   "mcp-server/setup/ai-connectors",

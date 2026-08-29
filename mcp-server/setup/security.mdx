@@ -27,7 +27,8 @@ The JWT from `appsAdd` is shown **once** — same rules as [authentication](/dev
 - Call only from **trusted servers** you control
 - Terminate TLS at your edge; never downgrade to HTTP
 - Pass `x-app-token` server-side; never forward to browsers or mobile apps
-- Session ids (`mcp-session-id`) are not secrets, but tie activity to your server — do not publish them
+- Hosted POSTs are rate-limited per app token (default **120/min**, `MCP_RATE_LIMIT_PER_MIN`; set `0` to disable)
+- GraphQL tool calls time out by default after **30s** (`KARZOUN_MCP_FETCH_TIMEOUT_MS`)
 
 ## Permission scoping
 

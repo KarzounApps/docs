@@ -39,9 +39,34 @@ Tool names **match GraphQL operation names** exactly:
 
 Browse the full list in the [tool catalog](/mcp-server/tools/catalog). Field-level documentation lives in the [GraphQL reference](/api-reference).
 
+## Annotations (read vs write)
+
+Every tool includes MCP **annotations** so clients can treat reads differently from writes:
+
+| GraphQL | MCP hints |
+| ------- | --------- |
+| Query | `readOnlyHint: true`, `idempotentHint: true` |
+| Mutation | `readOnlyHint: false`, `destructiveHint: true` |
+
+All tools also set `openWorldHint: true` (they hit your live workspace). Annotations are **hints for the client**, not a security boundary — the app token still decides what runs.
+
+On the hosted HTTP endpoint, tool schemas are cached **per pack in the gateway process** so each POST does not rebuild Zod for every tool. Auth tokens are never part of that cache.
+
 ## Limiting tools
 
-Large manifests can overwhelm smaller models. Set a prefix to expose only what you need:
+Prefer a **pack** so agents only see the tools for a job:
+
+```json
+"env": {
+  "KARZOUN_API_URL": "https://YOUR.api.karzoun.chat/graphql",
+  "KARZOUN_APP_TOKEN": "YOUR_TOKEN",
+  "KARZOUN_MCP_PACK": "customer-support"
+}
+```
+
+HTTP equivalent: `POST /mcp/customer-support`. See [packs](/mcp-server/setup/hosted#packs-tool-subsets).
+
+You can also narrow further with a name prefix:
 
 ```json
 "env": {

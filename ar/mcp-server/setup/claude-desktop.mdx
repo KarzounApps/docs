@@ -1,50 +1,49 @@
 ---
 title: "إعداد Claude Desktop (stdio)"
-description: "اربط Claude Desktop بكرزون عبر خادم MCP المحلي."
+description: "اربط Claude Desktop بـ Karzoun عبر خادم MCP المحلي."
 ---
 
 <img src="/images/brands/claude-icon.png" alt="Claude" width="72" height="72" className="karzoun-brand-logo" />
 
-يستخدم Claude Desktop نفس حزمة `@karzounchat/mcp-server` المستخدمة في Cursor، مع موقع ملف إعداد مختلف.
+يستخدم Claude Desktop نفس حزمة `@karzounchat/mcp-server` مع مسار ملف إعداد مختلف.
 
 ## ملف الإعداد
 
-| نظام التشغيل      | المسار                                                              |
-| ------- | ------------------------------------------------------------------ |
-| macOS   | `~/Library/Application Support/Claude/claude_desktop_config.json` |
-| Windows | `%APPDATA%\Claude\claude_desktop_config.json`                     |
+| النظام | المسار |
+| ------ | ------ |
+| macOS  | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
 
 ## الإعداد
 
 ```json
 {
   "mcpServers": {
-    "karzoun": {
+    "karzoun-customer-support": {
       "command": "npx",
       "args": ["-y", "@karzounchat/mcp-server"],
       "env": {
         "KARZOUN_API_URL": "https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql",
-        "KARZOUN_APP_TOKEN": "YOUR_APP_TOKEN"
+        "KARZOUN_APP_TOKEN": "YOUR_APP_TOKEN",
+        "KARZOUN_MCP_PACK": "customer-support"
       }
     }
   }
 }
 ```
 
-أنشئ رمز تطبيق من **المطوّر ← التطبيقات** ([المصادقة](/ar/developers/getting-started/authentication)).
+أنشئ رمزاً من **المطور → التطبيقات**. عيّن `KARZOUN_MCP_PACK` لحزمة مركّزة أو `full`. انظر [الحزم](/mcp-server/setup/hosted#packs-tool-subsets).
 
 ## التحقق
 
 1. أغلق Claude Desktop وأعد فتحه
-2. ابحث عن مؤشر **المطرقة / الأدوات** — يجب أن تظهر أدوات كرزون
-3. اطلب: _"Using Karzoun tools, list my first 5 tags"_
+2. ابحث عن مؤشر الأدوات — يجب أن تظهر أدوات Karzoun
+3. اسأل: _"Using Karzoun tools, list my first 5 tags"_
 
-<Tip title="مكان مخصص للقطة شاشة">
-  _قريبًا: Claude Desktop يعرض كرزون في قائمة الأدوات المتاحة._
-</Tip>
+## Claude على الويب؟
+
+استخدم موصّل HTTP وليس هذا الملف: [موصّلات الذكاء الاصطناعي](/mcp-server/setup/ai-connectors#claudeai).
 
 ## استكشاف الأخطاء
 
-نفس الإصلاحات كما في [استكشاف أخطاء Cursor](/ar/mcp-server/guides/troubleshooting) — متغيرات البيئة، نطاقات الرمز، واتصال `npx`.
-
-لخطوات Cursor الخاصة ببيئة التطوير، راجع [إعداد Cursor](/ar/mcp-server/setup/cursor).
+نفس إصلاحات [Cursor](/mcp-server/guides/troubleshooting). للمحررين انظر [Cursor](/mcp-server/setup/cursor) أو [VS Code](/mcp-server/setup/vscode).

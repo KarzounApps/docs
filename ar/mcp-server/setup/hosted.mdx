@@ -9,6 +9,7 @@ description: "استدعِ كرزون MCP عبر Streamable HTTP من الخلف
 
 ```
 https://{subdomain}.api.karzoun.chat/mcp
+https://{subdomain}.api.karzoun.chat/mcp/{pack}
 ```
 
 <Warning title="من جهة الخادم فقط">
@@ -17,15 +18,13 @@ https://{subdomain}.api.karzoun.chat/mcp
 
 ## متى تستخدم المستضاف
 
-| استخدم المستضاف                                     | استخدم stdio بدلًا منه               |
-| ---------------------------------------------- | -------------------------------- |
-| وكيل ذكاء اصطناعي منشور على بنيتك       | البرمجة المحلية في Cursor / Claude |
-| مهمة Cron أو عامل خلفي يحتاج أدوات CRM           | استكشاف لمرة واحدة             |
-| وكيل SaaS متعدد المستأجرين يمرّر رموزًا لكل عميل | جهاز التطوير الشخصي            |
+| استخدم المستضاف | استخدم stdio بدلًا منه |
+| --- | --- |
+| وكيل ذكاء اصطناعي منشور على بنيتك | البرمجة المحلية في Cursor / Claude |
+| مهمة Cron أو عامل خلفي يحتاج أدوات CRM | استكشاف لمرة واحدة |
+| وكيل SaaS متعدد المستأجرين يمرّر رموزًا لكل عميل | جهاز التطوير الشخصي |
 
 ## المصادقة
-
-يتطلب كل طلب نفس الترويسة المستخدمة في GraphQL:
 
 ```
 x-app-token: YOUR_APP_TOKEN_JWT
@@ -33,31 +32,35 @@ x-app-token: YOUR_APP_TOKEN_JWT
 
 اختياري: `x-subdomain` عندما توجّه بوابتك المستأجرين عبر الترويسة.
 
-## مصافحة الجلسة
+## الحزم (packs)
 
-```mermaid
-sequenceDiagram
-  participant Client as Your server
-  participant MCP as /mcp
+فضّل **حزمة** حتى يحصل الوكيل على قائمة أدوات مركّزة:
 
-  Client->>MCP: POST initialize (no session)
-  MCP-->>Client: mcp-session-id header
-  Client->>MCP: POST tools/list (with session)
-  MCP-->>Client: tool definitions
-  Client->>MCP: POST tools/call customers
-  MCP-->>Client: JSON result
-```
-
-1. **POST** `initialize` — بدون `mcp-session-id` بعد
-2. اقرأ **`mcp-session-id`** من ترويسات الاستجابة
-3. **POST** `tools/list`، `tools/call`، وغيرها مع تلك الترويسة في كل طلب لاحق
-
-الجلسات مرتبطة بعملية البوابة — أعد التهيئة بعد عمليات النشر أو فترات الخمول الطويلة.
-
-## مثال التهيئة
+| الحزمة | المسار |
+| --- | --- |
+| دعم العملاء | `/mcp/customer-support` |
+| التسويق | `/mcp/marketing` |
+| العمليات | `/mcp/operations` |
+| واتساب | `/mcp/whatsapp` |
+| الأتمتة | `/mcp/automations` |
+| التكاملات | `/mcp/integrations` |
+| الذكاء الاصطناعي | `/mcp/ai` |
+| كامل الواجهة العامة | `/mcp` أو `/mcp/full` |
 
 ```bash
-curl -sD - -X POST 'https://YOUR.api.karzoun.chat/mcp' \
+curl -s 'https://YOUR.api.karzoun.chat/mcp/packs'
+```
+
+يمكنك أيضًا تمرير `?pack=customer-support` أو الترويسة `x-mcp-pack: customer-support` على `/mcp`.
+
+## النقل
+
+MCP المستضاف **عديم الحالة** (stateless) عبر Streamable HTTP. يرسل العميل `initialize` ثم `tools/list` / `tools/call` كطلبات POST منفصلة — دون الحاجة إلى `mcp-session-id` ثابت عبر نسخ البوابة.
+
+## مثال initialize
+
+```bash
+curl -s -X POST 'https://YOUR.api.karzoun.chat/mcp/customer-support' \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json, text/event-stream' \
   -H 'x-app-token: YOUR_TOKEN' \
@@ -73,60 +76,9 @@ curl -sD - -X POST 'https://YOUR.api.karzoun.chat/mcp' \
   }'
 ```
 
-احفظ ترويسة `mcp-session-id` من الاستجابة.
-
-## سرد الأدوات
-
-```bash
-curl -X POST 'https://YOUR.api.karzoun.chat/mcp' \
-  -H 'Content-Type: application/json' \
-  -H 'Accept: application/json, text/event-stream' \
-  -H 'x-app-token: YOUR_TOKEN' \
-  -H 'mcp-session-id: YOUR_SESSION_ID' \
-  -d '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'
-```
-
-## استدعاء أداة
-
-```bash
-curl -X POST 'https://YOUR.api.karzoun.chat/mcp' \
-  -H 'Content-Type: application/json' \
-  -H 'Accept: application/json, text/event-stream' \
-  -H 'x-app-token: YOUR_TOKEN' \
-  -H 'mcp-session-id: YOUR_SESSION_ID' \
-  -d '{
-    "jsonrpc": "2.0",
-    "id": 3,
-    "method": "tools/call",
-    "params": {
-      "name": "tags",
-      "arguments": { "page": 1, "perPage": 5 }
-    }
-  }'
-```
-
-## نمط البنية
-
-```mermaid
-flowchart TB
-  User[End user] --> App[Your app]
-  App --> Agent[AI agent layer]
-  Agent -->|x-app-token| MCP["Karzoun /mcp"]
-  MCP --> GQL[GraphQL]
-  Secrets[(Secrets manager)] -.-> Agent
-```
-
-خزّن الرموز في مدير أسرار؛ وحقنها لكل مستأجر إذا كنت تشغّل SaaS متعدد المستأجرين.
-
-## الحدود
-
-- نفس صلاحيات GraphQL وسلوك المعدّل كما في الاستدعاءات المباشرة للواجهة
-- حد افتراضي لاستجابة الأداة **512 كيلوبايت** (قابل للضبط على تركيبات البوابة المستضافة ذاتيًا)
-- راجع [الأمان](/ar/mcp-server/setup/security) للتدوير وتحديد النطاق
-
 ## الخطوات التالية
 
-- [موصّلات تطبيقات الذكاء الاصطناعي](/ar/mcp-server/setup/ai-connectors) — Claude، Manus، ChatGPT، Cursor عن بُعد
-- [أنماط الوكلاء](/ar/mcp-server/guides/agent-patterns) — أوامر عمال المستضاف
-- [كيف يعمل](/ar/mcp-server/guides/how-it-works) — الأخطاء وحدود الحجم
-- [استكشاف الأخطاء](/ar/mcp-server/guides/troubleshooting) — أخطاء الجلسة و401
+- [موصّلات تطبيقات الذكاء الاصطناعي](/ar/mcp-server/setup/ai-connectors)
+- [أنماط الوكلاء](/ar/mcp-server/guides/agent-patterns)
+- [كيف يعمل](/ar/mcp-server/guides/how-it-works)
+- [استكشاف الأخطاء](/ar/mcp-server/guides/troubleshooting)

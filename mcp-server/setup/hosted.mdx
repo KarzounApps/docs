@@ -9,6 +9,7 @@ Call Karzoun MCP over **Streamable HTTP** from your backend — or connect **clo
 
 ```
 https://{subdomain}.api.karzoun.chat/mcp
+https://{subdomain}.api.karzoun.chat/mcp/{pack}
 ```
 
 <Warning title="Server-side only">
@@ -33,31 +34,37 @@ x-app-token: YOUR_APP_TOKEN_JWT
 
 Optional: `x-subdomain` when your gateway routes tenants by header.
 
-## Session handshake
+## Packs (tool subsets)
 
-```mermaid
-sequenceDiagram
-  participant Client as Your server
-  participant MCP as /mcp
+Prefer a **pack** so agents get a focused tool list:
 
-  Client->>MCP: POST initialize (no session)
-  MCP-->>Client: mcp-session-id header
-  Client->>MCP: POST tools/list (with session)
-  MCP-->>Client: tool definitions
-  Client->>MCP: POST tools/call customers
-  MCP-->>Client: JSON result
+| Pack | URL |
+|------|-----|
+| Customer support | `/mcp/customer-support` |
+| Marketing | `/mcp/marketing` |
+| Operations | `/mcp/operations` |
+| WhatsApp | `/mcp/whatsapp` |
+| Automations | `/mcp/automations` |
+| Integrations | `/mcp/integrations` |
+| AI (knowledge base) | `/mcp/ai` |
+| Full public API | `/mcp` or `/mcp/full` |
+
+List packs:
+
+```bash
+curl -s 'https://YOUR.api.karzoun.chat/mcp/packs'
 ```
 
-1. **POST** `initialize` — no `mcp-session-id` yet
-2. Read **`mcp-session-id`** from response headers
-3. **POST** `tools/list`, `tools/call`, etc. with that header on every follow-up
+You can also pass `?pack=customer-support` or header `x-mcp-pack: customer-support` on `/mcp`.
 
-Sessions are tied to the gateway process — re-initialize after deploys or long idle periods.
+## Transport
+
+Hosted MCP is **stateless** Streamable HTTP (JSON responses). Official MCP clients still send `initialize` then `tools/list` / `tools/call` as separate POSTs — no sticky `mcp-session-id` is required across gateway pods.
 
 ## Initialize example
 
 ```bash
-curl -sD - -X POST 'https://YOUR.api.karzoun.chat/mcp' \
+curl -s -X POST 'https://YOUR.api.karzoun.chat/mcp/customer-support' \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json, text/event-stream' \
   -H 'x-app-token: YOUR_TOKEN' \
@@ -73,33 +80,29 @@ curl -sD - -X POST 'https://YOUR.api.karzoun.chat/mcp' \
   }'
 ```
 
-Save the `mcp-session-id` header from the response.
-
 ## List tools
 
 ```bash
-curl -X POST 'https://YOUR.api.karzoun.chat/mcp' \
+curl -X POST 'https://YOUR.api.karzoun.chat/mcp/customer-support' \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json, text/event-stream' \
   -H 'x-app-token: YOUR_TOKEN' \
-  -H 'mcp-session-id: YOUR_SESSION_ID' \
   -d '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'
 ```
 
 ## Call a tool
 
 ```bash
-curl -X POST 'https://YOUR.api.karzoun.chat/mcp' \
+curl -X POST 'https://YOUR.api.karzoun.chat/mcp/customer-support' \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json, text/event-stream' \
   -H 'x-app-token: YOUR_TOKEN' \
-  -H 'mcp-session-id: YOUR_SESSION_ID' \
   -d '{
     "jsonrpc": "2.0",
     "id": 3,
     "method": "tools/call",
     "params": {
-      "name": "tags",
+      "name": "customers",
       "arguments": { "page": 1, "perPage": 5 }
     }
   }'
@@ -111,7 +114,7 @@ curl -X POST 'https://YOUR.api.karzoun.chat/mcp' \
 flowchart TB
   User[End user] --> App[Your app]
   App --> Agent[AI agent layer]
-  Agent -->|x-app-token| MCP["Karzoun /mcp"]
+  Agent -->|x-app-token| MCP["Karzoun /mcp/:pack"]
   MCP --> GQL[GraphQL]
   Secrets[(Secrets manager)] -.-> Agent
 ```
@@ -121,6 +124,8 @@ Store tokens in a secrets manager; inject per tenant if you operate multi-tenant
 ## Limits
 
 - Same GraphQL permissions and rate behavior as direct API calls
+- Hosted `/mcp` POSTs: default **120 req/min** per app token (`MCP_RATE_LIMIT_PER_MIN`)
+- GraphQL fetch timeout: default **30s** (`KARZOUN_MCP_FETCH_TIMEOUT_MS`)
 - Default **512 KB** tool response cap (configurable on self-hosted gateway mounts)
 - See [Security](/mcp-server/setup/security) for rotation and scoping
 
@@ -129,4 +134,4 @@ Store tokens in a secrets manager; inject per tenant if you operate multi-tenant
 - [AI app connectors](/mcp-server/setup/ai-connectors) — Claude, Manus, ChatGPT, Cursor remote
 - [Agent patterns](/mcp-server/guides/agent-patterns) — Hosted worker prompts
 - [How it works](/mcp-server/guides/how-it-works) — Error and size limits
-- [Troubleshooting](/mcp-server/guides/troubleshooting) — Session and 401 errors
+- [Troubleshooting](/mcp-server/guides/troubleshooting) — Auth and connection errors

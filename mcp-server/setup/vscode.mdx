@@ -1,0 +1,66 @@
+---
+title: "VS Code setup (stdio)"
+description: "Run Karzoun MCP inside VS Code so Copilot / MCP-aware agents can call your workspace API."
+---
+
+VS Code supports MCP servers in **`.vscode/mcp.json`** (workspace) or user MCP settings — same `@karzounchat/mcp-server` package as Cursor.
+
+## Before you start
+
+- [App token](/developers/getting-started/authentication) from **Developer → Apps**
+- GraphQL URL: `https://{subdomain}.api.karzoun.chat/graphql`
+- A recent VS Code build with MCP support enabled
+
+## Configure MCP
+
+<Steps>
+  <Step title="Create the config file">
+    Add `.vscode/mcp.json` to your project (or open **MCP: Open User Configuration** from the Command Palette).
+  </Step>
+
+  <Step title="Add the Karzoun server">
+    ```json
+    {
+      "servers": {
+        "karzoun-customer-support": {
+          "type": "stdio",
+          "command": "npx",
+          "args": ["-y", "@karzounchat/mcp-server"],
+          "env": {
+            "KARZOUN_API_URL": "https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql",
+            "KARZOUN_APP_TOKEN": "YOUR_APP_TOKEN",
+            "KARZOUN_MCP_PACK": "customer-support"
+          }
+        }
+      }
+    }
+    ```
+
+    Replace the subdomain and paste the JWT from **Developer → Apps** (shown once).
+
+    Prefer a focused [pack](/mcp-server/setup/hosted#packs-tool-subsets) (`customer-support`, `whatsapp`, …). Use `full` only when you need every public tool.
+  </Step>
+
+  <Step title="Start the server">
+    Open the MCP view in VS Code and start **karzoun-customer-support** (or your server name). Status should show connected with a tool list.
+  </Step>
+
+  <Step title="Try a prompt">
+    Ask Copilot Chat (or your MCP client): _"Using Karzoun tools, list my first 5 tags"_
+  </Step>
+</Steps>
+
+## In-app setup page
+
+Karzoun provides copy-ready snippets at **Developer → MCP setup** (`/developer/mcp-setup`) — pick **Local → VS Code**, choose a pack, then **Copy config**.
+
+## Prefer HTTP instead?
+
+Cloud agents and remote sessions should use [hosted MCP](/mcp-server/setup/hosted) or [AI app connectors](/mcp-server/setup/ai-connectors) (Claude, ChatGPT, Manus, Gemini, Grok…).
+
+## Next steps
+
+- [Cursor setup](/mcp-server/setup/cursor) — Same package, Cursor `mcp.json` shape
+- [Claude Desktop](/mcp-server/setup/claude-desktop) — Desktop app stdio
+- [Security](/mcp-server/setup/security) — Token scoping
+- [Troubleshooting](/mcp-server/guides/troubleshooting) — Connection errors

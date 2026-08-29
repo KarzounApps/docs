@@ -5,10 +5,6 @@ description: "Run Karzoun MCP locally so Cursor's agent can call your workspace 
 
 Run Karzoun MCP locally so Cursor's agent can call your workspace GraphQL API as tools.
 
-<Tip title="Video walkthrough">
-  **Coming soon:** _Installing Karzoun MCP in Cursor_ — from app token to first `tags` query. _(Video embed placeholder)_
-</Tip>
-
 ## Before you start
 
 - [App token](/developers/getting-started/authentication) from **Developer → Apps**
@@ -20,66 +16,65 @@ Run Karzoun MCP locally so Cursor's agent can call your workspace GraphQL API as
   <Step title="Open MCP settings">
     **Cursor Settings → MCP → Add new global MCP server**
 
-    Or edit `~/.cursor/mcp.json` directly.
+    Or edit `~/.cursor/mcp.json` / project `.cursor/mcp.json`.
   </Step>
 
   <Step title="Add the Karzoun server">
     ```json
     {
       "mcpServers": {
-        "karzoun": {
+        "karzoun-customer-support": {
           "command": "npx",
           "args": ["-y", "@karzounchat/mcp-server"],
           "env": {
             "KARZOUN_API_URL": "https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql",
-            "KARZOUN_APP_TOKEN": "YOUR_APP_TOKEN"
+            "KARZOUN_APP_TOKEN": "YOUR_APP_TOKEN",
+            "KARZOUN_MCP_PACK": "customer-support"
           }
         }
       }
     }
     ```
 
-    Replace `YOUR_SUBDOMAIN` and paste the JWT from `appsAdd` (shown once).
+    Replace `YOUR_SUBDOMAIN` and paste the JWT from **Developer → Apps** (shown once).
 
     <Warning title="Keep tokens out of git">
-      Do not commit `mcp.json` if it contains real tokens. Use env vars or Cursor's secret storage where available.
+      Do not commit `mcp.json` if it contains real tokens. Prefer env vars or Cursor secret storage.
     </Warning>
   </Step>
 
-  <Step title="Optional: limit tools">
-    For faster startup and smaller context, expose only CRM tools:
+  <Step title="Pick a pack">
+    `KARZOUN_MCP_PACK` limits which public GraphQL tools the agent sees:
 
-    ```json
-    "env": {
-      "KARZOUN_API_URL": "https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql",
-      "KARZOUN_APP_TOKEN": "YOUR_APP_TOKEN",
-      "KARZOUN_MCP_TOOL_PREFIX": "customers"
-    }
-    ```
+    | Pack | Good for |
+    |------|----------|
+    | `customer-support` | Inbox, contacts, companies, tags (recommended start) |
+    | `marketing` | Broadcasts, segments, forms, products |
+    | `whatsapp` | Templates, messaging, flows |
+    | `automations` | Flows and nodes |
+    | `full` | Entire public API (large — advanced) |
+
+    Full table: [Hosted MCP → Packs](/mcp-server/setup/hosted#packs-tool-subsets).
   </Step>
 
   <Step title="Restart and verify">
-    1. **Cursor Settings → MCP** — toggle the server off/on or click refresh
-    2. Status should show **connected** with a tool count (~75 without prefix)
-    3. In chat: _"Use Karzoun to run currentUser"_
-
-    Expected: JSON profile for the app's workspace user.
+    1. **Cursor Settings → MCP** — refresh the server
+    2. Status should show **connected** with tools for your pack
+    3. In chat: _"Use Karzoun to list my first 5 tags"_
   </Step>
 </Steps>
 
 ## In-app setup page
 
-Karzoun also provides a guided flow at **Developer → MCP setup** in the web app (`/developer/mcp-setup`) with copy-ready config snippets.
+Open **Developer → MCP setup** (`/developer/mcp-setup`) for tenant-specific URLs and copy-ready configs (Cursor, VS Code, Claude Desktop).
 
-## Project-level config
+## Prefer cloud AI apps?
 
-For team repos, add `.cursor/mcp.json` (same schema) so everyone uses the same server name — each developer still supplies their own token via local env if preferred.
-
-For teams that prefer not to run `npx`, use [hosted MCP](/mcp-server/setup/hosted) or [AI app connectors](/mcp-server/setup/ai-connectors) (Claude.ai, Manus, ChatGPT, remote Cursor).
+Use [HTTP / hosted MCP](/mcp-server/setup/hosted) or [AI app connectors](/mcp-server/setup/ai-connectors) for Claude, ChatGPT, Manus, Gemini, Grok, and remote Cursor.
 
 ## Next steps
 
-- [AI app connectors](/mcp-server/setup/ai-connectors) — Cloud AI apps (Claude, Manus, ChatGPT)
-- [Agent patterns](/mcp-server/guides/agent-patterns) — Prompts that work
-- [How it works](/mcp-server/guides/how-it-works) — Tool ↔ GraphQL mapping
-- [Troubleshooting](/mcp-server/guides/troubleshooting) — If the server stays red
+- [VS Code setup](/mcp-server/setup/vscode)
+- [Claude Desktop](/mcp-server/setup/claude-desktop)
+- [Agent patterns](/mcp-server/guides/agent-patterns)
+- [Troubleshooting](/mcp-server/guides/troubleshooting)

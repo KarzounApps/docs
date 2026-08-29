@@ -1,42 +1,39 @@
 ---
 title: "MCP"
-description: "Connect Cursor, Claude, and server-side agents to Karzoun via Model Context Protocol."
+description: "Connect Cursor, Claude, VS Code, ChatGPT, and more to Karzoun via Model Context Protocol."
 ---
 
-Give AI assistants **structured access** to your Karzoun workspace — customers, tags, products, users, webhooks, and more — through the [Model Context Protocol](https://modelcontextprotocol.io/).
+Give AI assistants **structured access** to your Karzoun workspace — customers, inbox, WhatsApp, automations, and more — through the [Model Context Protocol](https://modelcontextprotocol.io/).
 
-The `@karzounchat/mcp-server` package maps the **public GraphQL API** to MCP tools **one-to-one**. When an agent calls `customers`, it runs the same operation you would send from the [Playground](https://karzoun.chat/developer/playground) or your backend.
+The `@karzounchat/mcp-server` package maps the **public GraphQL API** to MCP tools. Prefer a **pack** so the agent only sees the tools for its job.
 
 **Package:** [`@karzounchat/mcp-server`](https://www.npmjs.com/package/@karzounchat/mcp-server)
 **Source:** [KarzounApps/mcp-server](https://github.com/KarzounApps/mcp-server)
-
-<Tip title="Video overview">
-  **Coming soon:** _Karzoun MCP in 3 minutes_ — what MCP is, when to use stdio vs hosted, and a live Cursor demo. _(Embed placeholder)_
-</Tip>
+**In-app:** **Developer → MCP setup** (`/developer/mcp-setup`)
 
 ## Choose your setup
 
-|                 | **Local (stdio)**                                                     | **Hosted (`/mcp`)**                                                     |
-| --------------- | --------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| **Best for**    | Cursor, Claude Desktop, local dev                                     | Backend agents, automations, SaaS workers                               |
-| **Runs as**     | `npx @karzounchat/mcp-server` on your machine                         | HTTP on Karzoun gateway                                                 |
-| **Token lives** | MCP config `env` (your laptop)                                        | Your server only — never the browser                                    |
-| **Setup guide** | [Cursor](/mcp-server/setup/cursor) · [Claude Desktop](/mcp-server/setup/claude-desktop) | [AI connectors](/mcp-server/setup/ai-connectors) · [Hosted MCP](/mcp-server/setup/hosted) |
+|                 | **Local**                                                              | **HTTP**                                                                     |
+| --------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| **Best for**    | Cursor, VS Code, Claude Desktop on your laptop                         | Claude, ChatGPT, Manus, Gemini, Grok, remote agents                          |
+| **Runs as**     | `npx @karzounchat/mcp-server` (stdio)                                  | `POST https://{subdomain}.api.karzoun.chat/mcp` or `/mcp/{pack}`             |
+| **Token lives** | MCP config `env` on your machine                                       | Trusted AI host or your backend — never the browser                          |
+| **Setup guide** | [Cursor](/mcp-server/setup/cursor) · [VS Code](/mcp-server/setup/vscode) · [Claude Desktop](/mcp-server/setup/claude-desktop) | [AI connectors](/mcp-server/setup/ai-connectors) · [HTTP MCP](/mcp-server/setup/hosted) |
 
 ```mermaid
 flowchart LR
-  subgraph Local["Local IDE"]
-    C[Cursor / Claude]
+  subgraph Local["On your computer"]
+    C[Cursor / VS Code / Claude Desktop]
     STDIO[stdio MCP server]
     C <--> STDIO
   end
 
-  subgraph Cloud["Your backend"]
-    AG[Agent / worker]
+  subgraph Cloud["Cloud AI / backend"]
+    AG[Claude / ChatGPT / Manus / agent]
   end
 
   subgraph Karzoun["Karzoun"]
-    MCP["/mcp endpoint"]
+    MCP["/mcp or /mcp/pack"]
     GQL[GraphQL API]
     MCP --> GQL
   end
@@ -45,11 +42,26 @@ flowchart LR
   AG --> MCP
 ```
 
+## Packs (recommended)
+
+| Pack | Use for |
+|------|---------|
+| `customer-support` | Inbox, contacts, companies, tags, reply templates |
+| `marketing` | Broadcasts, segments, forms, products |
+| `operations` | Tasks, team chat, org, users, products |
+| `whatsapp` | WhatsApp messaging, templates, flows |
+| `automations` | Automation flows and nodes |
+| `integrations` | Apps, webhooks, MiniApps |
+| `ai` | Knowledge base |
+| `full` | Entire public API (large) |
+
+Local: set `KARZOUN_MCP_PACK`. HTTP: use `/mcp/{pack}` or `GET /mcp/packs`.
+
 ## Prerequisites
 
-1. **App token** — Create in **Developer → Apps** ([authentication guide](/developers/getting-started/authentication))
-2. **GraphQL URL** — `https://{subdomain}.api.karzoun.chat/graphql` ([quickstart](/developers/getting-started/quickstart))
-3. **Permissions** — Scope the app to the operations your agent needs
+1. **App token** — **Developer → Apps** ([authentication](/developers/getting-started/authentication))
+2. **GraphQL URL** — `https://{subdomain}.api.karzoun.chat/graphql`
+3. **Permissions** — Scope the app to what the agent needs
 
 <Warning title="Not a replacement for GraphQL">
   MCP is a **convenience layer for AI clients**. Production integrations that do not need an LLM should call GraphQL or [webhooks](/developers/guides/webhooks) directly.
@@ -57,26 +69,27 @@ flowchart LR
 
 ## Start here
 
-| Step | Guide                                                                                                                                    |
-| ---- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| 1    | [How it works](/mcp-server/guides/how-it-works) — Tools, auth, and responses                                                                      |
-| 2    | Pick a setup: [Cursor](/mcp-server/setup/cursor), [AI connectors](/mcp-server/setup/ai-connectors) (Claude, Manus, ChatGPT…), or [Hosted](/mcp-server/setup/hosted) |
-| 3    | [Agent patterns](/mcp-server/guides/agent-patterns) — Prompts that work well                                                                      |
-| 4    | [Tool catalog](/mcp-server/tools/catalog) — All **75+** operations                                                                     |
+| Step | Guide |
+| ---- | ----- |
+| 1 | [How it works](/mcp-server/guides/how-it-works) |
+| 2 | Pick Local ([Cursor](/mcp-server/setup/cursor) / [VS Code](/mcp-server/setup/vscode)) or HTTP ([connectors](/mcp-server/setup/ai-connectors)) |
+| 3 | [Agent patterns](/mcp-server/guides/agent-patterns) |
+| 4 | [Tool catalog](/mcp-server/tools/catalog) |
 
-## Configuration reference
+## Configuration reference (local)
 
-| Variable                         | Required | Description                            |
-| --------------------------------- | -------- | --------------------------------------- |
-| `KARZOUN_API_URL`                | Yes      | GraphQL endpoint URL                   |
-| `KARZOUN_APP_TOKEN`              | Yes      | App JWT from `appsAdd`                 |
-| `KARZOUN_MCP_TOOL_PREFIX`        | No       | Limit tools (e.g. `tags`, `customers`) |
-| `KARZOUN_MCP_MAX_RESPONSE_BYTES` | No       | Response cap (default: 524288)         |
+| Variable                         | Required | Description |
+| --------------------------------- | -------- | ----------- |
+| `KARZOUN_API_URL`                | Yes      | GraphQL endpoint URL |
+| `KARZOUN_APP_TOKEN`              | Yes      | App JWT |
+| `KARZOUN_MCP_PACK`               | No       | Pack id (default `full`) |
+| `KARZOUN_MCP_FETCH_TIMEOUT_MS`   | No       | GraphQL fetch timeout ms (default: 30000) |
+| `KARZOUN_MCP_MAX_RESPONSE_BYTES` | No       | Response cap (default: 524288) |
 
-Older environment variable names from previous releases are still accepted as fallbacks.
+Hosted gateway: `MCP_RATE_LIMIT_PER_MIN` (default `120` POSTs/min per app token; `0` disables).
 
 ## Related
 
-- [Security](/mcp-server/setup/security) — Token handling and permissions
-- [Troubleshooting](/mcp-server/guides/troubleshooting) — Common MCP errors
-- [GraphQL API](/developers) — API guides, webhooks, playground
+- [Security](/mcp-server/setup/security)
+- [Troubleshooting](/mcp-server/guides/troubleshooting)
+- [GraphQL API](/developers)

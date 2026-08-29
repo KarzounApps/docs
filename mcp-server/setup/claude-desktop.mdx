@@ -19,12 +19,13 @@ Claude Desktop uses the same `@karzounchat/mcp-server` package as Cursor, with a
 ```json
 {
   "mcpServers": {
-    "karzoun": {
+    "karzoun-customer-support": {
       "command": "npx",
       "args": ["-y", "@karzounchat/mcp-server"],
       "env": {
         "KARZOUN_API_URL": "https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql",
-        "KARZOUN_APP_TOKEN": "YOUR_APP_TOKEN"
+        "KARZOUN_APP_TOKEN": "YOUR_APP_TOKEN",
+        "KARZOUN_MCP_PACK": "customer-support"
       }
     }
   }
@@ -33,18 +34,24 @@ Claude Desktop uses the same `@karzounchat/mcp-server` package as Cursor, with a
 
 Create an app token in **Developer → Apps** ([authentication](/developers/getting-started/authentication)).
 
+Set `KARZOUN_MCP_PACK` to a focused pack (`customer-support`, `whatsapp`, …) or `full` for every public tool. See [packs](/mcp-server/setup/hosted#packs-tool-subsets).
+
 ## Verify
 
 1. Quit and reopen Claude Desktop
 2. Look for the **hammer / tools** indicator — Karzoun tools should appear
 3. Ask: _"Using Karzoun tools, list my first 5 tags"_
 
-<Tip title="Screenshot placeholder">
-  _Coming soon: Claude Desktop showing Karzoun in the available tools list._
-</Tip>
+## In-app setup
+
+**Developer → MCP setup** in Karzoun copies the same JSON for your tenant URL and selected pack.
+
+## Cloud Claude (claude.ai)?
+
+Use a **remote HTTP connector**, not this desktop file: [AI app connectors](/mcp-server/setup/ai-connectors#claudeai).
 
 ## Troubleshooting
 
 Same fixes as [Cursor troubleshooting](/mcp-server/guides/troubleshooting) — env vars, token scopes, and `npx` connectivity.
 
-For IDE-specific Cursor steps, see [Cursor setup](/mcp-server/setup/cursor).
+For IDE steps, see [Cursor](/mcp-server/setup/cursor) or [VS Code](/mcp-server/setup/vscode).

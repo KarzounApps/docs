@@ -17,21 +17,21 @@ Collect these once before connecting any client:
 
 | Field            | Value                                                                                             |
 | ---------------- | --------------------------------------------------------------------------------------------------- |
-| **MCP URL**      | `https://{subdomain}.api.karzoun.chat/mcp`                                                        |
+| **MCP URL**      | `https://{subdomain}.api.karzoun.chat/mcp` or `/mcp/{pack}`                                       |
 | **Auth header**  | `x-app-token: YOUR_APP_JWT`                                                                       |
-| **Transport**    | Streamable HTTP (POST + optional GET stream)                                                      |
+| **Transport**    | Stateless Streamable HTTP (POST)                                                                  |
 | **Token source** | **Developer → Apps** — [authentication guide](/developers/getting-started/authentication) |
 
 ```bash
-# Quick sanity check (save mcp-session-id from response headers)
-curl -sD - -X POST 'https://YOUR.api.karzoun.chat/mcp' \
+# Quick sanity check (no session header required)
+curl -s -X POST 'https://YOUR.api.karzoun.chat/mcp/customer-support' \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json, text/event-stream' \
   -H 'x-app-token: YOUR_TOKEN' \
   -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0.0"}}}'
 ```
 
-Full handshake: [Hosted MCP](/mcp-server/setup/hosted).
+Full handshake: [HTTP MCP](/mcp-server/setup/hosted). Prefer a **pack URL** so the agent gets a focused tool list.
 
 <Warning title="Server-side tokens only">
   Never paste app tokens into browser extensions, shared ChatGPT configs, or client-side code. Connect from a trusted AI host or your own backend. See [Security](/mcp-server/setup/security).
@@ -39,36 +39,21 @@ Full handshake: [Hosted MCP](/mcp-server/setup/hosted).
 
 ## What you unlock
 
-Karzoun exposes **75+ tools** mapped 1:1 to the public GraphQL API. The agent does not need to invent query syntax — it calls tools by operation name (`customers`, `tasksAdd`, `webhooks`, …).
+Karzoun exposes public GraphQL operations as MCP tools, grouped into **packs** (customer support, WhatsApp, marketing, …). Prefer `/mcp/customer-support` (or `KARZOUN_MCP_PACK` locally) instead of the full list.
 
-Browse the full list: [tool catalog](/mcp-server/tools/catalog).
-
-### By domain
-
-| Domain             | Example tools                                  | What an agent can do                                    |
-| ------------------ | ----------------------------------------------- | ---------------------------------------------------------- |
-| **Contacts & CRM** | `customers`, `companies`, `tags`, `tagsTag`    | Look up people, segment lists, apply tags               |
-| **Inbox**          | `conversations`, `conversationMessageAdd`      | Read threads, draft or send replies (within app scope)  |
-| **Tasks**          | `tasks`, `tasksAdd`, `tasksBoards`             | List work, create follow-ups, inspect boards            |
-| **Webhooks**       | `webhooks`, `webhooksAdd`                      | Register outbound event subscriptions                   |
-| **Knowledge base** | `knowledgeBaseSearch`, `knowledgeBaseArticles` | Ground answers in your help content                     |
-| **Apps**           | `apps`, `appsAdd`                              | Inspect or rotate integration credentials (admin scope) |
+Browse operations: [tool catalog](/mcp-server/tools/catalog). Packs: [HTTP MCP](/mcp-server/setup/hosted#packs-tool-subsets).
 
 ### Prompts that show the power
 
 Once connected, try natural-language requests like:
 
 - _"List my 10 most recently updated customers and summarize their tags."_
-- _"Find open tasks assigned to me on the Sales board and group by due date."_
+- _"Find open conversations that need a reply."_
 - _"Search the knowledge base for return policy and draft a short customer reply."_
-- _"Show webhook subscriptions for customer events — which URLs are active?"_
+- _"List WhatsApp templates approved for my account."_
 - _"Find the conversation with alice@example.com and summarize the last 5 messages."_
 
 Pair MCP with [agent patterns](/mcp-server/guides/agent-patterns) so the model reads before it mutates.
-
-<Tip title="Screenshot / video placeholder">
-  _Coming soon: screen recording — connect hosted MCP, then run a CRM lookup + tag workflow in one prompt._
-</Tip>
 
 ## Choose the right client
 
