@@ -3,38 +3,38 @@ title: "MCP security"
 description: "Token hygiene, scoping, and incident response for Karzoun MCP."
 ---
 
-MCP agents inherit **exactly** the permissions of the app token they use. Treat MCP as production API access, not a sandbox.
+MCP agents inherit **exactly** the scopes of the API key or OAuth grant they use, and no more than the person or workspace behind it. Treat MCP as production API access, not a sandbox.
 
 ## Token hygiene
 
 | Do                                                        | Don't                                            |
 | ------------------------------------------------------------ | --------------------------------------------------- |
-| Store tokens in env vars, secrets managers, or CI secrets | Commit tokens to git or share in Slack           |
-| Create separate apps per environment (dev/staging/prod)   | Reuse one token across teams and bots            |
-| Rotate when someone leaves or a laptop is lost            | Embed tokens in Cursor rules or client-side code |
-| Use minimum scopes in **Developer → Apps**                | Grant all-user access unless required            |
+| Store keys in env vars, secrets managers, or CI secrets | Commit keys to git or share in Slack             |
+| Create a separate key per environment (dev/staging/prod) | Reuse one key across teams and bots              |
+| Revoke a key when someone leaves or a laptop is lost    | Embed keys in Cursor rules or client-side code   |
+| Choose the minimum scopes in **Developer → API keys**   | Grant every scope unless required                |
 
-The JWT from `appsAdd` is shown **once** — same rules as [authentication](/developers/getting-started/authentication).
+The secret from **Developer → API keys** is shown **once** — same rules as [authentication](/developers/getting-started/authentication).
 
 ## Stdio (local IDE)
 
-- Tokens live in `~/.cursor/mcp.json` or Claude Desktop config on **your machine**
-- Anyone with access to your laptop can read them — use full-disk encryption and separate dev tokens
-- Prefer a dedicated "MCP dev" app with read-only scopes when exploring
+- Keys live in `~/.cursor/mcp.json` or Claude Desktop config on **your machine**
+- Anyone with access to your laptop can read them — use full-disk encryption and a separate dev key
+- Prefer a dedicated read-only key when exploring
 
 ## Hosted (/mcp)
 
 - Call only from **trusted servers** you control
 - Terminate TLS at your edge; never downgrade to HTTP
-- Pass `x-app-token` server-side; never forward to browsers or mobile apps
-- Hosted POSTs are rate-limited per app token (default **120/min**, `MCP_RATE_LIMIT_PER_MIN`; set `0` to disable)
+- Pass `Authorization: Bearer` server-side; never forward the key to browsers or mobile apps
+- Hosted POSTs are rate-limited per credential (default **120/min**, `MCP_RATE_LIMIT_PER_MIN`; set `0` to disable)
 - GraphQL tool calls time out by default after **30s** (`KARZOUN_MCP_FETCH_TIMEOUT_MS`)
 
 ## Permission scoping
 
 Before giving an agent write tools (`customersAdd`, `tagsRemove`, …):
 
-1. Create an app limited to the required user group
+1. Create a key limited to the required scopes (and a user group, for a workspace key)
 2. Test mutations in the [Playground](https://karzoun.chat/developer/playground)
 3. Optionally set `KARZOUN_MCP_TOOL_PREFIX` to read-only prefixes during development
 
@@ -43,8 +43,8 @@ Before giving an agent write tools (`customersAdd`, `tagsRemove`, …):
 LLMs can call mutations unexpectedly. Mitigations:
 
 - System prompts that require confirmation before deletes/merges ([agent patterns](/mcp-server/guides/agent-patterns))
-- Read-only tokens for analytics agents
-- Audit app usage via Karzoun logs where available
+- Read-only keys for analytics agents
+- Audit key usage via Karzoun logs where available
 
 ## Comparison with other integrations
 
@@ -57,10 +57,10 @@ LLMs can call mutations unexpectedly. Mitigations:
 
 ## Incident response
 
-If a token leaks:
+If a key leaks:
 
-1. Disable or remove the app in **Developer → Apps**
-2. Create a new app and update MCP config or server secrets
+1. Revoke it in **Developer → API keys**
+2. Create a new key and update the MCP config or server secrets
 3. Review recent GraphQL activity if audit tools are enabled
 
 ## Related

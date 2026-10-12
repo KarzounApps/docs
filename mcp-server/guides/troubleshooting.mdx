@@ -8,7 +8,7 @@ description: "Fix common Karzoun MCP connection, permission, and size errors."
 | Symptom                     | Fix                                                            |
 | ------------------------------ | ------------------------------------------------------------------ |
 | `Missing KARZOUN_API_URL`   | Set GraphQL URL in MCP config `env`                          |
-| `Missing KARZOUN_APP_TOKEN` | Create app token in **Developer → Apps**                     |
+| `Missing KARZOUN_API_KEY`   | Create a key in **Developer → API keys**                  |
 | `npx` hangs or fails        | Ensure Node 18+; try `npx -y @karzounchat/mcp-server@latest` |
 | Server shows red in Cursor  | Open **Settings → MCP** → view logs; fix env typos           |
 
@@ -22,8 +22,8 @@ Restart the MCP server after every config change.
 
 ## Tool returns permission error
 
-- App user group may not include the operation — edit scopes in **Developer → Apps**
-- Token expired or revoked — create a new app token
+- The key's scopes may not include the operation — edit it in **Developer → API keys**
+- Key expired or revoked — create a new API key
 - Test the same operation in the [Playground](https://karzoun.chat/developer/playground)
 
 ## Response exceeds size limit
@@ -40,9 +40,8 @@ Restart the MCP server after every config change.
 
 | HTTP / JSON-RPC                      | Meaning                                                               |
 | --------------------------------------- | -------------------------------------------------------------------------- |
-| `401 Missing x-app-token`            | Send `x-app-token` on every request                                 |
-| `400 invalid or missing MCP session` | Call `initialize` first; pass `mcp-session-id` header on follow-ups |
-| Connection drops                     | Sessions are in-memory; re-initialize after gateway restarts        |
+| `401` Authorization required     | Send `Authorization: Bearer` with an API key, or finish the OAuth login |
+| Connection drops                     | Hosted MCP is stateless; send `initialize` again on the next call   |
 
 See [Hosted MCP](/mcp-server/setup/hosted) for the full handshake.
 
@@ -57,4 +56,4 @@ See [Hosted MCP](/mcp-server/setup/hosted) for the full handshake.
 1. Check [Status](https://status.karzoun.chat/) if the outage looks platform-wide (GraphQL gateway or hosted MCP)
 2. Verify GraphQL with curl ([quickstart](/developers/getting-started/quickstart))
 3. Compare tool name in [catalog](/mcp-server/tools/catalog) with what the agent called
-4. Contact support with app id (not the raw token), tool name, and redacted error message
+4. Contact support with the key id (not the raw key), tool name, and redacted error message

@@ -147,7 +147,7 @@ mutation {
 ```bash cURL
 curl -X POST 'https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql' \
   -H 'Content-Type: application/json' \
-  -H 'x-app-token: YOUR_APP_TOKEN' \
+  -H 'Authorization: Bearer kz_live_YOUR_API_KEY' \
   -d '{
     "query": "mutation { webhooksAdd(url: \"https://api.example.com/karzoun/events\", name: \"My hook\", actions: [{ type: \"core:customer\", action: \"update\" }]) { _id token secret } }"
   }'
@@ -330,7 +330,7 @@ curl -X POST 'https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql' \
 ## الخطوات التالية
 
 - [مرجع GraphQL API](/api-reference) — ابحث عن `Webhook` و`WebhookDeliveryLog`
-- [المصادقة](/ar/developers/getting-started/authentication) — رموز التطبيقات للوصول إلى GraphQL
+- [المصادقة](/ar/developers/getting-started/authentication) — مفاتيح API وOAuth للوصول إلى GraphQL
 - [الأخطاء](/ar/developers/guides/errors) — تفسير استجابات أخطاء GraphQL وHTTP
 
 <Tip>

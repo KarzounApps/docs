@@ -147,7 +147,7 @@ mutation {
 ```bash cURL
 curl -X POST 'https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql' \
   -H 'Content-Type: application/json' \
-  -H 'x-app-token: YOUR_APP_TOKEN' \
+  -H 'Authorization: Bearer kz_live_YOUR_API_KEY' \
   -d '{
     "query": "mutation { webhooksAdd(url: \"https://api.example.com/karzoun/events\", name: \"My hook\", actions: [{ type: \"core:customer\", action: \"update\" }]) { _id token secret } }"
   }'
@@ -330,7 +330,7 @@ Query `webhooksGetActions` for the live list. Subscriptions below are grouped by
 ## Next steps
 
 - [GraphQL API reference](/api-reference) — search for `Webhook`, `WebhookDeliveryLog`
-- [Authentication](/developers/getting-started/authentication) — app tokens for GraphQL access
+- [Authentication](/developers/getting-started/authentication) — API keys and OAuth for GraphQL access
 - [Errors](/developers/guides/errors) — interpreting GraphQL and HTTP error responses
 
 <Tip>

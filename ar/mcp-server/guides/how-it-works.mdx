@@ -1,83 +1,42 @@
 ---
 title: "كيف يعمل"
-description: "كيف يربط كرزون MCP الأدوات بعمليات GraphQL."
+description: "ماذا يحدث عندما يستدعي تطبيق ذكاء اصطناعي أداة MCP في كرزون."
 ---
 
-كرزون MCP جسر رفيع: **أداة MCP واحدة = عملية GraphQL عامة واحدة**. لا واجهات مخفية، ولا طبقة تجريد إضافية.
+الأداة الواحدة هي عملية GraphQL عامة واحدة. `tags` تشغّل `query tags`. `customersAdd` تشغّل `mutation customersAdd`. لا توجد واجهة ثانية خلف MCP.
 
-## مسار الطلب
+1. يختار التطبيق أداة ويمرّر الوسائط. تلك الوسائط هي وسائط GraphQL.
+2. يبني خادم MCP الاستعلام ويرسله POST إلى عنوان GraphQL مع `Authorization: Bearer`.
+3. يُعاد JSON إلى التطبيق كنص.
 
-```mermaid
-sequenceDiagram
-  participant Agent as AI client
-  participant MCP as MCP server
-  participant API as Karzoun GraphQL
+إن لم يستطع مفتاح API تشغيل تلك العملية، فلن تستطيعها الأداة. جرّب العملية نفسها في [ساحة التجربة](https://karzoun.chat/developer/playground) قبل أن تلوم النموذج. النطاقات مشروحة في [المصادقة](/ar/developers/getting-started/authentication).
 
-  Agent->>MCP: tools/call customers
-  MCP->>MCP: Build query from manifest
-  MCP->>API: POST /graphql + x-app-token
-  API-->>MCP: JSON data
-  MCP-->>Agent: Text JSON result
-```
+توثيق حقول كل عملية في [مرجع GraphQL](/api-reference). الأسماء في [كتالوج الأدوات](/ar/mcp-server/tools/catalog).
 
-1. يختار الوكيل أداة (مثل `customerDetail`) ويمرّر الحجج.
-2. يبني خادم MCP استعلام أو تعديل GraphQL من بيان الأدوات المعتمد.
-3. يرسل الخادم POST إلى عنوان GraphQL للمستأجر مع `x-app-token`.
-4. تُعاد النتيجة كنص JSON إلى الوكيل.
+## أظهر للوكيل أدواتاً أقل
 
-تطبَّق نفس [صلاحيات رمز التطبيق](/ar/developers/getting-started/authentication) — إذا لم يستطع التطبيق تشغيل عملية في ساحة التجربة، فلن يستطيع MCP تشغيلها أيضًا.
-
-## تسمية الأدوات
-
-أسماء الأدوات **تطابق أسماء عمليات GraphQL** تمامًا:
-
-| الأداة           | عملية GraphQL            |
-| -------------- | ----------------------------- |
-| `tags`         | `query tags(...)`            |
-| `customersAdd` | `mutation customersAdd(...)` |
-| `webhooks`     | `query webhooks(...)`        |
-
-تصفّح القائمة الكاملة في [كتالوج الأدوات](/ar/mcp-server/tools/catalog). توثيق الحقول موجود في [مرجع GraphQL](/api-reference).
-
-## تقييد الأدوات
-
-قد تُثقل البيانات الكبيرة النماذج الأصغر. عيّن بادئة لعرض ما تحتاجه فقط:
+الحزمة هي القائمة التي تريدها. اضبط `KARZOUN_MCP_PACK` محلياً، أو استدعِ `/mcp/customer-support` عبر HTTP.
 
 ```json
 "env": {
-  "KARZOUN_API_URL": "https://YOUR.api.karzoun.chat/graphql",
-  "KARZOUN_APP_TOKEN": "YOUR_TOKEN",
-  "KARZOUN_MCP_TOOL_PREFIX": "customers"
+  "KARZOUN_API_URL": "https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql",
+  "KARZOUN_API_KEY": "kz_live_YOUR_API_KEY",
+  "KARZOUN_MCP_PACK": "customer-support"
 }
 ```
 
-تُسجَّل فقط الأدوات التي تبدأ أسماؤها بـ `customers` (مثل `customers`، `customersAdd`، `customerDetail`).
+`KARZOUN_MCP_TOOL_PREFIX` يقصّ تلك القائمة أكثر. `customers` يبقي `customers` و`customersAdd` و`customerDetail` ويسقط ما عداها. استخدم حزمة أولاً. استخدم البادئة عندما تبقى الحزمة أوسع مما تحتاج.
 
-## حجم الاستجابة
+## القراءة والكتابة
 
-تُحدَّ الاستجابة بـ **512 كيلوبايت** افتراضيًا (`KARZOUN_MCP_MAX_RESPONSE_BYTES`). إذا أعاد استعلام قائمة بيانات أكثر من اللازم، تفشل الأداة بخطأ واضح — ضيّق `page` / `perPage` أو حجج التصفية، كما في [الترقيم](/ar/developers/guides/pagination) في GraphQL.
+الاستعلامات معلَّمة للقراءة فقط. التعديلات معلَّمة للكتابة. هذه علامات للتطبيق. لا تمنع الحذف. نطاقات مفتاح API هي التي تمنعه.
 
-## الأخطاء
+## عندما يفشل الطلب
 
-تعيد الأدوات الفاشلة JSON بحقل `error`:
+تعيد الأداة JSON فيه نص `error`. فشل الصلاحية وفشل التحقق والردود الأكبر من **512 كيلوبايت** كلها بهذا الشكل. خفّض `perPage` أو أضف مرشحاً عندما تقول الرسالة إن الرد أكبر من اللازم. انظر [ترقيم الصفحات](/ar/developers/guides/pagination).
 
-```json
-{ "error": "Permission denied" }
-```
+MCP لا يبث رسائل الوارد الجديدة. استخدم [Webhooks](/ar/developers/guides/webhooks) لذلك. وهو لا يثبّت MiniApps.
 
-تظهر إخفاقات HTTP، وأخطاء التحقق من GraphQL، والاستجابات الكبيرة بهذا الشكل. علّم وكيلك قراءة الرسالة وتعديل الحجج.
+## المحلي والمستضاف
 
-## Stdio مقابل المستضاف
-
-| النقل  | العملية                               | مصدر الرمز                          |
-| ---------- | ---------------------------------------- | ---------------------------------------- |
-| **stdio**  | عملية Node محلية يطلقها بيئة التطوير | `KARZOUN_APP_TOKEN` في `env` إعداد MCP |
-| **المستضاف** | مسار البوابة `POST /mcp`             | ترويسة `x-app-token` لكل طلب      |
-
-يدعم الوضع المستضاف أيضًا `x-subdomain` اختياريًا عند التوجيه عبر بوابات متعددة المستأجرين. راجع [MCP المستضاف](/ar/mcp-server/setup/hosted).
-
-## ما لا يفعله MCP
-
-- بث أحداث البريد الوارد في الوقت الفعلي — استخدم [خطافات الويب](/ar/developers/guides/webhooks)
-- تسجيل MiniApps — راجع [MiniApps](/ar/miniapps)
-- تجاوز فحوصات الصلاحيات — تُحدَّد نطاقات التطبيقات في **المطوّر ← التطبيقات**
+على جهازك تحتفظ عملية `npx` بـ `KARZOUN_API_KEY` وتستدعي GraphQL بنفسها. MCP المستضاف هو `POST https://YOUR_SUBDOMAIN.api.karzoun.chat/mcp`. يرسل خادمك `Authorization: Bearer` في كل طلب، أو يسجّل Claude.ai وChatGPT دخول المستخدم. التفاصيل: [MCP عبر HTTP](/ar/mcp-server/setup/hosted).

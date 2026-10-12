@@ -1,108 +1,42 @@
 ---
 title: "How it works"
-description: "How Karzoun MCP maps tools to GraphQL operations."
+description: "What happens when an AI app calls a Karzoun MCP tool."
 ---
 
-Karzoun MCP is a thin bridge: **one MCP tool = one public GraphQL operation**. No hidden APIs, no extra abstraction layer.
+One tool is one public GraphQL operation. `tags` runs `query tags`. `customersAdd` runs `mutation customersAdd`. There is no second API behind MCP.
 
-## Request path
+1. The app chooses a tool and passes arguments. Those arguments are the GraphQL arguments.
+2. The MCP server builds the query and POSTs it to your GraphQL URL with `Authorization: Bearer`.
+3. The JSON result is handed back to the app as text.
 
-```mermaid
-sequenceDiagram
-  participant Agent as AI client
-  participant MCP as MCP server
-  participant API as Karzoun GraphQL
+If the API key cannot run that operation, the tool cannot either. Test the same operation in the [Playground](https://karzoun.chat/developer/playground) before you blame the model. Scopes are explained in [Authentication](/developers/getting-started/authentication).
 
-  Agent->>MCP: tools/call customers
-  MCP->>MCP: Build query from manifest
-  MCP->>API: POST /graphql + x-app-token
-  API-->>MCP: JSON data
-  MCP-->>Agent: Text JSON result
-```
+Field docs for each operation are in the [GraphQL reference](/api-reference). The names are listed in the [tool catalog](/mcp-server/tools/catalog).
 
-1. The agent picks a tool (e.g. `customerDetail`) and passes arguments.
-2. The MCP server builds a GraphQL query or mutation from the committed tool manifest.
-3. The server POSTs to your tenant GraphQL URL with `x-app-token`.
-4. The result is returned as JSON text to the agent.
+## Show the agent fewer tools
 
-The same [app token permissions](/developers/getting-started/authentication) apply — if the app cannot run an operation in the Playground, MCP cannot run it either.
-
-## Tool naming
-
-Tool names **match GraphQL operation names** exactly:
-
-| Tool           | GraphQL operation            |
-| -------------- | ----------------------------- |
-| `tags`         | `query tags(...)`            |
-| `customersAdd` | `mutation customersAdd(...)` |
-| `webhooks`     | `query webhooks(...)`        |
-
-Browse the full list in the [tool catalog](/mcp-server/tools/catalog). Field-level documentation lives in the [GraphQL reference](/api-reference).
-
-## Annotations (read vs write)
-
-Every tool includes MCP **annotations** so clients can treat reads differently from writes:
-
-| GraphQL | MCP hints |
-| ------- | --------- |
-| Query | `readOnlyHint: true`, `idempotentHint: true` |
-| Mutation | `readOnlyHint: false`, `destructiveHint: true` |
-
-All tools also set `openWorldHint: true` (they hit your live workspace). Annotations are **hints for the client**, not a security boundary — the app token still decides what runs.
-
-On the hosted HTTP endpoint, tool schemas are cached **per pack in the gateway process** so each POST does not rebuild Zod for every tool. Auth tokens are never part of that cache.
-
-## Limiting tools
-
-Prefer a **pack** so agents only see the tools for a job:
+A pack is the list you want. Set `KARZOUN_MCP_PACK` locally, or call `/mcp/customer-support` over HTTP.
 
 ```json
 "env": {
-  "KARZOUN_API_URL": "https://YOUR.api.karzoun.chat/graphql",
-  "KARZOUN_APP_TOKEN": "YOUR_TOKEN",
+  "KARZOUN_API_URL": "https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql",
+  "KARZOUN_API_KEY": "kz_live_YOUR_API_KEY",
   "KARZOUN_MCP_PACK": "customer-support"
 }
 ```
 
-HTTP equivalent: `POST /mcp/customer-support`. See [packs](/mcp-server/setup/hosted#packs-tool-subsets).
+`KARZOUN_MCP_TOOL_PREFIX` cuts that list further. `customers` keeps `customers`, `customersAdd`, and `customerDetail`, and drops everything else. Use a pack first. Use a prefix when one pack is still too wide.
 
-You can also narrow further with a name prefix:
+## Reads and writes
 
-```json
-"env": {
-  "KARZOUN_API_URL": "https://YOUR.api.karzoun.chat/graphql",
-  "KARZOUN_APP_TOKEN": "YOUR_TOKEN",
-  "KARZOUN_MCP_TOOL_PREFIX": "customers"
-}
-```
+Queries are marked read-only. Mutations are marked as writes. Those marks are hints for the app. They do not stop a delete. The API key's scopes do.
 
-Only tools whose names start with `customers` are registered (e.g. `customers`, `customersAdd`, `customerDetail`).
+## When a call fails
 
-## Response size
+The tool returns JSON with an `error` string. Permission failures, validation failures, and replies over **512 KB** all look like that. Lower `perPage` or add a filter when the message says the response is too large. See [Pagination](/developers/guides/pagination).
 
-Responses are capped at **512 KB** by default (`KARZOUN_MCP_MAX_RESPONSE_BYTES`). If a list query returns too much data, the tool fails with a clear error — narrow `page` / `perPage` or filter arguments, same as [pagination](/developers/guides/pagination) in GraphQL.
+MCP does not stream new inbox messages. Use [webhooks](/developers/guides/webhooks) for that. It also does not install MiniApps.
 
-## Errors
+## Local and hosted
 
-Failed tools return JSON with an `error` field:
-
-```json
-{ "error": "Permission denied" }
-```
-
-HTTP failures, GraphQL validation errors, and oversize responses all surface this way. Teach your agent to read the message and adjust arguments.
-
-## Stdio vs hosted
-
-| Transport  | Process                               | Token source                          |
-| ---------- | ---------------------------------------- | ---------------------------------------- |
-| **stdio**  | Local Node process spawned by the IDE | `KARZOUN_APP_TOKEN` in MCP config env |
-| **Hosted** | Gateway route `POST /mcp`             | `x-app-token` header per request      |
-
-Hosted mode also supports optional `x-subdomain` when routing through multi-tenant gateways. See [Hosted MCP](/mcp-server/setup/hosted).
-
-## What MCP does not do
-
-- Stream inbox real-time events — use [webhooks](/developers/guides/webhooks)
-- Register MiniApps — see [MiniApps](/miniapps)
-- Bypass permission checks — apps are scoped in **Developer → Apps**
+On your computer the `npx` process holds `KARZOUN_API_KEY` and calls GraphQL itself. Hosted MCP is `POST https://YOUR_SUBDOMAIN.api.karzoun.chat/mcp`. Your server sends `Authorization: Bearer` on each request, or Claude.ai and ChatGPT sign the user in. Details: [HTTP MCP](/mcp-server/setup/hosted).

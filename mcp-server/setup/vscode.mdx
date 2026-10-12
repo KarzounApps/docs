@@ -7,7 +7,7 @@ VS Code supports MCP servers in **`.vscode/mcp.json`** (workspace) or user MCP s
 
 ## Before you start
 
-- [App token](/developers/getting-started/authentication) from **Developer → Apps**
+- [API key](/developers/getting-started/authentication) from **Developer → API keys**
 - GraphQL URL: `https://{subdomain}.api.karzoun.chat/graphql`
 - A recent VS Code build with MCP support enabled
 
@@ -28,7 +28,7 @@ VS Code supports MCP servers in **`.vscode/mcp.json`** (workspace) or user MCP s
           "args": ["-y", "@karzounchat/mcp-server"],
           "env": {
             "KARZOUN_API_URL": "https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql",
-            "KARZOUN_APP_TOKEN": "YOUR_APP_TOKEN",
+            "KARZOUN_API_KEY": "kz_live_YOUR_API_KEY",
             "KARZOUN_MCP_PACK": "customer-support"
           }
         }
@@ -36,7 +36,7 @@ VS Code supports MCP servers in **`.vscode/mcp.json`** (workspace) or user MCP s
     }
     ```
 
-    Replace the subdomain and paste the JWT from **Developer → Apps** (shown once).
+    Replace the subdomain and paste the API key from **Developer → API keys** (shown once).
 
     Prefer a focused [pack](/mcp-server/setup/hosted#packs-tool-subsets) (`customer-support`, `whatsapp`, …). Use `full` only when you need every public tool.
   </Step>

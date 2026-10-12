@@ -1,47 +1,27 @@
 ---
 title: "Quickstart"
-description: "Make your first Karzoun GraphQL API call in under five minutes."
+description: "Make your first Karzoun GraphQL API call."
 ---
 
-Make your first call to the Karzoun public GraphQL API in under five minutes.
+You will create a key, call your workspace, and read a list of tags.
 
 <Steps>
-  <Step title="Create an app token">
-    1. Open **Developer → Apps** (`/developer/apps`)
-    2. Create an app and copy the JWT from the `appsAdd` response
-    3. Store it securely — it is shown once
-
-    Send the token on every request:
-
-    ```bash
-    -H "x-app-token: YOUR_APP_TOKEN_JWT"
-    ```
+  <Step title="Create an API key">
+    Open **Developer → API keys** (`/developer/api-keys`). Create a **personal** key, leave the scopes your account is allowed to use, and copy the secret. It starts with `kz_live_` and is shown once.
 
     <Warning>
-      Never commit app tokens to git or expose them in client-side JavaScript.
+      Do not commit the key or paste it into frontend code.
     </Warning>
   </Step>
-  <Step title="Find your GraphQL URL">
-    Your tenant GraphQL endpoint:
+  <Step title="Copy your API URL">
+    Replace `YOUR_SUBDOMAIN` with the subdomain of your workspace. If you sign in at `acme.karzoun.chat`, the API is:
 
     ```
-    https://{subdomain}.api.{domain}/graphql
+    https://acme.api.karzoun.chat/graphql
     ```
-
-    Example: `https://dev.api.karzoun.chat/graphql`
-
-    The hosted MCP endpoint is the same origin with `/mcp` instead of `/graphql`.
-
-    Download the public schema (SDL, no auth):
-
-    ```
-    https://{subdomain}.api.{domain}/public-api.graphql
-    ```
-
-    Example: `https://dev.api.karzoun.chat/public-api.graphql`
   </Step>
-  <Step title="Run a query">
-    Try this query to list tags:
+  <Step title="Run this query">
+    The query and the curl below are the same request.
 
     <CodeGroup>
     ```graphql
@@ -61,18 +41,34 @@ Make your first call to the Karzoun public GraphQL API in under five minutes.
     ```bash
     curl -X POST 'https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql' \
       -H 'Content-Type: application/json' \
-      -H 'x-app-token: YOUR_APP_TOKEN' \
-      -d '{"query":"query { tags(page: 1, perPage: 5) { data { _id name } } }"}'
+      -H 'Authorization: Bearer kz_live_YOUR_API_KEY' \
+      -d '{"query":"query { tags(page: 1, perPage: 5) { data { _id name } pagination { totalCount } } }"}'
     ```
     </CodeGroup>
 
-    <Tip>
-      Prefer a visual editor? Open the [GraphQL Playground](https://karzoun.chat/developer/playground).
-    </Tip>
+    A working key returns JSON like this:
+
+    ```json
+    {
+      "data": {
+        "tags": {
+          "data": [{ "_id": "…", "name": "VIP" }],
+          "pagination": { "totalCount": 12 }
+        }
+      }
+    }
+    ```
+
+    `data` may be an empty list. That still means the call worked. If you get `errors` instead, the key was missing, revoked, or the query does not match the schema. See [Errors](/developers/guides/errors).
   </Step>
 </Steps>
 
-## Next steps
+The same call works in the [Playground](https://karzoun.chat/developer/playground) while you are signed in. Add the `Authorization` header there only when you want to test the key rather than your own login.
 
-- [Authentication](/developers/getting-started/authentication)
-- [GraphQL API reference](/api-reference)
+## Next
+
+- [Authentication](/developers/getting-started/authentication) — personal and workspace keys, and what a key is allowed to call
+- [Pagination](/developers/guides/pagination) — walk the rest of a list
+- [GraphQL API reference](/api-reference) — every public query and mutation
+
+The raw schema, with no key required, is `https://YOUR_SUBDOMAIN.api.karzoun.chat/public-api.graphql`.

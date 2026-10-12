@@ -43,7 +43,7 @@ Rules:
 
 - Never put `"""` inside a description string.
 - No resolver/helper names (`paginateQuery`, etc.).
-- Prefer workspace / app token / `x-app-token` terminology (see `docs/AGENTS.md`).
+- Prefer workspace / API key terminology (see `docs/AGENTS.md`). Mention `x-app-token` only as the legacy credential.
 
 ## Operation description card
 
@@ -64,9 +64,9 @@ ${metaFooter(permission, relatedMarkdown)}
 ```html
 <small>
 
-*Auth* · `x-app-token` · required permission `{permission}`
+*Auth* · [API key](/developers/getting-started/authentication) · required permission `{permission}`
 <!-- or, when only requireLogin / moduleRequireLogin: -->
-*Auth* · `x-app-token` · authenticated
+*Auth* · [API key](/developers/getting-started/authentication) · authenticated
 
 *Related:* {deep links}
 

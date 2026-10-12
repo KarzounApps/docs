@@ -7,7 +7,7 @@ description: "شغّل Karzoun MCP محلياً ليمكّن وكيل Cursor م�
 
 ## قبل البدء
 
-- [رمز تطبيق](/developers/getting-started/authentication) من **المطور → التطبيقات**
+- [مفتاح API](/ar/developers/getting-started/authentication) من **المطوّر ← مفاتيح API**
 - رابط GraphQL: `https://{subdomain}.api.karzoun.chat/graphql`
 
 ## إعداد MCP
@@ -28,7 +28,7 @@ description: "شغّل Karzoun MCP محلياً ليمكّن وكيل Cursor م�
           "args": ["-y", "@karzounchat/mcp-server"],
           "env": {
             "KARZOUN_API_URL": "https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql",
-            "KARZOUN_APP_TOKEN": "YOUR_APP_TOKEN",
+            "KARZOUN_API_KEY": "kz_live_YOUR_API_KEY",
             "KARZOUN_MCP_PACK": "customer-support"
           }
         }
@@ -36,7 +36,7 @@ description: "شغّل Karzoun MCP محلياً ليمكّن وكيل Cursor م�
     }
     ```
 
-    استبدل النطاق الفرعي والصق JWT من **المطور → التطبيقات**.
+    استبدل النطاق الفرعي والصق مفتاح API من **المطوّر ← مفاتيح API**.
 
     <Warning title="لا تضع الرموز في git">
       لا ترفع `mcp.json` إذا احتوى رموزاً حقيقية.

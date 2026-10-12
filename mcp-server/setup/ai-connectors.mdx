@@ -3,49 +3,21 @@ title: "Connect AI apps to hosted MCP"
 description: "Connect Claude, Manus, ChatGPT, and remote Cursor to Karzoun's hosted MCP endpoint."
 ---
 
-Hosted MCP turns your Karzoun workspace into **live tools** for cloud AI agents — the same GraphQL operations you use in the [Playground](https://karzoun.chat/developer/playground), exposed as named MCP tools an LLM can call on your behalf.
+Use this page when the AI app is on the internet, not on your laptop. Your URL is:
 
-Use this guide when the AI app runs in the **cloud** (Claude.ai, Manus, ChatGPT, remote Cursor) and must reach Karzoun over **HTTPS**, not `npx` on your laptop.
-
-<Tip title="In-app setup">
-  Open **Developer → MCP setup** in Karzoun (`/developer/mcp-setup`) for your tenant-specific endpoint URL and a copy-ready `initialize` curl example.
-</Tip>
-
-## Your connection details
-
-Collect these once before connecting any client:
-
-| Field            | Value                                                                                             |
-| ---------------- | --------------------------------------------------------------------------------------------------- |
-| **MCP URL**      | `https://{subdomain}.api.karzoun.chat/mcp` or `/mcp/{pack}`                                       |
-| **Auth header**  | `x-app-token: YOUR_APP_JWT`                                                                       |
-| **Transport**    | Stateless Streamable HTTP (POST)                                                                  |
-| **Token source** | **Developer → Apps** — [authentication guide](/developers/getting-started/authentication) |
-
-```bash
-# Quick sanity check (no session header required)
-curl -s -X POST 'https://YOUR.api.karzoun.chat/mcp/customer-support' \
-  -H 'Content-Type: application/json' \
-  -H 'Accept: application/json, text/event-stream' \
-  -H 'x-app-token: YOUR_TOKEN' \
-  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0.0"}}}'
+```
+https://YOUR_SUBDOMAIN.api.karzoun.chat/mcp/customer-support
 ```
 
-Full handshake: [HTTP MCP](/mcp-server/setup/hosted). Prefer a **pack URL** so the agent gets a focused tool list.
+`customer-support` is the tool pack. Drop it, or swap in another pack from the [MCP overview](/mcp-server), when you want a different list.
 
-<Warning title="Server-side tokens only">
-  Never paste app tokens into browser extensions, shared ChatGPT configs, or client-side code. Connect from a trusted AI host or your own backend. See [Security](/mcp-server/setup/security).
-</Warning>
+**Claude.ai and ChatGPT** sign you in. Paste the URL and jump to that section below. Do not paste an API key.
 
-## What you unlock
+**Manus, remote Cursor, Claude Code, and your own server** can set a header. Send `Authorization: Bearer kz_live_…` with an [API key](/developers/getting-started/authentication). Never put that key in a browser extension or a shared chat.
 
-Karzoun exposes public GraphQL operations as MCP tools, grouped into **packs** (customer support, WhatsApp, marketing, …). Prefer `/mcp/customer-support` (or `KARZOUN_MCP_PACK` locally) instead of the full list.
+**Developer → MCP setup** (`/developer/mcp-setup`) fills in the URL for your workspace.
 
-Browse operations: [tool catalog](/mcp-server/tools/catalog). Packs: [HTTP MCP](/mcp-server/setup/hosted#packs-tool-subsets).
-
-### Prompts that show the power
-
-Once connected, try natural-language requests like:
+Once it is connected, try:
 
 - _"List my 10 most recently updated customers and summarize their tags."_
 - _"Find open conversations that need a reply."_
@@ -53,36 +25,18 @@ Once connected, try natural-language requests like:
 - _"List WhatsApp templates approved for my account."_
 - _"Find the conversation with alice@example.com and summarize the last 5 messages."_
 
-Pair MCP with [agent patterns](/mcp-server/guides/agent-patterns) so the model reads before it mutates.
-
-## Choose the right client
-
-| Client                                    | Local stdio               | Hosted `/mcp`            | Auth Karzoun expects                      |
-| ------------------------------------------ | -------------------------- | ------------------------- | -------------------------------------------- |
-| [Cursor](#cursor-remote)                  | Yes (recommended for dev) | Yes                      | `x-app-token` header                      |
-| [Claude Desktop](/mcp-server/setup/claude-desktop)       | Yes                       | Remote via Connectors UI | Header or OAuth (client-dependent)        |
-| [Claude.ai](#claudeai)                    | —                         | Yes                      | Custom connector URL; see auth note below |
-| [Manus](#manus)                           | —                         | Yes                      | HTTP + API key / custom headers           |
-| [ChatGPT Apps](#chatgpt-apps-and-connectors) | No                        | Yes (remote only)        | Often OAuth 2.1 — see caveat              |
-| [Claude Code](#claude-code)               | —                         | Yes                      | HTTP transport + headers                  |
-| Your backend                              | —                         | Yes                      | `x-app-token` on every request            |
-
-**Rule of thumb:** If the client lets you set **custom HTTP headers**, hosted Karzoun MCP works today. If the client only supports **OAuth discovery** (common for ChatGPT Apps), you need a small proxy or a backend agent until OAuth is available on Karzoun.
+Ask the model to read before it changes anything. More prompts: [Agent patterns](/mcp-server/guides/agent-patterns). The operation names are in the [tool catalog](/mcp-server/tools/catalog).
 
 ## Claude.ai
 
 Claude on the web supports **custom remote MCP connectors** (Settings → Connectors → Add custom connector).
 
 <Steps>
-  <Step title="Create an app token">
-    In Karzoun: **Developer → Apps** → create an app with the permissions your agent needs (start read-only: customers, tags, tasks).
-  </Step>
-
   <Step title="Add the connector">
     1. Open [Claude Connectors](https://claude.ai/settings/connectors) (or **Admin → Connectors** on Team/Enterprise).
     2. Click **Add custom connector**.
-    3. **Server URL:** `https://{subdomain}.api.karzoun.chat/mcp`
-    4. If the UI offers **Advanced** auth fields and your plan supports static credentials, prefer routing through a header-aware client (Cursor remote, Manus, or your backend) until OAuth is documented for Karzoun.
+    3. **Server URL:** `https://YOUR_SUBDOMAIN.api.karzoun.chat/mcp/customer-support`
+    4. Claude discovers Karzoun's authorization server. Sign in with your Karzoun account and approve the scopes. Do not paste an API key into this connector.
   </Step>
 
   <Step title="Enable in chat">
@@ -93,7 +47,7 @@ Claude on the web supports **custom remote MCP connectors** (Settings → Connec
 </Steps>
 
 <Info title="Claude Desktop vs Claude.ai">
-  **Claude Desktop** for local coding is still best with [stdio](/mcp-server/setup/claude-desktop). **Remote connectors** in Claude.ai are for cloud sessions — do not add the HTTPS URL to `claude_desktop_config.json`; use the Connectors UI instead.
+  **Claude Desktop** on your computer uses the [local setup](/mcp-server/setup/claude-desktop). Claude.ai uses this connector. Do not put the HTTPS URL in `claude_desktop_config.json`.
 </Info>
 
 ## Manus
@@ -111,9 +65,9 @@ Claude on the web supports **custom remote MCP connectors** (Settings → Connec
     | **Name**           | `Karzoun` (or your workspace name)                                                       |
     | **Transport**      | `HTTP` / Streamable HTTP                                                                 |
     | **Server URL**     | `https://{subdomain}.api.karzoun.chat/mcp`                                               |
-    | **Authentication** | API key / Bearer / custom — map to `x-app-token` if the UI exposes a custom header field |
+    | **Authentication** | API key / Bearer — paste `kz_live_…`. If the UI has a custom header field, use `Authorization`. |
 
-    If Manus only offers a single **API key** field and sends `Authorization: Bearer`, use a thin reverse proxy on your infrastructure that translates `Authorization: Bearer <token>` → `x-app-token: <token>` (advanced; keep the proxy private).
+    If Manus sends `Authorization: Bearer` from a single API key field, paste the Karzoun API key there. No proxy.
   </Step>
 
   <Step title="Test and use">
@@ -145,12 +99,10 @@ OpenAI supports **remote MCP** through **Apps / Connectors** (Developer Mode in 
   </Step>
 </Steps>
 
-<Warning title="OAuth requirement">
-  Many ChatGPT connector flows expect **OAuth 2.1** with dynamic client registration. Karzoun hosted MCP authenticates with **`x-app-token`** (same as the public GraphQL API), not OAuth discovery endpoints.
+<Warning title="OAuth, not a pasted key">
+  ChatGPT connectors sign in with **OAuth**. Paste the MCP URL, then sign in to Karzoun and approve the scopes. Do not paste an API key into this flow.
 
-  **What works today:** connect via [Manus](#manus), [Cursor remote](#cursor-remote), [Claude Code](#claude-code), or your own backend agent calling `/mcp` directly.
-
-  **For ChatGPT specifically:** if connector setup fails at authentication, run Karzoun tools from a backend worker (your server holds the token) or use an MCP gateway that adds OAuth in front of Karzoun. We will document first-party OAuth for ChatGPT when available.
+  Header-based clients ([Manus](#manus), [Cursor remote](#cursor-remote), [Claude Code](#claude-code), or your backend) send `Authorization: Bearer kz_live_…` instead.
 </Warning>
 
 ## Cursor (remote)
@@ -163,14 +115,14 @@ For teams that prefer **not** to run `npx` locally, Cursor supports **remote MCP
     "karzoun-hosted": {
       "url": "https://YOUR_SUBDOMAIN.api.karzoun.chat/mcp",
       "headers": {
-        "x-app-token": "${env:KARZOUN_APP_TOKEN}"
+        "Authorization": "Bearer ${env:KARZOUN_API_KEY}"
       }
     }
   }
 }
 ```
 
-Export `KARZOUN_APP_TOKEN` in your shell profile (desktop apps may not load `.zshrc` — use system env or Cursor's supported secret patterns).
+Export `KARZOUN_API_KEY` in your shell profile (desktop apps may not load `.zshrc` — use system env or Cursor's supported secret patterns).
 
 **Cursor Settings → MCP** should show **connected** with ~75 tools. Prefer [local stdio](/mcp-server/setup/cursor) for offline development; use **hosted** when `npx` is blocked or you want a single shared endpoint.
 
@@ -183,10 +135,10 @@ Docs: [Cursor MCP — remote servers](https://cursor.com/docs/mcp).
 ```bash
 claude mcp add --transport http karzoun \
   https://YOUR_SUBDOMAIN.api.karzoun.chat/mcp \
-  --header "x-app-token: YOUR_APP_TOKEN"
+  --header "Authorization: Bearer kz_live_YOUR_API_KEY"
 ```
 
-Use a project `.mcp.json` for repo-scoped access. Rotate tokens via **Developer → Apps** if the CLI config is shared.
+Use a project `.mcp.json` for repo-scoped access. Revoke the key in **Developer → API keys** if the CLI config is shared.
 
 ## Build your own agent
 
@@ -195,15 +147,17 @@ Any stack that speaks **Streamable HTTP MCP** can call Karzoun:
 ```mermaid
 flowchart LR
   User[User / trigger] --> Agent[Your agent runtime]
-  Agent -->|POST /mcp + x-app-token| Karzoun[Karzoun gateway]
+  Agent -->|POST /mcp + Authorization Bearer| Karzoun[Karzoun gateway]
   Karzoun --> GQL[GraphQL API]
 ```
 
 Typical hosts: LangGraph, custom Node/Python workers, Zapier-style automations, internal Slack bots.
 
-1. `POST initialize` → capture `mcp-session-id`
+1. `POST initialize`
 2. `POST tools/list` → discover operations
 3. `POST tools/call` → execute with GraphQL-shaped arguments
+
+Hosted MCP does not require an `mcp-session-id` between those calls.
 
 Examples and curl: [Hosted MCP](/mcp-server/setup/hosted). Prompt design: [Agent patterns](/mcp-server/guides/agent-patterns).
 
@@ -211,23 +165,22 @@ Examples and curl: [Hosted MCP](/mcp-server/setup/hosted). Prompt design: [Agent
 
 Before connecting a powerful client:
 
-| Goal                    | App permissions                     | Optional env                            |
+| Goal                    | Key scopes                          | Optional env                            |
 | ------------------------ | ------------------------------------- | ------------------------------------------ |
-| Read-only CRM assistant | Query customers, tags, companies    | `KARZOUN_MCP_TOOL_PREFIX` on stdio only |
-| Support triage          | Conversations + knowledge base read | Narrow app scope in UI                  |
-| Integration admin       | Webhooks + apps mutations           | Separate high-privilege token           |
+| Read-only CRM assistant | Read customers, tags, companies     | `KARZOUN_MCP_TOOL_PREFIX` on stdio only |
+| Support triage          | Conversations + knowledge base read | Narrow scopes on the key                 |
+| Integration admin       | Webhooks write                      | A separate key, not the read-only one    |
 
-Start with a **read-only** app, validate prompts, then issue a broader token if needed.
+Start with a **read-only** key, validate prompts, then issue a broader key if needed.
 
 ## Troubleshooting connectors
 
 | Symptom                        | Likely cause                          | Fix                                           |
 | -------------------------------- | ---------------------------------------- | ------------------------------------------------ |
-| 401 Missing `x-app-token`      | Header not sent                       | Add header in client config or proxy          |
-| 400 invalid session            | Skipped `initialize` or stale session | Re-run handshake; see [Hosted MCP](/mcp-server/setup/hosted) |
-| Tools empty / permission error | App scope too narrow                  | Widen permissions; test in Playground         |
-| Client cannot reach URL        | Private network / localhost           | Use public `*.api.karzoun.chat` only          |
-| ChatGPT auth fails             | OAuth-only connector                  | Use Manus, Cursor remote, or backend agent    |
+| 401 Authorization required     | No API key or OAuth login                 | Send `Authorization: Bearer`, or finish consent |
+| Tools empty / permission error | Key scopes too narrow                 | Widen scopes; test in the Playground          |
+| Client cannot reach URL        | Private network / localhost           | Use public `*.api.karzoun.chat` only           |
+| ChatGPT or Claude auth fails   | Connector URL is not the public MCP URL | Use `https://{subdomain}.api.karzoun.chat/mcp` and sign in |
 
 More: [Troubleshooting](/mcp-server/guides/troubleshooting).
 

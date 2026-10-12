@@ -13,7 +13,7 @@ https://{subdomain}.api.karzoun.chat/mcp/{pack}
 ```
 
 <Warning title="من جهة الخادم فقط">
-  لا تستدعِ `/mcp` من JavaScript في المتصفح أبدًا. سيتعرّض رمز التطبيق للمستخدمين النهائيين. استخدم الخلفية أو عاملًا موثوقًا.
+  لا تستدعِ `/mcp` من JavaScript في المتصفح أبدًا. سيتعرّض مفتاح API للمستخدمين النهائيين. استخدم الخلفية أو عاملًا موثوقًا.
 </Warning>
 
 ## متى تستخدم المستضاف
@@ -27,10 +27,12 @@ https://{subdomain}.api.karzoun.chat/mcp/{pack}
 ## المصادقة
 
 ```
-x-app-token: YOUR_APP_TOKEN_JWT
+Authorization: Bearer kz_live_YOUR_API_KEY
 ```
 
-اختياري: `x-subdomain` عندما توجّه بوابتك المستأجرين عبر الترويسة.
+`x-api-key: kz_live_…` مكافئ. العملاء الذين يسجّلون دخول المستخدم (Claude.ai وChatGPT) يستخدمون OAuth بدل مفتاح ملصوق: أعطهم رابط MCP فيكملون تسجيل الدخول والموافقة. `x-app-token` القديم يبقى مقبولاً حتى 31 مارس 2027.
+
+اختياري: `x-subdomain` عندما توجّه البوابة الحسابات عبر الترويسة.
 
 ## الحزم (packs)
 
@@ -63,7 +65,7 @@ MCP المستضاف **عديم الحالة** (stateless) عبر Streamable HTT
 curl -s -X POST 'https://YOUR.api.karzoun.chat/mcp/customer-support' \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json, text/event-stream' \
-  -H 'x-app-token: YOUR_TOKEN' \
+  -H 'Authorization: Bearer kz_live_YOUR_API_KEY' \
   -d '{
     "jsonrpc": "2.0",
     "id": 1,

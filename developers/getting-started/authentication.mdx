@@ -1,30 +1,27 @@
 ---
 title: "Authentication"
-description: "App tokens and request headers for the Karzoun public GraphQL API."
+description: "Create an API key and send it on Karzoun GraphQL requests."
 ---
 
-The public API uses **app tokens** (JWT) created in the Karzoun Developer dashboard.
+Scripts and servers call the public API with an **API key**. Create one in **Developer → API keys** (`/developer/api-keys`). Copy the secret when it is shown. You cannot read it again.
 
-Send the token on every request:
+Send it on every request:
 
 ```bash
--H "x-app-token: YOUR_APP_TOKEN_JWT"
+-H "Authorization: Bearer kz_live_YOUR_API_KEY"
 ```
 
-## Request format
+`x-api-key: kz_live_YOUR_API_KEY` is the same thing. Production keys start with `kz_live_`. Other environments use `kz_test_`.
 
-Every GraphQL request is a JSON POST with your token in headers.
+## Which key to create
 
-### Required headers
+Create a **personal** key when the integration should act as you and stop working if your user is deactivated. A server job that must keep running after you leave needs a **workspace** key. A workspace key belongs to the workspace. You can cap it with a user group. Unless you are an owner, you have to.
 
-| Header | Required | Description |
-| --- | --- | --- |
-| `x-app-token` | Yes | App JWT from Developer → Apps |
-| `Content-Type` | Yes | `application/json` |
+Both kinds expire. The default is one year. The longest you can set is two years. Revoke a key from the same page. Revocation takes effect on the next request.
 
-### Permissions
+A key can call only the scopes you pick. `contacts:read` can list contacts. `inbox:write` can read and change inbox data, because write includes read. Sensitive scopes, such as managing apps or webhooks, are limited to owners. An API key cannot create another key.
 
-Apps can be scoped to user groups or allowed for all users. Create apps with the minimum permissions needed for your integration.
+`currentUser` checks that the key works. With a personal key it returns you. With a workspace key it returns the key's own user, not a teammate.
 
 <CodeGroup>
 ```graphql
@@ -39,22 +36,31 @@ query {
 ```bash
 curl -X POST 'https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql' \
   -H 'Content-Type: application/json' \
-  -H 'x-app-token: YOUR_APP_TOKEN' \
+  -H 'Authorization: Bearer kz_live_YOUR_API_KEY' \
   -d '{"query":"query { currentUser { _id email } }"}'
 ```
 </CodeGroup>
 
-<Tip>
-  Use the `currentUser` query to confirm authentication before building integrations.
-</Tip>
+The [Playground](https://karzoun.chat/developer/playground) runs as the signed-in user. Put the header above in its headers panel when you want to test the key.
 
-## Security
+## If you are connecting Claude or ChatGPT
 
-- Never expose app tokens in browser-side code
-- Use MCP and server-side agents with tokens on the backend only
-- Rotate tokens by creating a new app and revoking the old one
+Those apps do not take a pasted key. Give them your MCP URL, `https://YOUR_SUBDOMAIN.api.karzoun.chat/mcp`. They send you through the normal Karzoun login and a consent screen. The token they keep can call only the scopes you approved. Disconnect it in **Settings → Connected apps**.
 
-## Next steps
+Local tools such as Cursor use an API key. See [MCP](/mcp-server).
+
+## Keep the key safe
+
+Store it in a secrets manager or a server environment variable. Do not put it in browser JavaScript, a git repo, or a chat. When a laptop is lost or someone leaves, revoke that key and create a new one. Do not reuse the old secret.
+
+## Existing app tokens
+
+`x-app-token` still works until **31 March 2027**. Responses include `Deprecation` and `Sunset` headers. Do not start anything new this way.
+
+Tokens you already have are listed in **Developer → Apps**. Convert one into a workspace API key there. The product no longer lets you create a new app token.
+
+## Next
 
 - [Quickstart](/developers/getting-started/quickstart)
+- [Errors](/developers/guides/errors)
 - [GraphQL API reference](/api-reference)

@@ -1,30 +1,15 @@
 ---
 title: "Pagination"
-description: "Paginate list queries in the Karzoun GraphQL API."
+description: "Read a Karzoun list one page at a time."
 ---
 
-List queries accept pagination:
+List queries such as `tags`, `customers`, and `conversations` take `page` and `perPage`. `page` starts at **1**. `tags` returns the first 20 rows when you leave both out. Other lists document their own default, so pass both whenever you care which page you get.
 
-| Argument | Type | Description |
-| --- | --- | --- |
-| `page` | Int | Page number (starts at 1) |
-| `perPage` | Int | Items per page |
-
-Example variables:
-
-```json
-{ "page": 1, "perPage": 20 }
-```
-
-List responses include a `pagination` object with `totalCount`, `currentPage`, `totalPages`, `hasNextPage`, and `hasPreviousPage`.
-
-## Example
-
-Pass `page` and `perPage` on list queries such as `tags`, `customers`, and `conversations`.
+Ask for the `pagination` object and stop when `hasNextPage` is false.
 
 ```graphql
 query {
-  customers(page: 2, perPage: 20) {
+  customers(page: 1, perPage: 20) {
     data {
       _id
       firstName
@@ -32,8 +17,32 @@ query {
     pagination {
       totalCount
       currentPage
+      totalPages
       hasNextPage
+      hasPreviousPage
     }
   }
 }
 ```
+
+Pass the next page as a variable rather than editing the query:
+
+```json
+{ "page": 2, "perPage": 20 }
+```
+
+```graphql
+query Customers($page: Int, $perPage: Int) {
+  customers(page: $page, perPage: $perPage) {
+    data { _id firstName }
+    pagination { currentPage hasNextPage }
+  }
+}
+```
+
+Keep `perPage` small. MCP throws away a tool result larger than 512 KB, and a huge page is slower for every client. Add a search or filter argument when the reference shows one, instead of paging through the whole workspace.
+
+## Next
+
+- [Quickstart](/developers/getting-started/quickstart)
+- [GraphQL API reference](/api-reference)

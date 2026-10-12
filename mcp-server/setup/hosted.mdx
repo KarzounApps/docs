@@ -3,9 +3,7 @@ title: "Hosted MCP (/mcp)"
 description: "Call Karzoun MCP over Streamable HTTP from your backend or cloud AI apps."
 ---
 
-Call Karzoun MCP over **Streamable HTTP** from your backend — or connect **cloud AI apps** (Claude, Manus, ChatGPT, remote Cursor) to the same endpoint.
-
-**New:** Step-by-step connector guide → [AI app connectors](/mcp-server/setup/ai-connectors)
+This page is the HTTP reference. If you are connecting Claude.ai, ChatGPT, Manus, or remote Cursor, start with [Cloud apps](/mcp-server/setup/ai-connectors). Stay here when your own server calls `/mcp`.
 
 ```
 https://{subdomain}.api.karzoun.chat/mcp
@@ -13,7 +11,7 @@ https://{subdomain}.api.karzoun.chat/mcp/{pack}
 ```
 
 <Warning title="Server-side only">
-  Never call `/mcp` from browser JavaScript. The app token would be exposed to end users. Use your backend or a trusted worker.
+  Never call `/mcp` from browser JavaScript. The API key would be exposed to end users. Use your backend or a trusted worker.
 </Warning>
 
 ## When to use hosted
@@ -26,13 +24,15 @@ https://{subdomain}.api.karzoun.chat/mcp/{pack}
 
 ## Authentication
 
-Every request requires the same header as GraphQL:
+Send the same credential as GraphQL:
 
 ```
-x-app-token: YOUR_APP_TOKEN_JWT
+Authorization: Bearer kz_live_YOUR_API_KEY
 ```
 
-Optional: `x-subdomain` when your gateway routes tenants by header.
+`x-api-key: kz_live_…` is equivalent. Clients that sign the user in (Claude.ai, ChatGPT) use OAuth instead of a pasted key: give them the MCP URL and they complete login and consent. A legacy `x-app-token` still works until 31 March 2027.
+
+Optional: `x-subdomain` when your gateway routes workspaces by header.
 
 ## Packs (tool subsets)
 
@@ -67,7 +67,7 @@ Hosted MCP is **stateless** Streamable HTTP (JSON responses). Official MCP clien
 curl -s -X POST 'https://YOUR.api.karzoun.chat/mcp/customer-support' \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json, text/event-stream' \
-  -H 'x-app-token: YOUR_TOKEN' \
+  -H 'Authorization: Bearer kz_live_YOUR_API_KEY' \
   -d '{
     "jsonrpc": "2.0",
     "id": 1,
@@ -86,7 +86,7 @@ curl -s -X POST 'https://YOUR.api.karzoun.chat/mcp/customer-support' \
 curl -X POST 'https://YOUR.api.karzoun.chat/mcp/customer-support' \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json, text/event-stream' \
-  -H 'x-app-token: YOUR_TOKEN' \
+  -H 'Authorization: Bearer kz_live_YOUR_API_KEY' \
   -d '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'
 ```
 
@@ -96,7 +96,7 @@ curl -X POST 'https://YOUR.api.karzoun.chat/mcp/customer-support' \
 curl -X POST 'https://YOUR.api.karzoun.chat/mcp/customer-support' \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json, text/event-stream' \
-  -H 'x-app-token: YOUR_TOKEN' \
+  -H 'Authorization: Bearer kz_live_YOUR_API_KEY' \
   -d '{
     "jsonrpc": "2.0",
     "id": 3,
@@ -114,7 +114,7 @@ curl -X POST 'https://YOUR.api.karzoun.chat/mcp/customer-support' \
 flowchart TB
   User[End user] --> App[Your app]
   App --> Agent[AI agent layer]
-  Agent -->|x-app-token| MCP["Karzoun /mcp/:pack"]
+  Agent -->|Authorization: Bearer| MCP["Karzoun /mcp/:pack"]
   MCP --> GQL[GraphQL]
   Secrets[(Secrets manager)] -.-> Agent
 ```
@@ -124,7 +124,7 @@ Store tokens in a secrets manager; inject per tenant if you operate multi-tenant
 ## Limits
 
 - Same GraphQL permissions and rate behavior as direct API calls
-- Hosted `/mcp` POSTs: default **120 req/min** per app token (`MCP_RATE_LIMIT_PER_MIN`)
+- Hosted `/mcp` POSTs: default **120 req/min** per credential (`MCP_RATE_LIMIT_PER_MIN`)
 - GraphQL fetch timeout: default **30s** (`KARZOUN_MCP_FETCH_TIMEOUT_MS`)
 - Default **512 KB** tool response cap (configurable on self-hosted gateway mounts)
 - See [Security](/mcp-server/setup/security) for rotation and scoping

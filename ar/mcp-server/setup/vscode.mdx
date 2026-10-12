@@ -7,7 +7,7 @@ description: "شغّل Karzoun MCP داخل VS Code ليتمكن Copilot / وك�
 
 ## قبل البدء
 
-- [رمز تطبيق](/developers/getting-started/authentication) من **المطور → التطبيقات**
+- [مفتاح API](/ar/developers/getting-started/authentication) من **المطوّر ← مفاتيح API**
 - رابط GraphQL: `https://{subdomain}.api.karzoun.chat/graphql`
 - إصدار حديث من VS Code يدعم MCP
 
@@ -28,7 +28,7 @@ description: "شغّل Karzoun MCP داخل VS Code ليتمكن Copilot / وك�
           "args": ["-y", "@karzounchat/mcp-server"],
           "env": {
             "KARZOUN_API_URL": "https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql",
-            "KARZOUN_APP_TOKEN": "YOUR_APP_TOKEN",
+            "KARZOUN_API_KEY": "kz_live_YOUR_API_KEY",
             "KARZOUN_MCP_PACK": "customer-support"
           }
         }
@@ -36,7 +36,7 @@ description: "شغّل Karzoun MCP داخل VS Code ليتمكن Copilot / وك�
     }
     ```
 
-    استبدل النطاق الفرعي والصق JWT من **المطور → التطبيقات** (يُعرض مرة واحدة).
+    استبدل النطاق الفرعي والصق مفتاح API من **المطوّر ← مفاتيح API** (يُعرض مرة واحدة).
 
     فضّل [حزمة](/mcp-server/setup/hosted#packs-tool-subsets) مركّزة (`customer-support`، `whatsapp`، …). استخدم `full` فقط عند الحاجة لكل الأدوات.
   </Step>

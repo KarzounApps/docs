@@ -3,12 +3,7 @@ title: "Cursor setup (stdio)"
 description: "Run Karzoun MCP locally so Cursor's agent can call your workspace GraphQL API as tools."
 ---
 
-Run Karzoun MCP locally so Cursor's agent can call your workspace GraphQL API as tools.
-
-## Before you start
-
-- [App token](/developers/getting-started/authentication) from **Developer → Apps**
-- GraphQL URL: `https://{subdomain}.api.karzoun.chat/graphql`
+Cursor runs a small local program that calls your workspace API. You need an [API key](/developers/getting-started/authentication) and your GraphQL URL, `https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql`.
 
 ## Configure MCP
 
@@ -28,7 +23,7 @@ Run Karzoun MCP locally so Cursor's agent can call your workspace GraphQL API as
           "args": ["-y", "@karzounchat/mcp-server"],
           "env": {
             "KARZOUN_API_URL": "https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql",
-            "KARZOUN_APP_TOKEN": "YOUR_APP_TOKEN",
+            "KARZOUN_API_KEY": "kz_live_YOUR_API_KEY",
             "KARZOUN_MCP_PACK": "customer-support"
           }
         }
@@ -36,10 +31,10 @@ Run Karzoun MCP locally so Cursor's agent can call your workspace GraphQL API as
     }
     ```
 
-    Replace `YOUR_SUBDOMAIN` and paste the JWT from **Developer → Apps** (shown once).
+    Replace `YOUR_SUBDOMAIN` and paste the API key from **Developer → API keys** (shown once).
 
-    <Warning title="Keep tokens out of git">
-      Do not commit `mcp.json` if it contains real tokens. Prefer env vars or Cursor secret storage.
+    <Warning title="Keep the key out of git">
+      Do not commit `mcp.json` if it contains a real key. Prefer an environment variable or Cursor's secret storage.
     </Warning>
   </Step>
 

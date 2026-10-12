@@ -24,7 +24,7 @@ Claude Desktop uses the same `@karzounchat/mcp-server` package as Cursor, with a
       "args": ["-y", "@karzounchat/mcp-server"],
       "env": {
         "KARZOUN_API_URL": "https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql",
-        "KARZOUN_APP_TOKEN": "YOUR_APP_TOKEN",
+        "KARZOUN_API_KEY": "kz_live_YOUR_API_KEY",
         "KARZOUN_MCP_PACK": "customer-support"
       }
     }
@@ -32,7 +32,7 @@ Claude Desktop uses the same `@karzounchat/mcp-server` package as Cursor, with a
 }
 ```
 
-Create an app token in **Developer → Apps** ([authentication](/developers/getting-started/authentication)).
+Create an API key in **Developer → API keys** ([authentication](/developers/getting-started/authentication)).
 
 Set `KARZOUN_MCP_PACK` to a focused pack (`customer-support`, `whatsapp`, …) or `full` for every public tool. See [packs](/mcp-server/setup/hosted#packs-tool-subsets).
 

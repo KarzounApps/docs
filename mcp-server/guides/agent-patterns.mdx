@@ -83,12 +83,11 @@ Pair with the [webhooks guide](/developers/guides/webhooks) for tenant outbound 
 
 For server-side workers calling `/mcp`:
 
-1. Store `KARZOUN_APP_TOKEN` in secrets manager
-2. `initialize` → capture `mcp-session-id`
-3. `tools/call` in a loop with explicit tool names
-4. Log GraphQL errors from tool responses
+1. Store `KARZOUN_API_KEY` in a secrets manager
+2. `initialize`, then `tools/call` in a loop with explicit tool names
+3. Log GraphQL errors from tool responses
 
-Do not expose the session or token to end users. Details: [Hosted MCP](/mcp-server/setup/hosted).
+Do not expose the key to end users. Hosted MCP does not use a session id. Details: [Hosted MCP](/mcp-server/setup/hosted).
 
 ## Anti-patterns
 

@@ -46,7 +46,7 @@
 - Use **Karzoun** or **Karzoun Chat** for the product — not Octobots in customer-facing docs
 - Prefer **workspace** over "tenant" or "organization" in English when describing a customer account
 - In Arabic Help Center / `ar/` prose: use **حساب** / **حسابك في كرزون** / **حساب كرزون** — not **مساحة** / **مساحة العمل**. (حسابك في كرزون = مساحة العمل التي يعمل من خلالها الفريق.) Keep literal «مساحة» only for physical/UI space, namespace, storage, etc.
-- Prefer **app token** / `x-app-token` for public API auth
+- Prefer **API key** (`Authorization: Bearer kz_…` or `x-api-key`) for public API auth. **OAuth** is for MCP clients that sign the user in (Claude.ai, ChatGPT). **App token** / `x-app-token` is legacy until 31 March 2027 — do not recommend it for new integrations. When auth, MCP, or API-key behavior changes, update the matching pages under `developers/`, `mcp-server/`, and `ar/` in the same change.
 - Prefer **Help Center** for end-user docs (not "customers docs")
 - Prefer **MiniApps** (one word, capital A) for marketplace JSON apps
 - Prefer **MCP** for Model Context Protocol tooling

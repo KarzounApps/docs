@@ -1,95 +1,73 @@
 ---
 title: "MCP"
-description: "Connect Cursor, Claude, VS Code, ChatGPT, and more to Karzoun via Model Context Protocol."
+description: "Connect Cursor, Claude, or ChatGPT to your Karzoun workspace."
 ---
 
-Give AI assistants **structured access** to your Karzoun workspace — customers, inbox, WhatsApp, automations, and more — through the [Model Context Protocol](https://modelcontextprotocol.io/).
+MCP lets an AI app call your Karzoun workspace: list customers, read the inbox, look up a WhatsApp template. Each tool is one public GraphQL operation. The tool name is the operation name.
 
-The `@karzounchat/mcp-server` package maps the **public GraphQL API** to MCP tools. Prefer a **pack** so the agent only sees the tools for its job.
+Open **Developer → MCP setup** (`/developer/mcp-setup`) if you want the URL and config already filled in for your workspace.
 
-**Package:** [`@karzounchat/mcp-server`](https://www.npmjs.com/package/@karzounchat/mcp-server)
-**Source:** [KarzounApps/mcp-server](https://github.com/KarzounApps/mcp-server)
-**In-app:** **Developer → MCP setup** (`/developer/mcp-setup`)
+## Pick your app
 
-## Choose your setup
+- **Cursor, VS Code, or Claude Desktop on your computer.** Follow [Cursor](/mcp-server/setup/cursor). [VS Code](/mcp-server/setup/vscode) and [Claude Desktop](/mcp-server/setup/claude-desktop) use the same program and a different config file. You paste an [API key](/developers/getting-started/authentication) into that file.
+- **Claude.ai or ChatGPT.** Follow [Cloud apps](/mcp-server/setup/ai-connectors). Paste the MCP URL. The app signs you in. Do not paste a key.
+- **A server you run.** Follow [HTTP MCP](/mcp-server/setup/hosted) and send `Authorization: Bearer` with an API key.
 
-|                 | **Local**                                                              | **HTTP**                                                                     |
-| --------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| **Best for**    | Cursor, VS Code, Claude Desktop on your laptop                         | Claude, ChatGPT, Manus, Gemini, Grok, remote agents                          |
-| **Runs as**     | `npx @karzounchat/mcp-server` (stdio)                                  | `POST https://{subdomain}.api.karzoun.chat/mcp` or `/mcp/{pack}`             |
-| **Token lives** | MCP config `env` on your machine                                       | Trusted AI host or your backend — never the browser                          |
-| **Setup guide** | [Cursor](/mcp-server/setup/cursor) · [VS Code](/mcp-server/setup/vscode) · [Claude Desktop](/mcp-server/setup/claude-desktop) | [AI connectors](/mcp-server/setup/ai-connectors) · [HTTP MCP](/mcp-server/setup/hosted) |
+If the app does not need a language model, call [GraphQL](/developers/getting-started/quickstart) or [webhooks](/developers/guides/webhooks) directly.
 
-```mermaid
-flowchart LR
-  subgraph Local["On your computer"]
-    C[Cursor / VS Code / Claude Desktop]
-    STDIO[stdio MCP server]
-    C <--> STDIO
-  end
+## Start with a pack
 
-  subgraph Cloud["Cloud AI / backend"]
-    AG[Claude / ChatGPT / Manus / agent]
-  end
+A pack is a short tool list. `full` is every public operation and is a poor default.
 
-  subgraph Karzoun["Karzoun"]
-    MCP["/mcp or /mcp/pack"]
-    GQL[GraphQL API]
-    MCP --> GQL
-  end
+| Pack | Give it to an agent that should |
+| --- | --- |
+| `customer-support` | Read the inbox, contacts, companies, and tags |
+| `marketing` | Work with broadcasts, segments, forms, and products |
+| `operations` | Work with tasks, team chat, and users |
+| `whatsapp` | Work with WhatsApp messages, templates, and flows |
+| `automations` | Read and edit automation flows |
+| `integrations` | Read apps, webhooks, and MiniApps |
+| `ai` | Search the knowledge base |
+| `full` | See the entire public API |
 
-  STDIO --> GQL
-  AG --> MCP
+On your computer, set `KARZOUN_MCP_PACK` to one of those ids. Over HTTP, call `/mcp/customer-support` instead of `/mcp`.
+
+After it connects, ask: "Use Karzoun to list my first 5 tags." If the tool is missing or refused, see [Troubleshooting](/mcp-server/guides/troubleshooting).
+
+## Local config
+
+```json
+{
+  "mcpServers": {
+    "karzoun-customer-support": {
+      "command": "npx",
+      "args": ["-y", "@karzounchat/mcp-server"],
+      "env": {
+        "KARZOUN_API_URL": "https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql",
+        "KARZOUN_API_KEY": "kz_live_YOUR_API_KEY",
+        "KARZOUN_MCP_PACK": "customer-support"
+      }
+    }
+  }
+}
 ```
 
-## Packs (recommended)
+| Variable | Required | What to put |
+| --- | --- | --- |
+| `KARZOUN_API_URL` | Yes | Your GraphQL URL |
+| `KARZOUN_API_KEY` | Yes | The key from **Developer → API keys** |
+| `KARZOUN_MCP_PACK` | No | A pack id. Defaults to `full` |
+| `KARZOUN_MCP_FETCH_TIMEOUT_MS` | No | How long one GraphQL call may take. Default 30000 |
+| `KARZOUN_MCP_MAX_RESPONSE_BYTES` | No | Largest tool reply. Default 524288 (512 KB) |
 
-| Pack | Use for |
-|------|---------|
-| `customer-support` | Inbox, contacts, companies, tags, reply templates |
-| `marketing` | Broadcasts, segments, forms, products |
-| `operations` | Tasks, team chat, org, users, products |
-| `whatsapp` | WhatsApp messaging, templates, flows |
-| `automations` | Automation flows and nodes |
-| `integrations` | Apps, webhooks, MiniApps |
-| `ai` | Knowledge base |
-| `full` | Entire public API (large) |
+An old `KARZOUN_APP_TOKEN` is still read when `KARZOUN_API_KEY` is empty, until 31 March 2027. New setups should set the API key.
 
-Local: set `KARZOUN_MCP_PACK`. HTTP: use `/mcp/{pack}` or `GET /mcp/packs`.
+Hosted `/mcp` allows 120 POSTs a minute per key. `MCP_RATE_LIMIT_PER_MIN=0` on the gateway turns that off.
 
-## Prerequisites
+Package: [`@karzounchat/mcp-server`](https://www.npmjs.com/package/@karzounchat/mcp-server). Source: [KarzounApps/mcp-server](https://github.com/KarzounApps/mcp-server).
 
-1. **App token** — **Developer → Apps** ([authentication](/developers/getting-started/authentication))
-2. **GraphQL URL** — `https://{subdomain}.api.karzoun.chat/graphql`
-3. **Permissions** — Scope the app to what the agent needs
+## Next
 
-<Warning title="Not a replacement for GraphQL">
-  MCP is a **convenience layer for AI clients**. Production integrations that do not need an LLM should call GraphQL or [webhooks](/developers/guides/webhooks) directly.
-</Warning>
-
-## Start here
-
-| Step | Guide |
-| ---- | ----- |
-| 1 | [How it works](/mcp-server/guides/how-it-works) |
-| 2 | Pick Local ([Cursor](/mcp-server/setup/cursor) / [VS Code](/mcp-server/setup/vscode)) or HTTP ([connectors](/mcp-server/setup/ai-connectors)) |
-| 3 | [Agent patterns](/mcp-server/guides/agent-patterns) |
-| 4 | [Tool catalog](/mcp-server/tools/catalog) |
-
-## Configuration reference (local)
-
-| Variable                         | Required | Description |
-| --------------------------------- | -------- | ----------- |
-| `KARZOUN_API_URL`                | Yes      | GraphQL endpoint URL |
-| `KARZOUN_APP_TOKEN`              | Yes      | App JWT |
-| `KARZOUN_MCP_PACK`               | No       | Pack id (default `full`) |
-| `KARZOUN_MCP_FETCH_TIMEOUT_MS`   | No       | GraphQL fetch timeout ms (default: 30000) |
-| `KARZOUN_MCP_MAX_RESPONSE_BYTES` | No       | Response cap (default: 524288) |
-
-Hosted gateway: `MCP_RATE_LIMIT_PER_MIN` (default `120` POSTs/min per app token; `0` disables).
-
-## Related
-
+- [How it works](/mcp-server/guides/how-it-works)
 - [Security](/mcp-server/setup/security)
-- [Troubleshooting](/mcp-server/guides/troubleshooting)
-- [GraphQL API](/developers)
+- [Tool catalog](/mcp-server/tools/catalog)
