@@ -1,11 +1,24 @@
 ---
 title: "إضافة منتج"
 description: "أضف منتجاً أو خدمة يدوياً: عام، تسعير، متغيرات، وSEO — من /settings/products-services."
+type: task
+updated: "2026-08-17"
 ---
 
-منتج **يدوي** يناسب SKU قليلة أو خدمات لا تأتي من متجر. للمئات: [استيراد CSV](/ar/help-center/guides/settings/products/import) أو [مزامنة متجر](/ar/help-center/guides/store/ecommerce-apps).
+SKU قليلة أو خدمات لا تأتي من متجر تستحق إدخالاً يدوياً؛ أما المئات فالاستيراد أو مزامنة المتجر أوفر وقتاً.
+
+منتج **يدوي** يمرّ بتبويبات عام وتسعير ومتغيرات عند الحاجة. للمئات: [استيراد CSV](/ar/help-center/guides/settings/products/import) أو [مزامنة متجر](/ar/help-center/guides/store/ecommerce-apps).
+
+يشرح هذا الدليل خطوات الإضافة، الحقول المهمة، وأخطاء شائعة مثل الرمز المكرر أو منتج بلا متغير نشط.
 
 > المسار: `/settings/products-services` ← **إضافة منتج**.
+
+## قبل أن تبدأ
+
+- صلاحية `manageProducts`.
+- عملة المنتج تُضبط **لكل SKU** — حقل العملة في [الإعدادات العامة](/ar/help-center/guides/settings/general) محلي للمتصفح ولا يفرض عملة الكتالوج.
+
+## الخطوات
 
 <Steps>
   <Step title="افتح النموذج">
@@ -13,9 +26,19 @@ description: "أضف منتجاً أو خدمة يدوياً: عام، تسعي�
   </Step>
   <Step title="تبويب عام">
     **الرمز** (فريد)، **الاسم**، **النوع**، **الفئة**، SKU، **الحالة**، صورة رئيسية، وسوم.
+
+    {/* MEDIA: /images/help/settings/products/add-product-form.webp | نافذة «إضافة منتج» — تبويب «عام» مع رمز واسم ونوع «منتج» وحالة «نشط» */}
+    <Frame caption="تبويب عام: رمز واسم ونوع وحالة">
+      <img src="/images/help/settings/products/add-product-form.webp" alt="نافذة إضافة منتج تبويب عام مع رمز واسم ونوع منتج وحالة نشط" />
+    </Frame>
   </Step>
   <Step title="التسعير والمخزون">
-    سعر الوحدة، العملة (من [الإعدادات العامة](/ar/help-center/guides/settings/general))، كميات إن وُجدت.
+    سعر الوحدة و**عملة هذا المنتج** (الافتراضي غالباً SAR). كميات إن وُجدت.
+
+    {/* MEDIA: /images/help/settings/products/add-product-pricing-gif.webp | GIF 4ث: إدخال سعر وعملة ثم الانتقال للمتغيرات أو الحفظ */}
+    <Frame caption="تعبئة السعر والعملة">
+      <img src="/images/help/settings/products/add-product-pricing-gif.webp" alt="إدخال سعر المنتج وعملته في نموذج الإضافة" />
+    </Frame>
   </Step>
   <Step title="المتغيرات (إن لزم)">
     مقاس/لون — راجع [الفئات والمتغيرات](/ar/help-center/guides/settings/products/categories-variants).
@@ -24,11 +47,6 @@ description: "أضف منتجاً أو خدمة يدوياً: عام، تسعي�
     الحالة **نشط** عند الجاهزية للاستخدام في القنوات والأتمتة.
   </Step>
 </Steps>
-
-<Info>
-**وسائط مطلوبة:** نافذة «إضافة منتج» — تبويب «عام» مع رمز واسم ونوع «منتج» وحالة «نشط».  
-المسار المقترح: `/images/help/settings/products/add-product-form.webp`
-</Info>
 
 ## حقول مهمة
 
@@ -43,9 +61,9 @@ description: "أضف منتجاً أو خدمة يدوياً: عام، تسعي�
 
 | التبويب | متى |
 | --- | --- |
-| **الشحن** | منتج físico |
+| **الشحن** | منتج مادي |
 | **تحسين محركات البحث** | إن كان المنتج يظهر على واجهة عامة |
-| **صور إضافية** | كتalog غني |
+| **صور إضافية** | كتالوج غني |
 
 ## بعد الإضافة
 
@@ -59,10 +77,25 @@ description: "أضف منتجاً أو خدمة يدوياً: عام، تسعي�
 | --- | --- |
 | نشط بلا سعر | أخطاء في الطلبات |
 | رمز مكرر | فشل الحفظ |
-| منتج بلا متغير نشط | «غير متوفر» في الكتalog |
+| منتج بلا متغير نشط | «غير متوفر» في الكتالوج |
+
+## أسئلة شائعة
+
+**متى أستخدم الاستيراد بدل الإضافة؟**  
+عند عشرات أو مئات الصفوف — [الاستيراد الجماعي](/ar/help-center/guides/settings/products/import).
+
+**هل عملة الواجهة تغيّر سعر المنتج؟**  
+لا — عملة الـ SKU في النموذج هي المرجع.
+
+## الخطوة التالية
+
+تعلّمت إضافة منتج يدوياً. بعد ذلك:
+
+- نظّم المقاسات والألوان: [الفئات والمتغيرات](/ar/help-center/guides/settings/products/categories-variants).
+- لربط التجارة: [تجارة واتساب](/ar/help-center/guides/whatsapp/commerce/overview).
 
 ## ذات صلة
 
 - [نظرة عامة على الكتالوج](/ar/help-center/guides/settings/products/overview)
 - [الفئات والمتغيرات](/ar/help-center/guides/settings/products/categories-variants)
-- [تجارة واتسApp](/ar/help-center/guides/whatsapp/commerce/overview)
+- [تجارة واتساب](/ar/help-center/guides/whatsapp/commerce/overview)

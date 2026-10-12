@@ -1,82 +1,73 @@
 ---
 title: "MCP"
-description: "اربط Cursor وClaude والوكلاء من جهة الخادم بكرزون عبر بروتوكول Model Context Protocol."
+description: "اربط Cursor أو Claude أو ChatGPT بحسابك في كرزون."
 ---
 
-امنح مساعدي الذكاء الاصطناعي **وصولًا منظمًا** إلى حساب كرزون — العملاء، الوسوم، المنتجات، المستخدمون، خطافات الويب، والمزيد — عبر [Model Context Protocol](https://modelcontextprotocol.io/).
+يتيح MCP لتطبيق ذكاء اصطناعي أن يستدعي حسابك في كرزون: يعرض العملاء، ويقرأ الوارد، ويبحث عن قالب واتساب. كل أداة هي عملية GraphQL عامة واحدة. اسم الأداة هو اسم العملية.
 
-تحوّل حزمة `@karzounchat/mcp-server` **واجهة GraphQL العامة** إلى أدوات MCP **واحدًا لواحد**. عندما يستدعي الوكيل `customers`، ينفّذ نفس العملية التي ترسلها من [ساحة التجربة](https://karzoun.chat/developer/playground) أو من الخلفية لديك.
+افتح **المطوّر ← إعداد MCP** (`/developer/mcp-setup`) إن أردت العنوان والإعداد معبّأين لحسابك.
 
-**الحزمة:** [`@karzounchat/mcp-server`](https://www.npmjs.com/package/@karzounchat/mcp-server)
-**المصدر:** [KarzounApps/mcp-server](https://github.com/KarzounApps/mcp-server)
+## اختر التطبيق
 
-<Tip title="نظرة عامة بالفيديو">
-  **قريبًا:** _كرزون MCP في 3 دقائق_ — ما هو MCP، متى تستخدم stdio مقابل الاستضافة، وعرض مباشر في Cursor. _(مكان مخصص للتضمين)_
-</Tip>
+- **Cursor أو VS Code أو Claude Desktop على جهازك.** اتبع [Cursor](/ar/mcp-server/setup/cursor). [VS Code](/ar/mcp-server/setup/vscode) و[Claude Desktop](/ar/mcp-server/setup/claude-desktop) يستخدمان البرنامج نفسه وملف إعداد مختلف. تلصق [مفتاح API](/ar/developers/getting-started/authentication) في ذلك الملف.
+- **Claude.ai أو ChatGPT.** اتبع [التطبيقات السحابية](/ar/mcp-server/setup/ai-connectors). الصق عنوان MCP. التطبيق يسجّل دخولك. لا تلصق مفتاحاً.
+- **خادم تشغّله أنت.** اتبع [MCP عبر HTTP](/ar/mcp-server/setup/hosted) وأرسل `Authorization: Bearer` مع مفتاح API.
 
-## اختر إعدادك
+إن كان التطبيق لا يحتاج نموذج لغة، استدعِ [GraphQL](/ar/developers/getting-started/quickstart) أو [Webhooks](/ar/developers/guides/webhooks) مباشرة.
 
-|                 | **محلي (stdio)**                                                     | **مستضاف (`/mcp`)**                                                     |
-| --------------- | --------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| **الأفضل لـ**    | Cursor، Claude Desktop، التطوير المحلي                                     | وكلاء الخلفية، الأتمتة، عمال SaaS                               |
-| **يعمل كـ**     | `npx @karzounchat/mcp-server` على جهازك                         | HTTP على بوابة كرزون                                                 |
-| **مكان الرمز** | إعداد MCP في `env` (جهازك)                                        | خادمك فقط — لا في المتصفح أبدًا                                    |
-| **دليل الإعداد** | [Cursor](/ar/mcp-server/setup/cursor) · [Claude Desktop](/ar/mcp-server/setup/claude-desktop) | [موصّلات الذكاء الاصطناعي](/ar/mcp-server/setup/ai-connectors) · [MCP المستضاف](/ar/mcp-server/setup/hosted) |
+## ابدأ بحزمة
 
-```mermaid
-flowchart LR
-  subgraph Local["Local IDE"]
-    C[Cursor / Claude]
-    STDIO[stdio MCP server]
-    C <--> STDIO
-  end
+الحزمة قائمة أدوات قصيرة. `full` هي كل العمليات العامة وبداية سيئة.
 
-  subgraph Cloud["Your backend"]
-    AG[Agent / worker]
-  end
+| الحزمة | أعطها لوكيل يفترض أن |
+| --- | --- |
+| `customer-support` | يقرأ الوارد وجهات الاتصال والشركات والوسوم |
+| `marketing` | يعمل على الحملات والشرائح والنماذج والمنتجات |
+| `operations` | يعمل على المهام ودردشة الفريق والمستخدمين |
+| `whatsapp` | يعمل على رسائل واتساب والقوالب والتدفقات |
+| `automations` | يقرأ تدفقات الأتمتة ويعدّلها |
+| `integrations` | يقرأ التطبيقات وWebhooks وMiniApps |
+| `ai` | يبحث في قاعدة المعرفة |
+| `full` | يرى الواجهة العامة كلها |
 
-  subgraph Karzoun["Karzoun"]
-    MCP["/mcp endpoint"]
-    GQL[GraphQL API]
-    MCP --> GQL
-  end
+على جهازك، اضبط `KARZOUN_MCP_PACK` على أحد هذه المعرّفات. عبر HTTP، استدعِ `/mcp/customer-support` بدل `/mcp`.
 
-  STDIO --> GQL
-  AG --> MCP
+بعد الاتصال، اسأل: «استخدم كرزون لعرض أول 5 وسوم.» إن غابت الأداة أو رُفضت، انظر [استكشاف الأخطاء](/ar/mcp-server/guides/troubleshooting).
+
+## الإعداد المحلي
+
+```json
+{
+  "mcpServers": {
+    "karzoun-customer-support": {
+      "command": "npx",
+      "args": ["-y", "@karzounchat/mcp-server"],
+      "env": {
+        "KARZOUN_API_URL": "https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql",
+        "KARZOUN_API_KEY": "kz_live_YOUR_API_KEY",
+        "KARZOUN_MCP_PACK": "customer-support"
+      }
+    }
+  }
+}
 ```
 
-## المتطلبات المسبقة
+| المتغير | مطلوب | ماذا تضع |
+| --- | --- | --- |
+| `KARZOUN_API_URL` | نعم | عنوان GraphQL |
+| `KARZOUN_API_KEY` | نعم | المفتاح من **المطوّر ← مفاتيح API** |
+| `KARZOUN_MCP_PACK` | لا | معرّف حزمة. الافتراضي `full` |
+| `KARZOUN_MCP_FETCH_TIMEOUT_MS` | لا | مدة استدعاء GraphQL الواحد. الافتراضي 30000 |
+| `KARZOUN_MCP_MAX_RESPONSE_BYTES` | لا | أكبر رد لأداة. الافتراضي 524288 (512 كيلوبايت) |
 
-1. **رمز التطبيق** — أنشئه من **المطوّر ← التطبيقات** ([دليل المصادقة](/ar/developers/getting-started/authentication))
-2. **عنوان GraphQL** — `https://{subdomain}.api.karzoun.chat/graphql` ([البداية السريعة](/ar/developers/getting-started/quickstart))
-3. **الصلاحيات** — اضبط نطاق التطبيق على العمليات التي يحتاجها وكيلك
+ما زال `KARZOUN_APP_TOKEN` القديم يُقرأ عندما يكون `KARZOUN_API_KEY` فارغاً، حتى 31 مارس 2027. الإعدادات الجديدة تضع مفتاح API.
 
-<Warning title="ليس بديلاً عن GraphQL">
-  MCP طبقة **تيسير لعملاء الذكاء الاصطناعي**. التكاملات الإنتاجية التي لا تحتاج نموذج لغة كبير يجب أن تستدعي GraphQL أو [خطافات الويب](/ar/developers/guides/webhooks) مباشرة.
-</Warning>
+يسمح `/mcp` المستضاف بـ 120 طلب POST في الدقيقة لكل مفتاح. `MCP_RATE_LIMIT_PER_MIN=0` على البوابة يوقف ذلك.
 
-## ابدأ من هنا
+الحزمة: [`@karzounchat/mcp-server`](https://www.npmjs.com/package/@karzounchat/mcp-server). المصدر: [KarzounApps/mcp-server](https://github.com/KarzounApps/mcp-server).
 
-| الخطوة | الدليل                                                                                                                                    |
-| ---- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| 1    | [كيف يعمل](/ar/mcp-server/guides/how-it-works) — الأدوات، المصادقة، والاستجابات                                                                      |
-| 2    | اختر إعدادًا: [Cursor](/ar/mcp-server/setup/cursor)، [موصّلات الذكاء الاصطناعي](/ar/mcp-server/setup/ai-connectors) (Claude، Manus، ChatGPT…)، أو [المستضاف](/ar/mcp-server/setup/hosted) |
-| 3    | [أنماط الوكلاء](/ar/mcp-server/guides/agent-patterns) — أوامر تعمل جيدًا                                                                      |
-| 4    | [كتالوج الأدوات](/ar/mcp-server/tools/catalog) — أكثر من **75** عملية                                                                     |
+## التالي
 
-## مرجع الإعداد
-
-| المتغير                         | مطلوب | الوصف                            |
-| --------------------------------- | -------- | --------------------------------------- |
-| `KARZOUN_API_URL`                | نعم      | عنوان نقطة نهاية GraphQL                   |
-| `KARZOUN_APP_TOKEN`              | نعم      | JWT التطبيق من `appsAdd`                 |
-| `KARZOUN_MCP_TOOL_PREFIX`        | لا       | تقييد الأدوات (مثل `tags`، `customers`) |
-| `KARZOUN_MCP_MAX_RESPONSE_BYTES` | لا       | حد حجم الاستجابة (الافتراضي: 524288)         |
-
-ما زالت أسماء متغيرات البيئة الأقدم من الإصدارات السابقة مقبولة كاحتياطي.
-
-## ذات صلة
-
-- [الأمان](/ar/mcp-server/setup/security) — التعامل مع الرموز والصلاحيات
-- [استكشاف الأخطاء](/ar/mcp-server/guides/troubleshooting) — أخطاء MCP الشائعة
-- [GraphQL API](/ar/developers) — الواجهة البرمجية، خطافات الويب، ساحة التجربة
+- [كيف يعمل](/ar/mcp-server/guides/how-it-works)
+- [الأمان](/ar/mcp-server/setup/security)
+- [كتالوج الأدوات](/ar/mcp-server/tools/catalog)

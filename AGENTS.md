@@ -39,14 +39,14 @@
 - Prefer CSS logical properties (`inset-inline-*`, `margin-inline-*`, `padding-inline-*`, `border-inline-*`) over physical left/right when overriding Mintlify chrome for RTL
 - `style.css` is the full Arabic RTL audit — update it when new Mintlify chrome breaks under `/ar` (do not wait for per-component reports). Never re-enable `list-style` on prose `ul` (Mintlify uses `li::before` bullets)
 - **Arabic content parity:** every English MDX page (except Help Center articles and generated `api-reference/`) has a matching `ar/…` translation with the same structure; AR nav mirrors EN tabs. Keep internal links under `/ar/…`
-- **Help Center:** protocol + rebuild plan in `HELP-CENTER.md`. Gold standard: `ar/help-center/guides/contacts/`. Active rewrite wave order: Campaigns (broadcasts) → Karzoun Pixel → Inbox → … (see plan in HELP-CENTER.md). Verify `v4UI` + monorepo packages before rewriting. Images: `images/help/`. Do not put Developers / Partners / stub pages in Help nav.
+- **Help Center:** protocol + rebuild plan in `HELP-CENTER.md`. Voice/media contract (Friendly SaaS openers, `## الخطوة التالية`, `-gif`/`-video` placeholders): locked in that file; article rewrites follow Waves **B–E** in `ar/help-center/_VOICE_AND_MEDIA_UPGRADE_PLAN.md` (Inbox first). Gold standard accuracy: `ar/help-center/guides/contacts/`. Verify `v4UI` + monorepo packages before rewriting. Images: `images/help/`. Do not put Developers / Partners / stub pages in Help nav.
 
 ## Terminology
 
 - Use **Karzoun** or **Karzoun Chat** for the product — not Octobots in customer-facing docs
 - Prefer **workspace** over "tenant" or "organization" in English when describing a customer account
 - In Arabic Help Center / `ar/` prose: use **حساب** / **حسابك في كرزون** / **حساب كرزون** — not **مساحة** / **مساحة العمل**. (حسابك في كرزون = مساحة العمل التي يعمل من خلالها الفريق.) Keep literal «مساحة» only for physical/UI space, namespace, storage, etc.
-- Prefer **app token** / `x-app-token` for public API auth
+- Prefer **API key** (`Authorization: Bearer kz_…` or `x-api-key`) for public API auth. **OAuth** is for MCP clients that sign the user in (Claude.ai, ChatGPT). **App token** / `x-app-token` is legacy until 31 March 2027 — do not recommend it for new integrations. When auth, MCP, or API-key behavior changes, update the matching pages under `developers/`, `mcp-server/`, and `ar/` in the same change.
 - Prefer **Help Center** for end-user docs (not "customers docs")
 - Prefer **MiniApps** (one word, capital A) for marketplace JSON apps
 - Prefer **MCP** for Model Context Protocol tooling

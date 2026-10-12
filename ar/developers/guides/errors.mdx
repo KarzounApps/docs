@@ -1,23 +1,37 @@
 ---
 title: "الأخطاء"
-description: "افهم أشكال أخطاء GraphQL وHTTP من واجهة كرزون."
+description: "اقرأ رداً فاشلاً من GraphQL في كرزون وأصلحه."
 ---
 
-تعيد أخطاء GraphQL حمولة قياسية `{ "errors": [...] }` مع `message` و`extensions.code`.
+الطلب الفاشل ما زال يعيد JSON. اقرأ `errors[0].message` أولاً. حالة HTTP تكون 200 لكثير من أخطاء GraphQL، و401 عندما تُرفض بيانات الاعتماد نفسها.
 
-| الحالة | الاستجابة المعتادة |
-| --- | --- |
-| رمز مفقود | HTTP 401 أو خطأ مصادقة GraphQL |
-| رمز غير صالح | فشل المصادقة |
-| خطأ تحقق | `GRAPHQL_VALIDATION_FAILED` |
-| رفض الصلاحية | حقل أو عملية غير مسموحة لنطاق التطبيق |
+```json
+{
+  "errors": [
+    {
+      "message": "Login required",
+      "path": ["tags"],
+      "extensions": { "code": "INTERNAL_SERVER_ERROR" }
+    }
+  ],
+  "data": { "tags": null }
+}
+```
 
-<Tip>
-  استخدم [الساحة داخل التطبيق](https://karzoun.chat/developer/playground) للتحقق من الاستعلامات وفحص حمولات الأخطاء.
-</Tip>
+قد تكون `data` مساوية لـ `null` للحقل الذي فشل وتبقى موجودة. لا تعامل جسماً فيه `errors` على أنه نجاح.
 
-## إصلاحات شائعة
+## ماذا تغيّر
 
-- **401** — تحقق من ترويسة `x-app-token` وحالة التطبيق `isEnabled`
-- **رفض الصلاحية** — قد لا تتضمن مجموعة مستخدمي التطبيق العملية؛ عدّل النطاقات في `/developer/apps`
-- **التحقق** — يجب أن تطابق أسماء الحقول والوسائط [مرجع المخطط](/api-reference)
+| ما تراه | المعنى | ماذا تفعل |
+| --- | --- | --- |
+| HTTP 401، أو `Login required` | المفتاح أو رمز OAuth مفقود أو ملغى أو منتهٍ، أو أُرسل إلى الحساب الخطأ | أرسل `Authorization: Bearer kz_live_…` إلى `https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql`. أنشئ مفتاحاً جديداً إن كان هذا ملغى. |
+| `Permission denied`، أو حقل طلبته مرفوض | نطاقات المفتاح، أو صلاحياتك، لا تشمل تلك العملية | أضف النطاق من **المطوّر ← مفاتيح API**، أو اطلب من المالك. جرّب الاستعلام نفسه في [ساحة التجربة](https://karzoun.chat/developer/playground) وأنت مسجّل بمستخدم يستطيع تشغيله. |
+| `GRAPHQL_VALIDATION_FAILED` | حقل أو وسيط غير موجود في المخطط | قارن الاستعلام مع [مرجع الواجهة](/api-reference). الأسماء حساسة لحالة الأحرف. |
+| الأداة أو الطلب يقول إن الرد أكبر من اللازم | القائمة تجاوزت ما يقبله العميل | خفّض `perPage` أو أضف مرشحاً. انظر [ترقيم الصفحات](/ar/developers/guides/pagination). |
+
+قد يعيد الاستعلام `data` و`errors` معاً عندما يفشل حقل وينجح آخر. افحص `errors` حتى عندما تكون `data` موجودة.
+
+## التالي
+
+- [المصادقة](/ar/developers/getting-started/authentication)
+- [البداية السريعة](/ar/developers/getting-started/quickstart)

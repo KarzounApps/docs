@@ -1,23 +1,37 @@
 ---
 title: "Errors"
-description: "Understand GraphQL and HTTP error shapes from the Karzoun API."
+description: "Read a failed Karzoun GraphQL response and fix it."
 ---
 
-GraphQL errors return a standard `{ "errors": [...] }` payload with `message` and `extensions.code`.
+A failed call still returns JSON. Read `errors[0].message` first. The HTTP status is 200 for many GraphQL mistakes and 401 when the credential itself was rejected.
 
-| Situation | Typical response |
-| --- | --- |
-| Missing token | HTTP 401 or GraphQL auth error |
-| Invalid token | Authentication failure |
-| Validation error | `GRAPHQL_VALIDATION_FAILED` |
-| Permission denied | Field or operation not allowed for app scope |
+```json
+{
+  "errors": [
+    {
+      "message": "Login required",
+      "path": ["tags"],
+      "extensions": { "code": "INTERNAL_SERVER_ERROR" }
+    }
+  ],
+  "data": { "tags": null }
+}
+```
 
-<Tip>
-  Use the [in-app playground](https://karzoun.chat/developer/playground) to validate queries and inspect error payloads.
-</Tip>
+`data` can be `null` for the field that failed and still be present. Do not treat a body that contains `errors` as success.
 
-## Common fixes
+## What to change
 
-- **401** — Check `x-app-token` header and app `isEnabled` status
-- **Permission denied** — App user group may not include the operation; adjust scopes in `/developer/apps`
-- **Validation** — Field names and arguments must match the [schema reference](/api-reference)
+| What you see | What it means | What to do |
+| --- | --- | --- |
+| HTTP 401, or `Login required` | The key or OAuth token was missing, revoked, expired, or sent to the wrong workspace | Send `Authorization: Bearer kz_live_…` to `https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql`. Create a new key if this one was revoked. |
+| `Permission denied`, or a field you asked for is refused | The key's scopes, or your own permissions, do not include that operation | Add the scope in **Developer → API keys**, or ask an owner. Confirm the same query in the [Playground](https://karzoun.chat/developer/playground) while signed in as a user who can run it. |
+| `GRAPHQL_VALIDATION_FAILED` | A field or argument is not in the schema | Compare the query with the [API reference](/api-reference). Names are case-sensitive. |
+| The tool or call says the response is too large | The list was bigger than the client allows | Lower `perPage` or add a filter. See [Pagination](/developers/guides/pagination). |
+
+A query can return both `data` and `errors` when one field failed and another did not. Check `errors` even when `data` is present.
+
+## Next
+
+- [Authentication](/developers/getting-started/authentication)
+- [Quickstart](/developers/getting-started/quickstart)

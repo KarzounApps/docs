@@ -1,9 +1,15 @@
 ---
 title: "إنشاء حملة"
 description: "أنشئ رسالة جماعية في كرزون عبر خمس خطوات: الإعداد، الجمهور، المحتوى، الجدولة، ثم المراجعة والنشر أو الحفظ كمسودة."
+type: task
+updated: "2026-08-17"
 ---
 
-كل حملة جديدة تمر بنفس الخطوات، ويختلف المحتوى والجدولة حسب القناة التي تختارها. من **الرسائل الجماعية** انقر **إضافة رسالة جماعية**.
+عندما تريد إطلاق عرض أو تنبيه لجمهور محدد، تحتاج مساراً واحداً واضحاً من الاسم حتى النشر دون إعادة بناء الإعداد في كل قناة.
+
+يوفّر **الرسائل الجماعية** في كرزون معالج إطلاق موحّد بخمس خطوات؛ يختلف المحتوى والجدولة حسب القناة التي تختارها.
+
+يشرح هذا الدليل كيف تمرّ من **إضافة رسالة جماعية** حتى المسودة أو النشر المباشر.
 
 ## قبل أن تبدأ
 
@@ -11,55 +17,106 @@ description: "أنشئ رسالة جماعية في كرزون عبر خمس خ�
 - لواتساب: رقم مربوط وقالب **معتمد** من ميتا
 - للبريد: مرسل صالح وقالب أو محتوى جاهز عند الحاجة
 - لحملة الأتمتة: مسار أتمتة جاهز للاختيار
+- للإشعارات: جمهور لديه أجهزة مرتبطة
 
 ## خطوات الإطلاق
 
 <Steps>
   <Step title="١. الإعداد">
+    من **الرسائل الجماعية** انقر **إضافة رسالة جماعية**، ثم عبّئ:
+
     - **اسم الرسالة الجماعية** (داخلي لفريقك، حتى ٢٠٠ حرف تقريباً)
     - **القناة:** واتساب، دردشة مباشرة، بريد، أتمتة، أو إشعارات
     - **نوع الحملة:** يدوية لمرة واحدة، أو متكررة  
       عند اختيار **الدردشة المباشرة** يُثبَّت نمط **مشغّل الزائر** ولا تظهر خيارات اليدوي/المتكرر كالمعتاد
+
+    {/* MEDIA: /images/help/broadcasts/create-channels.webp | شاشة الإعداد باختيار القنوات الخمس */}
+    <Frame caption="خطوة الإعداد: الاسم والقناة ونوع الحملة">
+      <img src="/images/help/broadcasts/create-channels.webp" alt="اختيار قناة الحملة في خطوة الإعداد" />
+    </Frame>
+
+    {/* MEDIA: /images/help/broadcasts/create-wizard-video.mp4 | فيديو 45ث: من إضافة رسالة جماعية حتى المراجعة والنشر لحملة واتساب */}
+    <Frame caption="مسار الإنشاء من الإعداد حتى المراجعة">
+      <video controls src="/images/help/broadcasts/create-wizard-video.mp4" />
+    </Frame>
   </Step>
   <Step title="٢. الجمهور">
     اختر وضعاً واحداً: **الشرائح** أو **الوسوم** أو **جهات اتصال محددة**.  
     التفاصيل والقيود في [اختيار الجمهور](/ar/help-center/guides/broadcasts/audience).
+
+    {/* MEDIA: /images/help/broadcasts/create-audience-step.webp | خطوة الجمهور داخل المعالج مع عدّاد التقدير */}
+    <Frame caption="اختيار الجمهور وعدّاد التقدير">
+      <img src="/images/help/broadcasts/create-audience-step.webp" alt="خطوة الجمهور في معالج إنشاء الحملة" />
+    </Frame>
   </Step>
   <Step title="٣. المحتوى">
     يختلف بالكامل حسب القناة:
+
     - واتساب → رقم + قالب معتمد + متغيرات → [حملة واتساب](/ar/help-center/guides/broadcasts/whatsapp)
     - بريد → مرسل وموضوع ومحتوى/قالب → [حملة بريد](/ar/help-center/guides/broadcasts/email)
     - دردشة → قواعد الزائر ونص الرسالة → [الدردشة المباشرة](/ar/help-center/guides/broadcasts/livechat)
     - أتمتة → اختيار مسار → [حملة أتمتة](/ar/help-center/guides/broadcasts/automation)
     - إشعارات → عنوان ونص وخيارات → [الإشعارات](/ar/help-center/guides/broadcasts/push)
+
+    {/* MEDIA: /images/help/broadcasts/create-content-by-channel-gif.webp | GIF 6ث: التبديل بين قنوات المعالج وظهور حقول المحتوى المناسبة */}
+    <Frame caption="تغيّر حقول المحتوى حسب القناة">
+      <img src="/images/help/broadcasts/create-content-by-channel-gif.webp" alt="تغيّر خطوة المحتوى عند اختيار قناة مختلفة" />
+    </Frame>
   </Step>
   <Step title="٤. الجدولة">
     - يدوية: **إرسال فوري** أو **مرة واحدة** بتاريخ ووقت
-    - متكررة: جدول التكرار (أيام/أسابيع…) مع خيارات متقدمة
+    - متكررة: يومي/أسبوعي/شهري (تقويمي أو نسبي)، استثناءات، منطقة زمنية، ومعاينة الخمس التالية — [الجدولة](/ar/help-center/guides/broadcasts/schedule-and-status)
     - مشغّل الزائر: بلا موعد تقليدي؛ يعتمد على قواعد المحتوى  
     المزيد في [الجدولة وحالات الحملة](/ar/help-center/guides/broadcasts/schedule-and-status).
+
+    {/* MEDIA: /images/help/broadcasts/create-schedule-gif.webp | GIF 5ث: التبديل بين فوري ومرة واحدة ومتكرر وظهور حقول الموعد */}
+    <Frame caption="اختيار الجدولة في المعالج">
+      <img src="/images/help/broadcasts/create-schedule-gif.webp" alt="تبديل خيارات الجدولة في خطوة الإطلاق" />
+    </Frame>
   </Step>
   <Step title="٥. المراجعة">
     راجع الاسم والقناة والجمهور والمحتوى والموعد، ثم:
+
     - **حفظ كمسودة** للمتابعة لاحقاً، أو
     - **نشر مباشر** لبدء الإرسال أو تفعيل الجدول / مشغّل الزائر
+
+    {/* MEDIA: /images/help/broadcasts/create-wizard-steps.webp | شريط خطوات الإطلاق الخمس ظاهر أعلى المعالج */}
+    <Frame caption="شريط الخطوات الخمس قبل النشر">
+      <img src="/images/help/broadcasts/create-wizard-steps.webp" alt="خطوات إنشاء الرسالة الجماعية الخمس" />
+    </Frame>
+
+    {/* MEDIA: /images/help/broadcasts/create-review-publish-gif.webp | GIF 5ث: مراجعة الملخص ثم نشر مباشر أو حفظ كمسودة */}
+    <Frame caption="المراجعة ثم النشر أو المسودة">
+      <img src="/images/help/broadcasts/create-review-publish-gif.webp" alt="مراجعة الحملة ثم اختيار نشر أو مسودة" />
+    </Frame>
   </Step>
 </Steps>
 
-<Info>
-**وسائط مطلوبة:** شريط خطوات الإطلاق الخمس + شاشة الإعداد باختيار القنوات الخمس.  
-`/images/help/broadcasts/create-wizard-steps.webp`  
-`/images/help/broadcasts/create-channels.webp`  
-**عرض تفاعلي (اختياري):** إنشاء حملة واتساب من الإعداد حتى المراجعة.
-</Info>
-
-## بعد النشر
+## بعد الانتهاء
 
 تابع الحملة من [القائمة](/ar/help-center/guides/broadcasts/manage) أو من صفحة التفاصيل: إحصائيات التسليم، التقارير، سجل النشاط، وسجل التشغيل للمتكرر.  
-للأرقام العامة راجع [التحليلات](/ar/help-center/guides/broadcasts/analytics).
+للأرقام العامة راجع [التحليلات](/ar/help-center/guides/broadcasts/analytics).  
+جهّز استلام الردود من [ردود الحملات والتسليم](/ar/help-center/guides/broadcasts/replies-handoff).  
+عند مشكلة تسليم: [استكشاف أخطاء الحملات](/ar/help-center/guides/broadcasts/failures).
+
+## أسئلة شائعة
+
+**هل أستطيع تعديل الحملة بعد النشر؟**  
+المسودات قابلة للتعديل بحرية. بعد النشر تُقفل بعض الحقول جزئياً — انسخ الحملة إن احتجت تغييراً كبيراً.
+
+**أين أخصص اسم العميل داخل الرسالة؟**  
+راجع [المتغيرات الديناميكية](/ar/help-center/guides/getting-started/dynamic-variables) حسب القناة (قالب بريد، خانات واتساب، أتمتة…).
+
+## الخطوة التالية
+
+تعلّمت مسار الإطلاق الخمس. بعد ذلك:
+
+- ثبّت الجمهور بدقة من [اختيار الجمهور](/ar/help-center/guides/broadcasts/audience) قبل أول نشر كبير.
+- إن كانت قناتك واتساب: أكمل من [حملة واتساب لمرة واحدة](/ar/help-center/guides/broadcasts/whatsapp).
 
 ## ذات صلة
 
 - [إطلاق الحملات التسويقية](/ar/help-center/guides/broadcasts/overview)
 - [اختيار الجمهور](/ar/help-center/guides/broadcasts/audience)
 - [إدارة الحملات](/ar/help-center/guides/broadcasts/manage)
+- [المتغيرات الديناميكية](/ar/help-center/guides/getting-started/dynamic-variables)

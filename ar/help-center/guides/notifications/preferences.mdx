@@ -1,11 +1,22 @@
 ---
 title: "تفضيلات الإشعارات"
 description: "اختر أنواع الإشعارات والقنوات: الويب، البريد الإلكتروني، والإشعارات الفورية من إعدادات الإشعارات."
+type: task
+updated: "2026-08-17"
 ---
 
-البريد الوارد يعلّمك بالمحادثات؛ التفضيلات تمنع أن يوقظك بريد عن كل تفاعل غير مهم. اضبط مرة، ثم راجع بعد أسبوع عمل حقيقي.
+البريد الوارد يعلّمك بالمحادثات؛ لكن بريداً عن كل تفاعل غير مهم يوقظك دون فائدة تشغيلية.
+
+التفضيلات تمنع الإغراق: اضبط مرة، ثم راجع بعد أسبوع عمل حقيقي.
+
+يشرح هذا الدليل قراءة جدول الأنواع والقنوات، وإعداداً مقترحاً لوكيل دعم، وكيف تختبر بعد الحفظ.
 
 المسار: `/settings/notifications`.
+
+## قبل أن تبدأ
+
+- التفضيلات شخصية لحسابك في كرزون — لا تفرض إعداد الزملاء.
+- عمود **الإشعارات الفورية** يعمل بشكل أفضل بعد تهيئة [سطح المكتب](/ar/help-center/guides/notifications/desktop-push).
 
 ## كيف تقرأ الجدول؟
 
@@ -18,10 +29,29 @@ description: "اختر أنواع الإشعارات والقنوات: الوي�
 
 عطّل القناة لا النوع بالكامل إن أردت الإبقاء على الويب دون البريد.
 
-<Info>
-**وسائط مطلوبة:** جدول التفضيلات بفئة البريد الوارد وقنوات ثلاث.  
-المسار المقترح: `/images/help/notifications/preferences-table.webp`
-</Info>
+{/* MEDIA: /images/help/notifications/preferences-table.webp | جدول التفضيلات بفئة البريد الوارد وقنوات الويب والبريد والفوري */}
+<Frame caption="جدول الأنواع والقنوات الثلاث">
+  <img src="/images/help/notifications/preferences-table.webp" alt="جدول تفضيلات الإشعارات مع قنوات الويب والبريد والفوري" />
+</Frame>
+
+## الخطوات
+
+<Steps>
+  <Step title="افتح تفضيلات الإشعارات">
+    **الإعدادات** ← **الإشعارات** (`/settings/notifications`).
+  </Step>
+  <Step title="اضبط كل نوع حسب القناة">
+    شغّل/أوقف الويب والبريد والفوري لكل صف مهم لعملك.
+
+    {/* MEDIA: /images/help/notifications/preferences-toggle-gif.webp | GIF 5ث: إيقاف البريد لنوع إسناد مع إبقاء الويب والفوري */}
+    <Frame caption="تعطيل قناة دون إيقاف النوع">
+      <img src="/images/help/notifications/preferences-toggle-gif.webp" alt="إيقاف عمود البريد لنوع إشعار مع إبقاء الويب" />
+    </Frame>
+  </Step>
+  <Step title="احفظ واختبر">
+    أرسل اختباراً عملياً (عيّن محادثة لنفسك) ثم راجع [مركز الإشعارات](/ar/help-center/guides/notifications/overview).
+  </Step>
+</Steps>
 
 ## إعداد مقترح لوكيل دعم
 
@@ -34,12 +64,34 @@ description: "اختر أنواع الإشعارات والقنوات: الوي�
 
 ## بعد الحفظ
 
-1. أرسل اختباراً عملياً (عيّن محادثة لنفسك).  
-2. راجع [مركز الإشعارات](/ar/help-center/guides/notifications/overview).  
+1. عيّن محادثة لنفسك كاختبار.  
+2. راجع المركز من الجرس.  
 3. أكمل [سطح المكتب](/ar/help-center/guides/notifications/desktop-push) إن أردت تنبيهاً خارج التبويب.
+
+## أخطاء شائعة
+
+| ما تراه | السبب | الصواب |
+| --- | --- |
+| بريد كثير بلا داعٍ | عمود البريد مفعّل للأنواع الثانوية | أوقف البريد وابقَ على الويب |
+| لا دفع رغم التفعيل | إذن المتصفح أو عمود الفوري | راجع [سطح المكتب](/ar/help-center/guides/notifications/desktop-push) |
+
+## أسئلة شائعة
+
+**هل التفضيلات على مستوى الحساب كله؟**  
+شخصية لمستخدمك؛ كل زميل يضبط لنفسه.
+
+**أين مركز القراءة؟**  
+`/notifications` — انظر [نظرة عامة](/ar/help-center/guides/notifications/overview).
+
+## الخطوة التالية
+
+تعلّمت ضبط القنوات لكل نوع. بعد ذلك:
+
+- فعّل إذن المتصفح والصوت: [سطح المكتب والدفع](/ar/help-center/guides/notifications/desktop-push).
+- راجع ما وصل من [نظرة عامة على الإشعارات](/ar/help-center/guides/notifications/overview).
 
 ## ذات صلة
 
 - [سطح المكتب والدفع](/ar/help-center/guides/notifications/desktop-push)
-- [إشعارات الإعدادات](/ar/help-center/guides/settings/notifications)
-- [الإشعارات](/ar/help-center/guides/notifications/overview)
+- [نظرة عامة على الإشعارات](/ar/help-center/guides/notifications/overview)
+- [يومك في البريد الوارد](/ar/help-center/guides/inbox/agent-day)

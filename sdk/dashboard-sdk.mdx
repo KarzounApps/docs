@@ -1,9 +1,9 @@
 ---
 title: "Dashboard SDK"
-description: "Build inbox sidebar panels with @karzoun/dashboard-sdk — conversation context and MiniApp actions in an iframe."
+description: "Build inbox sidebar panels with @karzounchat/dashboard-sdk — conversation context and MiniApp actions in an iframe."
 ---
 
-`@karzoun/dashboard-sdk` is a lightweight client for **dashboard panel apps** embedded in the Karzoun inbox. Your page loads in a sandboxed iframe; the SDK talks to the host over `postMessage`. Credentials for linked MiniApps never enter the iframe.
+`@karzounchat/dashboard-sdk` is a lightweight client for **dashboard panel apps** embedded in the Karzoun inbox. Your page loads in a sandboxed iframe; the SDK talks to the host over `postMessage`. Credentials for linked MiniApps never enter the iframe.
 
 <Info>
   Full API reference, protocol notes, and working HTML examples live in the public repo: [KarzounApps/dashboard-sdk](https://github.com/KarzounApps/dashboard-sdk).
@@ -32,7 +32,7 @@ description: "Build inbox sidebar panels with @karzoun/dashboard-sdk — convers
 ## Install
 
 ```bash
-npm install @karzoun/dashboard-sdk
+npm install @karzounchat/dashboard-sdk
 ```
 
 <Warning>
@@ -48,7 +48,7 @@ npm install @karzoun/dashboard-sdk
 ## Quick start
 
 ```typescript
-import { createDashboard } from "@karzoun/dashboard-sdk";
+import { createDashboard } from "@karzounchat/dashboard-sdk";
 
 const dashboard = createDashboard({ debug: false });
 
@@ -162,4 +162,4 @@ See the Shopify and Zid examples in the [dashboard-sdk repo](https://github.com/
 
 - [MiniApps](/miniapps) — define the actions your panel calls
 - [GraphQL API](/developers) — server-side alternative to iframe panels
-- [Help Center: Dashboard apps](/ar/help-center/guides/developers/doc-2279095) — admin setup (Arabic)
+- [Help Center: Dashboard apps](/ar/help-center/guides/inbox/dashboard-apps) — admin setup (Arabic)

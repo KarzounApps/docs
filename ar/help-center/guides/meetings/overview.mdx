@@ -1,9 +1,15 @@
 ---
-title: "نظرة عامة"
+title: "نظرة عامة: الاجتماعات"
 description: "الاجتماعات في كرزون: تقويم بثمانية عروض لجدولة لقاءات الفريق والعملاء، مع غرف وربط تقويم Google — منفصل عن المهام."
+type: overview
+updated: "2026-08-17"
 ---
 
-عندما تحتاج موعداً بوقت ومشاركين وحالة حضور — لا بطاقة عمل في لوحة — استخدم **الاجتماعات** (`/meetings`). المنتج منفصل عن [المهام](/ar/help-center/guides/tasks/overview): المهمة تتابع عملاً عبر مراحل؛ الاجتماع يثبت لقاءً في التقويم.
+عندما تحتاج موعداً بوقت ومشاركين وحالة حضور — لا بطاقة عمل في لوحة — يتشتت الفريق بين جداول خارجية ومحادثات.
+
+توفّر **الاجتماعات** في كرزون (`/meetings`) تقويماً بثمانية عروض لجدولة لقاءات الفريق والعملاء، مع غرف وربط تقويم Google. المنتج منفصل عن [المهام](/ar/help-center/guides/tasks/overview): المهمة تتابع عملاً عبر مراحل؛ الاجتماع يثبت لقاءً في التقويم.
+
+يشرح هذا الدليل ماذا ترى في الشاشة، وكيف تختلف الاجتماعات عمّا يجاورها، وأين يبدأ المشارك مقابل المنظّم.
 
 في الشريط: **الاجتماعات** ← القائمة والغرف والإعدادات. قد يتطلب الحساب صلاحية الاجتماعات وميزة إدارة التقويم في الخطة.
 
@@ -17,16 +23,21 @@ description: "الاجتماعات في كرزون: تقويم بثمانية ع
 | السطح | المسار | دوره |
 | --- | --- | --- |
 | التقويم والعروض | `/meetings` | ثمانية أوضاع عرض + فلاتر + **اجتماع جديد** |
+| درج التفاصيل | من أي موعد | أجندة، ملاحظات، إجراءات، قرارات، RSVP، حضور — [تفاصيل الاجتماع](/ar/help-center/guides/meetings/detail-drawer) |
 | الغرف | `/meetings/rooms` | غرف حضورية/مختلطة وسعتها وتوفرها |
 | إعدادات التقويم | `/meetings/settings` | ربط **تقويم Google** والمزامنة |
 
 فلاتر سريعة شائعة: **كل الاجتماعات** · **اجتماعاتي** · **أنشأتها أنا**. عملياً ترى الاجتماعات التي أنت مشارك فيها.
 
-<Info>
-**وسائط مطلوبة:** شاشة `/meetings` بعرض الشهر أو الأسبوع، شريط العروض، وزر «اجتماع جديد».  
-المسار المقترح: `/images/help/meetings/overview-calendar.webp`  
-**فيديو (مستحسن):** 25 ثانية من فتح الاجتماعات حتى إنشاء موعد بسيط.
-</Info>
+{/* MEDIA: /images/help/meetings/overview-calendar.webp | شاشة /meetings بعرض الشهر أو الأسبوع، شريط العروض، وزر اجتماع جديد | فيديو (مستحسن): 25 ثانية من فتح الاجتماعات حتى إنشاء موعد بسيط. */}
+<Frame caption="تقويم الاجتماعات وزر اجتماع جديد">
+  <img src="/images/help/meetings/overview-calendar.webp" alt="شاشة الاجتماعات بعرض الشهر أو الأسبوع مع شريط العروض وزر اجتماع جديد" />
+</Frame>
+
+{/* MEDIA: /images/help/meetings/overview-view-switch-gif.webp | GIF 5ث: التبديل بين عرض الشهر والأسبوع والقائمة لنفس المجموعة من المواعيد */}
+<Frame caption="تبديل العروض من شريط أعلى التقويم">
+  <img src="/images/help/meetings/overview-view-switch-gif.webp" alt="تبديل عرض التقويم بين الشهر والأسبوع والقائمة" />
+</Frame>
 
 ## الاجتماعات مقابل ما يجاورها
 
@@ -49,19 +60,27 @@ description: "الاجتماعات في كرزون: تقويم بثمانية ع
   <Card title="إنشاء الاجتماع والعروض" icon="calendar-plus" href="/ar/help-center/guides/meetings/create-and-views">
     الحقول الثمانية أوضاع العرض.
   </Card>
+  <Card title="تفاصيل الاجتماع" icon="panel-right" href="/ar/help-center/guides/meetings/detail-drawer">
+    أجندة، ملاحظات، إجراءات، RSVP، حضور.
+  </Card>
   <Card title="الغرف" icon="door-open" href="/ar/help-center/guides/meetings/rooms">
     غرف الاجتماعات واختيارها عند الحضوري.
   </Card>
   <Card title="تقويم Google" icon="calendar" href="/ar/help-center/guides/meetings/google-calendar">
     الربط والمزامنة وGoogle Meet.
   </Card>
-  <Card title="مسار المنظّم" icon="user-check" href="/ar/help-center/guides/meetings/path-organizer">
-    من يدعو ويبدأ ويلغي.
-  </Card>
 </CardGroup>
+
+## الخطوة التالية
+
+تعلّمت خريطة الاجتماعات وحدودها. بعد ذلك:
+
+- إن كنت مدعواً: [مسار المشارك](/ar/help-center/guides/meetings/path-participant).
+- إن تنظّم المواعيد: [مسار المنظّم](/ar/help-center/guides/meetings/path-organizer) ثم [إنشاء الاجتماع والعروض](/ar/help-center/guides/meetings/create-and-views).
 
 ## ذات صلة
 
 - [مسار المشارك](/ar/help-center/guides/meetings/path-participant)
+- [مسار المنظّم](/ar/help-center/guides/meetings/path-organizer)
 - [نظرة عامة على المهام](/ar/help-center/guides/tasks/overview)
 - [ملف جهة الاتصال](/ar/help-center/guides/contacts/profile)

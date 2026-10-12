@@ -83,12 +83,11 @@ You have Karzoun MCP tools for CRM and workspace data.
 
 لعمال جهة الخادم الذين يستدعون `/mcp`:
 
-1. خزّن `KARZOUN_APP_TOKEN` في مدير الأسرار
-2. `initialize` → التقط `mcp-session-id`
-3. `tools/call` في حلقة بأسماء أدوات صريحة
-4. سجّل أخطاء GraphQL من استجابات الأدوات
+1. خزّن `KARZOUN_API_KEY` في مدير الأسرار
+2. `initialize` ثم `tools/call` في حلقة بأسماء أدوات صريحة
+3. سجّل أخطاء GraphQL من استجابات الأدوات
 
-لا تعرض الجلسة أو الرمز للمستخدمين النهائيين. التفاصيل: [MCP المستضاف](/ar/mcp-server/setup/hosted).
+لا تعرض المفتاح للمستخدمين النهائيين. MCP المستضاف لا يستخدم معرّف جلسة. التفاصيل: [MCP المستضاف](/ar/mcp-server/setup/hosted).
 
 ## أنماط مضادة
 

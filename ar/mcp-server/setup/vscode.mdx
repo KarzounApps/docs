@@ -1,0 +1,66 @@
+---
+title: "إعداد VS Code (stdio)"
+description: "شغّل Karzoun MCP داخل VS Code ليتمكن Copilot / وكلاء MCP من استدعاء واجهة مساحة عملك."
+---
+
+يدعم VS Code خوادم MCP عبر **`.vscode/mcp.json`** (للمشروع) أو إعدادات المستخدم — نفس حزمة `@karzounchat/mcp-server` المستخدمة مع Cursor.
+
+## قبل البدء
+
+- [مفتاح API](/ar/developers/getting-started/authentication) من **المطوّر ← مفاتيح API**
+- رابط GraphQL: `https://{subdomain}.api.karzoun.chat/graphql`
+- إصدار حديث من VS Code يدعم MCP
+
+## إعداد MCP
+
+<Steps>
+  <Step title="أنشئ ملف الإعداد">
+    أضف `.vscode/mcp.json` إلى مشروعك (أو افتح **MCP: Open User Configuration** من لوحة الأوامر).
+  </Step>
+
+  <Step title="أضف خادم Karzoun">
+    ```json
+    {
+      "servers": {
+        "karzoun-customer-support": {
+          "type": "stdio",
+          "command": "npx",
+          "args": ["-y", "@karzounchat/mcp-server"],
+          "env": {
+            "KARZOUN_API_URL": "https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql",
+            "KARZOUN_API_KEY": "kz_live_YOUR_API_KEY",
+            "KARZOUN_MCP_PACK": "customer-support"
+          }
+        }
+      }
+    }
+    ```
+
+    استبدل النطاق الفرعي والصق مفتاح API من **المطوّر ← مفاتيح API** (يُعرض مرة واحدة).
+
+    فضّل [حزمة](/mcp-server/setup/hosted#packs-tool-subsets) مركّزة (`customer-support`، `whatsapp`، …). استخدم `full` فقط عند الحاجة لكل الأدوات.
+  </Step>
+
+  <Step title="شغّل الخادم">
+    افتح عرض MCP في VS Code وابدأ **karzoun-customer-support**. يجب أن يظهر الاتصال وقائمة الأدوات.
+  </Step>
+
+  <Step title="جرّب طلباً">
+    اسأل Copilot Chat: _"Using Karzoun tools, list my first 5 tags"_
+  </Step>
+</Steps>
+
+## صفحة الإعداد داخل التطبيق
+
+توفر Karzoun مقتطفات جاهزة في **المطور → إعداد MCP** (`/developer/mcp-setup`) — اختر **Local → VS Code** ثم **نسخ الإعداد**.
+
+## تفضّل HTTP؟
+
+استخدم [MCP المستضاف](/mcp-server/setup/hosted) أو [موصّلات تطبيقات الذكاء الاصطناعي](/mcp-server/setup/ai-connectors).
+
+## الخطوات التالية
+
+- [إعداد Cursor](/mcp-server/setup/cursor)
+- [Claude Desktop](/mcp-server/setup/claude-desktop)
+- [الأمان](/mcp-server/setup/security)
+- [استكشاف الأخطاء](/mcp-server/guides/troubleshooting)

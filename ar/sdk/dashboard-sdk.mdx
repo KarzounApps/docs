@@ -1,9 +1,9 @@
 ---
 title: "Dashboard SDK"
-description: "ابنِ لوحات جانبية في البريد الوارد باستخدام @karzoun/dashboard-sdk — سياق المحادثة وإجراءات MiniApp داخل iframe."
+description: "ابنِ لوحات جانبية في البريد الوارد باستخدام @karzounchat/dashboard-sdk — سياق المحادثة وإجراءات MiniApp داخل iframe."
 ---
 
-`@karzoun/dashboard-sdk` مكتبة خفيفة لتطبيقات **لوحة التحكم** المضمّنة في البريد الوارد كرزون. تُحمَّل صفحتك داخل iframe معزول؛ يتواصل الـ SDK مع المضيف عبر `postMessage`. بيانات اعتماد MiniApps المرتبطة لا تصل أبداً إلى الـ iframe.
+`@karzounchat/dashboard-sdk` مكتبة خفيفة لتطبيقات **لوحة التحكم** المضمّنة في البريد الوارد كرزون. تُحمَّل صفحتك داخل iframe معزول؛ يتواصل الـ SDK مع المضيف عبر `postMessage`. بيانات اعتماد MiniApps المرتبطة لا تصل أبداً إلى الـ iframe.
 
 <Info>
   مرجع الـ API الكامل وملاحظات البروتوكول وأمثلة HTML جاهزة في المستودع العام: [KarzounApps/dashboard-sdk](https://github.com/KarzounApps/dashboard-sdk).
@@ -32,7 +32,7 @@ description: "ابنِ لوحات جانبية في البريد الوارد ب
 ## التثبيت
 
 ```bash
-npm install @karzoun/dashboard-sdk
+npm install @karzounchat/dashboard-sdk
 ```
 
 <Warning>
@@ -48,7 +48,7 @@ npm install @karzoun/dashboard-sdk
 ## بداية سريعة
 
 ```typescript
-import { createDashboard } from "@karzoun/dashboard-sdk";
+import { createDashboard } from "@karzounchat/dashboard-sdk";
 
 const dashboard = createDashboard({ debug: false });
 
@@ -162,4 +162,4 @@ dashboard.onConversationUpdate(async () => {
 
 - [MiniApps](/ar/miniapps) — عرّف الإجراءات التي تستدعيها لوحتك
 - [واجهة GraphQL](/ar/developers) — بديل من جانب الخادم للوحات الـ iframe
-- [مركز المساعدة: تطبيقات لوحة التحكم](/ar/help-center/guides/developers/doc-2279095) — إعداد المشرف
+- [مركز المساعدة: تطبيقات لوحة التحكم](/ar/help-center/guides/inbox/dashboard-apps) — إعداد المشرف

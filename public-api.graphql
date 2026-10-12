@@ -264,7 +264,7 @@ the live `_id`) so in-progress edits never affect what is currently running.
 
 <Info>
 `hasDraft` (on [`automationsMain`](/api-reference/queries/automationsMain) rows) tells you whether a live
-automation has an in-progress draft — use [`draftAutomationDetail`](/api-reference/mutations/draftAutomationDetail)
+automation has an in-progress draft — use [`automation`](/api-reference/queries/automation)(`ns`, `DRAFT`)
 to open or create it.
 </Info>
 """
@@ -276,7 +276,7 @@ type Automation {
   """
   Stable namespace shared by the live automation, its versions, and its draft.
   Use this — not `_id` — to address "the automation" across edits with
-  [`automationByNs`](/api-reference/queries/automationByNs) / [`automationDetailByNs`](/api-reference/queries/automationDetailByNs).
+  [`automation`](/api-reference/queries/automation)(`ns`, revision).
   """
   ns: String
   """Display name shown in the automation list and builder."""
@@ -366,6 +366,13 @@ enum AutomationCatalogView {
   index
   trigger
   action
+}
+
+"""Which revision to open for a shared automation ns (draft and live share ns)."""
+enum AutomationRevision {
+  LIVE
+  DRAFT
+  AUTO
 }
 
 """
@@ -3198,27 +3205,11 @@ type Mutation {
   
   *Auth* · `x-app-token` · required permission `automationsEdit`
   
-  *Related:* [`draftAutomationDetail`](/api-reference/mutations/draftAutomationDetail), [`automationsPublish`](/api-reference/mutations/automationsPublish)
+  *Related:* [`automation`](/api-reference/queries/automation)(`ns`, `DRAFT`), [`automationsPublish`](/api-reference/mutations/automationsPublish)
   
   </small>
   """
   automationsDiscardDraft(_id: String!): JSON
-  """
-  Fetch (creating on first call) the editable draft for a live automation.
-  
-  If a draft already exists for `_id`, returns it with its `nodes`/`triggers`
-  resolved. Otherwise deep-clones the live automation into a new draft sharing
-  the same `ns`.
-  
-  <small>
-  
-  *Auth* · `x-app-token` · required permission `automationsEdit`
-  
-  *Related:* [`automationsPublish`](/api-reference/mutations/automationsPublish), [`automationsDiscardDraft`](/api-reference/mutations/automationsDiscardDraft), [`Automation`](/api-reference/types/Automation)
-  
-  </small>
-  """
-  draftAutomationDetail(_id: String!): Automation
   """
   Create a node and attach it to its parent automation.
   
@@ -3441,7 +3432,7 @@ type Mutation {
   
   *Auth* · `x-app-token` · required permission `automationsEdit`
   
-  *Related:* [`automationsPublish`](/api-reference/mutations/automationsPublish), [`automationsSetTags`](/api-reference/mutations/automationsSetTags), [`automationDetail`](/api-reference/queries/automationDetail)
+  *Related:* [`automationsPublish`](/api-reference/mutations/automationsPublish), [`automationsSetTags`](/api-reference/mutations/automationsSetTags), [`automation`](/api-reference/queries/automation)
   
   </small>
   """
@@ -3497,7 +3488,7 @@ type Mutation {
   
   *Auth* · `x-app-token` · required permission `automationsEdit`
   
-  *Related:* [`archiveAutomations`](/api-reference/mutations/archiveAutomations), [`automationDetail`](/api-reference/queries/automationDetail)
+  *Related:* [`archiveAutomations`](/api-reference/mutations/archiveAutomations), [`automation`](/api-reference/queries/automation)
   
   </small>
   """
@@ -3523,7 +3514,7 @@ type Mutation {
   
   *Auth* · `x-app-token` · required permission `automationsAdd`
   
-  *Related:* [`automationsSaveAsTemplate`](/api-reference/mutations/automationsSaveAsTemplate), [`automationDetail`](/api-reference/queries/automationDetail)
+  *Related:* [`automationsSaveAsTemplate`](/api-reference/mutations/automationsSaveAsTemplate), [`automation`](/api-reference/queries/automation)
   
   </small>
   """
@@ -3674,7 +3665,7 @@ type Mutation {
   
   *Auth* · `x-app-token` · required permission `automationsEdit`
   
-  *Related:* [`automationDetail`](/api-reference/queries/automationDetail), [`automationHistories`](/api-reference/queries/automationHistories), [Authentication](/developers/getting-started/authentication)
+  *Related:* [`automation`](/api-reference/queries/automation), [`automationHistories`](/api-reference/queries/automationHistories), [Authentication](/developers/getting-started/authentication)
   
   </small>
   """
@@ -7259,8 +7250,7 @@ input NodeInput {
 }
 
 """
-Paginated list of [`Node`](/api-reference/types/Node) rows, returned by [`nodes`](/api-reference/queries/nodes),
-[`nodesMain`](/api-reference/queries/nodesMain), and [`macros`](/api-reference/queries/macros).
+Paginated list of [`Node`](/api-reference/types/Node) rows, returned by [`nodes`](/api-reference/queries/nodes) and [`macros`](/api-reference/queries/macros).
 """
 type NodesPaginatedResponse {
   """[`Node`](/api-reference/types/Node) rows for the current page."""
@@ -7849,7 +7839,7 @@ type Query {
   
   *Auth* · `x-app-token` · required permission `showAutomations`
   
-  *Related:* [`automations`](/api-reference/queries/automations), [`draftAutomationDetail`](/api-reference/queries/draftAutomationDetail), [Authentication](/developers/getting-started/authentication)
+  *Related:* [`automations`](/api-reference/queries/automations), [`automation`](/api-reference/queries/automation), [Authentication](/developers/getting-started/authentication)
   
   </small>
   """
@@ -7865,51 +7855,33 @@ type Query {
   
   *Auth* · `x-app-token` · required permission `showAutomations`
   
-  *Related:* [`automationsMain`](/api-reference/queries/automationsMain), [`automationDetail`](/api-reference/queries/automationDetail), [Authentication](/developers/getting-started/authentication)
+  *Related:* [`automationsMain`](/api-reference/queries/automationsMain), [`automation`](/api-reference/queries/automation), [Authentication](/developers/getting-started/authentication)
   
   </small>
   """
   automations(page: Int, perPage: Int, ids: [String], excludeIds: Boolean, searchValue: String, sortField: String, sortDirection: SortDirection, status: String, tagIds: [String], untagged: Boolean, folderTagId: String): [Automation]
   """
-  Fetch one [`Automation`](/api-reference/types/Automation) by `_id`.
+  **Canonical get-by-ns.** Fetch one [`Automation`](/api-reference/types/Automation) for a stable `ns`,
+  with `revision` selecting which document to open when draft and live share the same ns.
+  
+  Request `nodes { … }` / `triggers { … }` on the selection set for a full editor
+  snapshot (field resolvers load the graph).
+  
+  | Revision | Behavior |
+  |----------|----------|
+  | `LIVE` | live or offline only |
+  | `DRAFT` | existing draft, or **create** a draft clone from live/offline (create-or-return; never double-clones) |
+  | `AUTO` | live/offline first, else existing draft — never creates |
   
   <small>
   
   *Auth* · `x-app-token` · required permission `showAutomations`
   
-  *Related:* [`automationDetailByNs`](/api-reference/queries/automationDetailByNs), [`automationsEdit`](/api-reference/mutations/automationsEdit), [Authentication](/developers/getting-started/authentication)
+  *Related:* [`automationsMain`](/api-reference/queries/automationsMain), [Authentication](/developers/getting-started/authentication)
   
   </small>
   """
-  automationDetail(_id: String!): Automation
-  """
-  Resolve the automation to open in the builder for a stable `ns` URL.
-  
-  By default returns the live/offline document first, falling back to a draft.
-  Pass `preferDraft: true` to reverse that order (draft first).
-  
-  <small>
-  
-  *Auth* · `x-app-token` · required permission `showAutomations`
-  
-  *Related:* [`automationByNs`](/api-reference/queries/automationByNs), [`draftAutomationDetail`](/api-reference/mutations/draftAutomationDetail), [Authentication](/developers/getting-started/authentication)
-  
-  </small>
-  """
-  automationDetailByNs(ns: String!, preferDraft: Boolean): Automation
-  """
-  Fetch the most recent automation document for a namespace, with the same
-  filters as [`automations`](/api-reference/queries/automations).
-  
-  <small>
-  
-  *Auth* · `x-app-token` · required permission `showAutomations`
-  
-  *Related:* [`automationDetailByNs`](/api-reference/queries/automationDetailByNs), [Authentication](/developers/getting-started/authentication)
-  
-  </small>
-  """
-  automationByNs(ns: String!, page: Int, perPage: Int, ids: [String], excludeIds: Boolean, searchValue: String, sortField: String, sortDirection: SortDirection, status: String, tagIds: [String], untagged: Boolean, folderTagId: String): Automation
+  automation(ns: String!, revision: AutomationRevision!): Automation
   """
   List notes on an automation, optionally scoped to one trigger or node.
   
@@ -8078,18 +8050,6 @@ type Query {
   """
   automationHistoryDetail(_id: String!): AutomationHistoryDetail
   """
-  List automation nodes.
-  
-  <small>
-  
-  *Auth* · `x-app-token` · required permission `showAutomations`
-  
-  *Related:* [`nodesMain`](/api-reference/queries/nodesMain), [`macros`](/api-reference/queries/macros), [Authentication](/developers/getting-started/authentication)
-  
-  </small>
-  """
-  nodes(page: Int, perPage: Int, searchValue: String, isMacro: Boolean): NodesPaginatedResponse
-  """
   Paginated automation nodes with the same filter set as
   [`automations`](/api-reference/queries/automations)'s list filters (search, tags, sort, id list).
   
@@ -8097,11 +8057,11 @@ type Query {
   
   *Auth* · `x-app-token` · required permission `showAutomations`
   
-  *Related:* [`nodes`](/api-reference/queries/nodes), [`nodeDetail`](/api-reference/queries/nodeDetail), [Authentication](/developers/getting-started/authentication)
+  *Related:* [`nodeDetail`](/api-reference/queries/nodeDetail), [`macros`](/api-reference/queries/macros), [Authentication](/developers/getting-started/authentication)
   
   </small>
   """
-  nodesMain(page: Int, perPage: Int, ids: [String], excludeIds: Boolean, searchValue: String, sortField: String, sortDirection: SortDirection, status: String, tagIds: [String], untagged: Boolean, folderTagId: String): NodesPaginatedResponse
+  nodes(page: Int, perPage: Int, ids: [String], excludeIds: Boolean, searchValue: String, sortField: String, sortDirection: SortDirection, status: String, tagIds: [String], untagged: Boolean, folderTagId: String): NodesPaginatedResponse
   """
   List reusable macro nodes (`isMacro: true`) belonging to live/offline
   automations — the picker source when adding a macro reference elsewhere.

@@ -1,47 +1,27 @@
 ---
 title: "البداية السريعة"
-description: "نفّذ أول استدعاء لواجهة GraphQL العامة لكرزون في أقل من خمس دقائق."
+description: "نفّذ أول طلب لواجهة GraphQL في كرزون."
 ---
 
-نفّذ أول استدعاء لواجهة GraphQL العامة لكرزون في أقل من خمس دقائق.
+ستنشئ مفتاحاً، وتستدعي حسابك، وتقرأ قائمة وسوم.
 
 <Steps>
-  <Step title="أنشئ رمز تطبيق">
-    1. افتح **المطوّر ← التطبيقات** (`/developer/apps`)
-    2. أنشئ تطبيقاً وانسخ JWT من استجابة `appsAdd`
-    3. احفظه بأمان — يُعرض مرة واحدة
-
-    أرسل الرمز مع كل طلب:
-
-    ```bash
-    -H "x-app-token: YOUR_APP_TOKEN_JWT"
-    ```
+  <Step title="أنشئ مفتاح API">
+    افتح **المطوّر ← مفاتيح API** (`/developer/api-keys`). أنشئ مفتاحاً **شخصياً**، واترك النطاقات التي يسمح بها حسابك، وانسخ السر. يبدأ بـ `kz_live_` ويُعرض مرة واحدة.
 
     <Warning>
-      لا تضع رموز التطبيقات في Git أبداً ولا تعرضها في JavaScript على جانب العميل.
+      لا ترفع المفتاح إلى Git ولا تلصقه في شيفرة الواجهة.
     </Warning>
   </Step>
-  <Step title="اعثر على عنوان GraphQL">
-    نقطة نهاية GraphQL للحساب:
+  <Step title="انسخ عنوان الواجهة">
+    استبدل `YOUR_SUBDOMAIN` بالنطاق الفرعي لحسابك. إن كنت تدخل من `acme.karzoun.chat` فالعنوان هو:
 
     ```
-    https://{subdomain}.api.{domain}/graphql
+    https://acme.api.karzoun.chat/graphql
     ```
-
-    مثال: `https://dev.api.karzoun.chat/graphql`
-
-    نقطة نهاية MCP المستضافة هي نفس الأصل مع `/mcp` بدلاً من `/graphql`.
-
-    تنزيل مخطط الواجهة العامة (SDL، بدون مصادقة):
-
-    ```
-    https://{subdomain}.api.{domain}/public-api.graphql
-    ```
-
-    مثال: `https://dev.api.karzoun.chat/public-api.graphql`
   </Step>
-  <Step title="نفّذ استعلاماً">
-    جرّب هذا الاستعلام لسرد الوسوم:
+  <Step title="شغّل هذا الاستعلام">
+    الاستعلام وأمر curl أدناه هما الطلب نفسه.
 
     <CodeGroup>
     ```graphql
@@ -61,18 +41,34 @@ description: "نفّذ أول استدعاء لواجهة GraphQL العامة �
     ```bash
     curl -X POST 'https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql' \
       -H 'Content-Type: application/json' \
-      -H 'x-app-token: YOUR_APP_TOKEN' \
-      -d '{"query":"query { tags(page: 1, perPage: 5) { data { _id name } } }"}'
+      -H 'Authorization: Bearer kz_live_YOUR_API_KEY' \
+      -d '{"query":"query { tags(page: 1, perPage: 5) { data { _id name } pagination { totalCount } } }"}'
     ```
     </CodeGroup>
 
-    <Tip>
-      تفضّل محرراً مرئياً؟ افتح [ساحة GraphQL](https://karzoun.chat/developer/playground).
-    </Tip>
+    المفتاح السليم يعيد JSON بهذا الشكل:
+
+    ```json
+    {
+      "data": {
+        "tags": {
+          "data": [{ "_id": "…", "name": "VIP" }],
+          "pagination": { "totalCount": 12 }
+        }
+      }
+    }
+    ```
+
+    قد تكون `data` قائمة فارغة. هذا يعني أن الطلب نجح. إذا ظهر `errors` فالمفتاح مفقود أو ملغى، أو الاستعلام لا يطابق المخطط. انظر [الأخطاء](/ar/developers/guides/errors).
   </Step>
 </Steps>
 
-## الخطوات التالية
+الطلب نفسه يعمل في [ساحة التجربة](https://karzoun.chat/developer/playground) وأنت مسجّل الدخول. أضف ترويسة `Authorization` هناك فقط عندما تريد تجربة المفتاح لا جلستك.
 
-- [المصادقة](/ar/developers/getting-started/authentication)
-- [مرجع GraphQL API](/api-reference)
+## التالي
+
+- [المصادقة](/ar/developers/getting-started/authentication) — المفتاح الشخصي ومفتاح الحساب، وما يُسمح للمفتاح باستدعائه
+- [ترقيم الصفحات](/ar/developers/guides/pagination) — اقرأ بقية القائمة
+- [مرجع GraphQL](/api-reference) — كل استعلام وتعديل عام
+
+المخطط الخام، بلا مفتاح، على `https://YOUR_SUBDOMAIN.api.karzoun.chat/public-api.graphql`.

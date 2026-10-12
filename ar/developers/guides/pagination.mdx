@@ -1,30 +1,15 @@
 ---
-title: "الترقيم الصفحي"
-description: "ترقيم استعلامات القوائم في واجهة GraphQL لكرزون."
+title: "ترقيم الصفحات"
+description: "اقرأ قائمة في كرزون صفحةً صفحة."
 ---
 
-تقبل استعلامات القوائم الترقيم الصفحي:
+استعلامات القوائم مثل `tags` و`customers` و`conversations` تأخذ `page` و`perPage`. تبدأ `page` من **1**. `tags` يعيد أول 20 صفاً إذا تركتهما فارغين. القوائم الأخرى توثّق افتراضها، لذا مرّر الاثنين كلما كان يهمك أي صفحة تحصل عليها.
 
-| الوسيط | النوع | الوصف |
-| --- | --- | --- |
-| `page` | Int | رقم الصفحة (يبدأ من 1) |
-| `perPage` | Int | العناصر في كل صفحة |
-
-مثال على المتغيرات:
-
-```json
-{ "page": 1, "perPage": 20 }
-```
-
-تتضمن استجابات القوائم كائن `pagination` مع `totalCount` و`currentPage` و`totalPages` و`hasNextPage` و`hasPreviousPage`.
-
-## مثال
-
-مرّر `page` و`perPage` في استعلامات القوائم مثل `tags` و`customers` و`conversations`.
+اطلب كائن `pagination` وتوقف عندما تكون `hasNextPage` خطأ.
 
 ```graphql
 query {
-  customers(page: 2, perPage: 20) {
+  customers(page: 1, perPage: 20) {
     data {
       _id
       firstName
@@ -32,8 +17,32 @@ query {
     pagination {
       totalCount
       currentPage
+      totalPages
       hasNextPage
+      hasPreviousPage
     }
   }
 }
 ```
+
+مرّر الصفحة التالية كمتغير بدل تعديل الاستعلام:
+
+```json
+{ "page": 2, "perPage": 20 }
+```
+
+```graphql
+query Customers($page: Int, $perPage: Int) {
+  customers(page: $page, perPage: $perPage) {
+    data { _id firstName }
+    pagination { currentPage hasNextPage }
+  }
+}
+```
+
+أبقِ `perPage` صغيراً. MCP يتجاهل نتيجة أداة أكبر من 512 كيلوبايت، والصفحة الضخمة أبطأ لكل عميل. أضف وسيط بحث أو ترشيح عندما يظهر في المرجع، بدل تصفح الحساب كله.
+
+## التالي
+
+- [البداية السريعة](/ar/developers/getting-started/quickstart)
+- [مرجع GraphQL](/api-reference)

@@ -1,9 +1,15 @@
 ---
 title: "حملة أتمتة"
 description: "شغّل مسار أتمتة على جمهور من الشرائح أو الوسوم عبر الرسائل الجماعية — مع فهم أن اكتمال الحملة لا يعني اكتمال المسار لكل عميل."
+type: task
+updated: "2026-08-17"
 ---
 
-قناة **الأتمتة** داخل الرسائل الجماعية لا تكتب رسالة واتساب أو بريداً أثناء خطوات الإطلاق. بدل ذلك تختار **مسار أتمتة** جاهزاً، فيبدأ النظام تشغيل هذا المسار لكل عميل في الجمهور المختار.
+عندما تريد تشغيل فلو متعدد الخطوات (انتظار، شروط، رسائل، مهام) على دفعة كبيرة، لا تكتب النص داخل معالج الحملة.
+
+قناة **الأتمتة** داخل **الرسائل الجماعية** تختار **مسار أتمتة** جاهزاً، فيبدأ النظام تشغيل هذا المسار لكل عميل في الجمهور المختار.
+
+يشرح هذا الدليل خطوات الإطلاق، ومتى تجمع الحملة مع مشغّل دخول الشريحة، وماذا يعني «اكتملت الحملة» حقاً.
 
 ## متى تناسبك؟
 
@@ -18,26 +24,60 @@ description: "شغّل مسار أتمتة على جمهور من الشرائح
 <Steps>
   <Step title="الإعداد">
     قناة **الأتمتة** → يدوية لمرة واحدة أو متكررة إن لزم جدول يعيد تشغيل البدء على الجمهور.
+
+    {/* MEDIA: /images/help/broadcasts/automation-setup-channel-gif.webp | GIF 4ث: اختيار قناة الأتمتة ونوع الحملة في الإعداد */}
+    <Frame caption="إعداد حملة بقناة الأتمتة">
+      <img src="/images/help/broadcasts/automation-setup-channel-gif.webp" alt="اختيار قناة الأتمتة في الإعداد" />
+    </Frame>
   </Step>
   <Step title="الجمهور">
-    شرائح جاهزة أو وسوم أو جهات محددة — [اختيار الجمهور](/ar/help-center/guides/broadcasts/audience).
+    شرائح جاهزة أو وسوم أو جهات محددة — [اختيار الجمهور](/ar/help-center/guides/broadcasts/audience). لا يُفرض فلتر هاتف/بريد/جهاز على مستوى الحملة؛ القيود داخل المسار.
+
+    {/* MEDIA: /images/help/broadcasts/automation-audience.webp | خطوة الجمهور لحملة أتمتة مع شريحة أو وسم مختار */}
+    <Frame caption="جمهور حملة الأتمتة">
+      <img src="/images/help/broadcasts/automation-audience.webp" alt="اختيار جمهور لحملة الأتمتة" />
+    </Frame>
   </Step>
   <Step title="المحتوى">
     اختر **مسار الأتمتة** من القائمة (المسار يجب أن يكون معدّاً مسبقاً في الأتمتة).
+
+    {/* MEDIA: /images/help/broadcasts/automation-select-flow.webp | خطوة اختيار مسار الأتمتة داخل خطوات إطلاق الحملة */}
+    <Frame caption="اختيار مسار الأتمتة">
+      <img src="/images/help/broadcasts/automation-select-flow.webp" alt="اختيار مسار الأتمتة في محتوى الحملة" />
+    </Frame>
   </Step>
   <Step title="الجدولة والمراجعة">
     فوري أو مجدول أو متكرر، ثم نشر أو مسودة.
+
+    {/* MEDIA: /images/help/broadcasts/automation-schedule-review-gif.webp | GIF 5ث: اختيار جدولة ثم مراجعة ونشر حملة الأتمتة */}
+    <Frame caption="الجدولة ثم النشر">
+      <img src="/images/help/broadcasts/automation-schedule-review-gif.webp" alt="جدولة ومراجعة حملة الأتمتة" />
+    </Frame>
   </Step>
 </Steps>
 
-<Info>
-**وسائط مطلوبة:** خطوة اختيار مسار الأتمتة داخل خطوات إطلاق الحملة.  
-`/images/help/broadcasts/automation-select-flow.webp`
-</Info>
-
 ## مهم: ماذا يعني «اكتملت الحملة»؟
 
-اكتمال حملة الأتمتة يعني أن النظام **أنهى محاولة بدء المسار** لمستلمي الدفعة — وليس أن كل عميل أنهى كل خطوات الفلو. تابع تفاصيل التنفيذ داخل الأتمتة نفسها عند الحاجة.
+اكتمال حملة الأتمتة يعني أن النظام **أنهى محاولة بدء المسار** لمستلمي الدفعة — وليس أن كل عميل أنهى كل خطوات الفلو. تابع تفاصيل التنفيذ في [سجل التنفيذ](/ar/help-center/guides/automations/execution-history).
+
+{/* MEDIA: /images/help/broadcasts/automation-complete-vs-flow.webp | تفاصيل حملة مكتملة مع تذكير بمتابعة سجل الأتمتة لكل عميل */}
+<Frame caption="اكتمال الحملة ≠ اكتمال المسار لكل عميل">
+  <img src="/images/help/broadcasts/automation-complete-vs-flow.webp" alt="حملة أتمتة مكتملة مع رابط لمتابعة المسار" />
+</Frame>
+
+للتسليم من المسار إلى موظف أو وكيل ذكاء: [ردود الحملات والتسليم](/ar/help-center/guides/broadcasts/replies-handoff) و[التسليم بين البوت والوكيل](/ar/help-center/guides/automations/handoff).
+
+## أسئلة شائعة
+
+**هل أكتب نص واتساب داخل حملة الأتمتة؟**  
+لا. النص والإجراءات داخل محرر الأتمتة. الحملة تختار المسار والجمهور والموعد فقط.
+
+## الخطوة التالية
+
+ربطتَ المسار بالجمهور. بعد ذلك:
+
+- راقب التنفيذ من [سجل التنفيذ](/ar/help-center/guides/automations/execution-history).
+- لفهم الربط العكسي من الأتمتة: [التشغيل من حملة تسويقية](/ar/help-center/guides/automations/with-broadcasts).
 
 ## ذات صلة
 
@@ -45,3 +85,4 @@ description: "شغّل مسار أتمتة على جمهور من الشرائح
 - [اختيار الجمهور](/ar/help-center/guides/broadcasts/audience)
 - [ما هي الشرائح؟](/ar/help-center/guides/contacts/segments/overview)
 - [حملة واتساب متكررة](/ar/help-center/guides/broadcasts/whatsapp-recurring)
+- [التشغيل من حملة تسويقية](/ar/help-center/guides/automations/with-broadcasts)

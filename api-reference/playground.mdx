@@ -3,7 +3,7 @@ title: "GraphQL Playground"
 description: "Open the interactive Karzoun GraphQL Playground to explore the public API."
 ---
 
-Use the hosted Playground to run queries and mutations against your workspace with an app token.
+Use the hosted Playground to run queries and mutations against your workspace. It calls the API as the signed-in user. To test an API key, add `Authorization: Bearer kz_live_…` in the headers panel.
 
 <Card title="Open Playground" icon="terminal" href="https://karzoun.chat/developer/playground">
   Interactive GraphQL editor in the Karzoun developer dashboard.
@@ -11,11 +11,11 @@ Use the hosted Playground to run queries and mutations against your workspace wi
 
 ## Before you start
 
-1. Create an [app token](/developers/getting-started/authentication)
+1. Sign in, or create an [API key](/developers/getting-started/authentication) if you want to test a key instead of your session
 2. Know your endpoint: `https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql`
 3. Download the public SDL anytime: `https://YOUR_SUBDOMAIN.api.karzoun.chat/public-api.graphql`
 4. Prefer the schema reference in this tab for field and type docs
 
 <Tip>
-  Never paste production tokens into shared screens or recordings.
+  Never paste production API keys into shared screens or recordings.
 </Tip>

@@ -1,85 +1,67 @@
 ---
 title: "إعداد Cursor (stdio)"
-description: "شغّل كرزون MCP محليًا ليتمكن وكيل Cursor من استدعاء واجهة GraphQL لحسابك في كرزون كأدوات."
+description: "شغّل Karzoun MCP محلياً ليمكّن وكيل Cursor من استدعاء GraphQL كمساحة عملك كأدوات."
 ---
 
-شغّل كرزون MCP محليًا ليتمكن وكيل Cursor من استدعاء واجهة GraphQL لحسابك في كرزون كأدوات.
-
-<Tip title="شرح بالفيديو">
-  **قريبًا:** _تثبيت كرزون MCP في Cursor_ — من رمز التطبيق إلى أول استعلام `tags`. _(مكان مخصص لتضمين الفيديو)_
-</Tip>
+شغّل Karzoun MCP محلياً ليمكّن وكيل Cursor من استدعاء واجهة GraphQL العامة كمساحة عملك.
 
 ## قبل البدء
 
-- [رمز التطبيق](/ar/developers/getting-started/authentication) من **المطوّر ← التطبيقات**
-- عنوان GraphQL: `https://{subdomain}.api.karzoun.chat/graphql`
+- [مفتاح API](/ar/developers/getting-started/authentication) من **المطوّر ← مفاتيح API**
+- رابط GraphQL: `https://{subdomain}.api.karzoun.chat/graphql`
 
 ## إعداد MCP
 
 <Steps>
   <Step title="افتح إعدادات MCP">
-    **إعدادات Cursor ← MCP ← Add new global MCP server**
+    **Cursor Settings → MCP → Add new global MCP server**
 
-    أو عدّل `~/.cursor/mcp.json` مباشرة.
+    أو عدّل `~/.cursor/mcp.json` / `.cursor/mcp.json` في المشروع.
   </Step>
 
-  <Step title="أضف خادم كرزون">
+  <Step title="أضف خادم Karzoun">
     ```json
     {
       "mcpServers": {
-        "karzoun": {
+        "karzoun-customer-support": {
           "command": "npx",
           "args": ["-y", "@karzounchat/mcp-server"],
           "env": {
             "KARZOUN_API_URL": "https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql",
-            "KARZOUN_APP_TOKEN": "YOUR_APP_TOKEN"
+            "KARZOUN_API_KEY": "kz_live_YOUR_API_KEY",
+            "KARZOUN_MCP_PACK": "customer-support"
           }
         }
       }
     }
     ```
 
-    استبدل `YOUR_SUBDOMAIN` والصق JWT من `appsAdd` (يُعرض مرة واحدة).
+    استبدل النطاق الفرعي والصق مفتاح API من **المطوّر ← مفاتيح API**.
 
-    <Warning title="أبقِ الرموز خارج Git">
-      لا ترفع `mcp.json` إلى Git إذا كان يحتوي رموزًا حقيقية. استخدم متغيرات البيئة أو تخزين الأسرار في Cursor حيث يتوفر.
+    <Warning title="لا تضع الرموز في git">
+      لا ترفع `mcp.json` إذا احتوى رموزاً حقيقية.
     </Warning>
   </Step>
 
-  <Step title="اختياري: تقييد الأدوات">
-    لتسريع التشغيل وتقليل السياق، اعرض أدوات CRM فقط:
-
-    ```json
-    "env": {
-      "KARZOUN_API_URL": "https://YOUR_SUBDOMAIN.api.karzoun.chat/graphql",
-      "KARZOUN_APP_TOKEN": "YOUR_APP_TOKEN",
-      "KARZOUN_MCP_TOOL_PREFIX": "customers"
-    }
-    ```
+  <Step title="اختر حزمة">
+    يحدّ `KARZOUN_MCP_PACK` الأدوات الظاهرة للوكيل. ابدأ بـ `customer-support`. الجدول الكامل: [حزم HTTP MCP](/mcp-server/setup/hosted#packs-tool-subsets).
   </Step>
 
   <Step title="أعد التشغيل وتحقق">
-    1. **إعدادات Cursor ← MCP** — أوقف/شغّل الخادم أو انقر تحديث
-    2. يجب أن تظهر الحالة **connected** مع عدد أدوات (~75 بدون بادئة)
-    3. في المحادثة: _"Use Karzoun to run currentUser"_
-
-    المتوقع: ملف JSON لملف مستخدم الحساب المرتبط بالتطبيق.
+    حدّث الخادم من **Cursor Settings → MCP** ثم اسأل: _"Use Karzoun to list my first 5 tags"_
   </Step>
 </Steps>
 
 ## صفحة الإعداد داخل التطبيق
 
-يوفّر كرزون أيضًا تدفقًا موجّهًا في **المطوّر ← إعداد MCP** في تطبيق الويب (`/developer/mcp-setup`) مع مقاطع إعداد جاهزة للنسخ.
+**المطور → إعداد MCP** (`/developer/mcp-setup`) — مقتطفات جاهزة لـ Cursor و VS Code و Claude Desktop.
 
-## إعداد على مستوى المشروع
+## تطبيقات سحابية؟
 
-لمستودعات الفريق، أضف `.cursor/mcp.json` (بنفس المخطط) حتى يستخدم الجميع نفس اسم الخادم — ويظل كل مطوّر يزوّد رمزه الخاص عبر البيئة المحلية إن رغب.
-
-للفرق التي تفضّل عدم تشغيل `npx`، استخدم [MCP المستضاف](/ar/mcp-server/setup/hosted) أو [موصّلات تطبيقات الذكاء الاصطناعي](/ar/mcp-server/setup/ai-connectors) (Claude.ai، Manus، ChatGPT، Cursor عن بُعد).
+استخدم [HTTP MCP](/mcp-server/setup/hosted) أو [موصّلات الذكاء الاصطناعي](/mcp-server/setup/ai-connectors).
 
 ## الخطوات التالية
 
-- [موصّلات تطبيقات الذكاء الاصطناعي](/ar/mcp-server/setup/ai-connectors) — تطبيقات الذكاء الاصطناعي السحابية (Claude، Manus، ChatGPT)
-- [أنماط الوكلاء](/ar/mcp-server/guides/agent-patterns) — أوامر تعمل
-- [كيف يعمل](/ar/mcp-server/guides/how-it-works) — ربط الأداة ↔ GraphQL
-- [استكشاف الأخطاء](/ar/mcp-server/guides/troubleshooting) — إذا بقي الخادم باللون الأحمر
+- [VS Code](/mcp-server/setup/vscode)
+- [Claude Desktop](/mcp-server/setup/claude-desktop)
+- [استكشاف الأخطاء](/mcp-server/guides/troubleshooting)
