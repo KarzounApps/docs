@@ -2,7 +2,7 @@
 title: "التنسيق وCSS"
 description: "خصّص مظهر النافذة بلون السمة في خطوة النمط، أو أضف CSS مخصصاً في خطوة التنسيق باستخدام أصناف النموذج الجاهزة."
 type: task
-updated: "2026-08-17"
+updated: "2026-11-13"
 ---
 
 معظم الفرق تكتفي بلون السمة من خطوة **النمط**. خطوة **التنسيق** للمصمّم أو المطوّر الذي يحتاج تجاوز المظهر الافتراضي بـ CSS.
@@ -33,20 +33,20 @@ updated: "2026-08-17"
 
 | الصنف | العنصر |
 | --- | --- |
-| `.octobots-form` | حاوية النموذج |
-| `.octobots-form-title` | عنوان النموذج |
-| `.octobots-form-description` | وصف النموذج |
-| `.octobots-form-field` | حاوية الحقل |
-| `.octobots-form-input` | عناصر الإدخال |
-| `.octobots-form-btn` | زر الإرسال |
-| `.octobots-callout` | حاوية المقدمة |
-| `.octobots-callout-title` | عنوان المقدمة |
-| `.octobots-success` | حاوية صفحة النجاح |
+| `.form-wrapper` | حاوية النموذج |
+| `.form-header h1` | عنوان النموذج |
+| `.form-header p` | وصف النموذج |
+| `.form-field` | حاوية الحقل |
+| `.form-field input` · `.form-field textarea` · `.form-field select` | عناصر الإدخال |
+| `.form-btn-primary` | زر الإرسال وزر المقدمة وزر النافذة بزر |
+| `.form-callout` | حاوية المقدمة، ومحتوى النافذة بزر |
+| `.form-callout h2` | عنوان المقدمة أو النافذة بزر |
+| `.form-success` | حاوية صفحة النجاح |
 
 مثال بسيط:
 
 ```css
-.octobots-form-btn {
+.form-btn-primary {
   border-radius: 8px;
 }
 ```
@@ -62,10 +62,10 @@ updated: "2026-08-17"
 تعلّمت أين تخصّص المظهر دون كسر الجوال. بعد ذلك:
 
 - راجع الشكل من [أنواع العرض](/ar/help-center/guides/popups/display-types).
-- ثبّت على الموقع من [تثبيت كود النافذة](/ar/help-center/guides/popups/install-code).
+- ثبّت على الموقع من [العرض على موقعك](/ar/help-center/guides/popups/install-code).
 
 ## ذات صلة
 
 - [أنواع العرض](/ar/help-center/guides/popups/display-types)
 - [إنشاء نافذة](/ar/help-center/guides/popups/create)
-- [تثبيت كود النافذة](/ar/help-center/guides/popups/install-code)
+- [العرض على موقعك](/ar/help-center/guides/popups/install-code)

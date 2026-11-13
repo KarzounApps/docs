@@ -639,6 +639,7 @@
                     "pages": [
                       "ar/help-center/guides/channels/whatsapp",
                       "ar/help-center/guides/channels/messenger",
+                      "ar/help-center/guides/channels/messenger-custom-css",
                       "ar/help-center/guides/channels/facebook-messenger",
                       "ar/help-center/guides/channels/facebook-comments",
                       "ar/help-center/guides/channels/instagram-messenger",
@@ -695,7 +696,8 @@
                       {
                         "group": "مدير الإعلانات",
                         "pages": [
-                          "ar/help-center/guides/whatsapp/ads/overview"
+                          "ar/help-center/guides/whatsapp/ads/overview",
+                          "ar/help-center/guides/whatsapp/ads/conversions"
                         ]
                       },
                       {
@@ -852,6 +854,7 @@
                         "group": "البناء",
                         "pages": [
                           "ar/help-center/guides/popups/create",
+                          "ar/help-center/guides/popups/message",
                           "ar/help-center/guides/popups/display-types",
                           "ar/help-center/guides/popups/fields-and-logic",
                           "ar/help-center/guides/popups/targeting-rules",
@@ -861,7 +864,7 @@
                         ]
                       },
                       {
-                        "group": "التثبيت والمتابعة",
+                        "group": "العرض والمتابعة",
                         "pages": [
                           "ar/help-center/guides/popups/install-code",
                           "ar/help-center/guides/popups/with-pixel",
@@ -1377,10 +1380,17 @@
                 ]
               },
               {
+                "group": "Channels",
+                "pages": [
+                  "help-center/guides/channels/messenger-custom-css"
+                ]
+              },
+              {
                 "group": "WhatsApp",
                 "pages": [
                   "help-center/guides/whatsapp/connect",
                   "help-center/guides/whatsapp/whatsapp-ctwa-ads",
+                  "help-center/guides/whatsapp/meta-conversions",
                   "help-center/guides/whatsapp/whatsapp-calling"
                 ]
               },

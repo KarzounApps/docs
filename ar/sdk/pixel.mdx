@@ -1,28 +1,109 @@
 ---
 title: "Karzoun Pixel"
-description: "ضمّن بكسل تتبع كرزون لتحديد زوّار الموقع ومزامنة بيانات العملاء."
+description: "ثبّت كود موقع كرزون، وعرّف المستخدمين المسجّلين، وتحكّم بالمحادثة والنوافذ ومركز المساعدة والتتبع من JavaScript."
 ---
 
-ضمّن بكسل تتبع كرزون في موقعك لتحديد الزوّار ومزامنة بيانات العملاء مع حسابك في كرزون.
+كرزون بكسل هو كود التثبيت الوحيد للموقع. يحمّل ما فعّلته لذلك الموقع في **الإعدادات** ← **المواقع**: المحادثة والنوافذ المنبثقة ومركز المساعدة والتتبع. الكود نفسه لا يتغيّر.
 
-## التضمين الأساسي
+## التثبيت
+
+انسخ الكود من **الإعدادات** ← **المواقع** ← موقعك ← **كود التثبيت**، والصقه قبل `</body>` في كل الصفحات:
 
 ```html
 <script>
-  (function (w, d, s, l, i) {
-    /* pixel bootstrap */
-  })(window, document, "script", "dataLayer", "PIXEL_ID");
+  window.karzounSettings = {
+    apiUrl: 'https://YOUR_SUBDOMAIN.api.karzoun.chat/clientportal',
+    integrationId: 'YOUR_WEBSITE_KEY',
+  };
 </script>
+<script src="https://karzoun-pixel.pages.dev/p.js" crossorigin="anonymous" async></script>
 ```
 
-## الإعداد
+| الإعداد | مطلوب | الوصف |
+| --- | --- | --- |
+| `apiUrl` | نعم | عنوان API البكسل لحسابك في كرزون |
+| `integrationId` | نعم | مفتاح الموقع الظاهر في صفحته |
+| `locale` | لا | `ar` أو `en`. الافتراضي `<html lang>` للصفحة، ثم لغة لوحة التحكم |
+| `identify` | لا | المستخدم المسجّل (أدناه) |
+| `company` | لا | شركة المستخدم، مثل `{ name: 'Acme Corp' }` |
 
-| الإعداد         | الوصف                     |
-| ----------------- | ---------------------------------- |
-| `integrationId` | معرّف تكامل كرزون لديك     |
-| `apiUrl`        | عنوان API للبوابة لحسابك في كرزون |
-| `cdnUrl`        | شبكة CDN للأصول الثابتة                |
+ما يُحمَّل، والنوافذ، وإعدادات المحادثة، والنطاقات المسموحة كلها تأتي من الخادم، فلا شيء آخر يُضبط في الكود.
 
-اضبط البكسل في **الإعدادات ← التكاملات** واستخدم المقتطف المُولَّد.
+## تعريف المستخدمين المسجّلين
 
-لتعيين بيانات العملاء المتقدّم، راجع توثيق البكسل في `packages/karzoun-pixel/docs/` في المستودع الأحادي.
+```js
+window.karzounSettings = {
+  apiUrl: 'https://YOUR_SUBDOMAIN.api.karzoun.chat/clientportal',
+  integrationId: 'YOUR_WEBSITE_KEY',
+  identify: {
+    email: 'customer@example.com',
+    phone: '+966500000000',
+    name: 'سارة أحمد',
+    code: 'USR-123',          // معرّف المستخدم عندك
+    userHash: 'HMAC_HEX',     // اختياري، انظر أدناه
+    properties: { membership_tier: 'gold' },
+  },
+};
+```
+
+- مفاتيح `properties` المطابقة لرمز خاصية (**الإعدادات** ← **الخصائص**) تملأ تلك الخاصية، والباقي يُحفظ كبيانات متتبَّعة.
+- لتبقى محادثات المستخدم معه على أي جهاز، وقّع `code` على خادمك ومرّره في `userHash`:
+
+  ```js
+  // Node.js على خادمك
+  const userHash = crypto.createHmac('sha256', IDENTITY_SECRET).update(userId).digest('hex');
+  ```
+
+  المفتاح السري في إعدادات الماسنجر ← **التثبيت والأمان** ← **التحقق من الهوية**. لا تضعه في كود الصفحة.
+
+مرّر `code` و`userHash` الموقّعين في `karzounSettings.identify` قبل تحميل `p.js`. لربط زائر لاحقاً (مثلاً بعد نموذج في موقعك) استدعِ `Karzoun.identify({ email, phone, name })`. وعند تسجيل الخروج استدعِ `Karzoun.reset()`.
+
+## واجهة JavaScript
+
+متاحة على `window.Karzoun` بعد تحميل `p.js`.
+
+| الاستدعاء | ماذا يفعل |
+| --- | --- |
+| `Karzoun.messenger.open()` · `.close()` · `.toggle()` · `.isOpen()` | التحكم بنافذة المحادثة |
+| `Karzoun.forms.show('FORM_CODE')` · `.hide()` | فتح نافذة منبثقة أو إغلاقها |
+| `Karzoun.kb.open()` · `Karzoun.kb.open('ARTICLE_ID')` · `.close()` | فتح لوحة مركز المساعدة، أو مقالة محددة |
+| `Karzoun.track('event_name', { ...props })` | إرسال حدث مخصص |
+| `Karzoun.identify({ ... })` | تعريف الزائر |
+| `Karzoun.reset()` | نسيان الزائر المعرّف (تسجيل الخروج) |
+| `Karzoun.pixel.ecommerce.*` | أحداث المتجر (أدناه) |
+| `Karzoun.messenger.on(event, fn)` · `Karzoun.forms.on(...)` · `Karzoun.kb.on(...)` | الاستماع لأحداث الأدوات؛ يعيد دالة لإلغاء الاستماع |
+
+كل جزء يعمل فقط حين يكون مفعّلاً للموقع. مثلاً `Karzoun.kb.open()` يحتاج **مركز المساعدة** مفعّلاً.
+
+### زر المحادثة الخاص بك
+
+اجعل **إظهار زر المحادثة** على **أبداً** في إعدادات الماسنجر، ثم:
+
+```html
+<button onclick="Karzoun.messenger.open()">تحدّث معنا</button>
+```
+
+### نموذج داخل الصفحة
+
+```html
+<div data-kz-form="FORM_CODE"></div>
+```
+
+يعرض البكسل نموذج النافذة داخل هذا العنصر، حتى إن أُضيف بعد التحميل (تطبيقات الصفحة الواحدة).
+
+### أحداث المتجر
+
+سلة وزد وشوبيفاي وووكومرس تُتتبَّع تلقائياً. لمتجر مخصص:
+
+```js
+Karzoun.pixel.ecommerce.viewProduct({ id: 'SKU-1', name: 'Shirt', price: 120, currency: 'SAR' });
+Karzoun.pixel.ecommerce.addToCart({ productId: 'SKU-1', quantity: 1, price: 120 });
+Karzoun.pixel.ecommerce.startCheckout({ items: [{ productId: 'SKU-1', quantity: 1, price: 120 }], total: 120 });
+Karzoun.pixel.ecommerce.completeOrder({ orderId: 'ORD-9', items: [{ productId: 'SKU-1', quantity: 1, price: 120 }], total: 120, currency: 'SAR' });
+```
+
+متاح أيضاً: `removeFromCart` و`viewCart` و`search` و`viewProductList` و`clickProduct` و`applyCoupon`.
+
+## تنسيق المحادثة
+
+CSS نافذة المحادثة يُضبط في إعدادات الماسنجر، لا في كود التثبيت. راجع [تخصيص مظهر الدردشة بـ CSS](/ar/help-center/guides/channels/messenger-custom-css).

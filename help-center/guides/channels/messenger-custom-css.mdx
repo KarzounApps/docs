@@ -1,0 +1,243 @@
+---
+title: "Style the chat with CSS"
+description: "Add your own CSS to the Karzoun chat window from Messenger settings: where to write it, the classes you can target, and ready-to-copy examples."
+type: setup
+updated: "2026-11-13"
+---
+
+You set the color and logo in settings, then want a different font, softer corners, or to hide something that doesn't fit your site.
+
+The **Custom CSS** field lets you write your own styles. They apply inside the chat window on every page of your site, with no change to the install code.
+
+This guide shows where to write the CSS, which classes to target, and gives you examples to copy.
+
+## Where to write it
+
+<Steps>
+  <Step title="Open Messenger settings">
+    In **Channels**, open your **Karzoun Messenger** channel and choose **Edit**.
+  </Step>
+  <Step title="Go to the Look step">
+    At the bottom of the step, open **Custom CSS (advanced)**.
+  </Step>
+  <Step title="Write the CSS and save">
+    Paste your styles and click **Save**. They reach your site within about a minute (the cache time).
+  </Step>
+</Steps>
+
+<Note>
+Don't put the CSS in the install code or in your site's files. The chat window runs in its own `iframe`, so your page's styles can't reach inside it. The settings field is the only place that does.
+</Note>
+
+## How it works
+
+| Question | Answer |
+| --- | --- |
+| **Where does it apply?** | Inside the chat window only, on every site that shows this channel |
+| **When does it apply?** | After the window's own styles, so it usually wins |
+| **What can't it change?** | The chat button (launcher), and the window's position and size on the page. See [Outside the window](#outside-the-window) |
+| **Do updates affect it?** | They can. The classes below are internal, and some may change when the window is redesigned |
+
+<Warning>
+The **brand color** is applied directly to the header, the visitor's bubbles and the send button. To change those colors, add `!important`, or the settings color stays.
+</Warning>
+
+## Main classes
+
+| Selector | Element |
+| --- | --- |
+| `--primary` | Brand color variable (set from settings) |
+| `.header` | Header at the top of the window |
+| `.header-title` · `.header-status` | Window name and online status |
+| `.header-logo-wrap` | Logo frame in the header |
+| `#homeScreen` | Home screen |
+| `.greetings h2` · `.greetings p` | Greeting title and text |
+| `.action-card` | Home screen cards (start a chat, contact us…) |
+| `#chatScreen` | Conversation screen |
+| `#messages` | Message area |
+| `.msg` | Any message bubble |
+| `.msg.customer` | Visitor messages |
+| `.msg.agent` · `.msg.bot` | Team and bot messages |
+| `.msg-time` | Message time |
+| `.composer` | Typing bar under the conversation |
+| `.composer-input` | Typing field |
+| `.composer-send` | Send button |
+| `.composer-attach` · `.composer-mic` | Attachment and voice buttons |
+| `.ix-btn` | Interactive message buttons |
+| `.bottom-nav` · `.bottom-nav-item` | Bottom navigation bar |
+| `.powered-by` | "Powered by Karzoun" line |
+| `html[dir="rtl"]` | The window when it's in Arabic |
+
+## Examples
+
+### A different font
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+html, body {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+```
+
+<Tip>
+Keep `@import` on the first line of the field, or the browser ignores it.
+</Tip>
+
+### A solid header instead of the gradient
+
+```css
+.header {
+  background: #0f172a !important;
+}
+```
+
+### Message bubbles
+
+```css
+/* Visitor messages */
+.msg.customer {
+  background: #111827 !important;
+  border-radius: 12px;
+}
+
+/* Team and bot messages */
+.msg.agent,
+.msg.bot {
+  background: #eef2ff;
+  color: #1e1b4b;
+  border-radius: 12px;
+}
+```
+
+### Sharper corners everywhere
+
+```css
+.action-card,
+.msg,
+.composer-input,
+.ix-btn {
+  border-radius: 4px;
+}
+
+.composer-send {
+  border-radius: 8px;
+}
+```
+
+### Larger text in the conversation
+
+```css
+.msg {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.composer-input {
+  font-size: 15px;
+}
+```
+
+### Home screen cards
+
+```css
+.action-card {
+  background: #fff;
+  border-color: var(--primary);
+}
+
+.action-card:hover {
+  transform: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+```
+
+### Hide elements
+
+```css
+/* Online status under the window name */
+.header-status {
+  display: none;
+}
+
+/* Message times */
+.msg-time {
+  display: none;
+}
+```
+
+<Note>
+To hide the attachment, voice or emoji buttons, or the "Powered by Karzoun" line, use the switches in settings instead of CSS.
+</Note>
+
+### Arabic-only styles
+
+```css
+html[dir="rtl"] .greetings h2 {
+  font-size: 22px;
+  letter-spacing: 0;
+}
+```
+
+### Dark look
+
+```css
+body,
+.composer,
+#homeScreen {
+  background: #0b1120;
+  color: #e2e8f0;
+}
+
+.msg.agent,
+.msg.bot,
+.action-card {
+  background: #1e293b;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+.composer-input {
+  background: #1e293b;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+```
+
+## Outside the window
+
+The chat button and the window frame live on your site's page, not inside the window, so the **Custom CSS** field can't reach them.
+
+| You want to | How |
+| --- | --- |
+| Change the button's look, label or side | The **Look** step in Messenger settings |
+| Use your own button instead of Karzoun's | In **Install & security**, set **Show chat button** to **Never**, then open the chat from your button with `Karzoun.messenger.open()` |
+| Nudge the window or button | CSS on your site targeting `#kz-messenger-container` and `#kz-messenger-launcher`, with `!important` |
+
+Your own button:
+
+```html
+<button onclick="Karzoun.messenger.open()">Chat with us</button>
+```
+
+Lifting the button and window above a sticky bar at the bottom of your site (goes in your site's CSS, not in settings):
+
+```css
+#kz-messenger-launcher {
+  bottom: 90px !important;
+}
+
+#kz-messenger-container {
+  bottom: 160px !important;
+}
+```
+
+## Common issues
+
+| What happens | Cause and fix |
+| --- | --- |
+| The header or bubble color didn't change | These take the settings color directly. Add `!important` |
+| The change doesn't show on the site | Wait a minute after saving, then reload in a private window |
+| The imported font doesn't load | `@import` isn't on the first line of the field |
+| You wrote CSS on your site and nothing changed | Your page can't reach inside the window. Move it to the **Custom CSS** field |
+| An element changed after an update | Its internal class changed. Check the table above and update the selector |

@@ -1,28 +1,109 @@
 ---
 title: "Karzoun Pixel"
-description: "Embed the Karzoun tracking pixel to identify website visitors and sync customer data."
+description: "Install the Karzoun website code, identify signed-in users, and control chat, popups, the help center and tracking from JavaScript."
 ---
 
-Embed the Karzoun tracking pixel on your website to identify visitors and sync customer data with your Karzoun workspace.
+The Karzoun Pixel is the one install code for a website. It loads whatever the business switched on for that site in **Settings → Websites**: chat, popups, the help center and tracking. The code itself never changes.
 
-## Basic embed
+## Install
+
+Copy the code from **Settings → Websites → your website → Install code**, and paste it before `</body>` on every page:
 
 ```html
 <script>
-  (function (w, d, s, l, i) {
-    /* pixel bootstrap */
-  })(window, document, "script", "dataLayer", "PIXEL_ID");
+  window.karzounSettings = {
+    apiUrl: 'https://YOUR_SUBDOMAIN.api.karzoun.chat/clientportal',
+    integrationId: 'YOUR_WEBSITE_KEY',
+  };
 </script>
+<script src="https://karzoun-pixel.pages.dev/p.js" crossorigin="anonymous" async></script>
 ```
 
-## Configuration
+| Setting | Required | Description |
+| --- | --- | --- |
+| `apiUrl` | Yes | Your workspace's pixel API |
+| `integrationId` | Yes | The website key shown on the website's page |
+| `locale` | No | `ar` or `en`. Defaults to the page's `<html lang>`, then the dashboard language |
+| `identify` | No | The signed-in user (below) |
+| `company` | No | The user's company, e.g. `{ name: 'Acme Corp' }` |
 
-| Setting         | Description                     |
-| ----------------- | ---------------------------------- |
-| `integrationId` | Your Karzoun integration ID     |
-| `apiUrl`        | Gateway API URL for your tenant |
-| `cdnUrl`        | Static asset CDN                |
+What loads, popups, chat settings, and allowed domains all come from the server, so there's nothing else to configure in the code.
 
-Configure the pixel in **Settings → Integrations** and use the generated snippet.
+## Identify signed-in users
 
-For advanced customer data mapping, see the pixel documentation in `packages/karzoun-pixel/docs/` in the monorepo.
+```js
+window.karzounSettings = {
+  apiUrl: 'https://YOUR_SUBDOMAIN.api.karzoun.chat/clientportal',
+  integrationId: 'YOUR_WEBSITE_KEY',
+  identify: {
+    email: 'customer@example.com',
+    phone: '+966500000000',
+    name: 'Sara Ahmed',
+    code: 'USR-123',          // your user id
+    userHash: 'HMAC_HEX',     // optional, see below
+    properties: { membership_tier: 'gold' },
+  },
+};
+```
+
+- Keys in `properties` that match a property code (**Settings → Properties**) fill that property. Others are kept as tracked data.
+- To keep a user's chat history on any device, sign `code` on your server and pass it as `userHash`:
+
+  ```js
+  // Node.js, on your server
+  const userHash = crypto.createHmac('sha256', IDENTITY_SECRET).update(userId).digest('hex');
+  ```
+
+  The secret is in Messenger settings → **Install & security** → **Identity verification**. Never put it in page code.
+
+Pass the signed `code` and `userHash` in `karzounSettings.identify` before `p.js` loads. To link a visitor later (for example after a form on your own site), call `Karzoun.identify({ email, phone, name })`. On sign-out, call `Karzoun.reset()`.
+
+## JavaScript API
+
+Available on `window.Karzoun` once `p.js` has loaded.
+
+| Call | What it does |
+| --- | --- |
+| `Karzoun.messenger.open()` · `.close()` · `.toggle()` · `.isOpen()` | Control the chat window |
+| `Karzoun.forms.show('FORM_CODE')` · `.hide()` | Open or close a popup |
+| `Karzoun.kb.open()` · `Karzoun.kb.open('ARTICLE_ID')` · `.close()` | Open the help center panel, optionally on one article |
+| `Karzoun.track('event_name', { ...props })` | Send a custom event |
+| `Karzoun.identify({ ... })` | Identify the visitor |
+| `Karzoun.reset()` | Forget the identified visitor (sign-out) |
+| `Karzoun.pixel.ecommerce.*` | Ecommerce events (below) |
+| `Karzoun.messenger.on(event, fn)` · `Karzoun.forms.on(...)` · `Karzoun.kb.on(...)` | Listen to widget events; returns an unsubscribe function |
+
+Each part works only when it's switched on for the website. For example, `Karzoun.kb.open()` needs **Help center** on.
+
+### Your own chat button
+
+Set **Show chat button** to **Never** in Messenger settings, then:
+
+```html
+<button onclick="Karzoun.messenger.open()">Chat with us</button>
+```
+
+### Inline form
+
+```html
+<div data-kz-form="FORM_CODE"></div>
+```
+
+The pixel renders the popup's form inside this element, including elements added after load (single-page apps).
+
+### Ecommerce events
+
+Salla, Zid, Shopify and WooCommerce are tracked automatically. For a custom store:
+
+```js
+Karzoun.pixel.ecommerce.viewProduct({ id: 'SKU-1', name: 'Shirt', price: 120, currency: 'SAR' });
+Karzoun.pixel.ecommerce.addToCart({ productId: 'SKU-1', quantity: 1, price: 120 });
+Karzoun.pixel.ecommerce.startCheckout({ items: [{ productId: 'SKU-1', quantity: 1, price: 120 }], total: 120 });
+Karzoun.pixel.ecommerce.completeOrder({ orderId: 'ORD-9', items: [{ productId: 'SKU-1', quantity: 1, price: 120 }], total: 120, currency: 'SAR' });
+```
+
+Also available: `removeFromCart`, `viewCart`, `search`, `viewProductList`, `clickProduct`, `applyCoupon`.
+
+## Styling the chat
+
+Custom CSS for the chat window is set in Messenger settings, not in the install code. See [Style the chat with CSS](/help-center/guides/channels/messenger-custom-css).

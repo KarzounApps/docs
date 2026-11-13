@@ -1,0 +1,101 @@
+---
+title: "Meta conversions and lead forms"
+description: "Connect Meta Conversions API, open Facebook and Instagram leads in Forms, and send later conversions from a workflow."
+---
+
+The first message from a WhatsApp, Messenger, or Instagram ad sends **Lead submitted** to Meta on its own. Meta counts a repeat of the same event id as one lead for about 48 hours. A Facebook lead form, a qualified lead, and a sale still reach Meta only when a published workflow says so.
+
+**Meta Conversions API** stores the lead form in Karzoun and can send a later conversion or update a customer-list audience.
+
+This guide covers the connection, where the forms show up, and which action sends each kind of conversion.
+
+---
+
+## Before you start
+
+Install **Meta Conversions API** from the marketplace, then connect it under **Settings → Applications** until the status is **Connected**.
+
+| Field | Use it for |
+| --- | --- |
+| `pixelId` | Dataset that receives the customer conversion |
+| `accessToken` | Token for that dataset. Not the page token |
+| `adsAccessToken` | Token that can edit customer-list audiences |
+| `currency` | Default currency, such as `SAR` |
+| `testEventCode` | Meta test code. Clear it after testing |
+
+---
+
+## Where a lead shows up
+
+Facebook and Instagram forms are not created with **Create Popup**, and they do not use this app's token. Connect the Facebook Page. Karzoun then pulls the leads Meta still has (up to 90 days) and receives new ones on the Page webhook. A form filled from the Instagram account linked to that Page arrives the same way. The rows show under **Popups → Facebook lead forms**. Reconnect a Page that was connected before lead forms were enabled.
+
+Open the form name to see submissions. One person is one row. Each question is one column, in the form's order, followed by the campaign, the ad, a link that opens that ad, and paid or organic.
+
+Name, phone, and email are written on the contact. Matching is by phone, then email. Other answers stay on the submission.
+
+You can open submissions or archive the row. Edit, embed, duplicate, and delete stay unavailable.
+
+<Info>
+Saving the lead does not send a Lead event to Meta. A later conversion action does that.
+</Info>
+
+---
+
+## What to put in the workflow
+
+| In the picker | When it runs |
+| --- | --- |
+| **Customer → Pipeline stage changed** | The contact moves to another pipeline stage |
+| **Facebook Events → Lead form received** | A Facebook or Instagram lead is stored. The payload includes the contact, form, Meta lead id, campaign, and ad. This trigger comes with the Facebook channel, even when this app is not connected |
+| **Send WhatsApp conversion** | A WhatsApp ad click from the last 7 days. Uses the connected WhatsApp account |
+| **Send Messenger conversion** | A Messenger ad click from the last 7 days. Uses the connected Facebook Page |
+| **Send Instagram conversion** | An Instagram ad click from the last 7 days. Uses the connected Instagram account |
+| **Send customer conversion** | No ad click. Matches the customer by phone or email, and sends the **Lead ID** you fill in. Uses the dataset on this app |
+| **Add to audience** | Adds the hashed phone and email to the **Audience ID** you set |
+| **Remove from audience** | Removes that person from the same audience |
+
+### Click conversions
+
+**Lead submitted** is sent when the first ad message arrives, and it is not in the click action's event list. Use **Send WhatsApp conversion**, **Send Messenger conversion**, or **Send Instagram conversion** for **Qualified lead**, **Purchase**, and the other events. Each of those sends only when that channel has an ad click from the last 7 days. Otherwise the step is skipped. A repeat uses the same event id, and Meta counts that as one event for about 48 hours. A new **Order ID** is a new purchase. **Purchase** needs **Value** and **Currency**. Phone and email are not sent with a click.
+
+Reconnect WhatsApp after this change so the account token includes permission to send events. Reconnect the Facebook Page so its token includes `page_events`.
+
+### Send customer conversion
+
+This action is on the conversions app. Pick an **Event**. **Purchase** needs **Value** and **Currency**. The customer is matched by phone or email.
+
+**Lead ID** is optional. When the workflow starts from **Lead form received**, pass that trigger's lead id into this field. Leave it empty when the conversion has no Meta lead.
+
+**Click ID** is optional. Pass the website ad click, `fbclid`, when the order came from the site. Also pass **Page URL** and **Browser** from that visit. Leave **Click ID** empty when there is no website click.
+
+With neither a phone nor an email, the step is skipped. A **Test event code** on the action replaces the one saved on the connection.
+
+### Audiences
+
+**Add to audience** and **Remove from audience** need `adsAccessToken` and an audience id. With neither a phone nor an email, the step is skipped.
+
+Creating the audience from the connect screen is not available. Create the list in Meta Ads Manager and paste its id into the action.
+
+<Warning>
+Do not put a conversion action on **Lead form received** if you still need to qualify or close the sale. Store the lead, then send the conversion when the pipeline stage changes or when the person joins or leaves a segment.
+</Warning>
+
+---
+
+## Troubleshooting
+
+| What you see | What to check |
+| --- | --- |
+| Actions missing in the builder | Click actions come from the connected channel. **Send customer conversion** and the audience actions need this app **Connected** |
+| No row under **Facebook lead forms** | The Facebook Page is connected, and a real lead arrived or the 90-day pull finished |
+| Lead from an ad chat missing in Meta | The channel is connected, and its token can send events. WhatsApp needs `whatsapp_business_manage_events`. The Facebook Page needs `page_events`. Reconnect after those permissions were added |
+| Conversion missing in Meta | The workflow is published. A click action needs that channel's ad click from the last 7 days. A customer conversion needs a phone or email |
+| The same purchase counted twice | Use a new **Order ID** for a new purchase. The same event id is one event on Meta for about 48 hours |
+| Audience did not change | `adsAccessToken` can edit the audience, **Audience ID** is correct, and the contact has a phone or email |
+
+---
+
+## Related
+
+- [WhatsApp ads that open a chat](/help-center/guides/whatsapp/whatsapp-ctwa-ads)
+- [Automations](/help-center/guides/automations/overview)
