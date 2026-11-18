@@ -1,0 +1,141 @@
+---
+title: "Catalog and commerce"
+description: "Connect a product catalog, control the cart and catalog button, list products, and send product messages."
+---
+
+With a product catalog connected to your WhatsApp Business Account, customers can browse products inside WhatsApp, add them to a cart and send you an order.
+
+## Connect a catalog
+
+Create the catalog in **Meta Commerce Manager** and connect it to your WhatsApp account in **WhatsApp Manager → Account tools → Catalog**. One catalog can be connected per WhatsApp Business Account.
+
+List the connected catalog:
+
+```bash
+curl "https://waba.karzoun.chat/product_catalogs?fields=id,name,product_count" \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+```json
+{ "data": [{ "id": "1234567890", "name": "Acme Store", "product_count": 128 }] }
+```
+
+## List products
+
+```bash
+curl "https://waba.karzoun.chat/product_catalogs/1234567890/products?fields=retailer_id,name,price,availability&limit=50" \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+```json
+{
+  "data": [
+    { "id": "8001", "retailer_id": "SKU-1042", "name": "Linen shirt", "price": "SAR 99.00", "availability": "in stock" }
+  ],
+  "paging": { "cursors": { "after": "…" } }
+}
+```
+
+Use `retailer_id` as `product_retailer_id` when you send products. Supports `fields`, `limit`, `after` and `filter`. Only catalogs connected to your account are reachable; others return `404`.
+
+## Commerce settings
+
+Control whether customers see the catalog button and can use the cart:
+
+```bash
+curl https://waba.karzoun.chat/whatsapp_commerce_settings \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+```json
+{ "data": [{ "id": "…", "is_cart_enabled": true, "is_catalog_visible": true }] }
+```
+
+Change them with query parameters:
+
+```bash
+curl -X POST "https://waba.karzoun.chat/whatsapp_commerce_settings?is_cart_enabled=true&is_catalog_visible=true" \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+| Setting | When `true` |
+| --- | --- |
+| `is_catalog_visible` | A shop button appears in the chat and on your business profile |
+| `is_cart_enabled` | Customers can add products to a cart and send it to you as an order |
+
+## Send products
+
+Inside an open [customer service window](/whatsapp-api/customer-service-window), send products as interactive messages:
+
+<Tabs>
+  <Tab title="One product">
+    ```json
+    {
+      "messaging_product": "whatsapp",
+      "to": "966500000000",
+      "type": "interactive",
+      "interactive": {
+        "type": "product",
+        "body": { "text": "Back in stock" },
+        "action": { "catalog_id": "1234567890", "product_retailer_id": "SKU-1042" }
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="Several products">
+    ```json
+    {
+      "messaging_product": "whatsapp",
+      "to": "966500000000",
+      "type": "interactive",
+      "interactive": {
+        "type": "product_list",
+        "header": { "type": "text", "text": "Summer picks" },
+        "body": { "text": "Our best sellers this week" },
+        "action": {
+          "catalog_id": "1234567890",
+          "sections": [
+            { "title": "Shirts", "product_items": [{ "product_retailer_id": "SKU-1042" }, { "product_retailer_id": "SKU-1043" }] }
+          ]
+        }
+      }
+    }
+    ```
+    Up to 30 products in up to 10 sections.
+  </Tab>
+  <Tab title="Whole catalog">
+    ```json
+    {
+      "messaging_product": "whatsapp",
+      "to": "966500000000",
+      "type": "interactive",
+      "interactive": {
+        "type": "catalog_message",
+        "body": { "text": "Browse our full collection" },
+        "action": { "name": "catalog_message", "parameters": { "thumbnail_product_retailer_id": "SKU-1042" } }
+      }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+To reach people outside the window, use [catalog and product templates](/whatsapp-api/templates/commerce).
+
+## Orders
+
+When a customer sends their cart, your webhook receives an `order` message:
+
+```json
+{
+  "type": "order",
+  "order": {
+    "catalog_id": "1234567890",
+    "text": "Please deliver after 5pm",
+    "product_items": [
+      { "product_retailer_id": "SKU-1042", "quantity": 2, "item_price": 99, "currency": "SAR" }
+    ]
+  }
+}
+```
+
+Reply in the same conversation to confirm the order, share a total or ask for delivery details.

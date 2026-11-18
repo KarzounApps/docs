@@ -1,0 +1,76 @@
+---
+title: "Manage templates"
+description: "Create, list, read, edit and delete WhatsApp message templates."
+---
+
+Templates belong to your number's WhatsApp Business Account. Meta reviews each one before you can send it.
+
+| Action | Request |
+| --- | --- |
+| List | `GET /message_templates` |
+| Create | `POST /message_templates` |
+| Read one | `GET /message_templates/{template-id}` |
+| Edit | `POST /message_templates/{template-id}` |
+| Delete | `DELETE /message_templates/{template-id}?name={name}` or `DELETE /message_templates?name={name}` |
+| Browse Meta's library | `GET /message_template_library` |
+
+## List
+
+```bash
+curl "https://waba.karzoun.chat/message_templates?fields=name,status,category,language&limit=50" \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+Supported query parameters: `fields`, `limit`, `status`, `name`, `after`.
+
+## Create
+
+```bash
+curl -X POST https://waba.karzoun.chat/message_templates \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "order_shipped",
+    "language": "ar",
+    "category": "UTILITY",
+    "components": [
+      { "type": "HEADER", "format": "IMAGE", "example": { "header_handle": ["4::aW1hZ2UvanBlZw==:ARb…"] } },
+      { "type": "BODY", "text": "مرحبًا {{1}}، تم شحن طلبك {{2}}.", "example": { "body_text": [["سارة", "#1042"]] } },
+      { "type": "BUTTONS", "buttons": [{ "type": "URL", "text": "تتبع الشحنة", "url": "https://example.com/track/{{1}}", "example": ["1042"] }] }
+    ]
+  }'
+```
+
+```json
+{ "id": "1689556908129832", "status": "PENDING", "category": "UTILITY" }
+```
+
+For an image, video or document header, get `header_handle` from [Upload a template sample](/whatsapp-api/messaging/media#upload-a-template-sample).
+
+## Review result
+
+The status changes to `APPROVED`, `REJECTED` or `PAUSED` later. Each change arrives on your [webhook](/whatsapp-api/webhooks/events#account-level-events) as `message_template_status_update`.
+
+## Edit
+
+```bash
+curl -X POST https://waba.karzoun.chat/message_templates/1689556908129832 \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "components": [ { "type": "BODY", "text": "Hi {{1}}, your order {{2}} has shipped." } ] }'
+```
+
+Meta limits how often an approved template can be edited.
+
+## Delete
+
+```bash
+curl -X DELETE "https://waba.karzoun.chat/message_templates/1689556908129832?name=order_shipped" \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+Deleting by name only (`DELETE /message_templates?name=order_shipped`) removes every language of that template.
+
+<Note>
+  A template, flow or group ID that doesn't belong to your key's account returns `404`.
+</Note>

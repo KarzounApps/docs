@@ -1,0 +1,75 @@
+---
+title: "Template analytics"
+description: "Get sent, delivered, read, clicked and cost metrics per template through the API."
+---
+
+Template analytics give you daily metrics for each template: how many were sent, delivered and read, which buttons were clicked, and what they cost. The **Insights** tab shows the same data; the API lets you pull it into your own reports.
+
+## Turn it on
+
+Meta needs template analytics enabled once per WhatsApp Business Account. Data is collected from that moment on, not retroactively.
+
+```bash
+curl -X POST https://waba.karzoun.chat/template_analytics \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+A `200` means it's on. Calling it again is harmless.
+
+## Get metrics
+
+```bash
+curl "https://waba.karzoun.chat/template_analytics?start=1731888000&end=1732492800&granularity=DAILY&template_ids=[1689556908129832]&metric_types=[SENT,DELIVERED,READ,CLICKED,COST]" \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+| Parameter | Required | Meaning |
+| --- | --- | --- |
+| `start`, `end` | Yes | Unix timestamps for the period |
+| `granularity` | Yes | `DAILY`. Hourly data isn't available |
+| `template_ids` | No | JSON array of template IDs, up to 10 |
+| `metric_types` | No | JSON array: `SENT`, `DELIVERED`, `READ`, `CLICKED`, `COST`. All of them if omitted |
+| `use_waba_timezone` | No | `true` to report days in your account's time zone instead of UTC. Then `start` and `end` must be `YYYY-MM-DD` |
+
+```json
+{
+  "data": [{
+    "granularity": "DAILY",
+    "data_points": [{
+      "template_id": "1689556908129832",
+      "start": 1731888000,
+      "end": 1731974400,
+      "sent": 1200,
+      "delivered": 1164,
+      "read": 902,
+      "clicked": [
+        { "type": "url_button", "button_content": "Track order", "count": 311 },
+        { "type": "quick_reply_button", "button_content": "Stop promotions", "count": 9 }
+      ],
+      "cost": [
+        { "type": "amount_spent", "value": 14.32 },
+        { "type": "cost_per_delivered", "value": 0.0123 }
+      ]
+    }]
+  }],
+  "paging": { "cursors": { "before": "…", "after": "…" } }
+}
+```
+
+## What the numbers mean
+
+| Metric | Meaning |
+| --- | --- |
+| `sent` | Messages sent with the template |
+| `delivered` | Messages that reached the device |
+| `read` | Messages opened. Only counted for users with read receipts on, so it's a lower bound |
+| `clicked` | Taps per button, for marketing and utility templates |
+| `cost` | Amount spent, cost per delivered message and cost per URL click |
+
+Metrics only cover messages your business started with the template. Data can take a few hours to appear.
+
+## Use it to
+
+- Compare read rates between templates and retire the weak ones before their [quality](/whatsapp-api/templates/overview#template-quality) drops.
+- Measure which button people tap, and put the most used one first.
+- Track campaign cost per template next to your own conversion data.

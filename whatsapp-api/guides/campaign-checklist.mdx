@@ -1,0 +1,54 @@
+---
+title: "Campaign checklist"
+description: "Everything to check before sending a WhatsApp marketing campaign at scale."
+---
+
+Run through this before you send a template to a large list. Most failed campaigns fail on one of these.
+
+## Audience
+
+- [ ] Every recipient [opted in](/whatsapp-api/opt-in) to WhatsApp messages from you, for this kind of content.
+- [ ] People who opted out, or tapped "Stop promotions", are removed.
+- [ ] Numbers are in international format, with country code, without `+` or leading zeros.
+- [ ] The list is segmented. Send to engaged customers first.
+
+## Limits
+
+- [ ] Count **unique recipients**, not messages. They must fit your [messaging limit](/whatsapp-api/account/messaging-limits) for the next 24 hours, shared by all numbers in the portfolio.
+- [ ] Your number's [quality rating](/whatsapp-api/account/quality-rating) is green or yellow, not red.
+- [ ] You know your number's throughput (on the **Profile** tab) and send at a rate it can handle. Back off on `130429`.
+
+## Template
+
+- [ ] The template is `APPROVED` in every language you'll use.
+- [ ] Its category is right. Promotions are `MARKETING`.
+- [ ] Its [quality](/whatsapp-api/templates/overview#template-quality) isn't low.
+- [ ] Variables are filled for every recipient. Empty values fail with `132000`.
+- [ ] Links work and use your own domain.
+- [ ] There's a "Stop promotions" quick reply.
+- [ ] It's new or rarely sent? Expect [pacing](/whatsapp-api/templates/sending#pacing). Send to a small group first.
+
+## Sending
+
+- [ ] Use the [Marketing Messages API](/whatsapp-api/templates/marketing) (`/marketing_messages`) for marketing.
+- [ ] Set a time to live for time-limited offers.
+- [ ] Send at a good time in the recipients' time zone.
+- [ ] Spread big sends over hours, not seconds.
+
+## Wallet
+
+- [ ] The available balance covers the whole campaign. Each send reserves its cost first; without balance the API answers `402`. See [Pricing and wallet](/whatsapp-api/pricing-and-wallet).
+- [ ] Auto top-up is on, or someone watches the balance.
+
+## Webhook
+
+- [ ] Your [webhook](/whatsapp-api/webhooks/overview) is set and answers `2xx` quickly. Expect about three status events per message, plus replies.
+- [ ] You store the message ID from each send and match statuses to it.
+- [ ] You handle `failed` statuses. Don't retry `131049`, `131050` or `130472`.
+- [ ] Someone is ready to answer replies.
+
+## After sending
+
+- Watch delivered, read and click rates on the **Insights** tab.
+- Watch for `message_template_quality_update` and `phone_number_quality_update` events.
+- Compare read rates between templates and drop the weak ones.

@@ -1,0 +1,49 @@
+---
+title: "Delivery and retries"
+description: "How Karzoun delivers, retries and logs WhatsApp webhook events."
+---
+
+## Success
+
+A delivery succeeds when your endpoint answers with any `2xx` status within **5 seconds**. Redirects (`3xx`) are not followed and count as failures.
+
+## Retries
+
+A failed delivery is retried on this schedule:
+
+| Attempt | After the previous failure |
+| --- | --- |
+| 2 | 10 seconds |
+| 3 | 1 minute |
+| 4 | 5 minutes |
+| 5 | 30 minutes |
+| 6 | 2 hours |
+| 7 | 6 hours |
+| 8 | 12 hours |
+
+After 8 attempts (about 21 hours) the event is marked **failed**. Retries survive restarts on Karzoun's side.
+
+If an endpoint fails 50 times in a row, Karzoun pauses deliveries to it for 5 minutes, then tries again. Events keep queueing during the pause, and the pause doesn't use up attempts.
+
+## Delivery log
+
+Open the number's **API** tab and click **View deliveries** in the **Webhook URL** card. Each event of the last 7 days shows:
+
+| Column | Shows |
+| --- | --- |
+| Event | Message (with its type), status (with its value) or the account-level field |
+| Status | **Delivered**, **Retrying** (with the next try), **Failed** or **Skipped** |
+| Response | Your endpoint's HTTP status, the response time, and the first 300 characters of an error response |
+
+**Skipped** means the number had no webhook URL when the event was due.
+
+## Resend
+
+Click **Resend** on a failed or skipped event to queue it again. It keeps its `X-Karzoun-Event-Id`, so your deduplication still works. Failed events can be resent for 7 days.
+
+## Design a stable endpoint
+
+- Return `200` before doing any work. Put the event on a queue and process it separately.
+- Expect bursts: a campaign of 1,000 messages produces up to about 3,000 status events.
+- Keep the endpoint's median response under 250 ms.
+- Make processing idempotent on `X-Karzoun-Event-Id`.

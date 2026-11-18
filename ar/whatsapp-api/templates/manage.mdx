@@ -1,0 +1,76 @@
+---
+title: "إدارة القوالب"
+description: "أنشئ قوالب رسائل واتساب واعرضها وعدّلها واحذفها."
+---
+
+القوالب تتبع حساب واتساب للأعمال (WABA) الخاص برقمك. ميتا تراجع كل قالب قبل أن تستطيع إرساله.
+
+| الإجراء | الطلب |
+| --- | --- |
+| عرض القوالب | `GET /message_templates` |
+| إنشاء | `POST /message_templates` |
+| قراءة قالب | `GET /message_templates/{template-id}` |
+| تعديل | `POST /message_templates/{template-id}` |
+| حذف | `DELETE /message_templates/{template-id}?name={name}` أو `DELETE /message_templates?name={name}` |
+| تصفّح مكتبة ميتا | `GET /message_template_library` |
+
+## العرض
+
+```bash
+curl "https://waba.karzoun.chat/message_templates?fields=name,status,category,language&limit=50" \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+المعاملات المدعومة: `fields`، `limit`، `status`، `name`، `after`.
+
+## الإنشاء
+
+```bash
+curl -X POST https://waba.karzoun.chat/message_templates \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "order_shipped",
+    "language": "ar",
+    "category": "UTILITY",
+    "components": [
+      { "type": "HEADER", "format": "IMAGE", "example": { "header_handle": ["4::aW1hZ2UvanBlZw==:ARb…"] } },
+      { "type": "BODY", "text": "مرحبًا {{1}}، تم شحن طلبك {{2}}.", "example": { "body_text": [["سارة", "#1042"]] } },
+      { "type": "BUTTONS", "buttons": [{ "type": "URL", "text": "تتبع الشحنة", "url": "https://example.com/track/{{1}}", "example": ["1042"] }] }
+    ]
+  }'
+```
+
+```json
+{ "id": "1689556908129832", "status": "PENDING", "category": "UTILITY" }
+```
+
+إذا كانت الترويسة صورة أو فيديو أو مستند، خذ قيمة `header_handle` من [رفع عيّنة قالب](/ar/whatsapp-api/messaging/media#رفع-عيّنة-قالب).
+
+## نتيجة المراجعة
+
+الحالة تتغيّر لاحقاً إلى `APPROVED` أو `REJECTED` أو `PAUSED`. كل تغيير يصلك على [الـ Webhook](/ar/whatsapp-api/webhooks/events#أحداث-على-مستوى-الحساب) في الحقل `message_template_status_update`.
+
+## التعديل
+
+```bash
+curl -X POST https://waba.karzoun.chat/message_templates/1689556908129832 \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "components": [ { "type": "BODY", "text": "Hi {{1}}, your order {{2}} has shipped." } ] }'
+```
+
+ميتا تحدّ من عدد مرات تعديل القالب المعتمد.
+
+## الحذف
+
+```bash
+curl -X DELETE "https://waba.karzoun.chat/message_templates/1689556908129832?name=order_shipped" \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+الحذف بالاسم فقط (`DELETE /message_templates?name=order_shipped`) يحذف القالب بكل لغاته.
+
+<Note>
+  أي معرّف قالب أو Flow أو مجموعة لا يتبع حساب مفتاحك يرجع `404`.
+</Note>

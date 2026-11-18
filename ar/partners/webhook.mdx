@@ -1,0 +1,65 @@
+---
+title: "Webhook الشريك"
+description: "استقبل أحداث العملاء والأرقام من كل حسابات عملائك على رابط واحد."
+---
+
+Webhook الشريك يخبر منصتك بما يحدث لعملائك في كرزون: حسابات جديدة، أرقام رُبطت أو أُزيلت، وأرصدة تقترب من النفاد.
+
+لا يحمل رسائل واتساب ولا أحداث حساب ميتا (مراجعة القوالب، تغيّر الجودة، التقييد). هذه تصل إلى [Webhook كل رقم](/ar/whatsapp-api/webhooks/overview).
+
+## الإعداد
+
+افتح **الشريك ← الإعدادات ← عام ← المطوّرون**، ضع **عنوان ويب هوك الشريك** واضغط **حفظ**. كرزون ترسل حدثاً تجريبياً موقّعاً أولاً، ولازم يرد خادمك بـ `2xx` خلال 5 ثوانٍ.
+
+```json
+{ "object": "karzoun", "event": "webhook.test", "channel": "partner", "partner": "agency", "sent_at": "2026-11-18T10:00:00.000Z" }
+```
+
+نفس شروط رابط Webhook الرقم: `https`، المنفذ 443، ونطاق عام.
+
+## الأحداث
+
+| الحدث | متى |
+| --- | --- |
+| `client.created` | أُنشئ حساب عميل تحت حساب الشريك (عبر الـ API أو التسجيل) |
+| `channel.connected` | اكتمل ربط رقم واتساب في حساب عميل: مسجّل، ومشترك، وجاهز للإرسال |
+| `channel.disconnected` | أُزيل رقم من حساب عميل |
+| `wallet.low_balance` | نزل رصيد عميل تحت 20 دولاراً. يُرسل مرة واحدة لكل نزول |
+
+## شكل الحدث
+
+```json
+{
+  "event": "channel.connected",
+  "partner": "agency",
+  "organization_id": "665f1c2a9e1d4b0012a3b4c5",
+  "subdomain": "acme",
+  "integration_id": "6660a2f1c0d3e40011b2c3d4",
+  "phone_number": "+966 50 000 0000",
+  "data": { "waba_id": "102290129340398", "phone_number_id": "106540352242922", "coexistence": false },
+  "occurred_at": "2026-11-18T10:00:00.000Z"
+}
+```
+
+| الحقل | المعنى |
+| --- | --- |
+| `event` | أحد الأحداث أعلاه |
+| `partner` | رمز الشريك |
+| `organization_id`، `subdomain` | حساب العميل |
+| `integration_id`، `phone_number` | الرقم، في أحداث `channel.*`. و`null` في غيرها |
+| `data` | تفاصيل الحدث: معرّفات ميتا في `channel.*`، الرصيد في `wallet.low_balance`، واسم الحساب في `client.created` |
+| `occurred_at` | وقت الحدث بصيغة ISO 8601 |
+
+## التحقق والإرسال
+
+Webhook الشريك يستخدم نفس التوقيع والإرسال الخاص بـ Webhook الأرقام:
+
+- موقّع بـ **مفتاح المنصّة** في `X-Karzoun-Signature-256` على `"{timestamp}.{body}"`. تحقّق منه بنفس الطريقة في [التحقق من التوقيع](/ar/whatsapp-api/webhooks/signature).
+- يُعاد عند الفشل لمدة 21 ساعة تقريباً. راجع [الإرسال وإعادة المحاولة](/ar/whatsapp-api/webhooks/delivery).
+- امنع التكرار حسب `X-Karzoun-Event-Id`.
+
+بطاقة **المطوّرون** تعرض آخر 10 عمليات إرسال مع زر **إعادة الإرسال** للفاشلة. وعبر الـ API استخدم `partnerWebhookDeliveries` و`partnerTestWebhook` و`partnerWebhookResend`.
+
+## تغيير مفتاح المنصّة
+
+اضغط **تغيير المفتاح**. المفتاح القديم يستمر بالتوقيع في `X-Karzoun-Signature-256-Previous` لمدة 24 ساعة، وروابط الربط الموقّعة به تبقى مقبولة خلال نفس المدة.

@@ -1,0 +1,303 @@
+---
+title: "Events"
+description: "Every WhatsApp webhook event: incoming messages, statuses, pricing, number and account events, with examples."
+---
+
+Each request carries **one** event in the standard WhatsApp webhook format: one entry with one change.
+
+```json
+{
+  "object": "whatsapp_business_account",
+  "entry": [{
+    "id": "{waba-id}",
+    "changes": [{ "field": "{field}", "value": { } }]
+  }]
+}
+```
+
+`field` tells you what happened, and `value` holds the details.
+
+## Number events
+
+Events about one number carry `value.metadata.phone_number_id` and go to that number's webhook.
+
+### Incoming messages
+
+```json
+{
+  "object": "whatsapp_business_account",
+  "entry": [{
+    "id": "102290129340398",
+    "changes": [{
+      "field": "messages",
+      "value": {
+        "messaging_product": "whatsapp",
+        "metadata": { "display_phone_number": "15550783881", "phone_number_id": "106540352242922" },
+        "contacts": [{ "profile": { "name": "Sara" }, "wa_id": "966500000000", "user_id": "SA.13491208655302741918" }],
+        "messages": [{
+          "from": "966500000000",
+          "id": "wamid.HBgMOTY2NTAwMDAwMDAwFQIAEhgg...",
+          "timestamp": "1731916800",
+          "type": "text",
+          "text": { "body": "Do you deliver to Jeddah?" }
+        }]
+      }
+    }]
+  }]
+}
+```
+
+`contacts` identifies the sender. If they use a [username](/whatsapp-api/account/usernames-and-bsuid), you may get `user_id` and `username` without `wa_id`.
+
+#### Message types
+
+The message object has a `type` and a property with the same name.
+
+| `type` | Contents |
+| --- | --- |
+| `text` | `text.body` |
+| `image`, `video`, `audio`, `document`, `sticker` | `id`, `mime_type`, `sha256`, and `caption` or `filename` where relevant. [Download the file](/whatsapp-api/webhooks/receiving-media) |
+| `location` | `latitude`, `longitude`, optional `name` and `address` |
+| `contacts` | Contact cards the user shared. `origin: "contact_request"` when they answered a [request contact info](/whatsapp-api/account/usernames-and-bsuid#ask-for-the-phone-number) button |
+| `interactive` | Replies to interactive messages: `button_reply`, `list_reply`, or `nfm_reply` for [flow](/whatsapp-api/messaging/flows) answers |
+| `button` | A tap on a template quick-reply button: `text` and your `payload` |
+| `reaction` | `message_id` and `emoji`. An empty emoji means the reaction was removed |
+| `order` | `catalog_id` and `product_items` from a cart the user sent |
+| `system` | System notices, such as the user changing their number |
+| `unsupported` | A type the API doesn't support yet, such as some polls or view-once media |
+
+#### Reply context
+
+When the user replies to a specific message, or taps a button on one, the message has `context`:
+
+```json
+"context": { "from": "15550783881", "id": "wamid.HBgMOTY2NTAwMDAwMDAwFQIAERgS..." }
+```
+
+`context.id` is the message they replied to.
+
+#### Interactive reply
+
+```json
+{
+  "from": "966500000000",
+  "id": "wamid.HBgM...",
+  "timestamp": "1731916900",
+  "type": "interactive",
+  "interactive": {
+    "type": "button_reply",
+    "button_reply": { "id": "confirm_order", "title": "Confirm" }
+  }
+}
+```
+
+#### Template button
+
+```json
+{
+  "type": "button",
+  "button": { "text": "Stop promotions", "payload": "STOP_PROMOS" },
+  "context": { "from": "15550783881", "id": "wamid.HBgM..." }
+}
+```
+
+#### From an ad or link
+
+When someone messages you from a Click to WhatsApp ad or a Facebook or Instagram post, the first message carries `referral`:
+
+```json
+"referral": {
+  "source_url": "https://fb.me/abc123",
+  "source_type": "ad",
+  "source_id": "120208000000000",
+  "headline": "Summer sale",
+  "body": "Up to 50% off",
+  "media_type": "image",
+  "image_url": "https://…",
+  "ctwa_clid": "ARAkLkA8rmlFeiCktEJQ-QTwRiyYHAFDLMNDBH0CD3qpjd0HR4irJ6LEkR7JwFF4XvnO2E4Nx0-eM-GABDLOPaOdRMv-_zfUQ2a"
+}
+```
+
+Store `ctwa_clid` to report conversions back to Meta. Messages from ads open a [customer service window](/whatsapp-api/customer-service-window#window-length).
+
+#### Errors in incoming messages
+
+A message the API can't process arrives with an `errors` array instead of content, for example a type that isn't supported.
+
+```json
+{ "type": "unsupported", "errors": [{ "code": 131051, "title": "Message type unknown" }] }
+```
+
+### Message statuses
+
+You get a status event each time a message you sent changes state.
+
+```json
+{
+  "field": "messages",
+  "value": {
+    "messaging_product": "whatsapp",
+    "metadata": { "display_phone_number": "15550783881", "phone_number_id": "106540352242922" },
+    "statuses": [{
+      "id": "wamid.HBgMOTY2NTAwMDAwMDAwFQIAERgS...",
+      "status": "delivered",
+      "timestamp": "1731916805",
+      "recipient_id": "966500000000",
+      "pricing": { "billable": true, "pricing_model": "PMP", "type": "regular", "category": "utility" }
+    }]
+  }
+}
+```
+
+| `status` | Meaning |
+| --- | --- |
+| `sent` | Accepted by WhatsApp's servers |
+| `delivered` | Reached the user's device |
+| `read` | The user opened it. Only when the user has read receipts on |
+| `failed` | Couldn't be sent or delivered. See `errors` |
+| `played` | A voice message was played |
+
+Match `id` with the ID you got from `POST /messages`. Statuses can arrive out of order, for example `read` before `delivered`: treat a later state as including the earlier ones.
+
+#### Pricing
+
+`pricing` tells you how the message is billed:
+
+| Field | Values |
+| --- | --- |
+| `billable` | `true` if the message is charged |
+| `pricing_model` | `PMP` (per-message pricing) |
+| `category` | `marketing`, `utility`, `authentication`, `authentication-international`, `service` |
+| `type` | How Meta classified the message, for example `regular` |
+
+See [Pricing and wallet](/whatsapp-api/pricing-and-wallet).
+
+#### Failed
+
+```json
+{
+  "id": "wamid.HBgM...",
+  "status": "failed",
+  "timestamp": "1731916805",
+  "recipient_id": "966500000000",
+  "errors": [{
+    "code": 131049,
+    "title": "This message was not delivered to maintain healthy ecosystem engagement.",
+    "error_data": { "details": "In order to maintain healthy ecosystem engagement, the message failed to be delivered." }
+  }]
+}
+```
+
+See [Errors](/whatsapp-api/reference/errors) for what each code means.
+
+### Other number fields
+
+| `field` | When |
+| --- | --- |
+| `calls` | Call connected, ended, or a permission reply. See [Calling](/whatsapp-api/messaging/calling) |
+| `smb_message_echoes` | Messages you sent from the WhatsApp Business app ([coexistence](/whatsapp-api/account/coexistence) numbers) |
+| `history`, `smb_app_state_sync` | Chat history and contacts shared when a WhatsApp Business app number connects |
+| `user_id_update` | A user's business-scoped ID changed, for example after a phone number change |
+| `user_preferences` | A user stopped or resumed marketing messages from you |
+| Group fields | Group created, participants changed, join requests. See [Groups](/whatsapp-api/messaging/groups) |
+
+## Account-level events
+
+Some events concern the whole WhatsApp Business Account, so they have no `phone_number_id`. They go to every number of that account that has a webhook URL, **once per distinct URL**.
+
+| `field` | When |
+| --- | --- |
+| `message_template_status_update` | A template was approved, rejected, paused, disabled or reinstated |
+| `message_template_quality_update` | A template's [quality](/whatsapp-api/templates/overview#template-quality) changed |
+| `message_template_components_update` | A template's content was edited |
+| `template_category_update` | Meta changed a template's category |
+| `phone_number_quality_update` | A number's [quality rating](/whatsapp-api/account/quality-rating) or messaging limit changed |
+| `phone_number_name_update` | A [display name](/whatsapp-api/account/display-names) review finished |
+| `account_update` | Account restricted, banned, reinstated, verified, and similar. See [Account status](/whatsapp-api/account/account-status) |
+| `business_capability_update` | The account's [messaging limits](/whatsapp-api/account/messaging-limits) changed |
+| `account_review_update` | The account's review finished |
+| `account_alerts` | Alerts Meta raises for the account |
+| `security` | Security changes, such as two-step verification being turned off |
+
+### Template status
+
+```json
+{
+  "field": "message_template_status_update",
+  "value": {
+    "event": "REJECTED",
+    "message_template_id": 1689556908129832,
+    "message_template_name": "order_shipped",
+    "message_template_language": "ar",
+    "reason": "INVALID_FORMAT"
+  }
+}
+```
+
+`event` is `APPROVED`, `REJECTED`, `PAUSED`, `DISABLED`, `FLAGGED`, `REINSTATED`, `PENDING_DELETION` and others. `reason` explains rejections, for example `INVALID_FORMAT`, `TAG_CONTENT_MISMATCH`, `ABUSIVE_CONTENT` or `SCAM`.
+
+### Template quality
+
+```json
+{
+  "field": "message_template_quality_update",
+  "value": {
+    "previous_quality_score": "GREEN",
+    "new_quality_score": "YELLOW",
+    "message_template_id": 1689556908129832,
+    "message_template_name": "spring_sale",
+    "message_template_language": "ar"
+  }
+}
+```
+
+### Template category
+
+```json
+{
+  "field": "template_category_update",
+  "value": {
+    "message_template_id": 1689556908129832,
+    "message_template_name": "order_shipped",
+    "message_template_language": "ar",
+    "previous_category": "UTILITY",
+    "new_category": "MARKETING"
+  }
+}
+```
+
+### Number quality
+
+```json
+{
+  "field": "phone_number_quality_update",
+  "value": {
+    "display_phone_number": "15550783881",
+    "event": "DOWNGRADE",
+    "current_limit": "TIER_2K"
+  }
+}
+```
+
+`event` is `UPGRADE`, `DOWNGRADE`, `FLAGGED` or `UNFLAGGED`.
+
+### Account update
+
+```json
+{
+  "field": "account_update",
+  "value": {
+    "phone_number": "15550783881",
+    "event": "ACCOUNT_RESTRICTION",
+    "restriction_info": [{ "restriction_type": "RESTRICTED_BIZ_INITIATED_MESSAGING", "expiration": 1732521600 }]
+  }
+}
+```
+
+## Handle events reliably
+
+- Answer `2xx` immediately, then process the event in the background.
+- Deduplicate on `X-Karzoun-Event-Id`. A retried or resent event keeps the same ID.
+- Events can arrive out of order. Order by the `timestamp` inside the event, not by arrival time.
+- Ignore fields and types you don't know yet. WhatsApp adds new ones regularly.
+- Expect about 3 status events per message you send, plus your incoming messages.

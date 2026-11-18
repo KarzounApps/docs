@@ -1,0 +1,6198 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Karzoun WhatsApp API",
+    "version": "1.0.0",
+    "description": "The Karzoun WhatsApp API, built on the WhatsApp Business Platform. One API key per phone number; endpoints never take a phone number ID or account ID."
+  },
+  "servers": [
+    {
+      "url": "https://waba.karzoun.chat"
+    }
+  ],
+  "security": [
+    {
+      "KarzounApiKey": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Messages"
+    },
+    {
+      "name": "Media"
+    },
+    {
+      "name": "Templates"
+    },
+    {
+      "name": "Flows"
+    },
+    {
+      "name": "Groups"
+    },
+    {
+      "name": "Calling"
+    },
+    {
+      "name": "Number settings"
+    },
+    {
+      "name": "Usernames"
+    },
+    {
+      "name": "Commerce"
+    },
+    {
+      "name": "Webhooks"
+    }
+  ],
+  "paths": {
+    "/messages": {
+      "post": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Send a message",
+        "description": "Send any WhatsApp message type, mark a message as read, or show a typing indicator. Billable sends reserve their cost from the wallet first. Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "send_a_message",
+        "responses": {
+          "200": {
+            "description": "Message accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                },
+                "examples": {
+                  "sent": {
+                    "summary": "Accepted",
+                    "value": {
+                      "messaging_product": "whatsapp",
+                      "contacts": [
+                        {
+                          "input": "966500000000",
+                          "wa_id": "966500000000"
+                        }
+                      ],
+                      "messages": [
+                        {
+                          "id": "wamid.HBgMOTY2NTAwMDAwMDAwFQIAERgS..."
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /messages",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "402 Wallet can't cover this send",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Wallet can cover 120 cents, 300 cents are already held, this send needs 45",
+                    "type": "Karzoun",
+                    "code": 402
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Message"
+              },
+              "examples": {
+                "template": {
+                  "summary": "Template",
+                  "value": {
+                    "messaging_product": "whatsapp",
+                    "to": "966500000000",
+                    "type": "template",
+                    "template": {
+                      "name": "hello_world",
+                      "language": {
+                        "code": "en_US"
+                      }
+                    }
+                  }
+                },
+                "text": {
+                  "summary": "Text",
+                  "value": {
+                    "messaging_product": "whatsapp",
+                    "to": "966500000000",
+                    "type": "text",
+                    "text": {
+                      "body": "Your order #1042 is on its way."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST https://waba.karzoun.chat/messages \\\n  -H 'Content-Type: application/json' \\\n  -H 'Karzoun-API-Key: YOUR_API_KEY' \\\n  -d '{\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"966500000000\",\n  \"type\": \"template\",\n  \"template\": {\n    \"name\": \"hello_world\",\n    \"language\": {\n      \"code\": \"en_US\"\n    }\n  }\n}'"
+          }
+        ]
+      }
+    },
+    "/marketing_messages": {
+      "post": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Send a marketing message",
+        "description": "Send a marketing template through the Marketing Messages API. Billable. Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "send_a_marketing_message",
+        "responses": {
+          "200": {
+            "description": "Message accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                },
+                "examples": {
+                  "sent": {
+                    "summary": "Accepted",
+                    "value": {
+                      "messaging_product": "whatsapp",
+                      "contacts": [
+                        {
+                          "input": "966500000000",
+                          "wa_id": "966500000000"
+                        }
+                      ],
+                      "messages": [
+                        {
+                          "id": "wamid.HBgMOTY2NTAwMDAwMDAwFQIAERgS..."
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /marketing_messages",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "402 Wallet can't cover this send",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Wallet can cover 120 cents, 300 cents are already held, this send needs 45",
+                    "type": "Karzoun",
+                    "code": 402
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Message"
+              },
+              "examples": {
+                "template": {
+                  "summary": "Template",
+                  "value": {
+                    "messaging_product": "whatsapp",
+                    "to": "966500000000",
+                    "type": "template",
+                    "template": {
+                      "name": "hello_world",
+                      "language": {
+                        "code": "en_US"
+                      }
+                    }
+                  }
+                },
+                "text": {
+                  "summary": "Text",
+                  "value": {
+                    "messaging_product": "whatsapp",
+                    "to": "966500000000",
+                    "type": "text",
+                    "text": {
+                      "body": "Your order #1042 is on its way."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST https://waba.karzoun.chat/marketing_messages \\\n  -H 'Content-Type: application/json' \\\n  -H 'Karzoun-API-Key: YOUR_API_KEY' \\\n  -d '{\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"966500000000\",\n  \"type\": \"template\",\n  \"template\": {\n    \"name\": \"hello_world\",\n    \"language\": {\n      \"code\": \"en_US\"\n    }\n  }\n}'"
+          }
+        ]
+      }
+    },
+    "/media": {
+      "post": {
+        "tags": [
+          "Media"
+        ],
+        "summary": "Upload media",
+        "description": "Upload a file as `multipart/form-data` (up to 100 MB). Returns a media ID valid for 30 days.",
+        "operationId": "upload_media",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /media",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messaging_product": {
+                    "type": "string",
+                    "example": "whatsapp"
+                  },
+                  "type": {
+                    "type": "string",
+                    "example": "image/jpeg"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{mediaId}": {
+      "get": {
+        "tags": [
+          "Media"
+        ],
+        "summary": "Retrieve media",
+        "description": "Media metadata. `url` is a Karzoun download URL that works with your API key.",
+        "operationId": "retrieve_media",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /{mediaId}",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "mediaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Media ID from an upload or an incoming message."
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Media"
+        ],
+        "summary": "Delete media",
+        "description": "Delete an uploaded file.",
+        "operationId": "delete_media",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path DELETE /{mediaId}",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "mediaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Media ID from an upload or an incoming message."
+          }
+        ]
+      }
+    },
+    "/{mediaId}/download": {
+      "get": {
+        "tags": [
+          "Media"
+        ],
+        "summary": "Download media",
+        "description": "Stream the file with its original `Content-Type`.",
+        "operationId": "download_media",
+        "responses": {
+          "200": {
+            "description": "The file.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /{mediaId}/download",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "mediaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Media ID from an upload or an incoming message."
+          }
+        ]
+      }
+    },
+    "/uploads": {
+      "post": {
+        "tags": [
+          "Media"
+        ],
+        "summary": "Start a resumable upload",
+        "description": "Start an upload session for a template sample. Query: `file_name`, `file_length`, `file_type`. Returns `{ \"id\": \"upload:…\" }`.",
+        "operationId": "start_a_resumable_upload",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /uploads",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "file_name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "file_length",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "file_type",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/upload:{uploadId}": {
+      "post": {
+        "tags": [
+          "Media"
+        ],
+        "summary": "Upload file bytes",
+        "description": "Send the raw file to the session (not multipart) with header `file_offset`. Returns `{ \"h\": \"…\" }` for `example.header_handle`. Keep the `sig` query parameter from the session ID.",
+        "operationId": "upload_file_bytes",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /upload:{uploadId}",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "uploadId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The part after `upload:` in the session ID."
+          },
+          {
+            "name": "file_offset",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "0"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/octet-stream": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Media"
+        ],
+        "summary": "Read upload progress",
+        "description": "Current `file_offset` of an interrupted upload.",
+        "operationId": "read_upload_progress",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /upload:{uploadId}",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "uploadId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The part after `upload:` in the session ID."
+          }
+        ]
+      }
+    },
+    "/message_templates": {
+      "get": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "List templates",
+        "description": "Supports `fields`, `limit`, `status`, `name` and `after`.",
+        "operationId": "list_templates",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /message_templates",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Create a template",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "create_a_template",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /message_templates",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Delete a template by name",
+        "description": "Deletes every language of the template. Query: `name`.",
+        "operationId": "delete_a_template_by_name",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path DELETE /message_templates",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/message_templates/{templateId}": {
+      "get": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Get a template",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "get_a_template",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /message_templates/{templateId}",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "templateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Template ID."
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Edit a template",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "edit_a_template",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /message_templates/{templateId}",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "templateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Template ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Delete a template",
+        "description": "Deletes one template by ID. Query: `name` (required by Meta).",
+        "operationId": "delete_a_template",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path DELETE /message_templates/{templateId}",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "templateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Template ID."
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/message_template_library": {
+      "get": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Browse the template library",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "browse_the_template_library",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /message_template_library",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/template_analytics": {
+      "get": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Get template analytics",
+        "description": "Daily sent, delivered, read, clicked and cost metrics per template. `start` and `end` are Unix timestamps; `granularity` is `DAILY`. Optional: `template_ids` and `metric_types` as JSON arrays.",
+        "operationId": "get_template_analytics",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /template_analytics",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "granularity",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "template_ids",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "metric_types",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "use_waba_timezone",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Enable template analytics",
+        "description": "Turns template analytics on for this WhatsApp Business Account. Needed once before `GET /template_analytics` returns data.",
+        "operationId": "enable_template_analytics",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /template_analytics",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/flows": {
+      "get": {
+        "tags": [
+          "Flows"
+        ],
+        "summary": "List flows",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "list_flows",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /flows",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Flows"
+        ],
+        "summary": "Create a flow",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "create_a_flow",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /flows",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/flows/{flowId}": {
+      "get": {
+        "tags": [
+          "Flows"
+        ],
+        "summary": "Get a flow",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "get_a_flow",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /flows/{flowId}",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "flowId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Flow ID."
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Flows"
+        ],
+        "summary": "Update a flow",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "update_a_flow",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /flows/{flowId}",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "flowId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Flow ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Flows"
+        ],
+        "summary": "Delete a draft flow",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "delete_a_draft_flow",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path DELETE /flows/{flowId}",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "flowId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Flow ID."
+          }
+        ]
+      }
+    },
+    "/flows/{flowId}/assets": {
+      "get": {
+        "tags": [
+          "Flows"
+        ],
+        "summary": "List flow assets",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "list_flow_assets",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /flows/{flowId}/assets",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "flowId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Flow ID."
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Flows"
+        ],
+        "summary": "Upload Flow JSON",
+        "description": "Send `multipart/form-data` with `name`, `asset_type=FLOW_JSON` and `file`.",
+        "operationId": "upload_flow_json",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /flows/{flowId}/assets",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "flowId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Flow ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messaging_product": {
+                    "type": "string",
+                    "example": "whatsapp"
+                  },
+                  "type": {
+                    "type": "string",
+                    "example": "image/jpeg"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/flows/{flowId}/publish": {
+      "post": {
+        "tags": [
+          "Flows"
+        ],
+        "summary": "Publish a flow",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "publish_a_flow",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /flows/{flowId}/publish",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "flowId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Flow ID."
+          }
+        ]
+      }
+    },
+    "/flows/{flowId}/deprecate": {
+      "post": {
+        "tags": [
+          "Flows"
+        ],
+        "summary": "Deprecate a flow",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "deprecate_a_flow",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /flows/{flowId}/deprecate",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "flowId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Flow ID."
+          }
+        ]
+      }
+    },
+    "/groups": {
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "List groups",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "list_groups",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /groups",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Create a group",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "create_a_group",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /groups",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/groups/{groupId}": {
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Get a group",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "get_a_group",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /groups/{groupId}",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Group ID."
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Update a group",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "update_a_group",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /groups/{groupId}",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Group ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Delete a group",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "delete_a_group",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path DELETE /groups/{groupId}",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Group ID."
+          }
+        ]
+      }
+    },
+    "/groups/{groupId}/invite_link": {
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Get the invite link",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "get_the_invite_link",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /groups/{groupId}/invite_link",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Group ID."
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Reset the invite link",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "reset_the_invite_link",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /groups/{groupId}/invite_link",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Group ID."
+          }
+        ]
+      }
+    },
+    "/groups/{groupId}/participants": {
+      "delete": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Remove participants",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "remove_participants",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path DELETE /groups/{groupId}/participants",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Group ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/groups/{groupId}/join_requests": {
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "List join requests",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "list_join_requests",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /groups/{groupId}/join_requests",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Group ID."
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Approve join requests",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "approve_join_requests",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /groups/{groupId}/join_requests",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Group ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Reject join requests",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "reject_join_requests",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path DELETE /groups/{groupId}/join_requests",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Group ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/calling/calls": {
+      "post": {
+        "tags": [
+          "Calling"
+        ],
+        "summary": "Manage a call",
+        "description": "Start, pre-accept, accept, reject or end a call. Billable. Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "manage_a_call",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /calling/calls",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "402 Wallet can't cover this send",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Wallet can cover 120 cents, 300 cents are already held, this send needs 45",
+                    "type": "Karzoun",
+                    "code": 402
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/calling/settings": {
+      "get": {
+        "tags": [
+          "Calling"
+        ],
+        "summary": "Get calling settings",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "get_calling_settings",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /calling/settings",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Calling"
+        ],
+        "summary": "Update calling settings",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "update_calling_settings",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /calling/settings",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/calling/permissions/{waId}": {
+      "get": {
+        "tags": [
+          "Calling"
+        ],
+        "summary": "Get call permission",
+        "description": "Whether you may call this WhatsApp user.",
+        "operationId": "get_call_permission",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /calling/permissions/{waId}",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "waId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "WhatsApp ID (phone number) of the user."
+          }
+        ]
+      }
+    },
+    "/health_status": {
+      "get": {
+        "tags": [
+          "Number settings"
+        ],
+        "summary": "Get health status",
+        "description": "Whether this number and its account can send messages.",
+        "operationId": "get_health_status",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /health_status",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/whatsapp_business_profile": {
+      "get": {
+        "tags": [
+          "Number settings"
+        ],
+        "summary": "Get business profile",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "get_business_profile",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /whatsapp_business_profile",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Number settings"
+        ],
+        "summary": "Update business profile",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "update_business_profile",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /whatsapp_business_profile",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/block_users": {
+      "get": {
+        "tags": [
+          "Number settings"
+        ],
+        "summary": "List blocked users",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "list_blocked_users",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /block_users",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Number settings"
+        ],
+        "summary": "Block users",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "block_users",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /block_users",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Number settings"
+        ],
+        "summary": "Unblock users",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "unblock_users",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path DELETE /block_users",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/conversational_automation": {
+      "get": {
+        "tags": [
+          "Number settings"
+        ],
+        "summary": "Get conversational components",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "get_conversational_components",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /conversational_automation",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Number settings"
+        ],
+        "summary": "Set conversational components",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "set_conversational_components",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /conversational_automation",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Number settings"
+        ],
+        "summary": "Remove conversational components",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "remove_conversational_components",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path DELETE /conversational_automation",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/business_compliance_info": {
+      "get": {
+        "tags": [
+          "Number settings"
+        ],
+        "summary": "Get business compliance info",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "get_business_compliance_info",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /business_compliance_info",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Number settings"
+        ],
+        "summary": "Set business compliance info",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "set_business_compliance_info",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /business_compliance_info",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/whatsapp_business_encryption": {
+      "get": {
+        "tags": [
+          "Number settings"
+        ],
+        "summary": "Get encryption public key",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "get_encryption_public_key",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /whatsapp_business_encryption",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Number settings"
+        ],
+        "summary": "Set encryption public key",
+        "description": "Fields follow the standard WhatsApp Cloud API.",
+        "operationId": "set_encryption_public_key",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /whatsapp_business_encryption",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/username": {
+      "get": {
+        "tags": [
+          "Usernames"
+        ],
+        "summary": "Get the business username",
+        "description": "Current username and its `status`. `username` is omitted when none is set.",
+        "operationId": "get_the_business_username",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /username",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Usernames"
+        ],
+        "summary": "Claim or change the business username",
+        "description": "Body: `{ \"username\": \"acme\" }`. Returns `{ \"status\": \"…\" }`.",
+        "operationId": "claim_or_change_the_business_username",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /username",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "username"
+                ],
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "claim": {
+                  "summary": "Claim a username",
+                  "value": {
+                    "username": "acme"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST https://waba.karzoun.chat/username \\\n  -H 'Content-Type: application/json' \\\n  -H 'Karzoun-API-Key: YOUR_API_KEY' \\\n  -d '{\n  \"username\": \"acme\"\n}'"
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Usernames"
+        ],
+        "summary": "Delete the business username",
+        "description": "Removes the username from this number.",
+        "operationId": "delete_the_business_username",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path DELETE /username",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/username_suggestions": {
+      "get": {
+        "tags": [
+          "Usernames"
+        ],
+        "summary": "List reserved username suggestions",
+        "description": "Usernames WhatsApp reserved for this business.",
+        "operationId": "list_reserved_username_suggestions",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /username_suggestions",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/contact_book": {
+      "delete": {
+        "tags": [
+          "Usernames"
+        ],
+        "summary": "Delete a contact book entry",
+        "description": "Removes the phone ↔ BSUID entry for one user. Query: `bsuid` and `messaging_product=whatsapp`. Parent BSUIDs aren't supported.",
+        "operationId": "delete_a_contact_book_entry",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path DELETE /contact_book",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "bsuid",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "messaging_product",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/whatsapp_commerce_settings": {
+      "get": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "Get commerce settings",
+        "description": "Whether the cart and the catalog are shown for this number.",
+        "operationId": "get_commerce_settings",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /whatsapp_commerce_settings",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "Update commerce settings",
+        "description": "Query: `is_cart_enabled` and/or `is_catalog_visible` (`true` or `false`).",
+        "operationId": "update_commerce_settings",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /whatsapp_commerce_settings",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "is_cart_enabled",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "is_catalog_visible",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/product_catalogs": {
+      "get": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "List catalogs",
+        "description": "Catalogs connected to this WhatsApp Business Account. Supports `fields`, `limit`, `after`.",
+        "operationId": "list_catalogs",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /product_catalogs",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/product_catalogs/{catalogId}/products": {
+      "get": {
+        "tags": [
+          "Commerce"
+        ],
+        "summary": "List catalog products",
+        "description": "Products in a catalog connected to this account. Supports `fields`, `limit`, `after`, `filter`.",
+        "operationId": "list_catalog_products",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /product_catalogs/{catalogId}/products",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "catalogId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of a catalog connected to this WhatsApp Business Account."
+          }
+        ]
+      }
+    },
+    "/webhook": {
+      "get": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Get the webhook",
+        "description": "This number's webhook URL and masked custom headers.",
+        "operationId": "get_the_webhook",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookView"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /webhook",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Set the webhook",
+        "description": "Set or clear (empty `url`) this number's webhook. The URL must accept a signed test event (2xx within 5 seconds). Omit `headers` to keep them; `[]` removes them.",
+        "operationId": "set_the_webhook",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookView"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /webhook",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "400 Invalid webhook",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Your endpoint did not accept the test event (HTTP 500). It must answer 2xx within 5 seconds.",
+                    "type": "Karzoun",
+                    "code": 400
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookInput"
+              },
+              "examples": {
+                "set": {
+                  "summary": "Set URL and header",
+                  "value": {
+                    "url": "https://example.com/whatsapp/webhook",
+                    "headers": [
+                      {
+                        "name": "Authorization",
+                        "value": "Bearer my-gateway-token"
+                      }
+                    ]
+                  }
+                },
+                "clear": {
+                  "summary": "Stop forwarding",
+                  "value": {
+                    "url": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST https://waba.karzoun.chat/webhook \\\n  -H 'Content-Type: application/json' \\\n  -H 'Karzoun-API-Key: YOUR_API_KEY' \\\n  -d '{\n  \"url\": \"https://example.com/whatsapp/webhook\",\n  \"headers\": [\n    {\n      \"name\": \"Authorization\",\n      \"value\": \"Bearer my-gateway-token\"\n    }\n  ]\n}'"
+          }
+        ]
+      }
+    },
+    "/webhook/test": {
+      "post": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Send a test event",
+        "description": "Send a signed test event to this number's webhook URL.",
+        "operationId": "send_a_test_event",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookTestResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /webhook/test",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/waba_webhook": {
+      "get": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "List account webhooks",
+        "description": "Webhook URLs of every number in this WhatsApp Business Account.",
+        "operationId": "list_account_webhooks",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WabaWebhookList"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path GET /waba_webhook",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Set the account webhook",
+        "description": "Set one URL on the account's numbers. `override_all: false` only fills numbers without a URL.",
+        "operationId": "set_the_account_webhook",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WabaWebhookSetResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "401 Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Invalid API key",
+                    "type": "Karzoun",
+                    "code": 401
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "404 Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "No such path POST /waba_webhook",
+                    "type": "Karzoun",
+                    "code": 404
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "400 Invalid webhook",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Your endpoint did not accept the test event (HTTP 500). It must answer 2xx within 5 seconds.",
+                    "type": "Karzoun",
+                    "code": 400
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "502 WhatsApp unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KarzounError"
+                },
+                "example": {
+                  "error": {
+                    "message": "Meta request failed",
+                    "type": "Karzoun",
+                    "code": 502
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/WebhookInput"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "override_all": {
+                        "type": "boolean",
+                        "default": false
+                      }
+                    }
+                  }
+                ]
+              },
+              "examples": {
+                "all": {
+                  "summary": "Every number",
+                  "value": {
+                    "url": "https://example.com/whatsapp/webhook",
+                    "override_all": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST https://waba.karzoun.chat/waba_webhook \\\n  -H 'Content-Type: application/json' \\\n  -H 'Karzoun-API-Key: YOUR_API_KEY' \\\n  -d '{\n  \"url\": \"https://example.com/whatsapp/webhook\",\n  \"override_all\": true\n}'"
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "KarzounApiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Karzoun-API-Key",
+        "description": "Per-number key from the number's API tab."
+      }
+    },
+    "schemas": {
+      "KarzounError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "const": "Karzoun"
+              },
+              "code": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "MetaResponse": {
+        "type": "object",
+        "additionalProperties": true,
+        "description": "Response body in the standard WhatsApp Cloud API format."
+      },
+      "Message": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "messaging_product"
+        ],
+        "properties": {
+          "messaging_product": {
+            "type": "string",
+            "const": "whatsapp"
+          },
+          "to": {
+            "type": "string",
+            "description": "Phone number, digits only."
+          },
+          "recipient": {
+            "type": "string",
+            "description": "Business-scoped user ID, instead of `to`."
+          },
+          "type": {
+            "type": "string",
+            "description": "text, image, audio, video, document, sticker, location, contacts, interactive, template, reaction…"
+          },
+          "category": {
+            "type": "string",
+            "description": "`utility` for Direct Send."
+          }
+        }
+      },
+      "WebhookHeader": {
+        "type": "object",
+        "required": [
+          "name",
+          "value"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "WebhookInput": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "https URL on port 443. Empty string clears it."
+          },
+          "headers": {
+            "type": "array",
+            "maxItems": 5,
+            "items": {
+              "$ref": "#/components/schemas/WebhookHeader"
+            }
+          }
+        }
+      },
+      "WebhookView": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "headers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookHeader"
+            },
+            "description": "Values are masked."
+          }
+        }
+      },
+      "WebhookTestResult": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "status_code": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "latency_ms": {
+            "type": "integer"
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "WabaWebhookList": {
+        "type": "object",
+        "properties": {
+          "waba_id": {
+            "type": "string"
+          },
+          "phone_numbers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "phone_number_id": {
+                  "type": "string"
+                },
+                "display_phone_number": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "url": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "WabaWebhookSetResult": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "updated_numbers": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}

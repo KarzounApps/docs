@@ -1,0 +1,42 @@
+---
+title: "Keep your account healthy"
+description: "Monitor quality, limits and account status, and react before WhatsApp restricts your number."
+---
+
+A healthy account sends without surprises: templates stay approved, limits grow and nothing gets blocked. These are the signals to watch and what to do about each.
+
+## What to watch
+
+| Signal | Where | Act when |
+| --- | --- | --- |
+| Number quality | **Profile** tab, `phone_number_quality_update` | It turns yellow or red |
+| Template quality | **Templates** tab, `message_template_quality_update` | A template turns yellow or red |
+| Template status | `message_template_status_update` | A template is paused or rejected |
+| Account status | `account_update` | Any warning or restriction |
+| Messaging limit | **Profile** tab, `business_capability_update` | You're close to it before a campaign |
+| Webhook health | **API** tab, **View deliveries** | Events are retrying or failing |
+| Wallet | **Billing** | The balance won't cover the next few days |
+
+Route these webhook events to an alert channel your team reads, not only to logs.
+
+## When quality drops
+
+1. Find the cause. Check which templates were sent most in the last 7 days and their read rates on the **Insights** tab.
+2. Pause or fix the weak templates. Make the sender and value obvious in the first line.
+3. Narrow the audience to people who engaged recently.
+4. Slow down. Fewer, better-targeted messages restore quality faster than anything else.
+
+See [Quality rating](/whatsapp-api/account/quality-rating) and [Template quality](/whatsapp-api/templates/overview#template-quality).
+
+## When you get a policy warning
+
+Act the same day. Read the violated policy in the `account_update` event or Meta's email, remove the content that caused it, and appeal within 90 days if you think it's wrong. See [Account status](/whatsapp-api/account/account-status).
+
+## Habits that keep accounts healthy
+
+- Message only people who [opted in](/whatsapp-api/opt-in), and respect opt-outs at once.
+- Prefer utility over marketing where it fits, and keep marketing relevant.
+- Keep templates few and good. Delete ones you don't use.
+- Answer users quickly inside the [customer service window](/whatsapp-api/customer-service-window).
+- Keep your business profile, website and portfolio details accurate.
+- Verify your business. It raises your limit and makes reviews smoother.

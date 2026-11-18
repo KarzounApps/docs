@@ -1,0 +1,55 @@
+---
+title: "Business portfolio and verification"
+description: "Set up your Meta Business Portfolio and verify your business to unlock higher limits and features."
+---
+
+Every WhatsApp business number lives in a **Meta Business Portfolio** (formerly Business Manager). The portfolio holds your WhatsApp accounts, phone numbers and team access, and it's what Meta verifies.
+
+## Business portfolio
+
+You create or pick a portfolio while you [connect your number](/whatsapp-api/dashboard/connect-a-number). Before you start, complete **Business Info** in Meta Business Suite (**Settings → Business info**):
+
+| Field | Why it matters |
+| --- | --- |
+| Legal business name | Must match your registration documents. Display names are reviewed against it |
+| Address and phone | Must match what's on your website |
+| Website | Live, on `https`, describing your business. Meta reviews it |
+
+An incomplete Business Info section is a common reason for an account to be restricted right after signup.
+
+Your **Business Portfolio ID** is in Meta Business Suite under **Settings → Business info**. Support teams ask for it when checking an account.
+
+<Warning>
+  The portfolio must belong to the business that sends the messages. Don't add people from outside your company as admins; it can get the portfolio restricted.
+</Warning>
+
+## Why verify
+
+Verification proves to Meta that your business is real and registered. It isn't required to start, but you need it to grow:
+
+- Raise your [messaging limit](/whatsapp-api/account/messaging-limits) to 2,000 and beyond.
+- Have your [display name](/whatsapp-api/account/display-names) shown in chats.
+- Register more [phone numbers](/whatsapp-api/account/phone-numbers).
+- Apply for an [Official Business Account](/whatsapp-api/account/official-business-account).
+
+## Ways to verify
+
+| Path | How | Best for |
+| --- | --- | --- |
+| **Through Karzoun (partner-led)** | Open **Business Verification** in your Karzoun workspace and submit your documents. Karzoun, as a Meta Business Partner, verifies on Meta's behalf | Fastest path, full capabilities quickly |
+| **In Meta Business Suite** | **Settings → Security Center → Start verification**, then upload documents | Businesses that prefer to handle it with Meta directly |
+| **Meta Verified for Business** | Paid Meta subscription in Business Suite | Brands that also want a verified badge and impersonation protection across Facebook, Instagram and WhatsApp |
+
+### Documents
+
+Meta accepts official documents that prove the business is registered, and the list differs per country. Typical examples: commercial registration certificate, tax or VAT registration, articles of incorporation, a business bank statement or a utility bill in the business's name. The legal name and address on the documents must match your Business Info.
+
+## Meta Verified for Business
+
+A paid Meta subscription for businesses with a strong online presence. Plans add a verified badge, impersonation protection, priority support and more. It's available for Cloud API numbers and for [coexistence](/whatsapp-api/account/coexistence) numbers, which can't get an Official Business Account. Subscribe in Meta Business Suite once you meet Meta's eligibility rules (age of majority, supported country, full control of the portfolio, minimum activity).
+
+## After verification
+
+- Your messaging limit can move up through Meta's [scaling path](/whatsapp-api/account/messaging-limits#raise-your-limit).
+- Meta re-evaluates your phone number cap and display name automatically.
+- A `business_capability_update` event arrives on your [webhook](/whatsapp-api/webhooks/events) when limits change.

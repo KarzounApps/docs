@@ -1,0 +1,57 @@
+---
+title: "إعدادات الرقم"
+description: "الملف التجاري، وحالة الرقم، والأرقام المحظورة، وباقي إعدادات رقم واتساب."
+---
+
+| الإعداد | الطلب |
+| --- | --- |
+| الملف التجاري (نبذة، عنوان، بريد، مواقع، صورة) | `GET` / `POST /whatsapp_business_profile` |
+| حالة الرقم (هل يستطيع الإرسال؟) | `GET /health_status` |
+| الأرقام المحظورة | `GET` / `POST` / `DELETE /block_users` |
+| عناصر المحادثة (Ice breakers، الأوامر، رسالة الترحيب) | `GET` / `POST` / `DELETE /conversational_automation` |
+| بيانات الامتثال التجاري (مطلوبة في بعض الدول) | `GET` / `POST /business_compliance_info` |
+| المفتاح العام للتشفير (للـ Flows) | `GET` / `POST /whatsapp_business_encryption` |
+
+الحقول بصيغة WhatsApp Cloud API القياسية.
+
+## حالة الرقم
+
+```bash
+curl https://waba.karzoun.chat/health_status \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+```json
+{
+  "health_status": {
+    "can_send_message": "AVAILABLE",
+    "entities": [
+      { "entity_type": "PHONE_NUMBER", "id": "106540352242922", "can_send_message": "AVAILABLE" },
+      { "entity_type": "WABA", "id": "102290129340398", "can_send_message": "AVAILABLE" }
+    ]
+  },
+  "id": "106540352242922"
+}
+```
+
+إذا ظهرت `LIMITED` أو `BLOCKED` تجد معها `errors` توضّح السبب (مثلاً مشكلة دفع أو سياسة أو توثيق).
+
+## تعديل الملف التجاري
+
+```bash
+curl -X POST https://waba.karzoun.chat/whatsapp_business_profile \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "messaging_product": "whatsapp", "about": "Open daily 9:00–22:00", "websites": ["https://example.com"] }'
+```
+
+## حظر رقم
+
+```bash
+curl -X POST https://waba.karzoun.chat/block_users \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "messaging_product": "whatsapp", "block_users": [{ "user": "966500000000" }] }'
+```
+
+تقييم الجودة، وحد المراسلة، وحالة اسم العرض تجدها في تبويب **الملف الشخصي** للرقم داخل حسابك.

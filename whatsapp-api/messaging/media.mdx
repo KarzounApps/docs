@@ -1,0 +1,100 @@
+---
+title: "Media"
+description: "Upload, retrieve, download and delete WhatsApp media, and upload samples for media templates."
+---
+
+## Upload
+
+Upload a file once and reuse its ID in messages for 30 days.
+
+```bash
+curl -X POST https://waba.karzoun.chat/media \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -F "messaging_product=whatsapp" \
+  -F "type=image/jpeg" \
+  -F "file=@receipt.jpg"
+```
+
+```json
+{ "id": "1037543291543636" }
+```
+
+Send `multipart/form-data`. Files up to 100 MB are accepted; each media type has its own WhatsApp limit (for example 5 MB for images, 16 MB for video, 100 MB for documents).
+
+## Retrieve
+
+```bash
+curl https://waba.karzoun.chat/1037543291543636 \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+```json
+{
+  "messaging_product": "whatsapp",
+  "id": "1037543291543636",
+  "url": "https://waba.karzoun.chat/1037543291543636/download",
+  "mime_type": "image/jpeg",
+  "sha256": "e7b2…",
+  "file_size": 48213
+}
+```
+
+`url` downloads the file with your API key. See [Download](#download).
+
+## Download
+
+```bash
+curl https://waba.karzoun.chat/1037543291543636/download \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -o receipt.jpg
+```
+
+The response is the file, with the original `Content-Type` and `Content-Length`.
+
+<Tip>
+  Incoming images, documents, audio and video arrive on your webhook as a media ID only. Download them with this endpoint. See [Receiving media](/whatsapp-api/webhooks/receiving-media).
+</Tip>
+
+## Delete
+
+```bash
+curl -X DELETE https://waba.karzoun.chat/1037543291543636 \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+## Upload a template sample
+
+Templates with an image, video or document header need a sample file when you create them. Meta takes it through a two-step resumable upload and returns a handle (`h`) for `example.header_handle`.
+
+<Steps>
+  <Step title="Start an upload session">
+    ```bash
+    curl -X POST "https://waba.karzoun.chat/uploads?file_name=banner.jpg&file_length=48213&file_type=image/jpeg" \
+      -H "Karzoun-API-Key: YOUR_API_KEY"
+    ```
+
+    ```json
+    { "id": "upload:MTphdHRhY2htZW50OjE4…?sig=ARZ…" }
+    ```
+  </Step>
+  <Step title="Send the file bytes">
+    Use the returned ID as the path, query string included. Send the raw file, not multipart.
+
+    ```bash
+    curl -X POST "https://waba.karzoun.chat/upload:MTphdHRhY2htZW50OjE4…?sig=ARZ…" \
+      -H "Karzoun-API-Key: YOUR_API_KEY" \
+      -H "file_offset: 0" \
+      -H "Content-Type: image/jpeg" \
+      --data-binary @banner.jpg
+    ```
+
+    ```json
+    { "h": "4::aW1hZ2UvanBlZw==:ARb…" }
+    ```
+
+    To resume an interrupted upload, `GET` the same path to read the current `file_offset`, then send the rest from there.
+  </Step>
+  <Step title="Use the handle in the template">
+    Put `h` in the header component's `example.header_handle` when you [create the template](/whatsapp-api/templates/manage#create).
+  </Step>
+</Steps>

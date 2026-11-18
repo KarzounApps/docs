@@ -1,0 +1,136 @@
+---
+title: "Errors"
+description: "Errors returned by the WhatsApp API, and how to handle them."
+---
+
+The WhatsApp API returns two kinds of errors.
+
+| Source | How to recognize it |
+| --- | --- |
+| **Karzoun** | `error.type` is `"Karzoun"`: authentication, wallet, request format or webhook settings. |
+| **WhatsApp** | Any other body, with WhatsApp's error `code` (for example `131047`). |
+
+```json
+{ "error": { "message": "Invalid API key", "type": "Karzoun", "code": 401 } }
+```
+
+## Karzoun errors
+
+| Status | Message | What to do |
+| --- | --- | --- |
+| `400` | `Upload body was not received. Send multipart/form-data.` | Send `/media` and flow assets as `multipart/form-data`. |
+| `400` | `Upload body was not received. Send the file bytes with its Content-Type.` | Send the raw file to `/upload:{id}`, not multipart. |
+| `400` | Webhook URL or header message | Fix the URL or headers. See [URL rules](/whatsapp-api/webhooks/overview#url-rules). |
+| `400` | `Your endpoint did not accept the test event (…)` | Make your endpoint answer `2xx` within 5 seconds, then save again. |
+| `401` | `Invalid API key` | The key is missing, malformed or revoked. |
+| `402` | `Wallet can cover … cents, … cents are already held, this send needs …` | Add funds. See [Pricing and wallet](/whatsapp-api/pricing-and-wallet). |
+| `404` | `No such path {METHOD} {path}` | The endpoint or method isn't available. Check the [API reference](/whatsapp-api/reference/send-a-message). |
+| `404` | `No such template on this number` (also `flow`, `group`) | The ID belongs to another account. |
+| `415` | `This path accepts JSON bodies` | Send `Content-Type: application/json`. |
+| `502` | `Meta request failed` / `Media download failed` | WhatsApp couldn't be reached. Retry with backoff. |
+| `503` | `Uploads are not configured` | Contact support. |
+
+<Note>
+  A `502` on a billable send keeps the wallet reservation, because the message may have been sent. Check your webhook for its status before resending.
+</Note>
+
+## WhatsApp errors
+
+WhatsApp errors keep WhatsApp's codes, in the response body for synchronous errors and in the `errors` array of `failed` [status events](/whatsapp-api/webhooks/events#failed) for delivery errors.
+
+```json
+{
+  "error": {
+    "message": "(#131047) Re-engagement message",
+    "type": "OAuthException",
+    "code": 131047,
+    "error_data": { "messaging_product": "whatsapp", "details": "Message failed to send because more than 24 hours have passed since the customer last replied to this number." },
+    "fbtrace_id": "AbCdEf123"
+  }
+}
+```
+
+Use `code` in your logic and log `error_data.details` and `fbtrace_id`: support needs them.
+
+### Sending and delivery
+
+| Code | Meaning | What to do |
+| --- | --- | --- |
+| `131026` | Message undeliverable | The number isn't on WhatsApp, the user hasn't accepted WhatsApp's latest terms, or their app is too old. Don't retry; use another channel |
+| `131047` | More than 24 hours since the user's last message | Send a [template](/whatsapp-api/templates/sending) |
+| `131049` | Not delivered to keep the ecosystem healthy | [Per-user marketing limit](/whatsapp-api/templates/sending#per-user-marketing-limits). Wait 24 hours |
+| `131050` | The user stopped marketing messages from you | Don't send them marketing. Utility and service messages still work |
+| `130472` | The user is part of a Meta experiment | Don't retry marketing to this user |
+| `131021` | Recipient is the sender | Use a different recipient |
+| `131051` | Unsupported message type | Check `type` |
+| `131052` | Couldn't download the media the user sent | Ask the user to send it again |
+| `131053` | Couldn't upload the media you sent | Check the [format and size](/whatsapp-api/messaging/media) and that the link is public |
+| `131062` | Authentication template sent to a BSUID | Send it to the phone number |
+| `131061` | Template with max price sent to `/messages` | Send it to [`/marketing_messages`](/whatsapp-api/templates/marketing) |
+| `131070` | Another provider controls this conversation | See [below](#another-provider-controls-the-conversation) |
+| `135000` | Generic user error | Check the request; contact support if it persists |
+
+### Templates
+
+| Code | Meaning | What to do |
+| --- | --- | --- |
+| `132000` | Number of parameters doesn't match the template | Send one parameter per variable |
+| `132001` | Template doesn't exist in this language, or isn't approved | Check `name`, `language.code` and status |
+| `132005` | Text too long after filling variables | Shorten the values |
+| `132007` | Content breaks policy after filling variables | Check the values |
+| `132012` | Parameter format doesn't match | For example, text sent for an image header |
+| `132015` | Template paused for low quality | See [Pausing](/whatsapp-api/templates/overview#pausing) |
+| `132016` | Template disabled | Create a new template |
+| `132068` | Flow is blocked | Fix the flow and publish it again |
+| `132069` | Flow is throttled | Fix the flow's health issues |
+
+### Rate limits
+
+| Code | Meaning | What to do |
+| --- | --- | --- |
+| `130429` | Throughput limit for the number | Retry with exponential backoff |
+| `131056` | Too many messages to the same user in a short time | Slow down for this recipient |
+| `131048` | Spam rate limit: too many messages blocked or reported | Improve quality and slow down. See [Quality rating](/whatsapp-api/account/quality-rating) |
+| `4`, `80007` | Too many API calls for the account | Back off and spread requests out |
+
+### Account and number
+
+| Code | Meaning | What to do |
+| --- | --- | --- |
+| `368` | Temporarily blocked for policy violations | See [Account status](/whatsapp-api/account/account-status) |
+| `130497` | The account can't message users in this country | Check WhatsApp's policy for the country |
+| `131031` | Account locked | See [Business account locked](/whatsapp-api/account/account-status#business-account-locked) |
+| `131037` | Display name needs approval | Wait for the [display name review](/whatsapp-api/account/display-names) |
+| `131042` | Billing problem on the account | Contact Karzoun support |
+| `131057` | Account in maintenance mode | Retry later |
+| `133010` | Number not registered | Reconnect the number in your workspace |
+| `133005`, `133008`, `133009` | Two-step verification PIN wrong, too many attempts, or entered too quickly | See [Two-step verification](/whatsapp-api/account/phone-numbers#two-step-verification) |
+| `133006` | Number needs to be verified again | Reconnect the number |
+| `133015`, `133016` | Too many registration attempts | Wait before trying again |
+
+### Request and server
+
+| Code | Meaning | What to do |
+| --- | --- | --- |
+| `100` | Invalid parameter | Read `error_data.details` |
+| `131008` | Required parameter missing | Add it |
+| `131009` | Parameter value invalid | Check the value's format |
+| `131000` | Something went wrong | Retry; contact support if it persists |
+| `131016`, `133004` | Service temporarily unavailable | Retry with backoff |
+| `1`, `2` | Temporary WhatsApp error | Retry with backoff |
+
+### Another provider controls the conversation
+
+Error `131070`, or no incoming messages although the number is connected, means the number is shared with another provider and that provider still answers conversations. This happens after you add Karzoun to a number that was already used elsewhere.
+
+Fix it in Meta Business Suite: **Settings → WhatsApp accounts →** your account **→ Conversation routing → Manage**, choose **Karzoun** in every dropdown and click **Apply**. Only a Business Portfolio admin can do this.
+
+## Retry guidance
+
+| Status | Retry? |
+| --- | --- |
+| `2xx` | No |
+| `400`, `401`, `404`, `415` | No. Fix the request |
+| `402` | After adding funds |
+| `429`, `130429` | Yes, with exponential backoff |
+| `5xx` | Yes, with backoff. For sends, check the webhook first to avoid duplicates |

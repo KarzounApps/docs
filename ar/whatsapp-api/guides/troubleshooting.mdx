@@ -1,0 +1,84 @@
+---
+title: "حل المشاكل والأسئلة الشائعة"
+description: "حلول لأشهر مشاكل واجهة واتساب، وإجابات للأسئلة المتكررة."
+---
+
+## الرسائل
+
+<AccordionGroup>
+  <Accordion title="رجع معرّف رسالة لكن المستخدم لم يستلمها">
+    معرّف الرسالة يعني أن واتساب قبل الطلب، لا أنه سلّمه. راجع أحداث الحالة على [الـ Webhook](/ar/whatsapp-api/webhooks/events#حالات-الرسائل) لهذا المعرّف. حالة `failed` فيها كود خطأ: راجع [الأخطاء](/ar/whatsapp-api/reference/errors). أسباب شائعة: الرقم ليس على واتساب (`131026`)، أو حد التسويق لكل مستخدم (`131049`)، أو المستخدم أوقف تسويقك (`131050`).
+  </Accordion>
+  <Accordion title="يصلني 131047 عند الرد">
+    مرّت أكثر من 24 ساعة على آخر رسالة من المستخدم، فـ [نافذة خدمة العملاء](/ar/whatsapp-api/customer-service-window) مغلقة. أرسل قالباً.
+  </Accordion>
+  <Accordion title="الرسائل تصل بترتيب خاطئ">
+    واتساب لا يضمن الترتيب. انتظر حالة `delivered` للرسالة الأولى قبل إرسال التالية عندما يكون الترتيب مهماً.
+  </Accordion>
+  <Accordion title="يصلني 402">
+    الرصيد المتاح في محفظتك لا يغطي الإرسال. اشحن المحفظة من **الفوترة**. الحجوزات المفتوحة من الإرسال الأخير تُحسب من الرصيد حتى تُحتسب نهائياً. راجع [التسعير والمحفظة](/ar/whatsapp-api/pricing-and-wallet).
+  </Accordion>
+  <Accordion title="يصلني 130429">
+    ترسل أسرع من إنتاجية الرقم. أعد المحاولة مع exponential backoff ووزّع الإرسال.
+  </Accordion>
+</AccordionGroup>
+
+## الـ Webhooks
+
+<AccordionGroup>
+  <Accordion title="لا تصلني أي أحداث">
+    1. تحقق من **عنوان نقطة الاستقبال** في تبويب **واجهة API** واضغط **إرسال حدث تجريبي**.
+    2. افتح **عرض سجل الإرسال** لترى هل الأحداث قيد إعادة المحاولة أو فاشلة، ورد خادمك.
+    3. إذا كان الرقم مستخدماً مع مزوّد آخر، قد تكون ميتا ما زالت توجّه المحادثات له. راجع [استخدام رقم من مزوّد آخر](/ar/whatsapp-api/account/existing-numbers#توجيه-المحادثات-إلى-كرزون).
+  </Accordion>
+  <Accordion title="الرابط لا يُحفظ">
+    الحفظ يرسل حدثاً تجريبياً. لازم يكون خادمك `https` عاماً ويرد بـ `2xx` خلال 5 ثوانٍ. راجع [الـ Webhooks](/ar/whatsapp-api/webhooks/overview).
+  </Accordion>
+  <Accordion title="يصلني نفس الحدث مرتين">
+    إعادة المحاولة وإعادة الإرسال تحتفظان بنفس `X-Karzoun-Event-Id`. امنع التكرار به.
+  </Accordion>
+  <Accordion title="التحقق من التوقيع يفشل">
+    احسب الـ HMAC على `timestamp.body` باستخدام جسم الطلب الخام قبل تحليل الـ JSON. وبعد تغيير المفتاح مباشرة جرّب أيضاً `X-Karzoun-Signature-256-Previous`. راجع [التحقق من التوقيع](/ar/whatsapp-api/webhooks/signature).
+  </Accordion>
+</AccordionGroup>
+
+## القوالب
+
+<AccordionGroup>
+  <Accordion title="رُفض قالبي">
+    السبب موجود في حدث `message_template_status_update` وفي تبويب **القوالب**. راجع [أسباب الرفض الشائعة](/ar/whatsapp-api/templates/overview#أسباب-الرفض-الشائعة).
+  </Accordion>
+  <Accordion title="ميتا غيّرت قالبي إلى تسويقي">
+    كان فيه محتوى ترويجي. احذفه وأنشئ قالباً خدمياً جديداً، أو أبقه تسويقياً. راجع [القوالب الخدمية](/ar/whatsapp-api/templates/utility).
+  </Accordion>
+  <Accordion title="الإرسال يرجع held_for_quality_assessment">
+    القالب يخضع لـ [التدرج في الإرسال](/ar/whatsapp-api/templates/sending#التدرج-في-الإرسال). الرسائل المحجوزة تُسلَّم أو تُلغى خلال ساعة تقريباً.
+  </Accordion>
+</AccordionGroup>
+
+## الأرقام والحسابات
+
+<AccordionGroup>
+  <Accordion title="هل أقدر أستخدم رقمي على تطبيق واتساب والـ API معاً؟">
+    نعم إذا كان على تطبيق واتساب للأعمال: اربطه عبر [التشغيل المشترك](/ar/whatsapp-api/account/coexistence). رقم واتساب الشخصي لازم يُحذف من التطبيق أولاً.
+  </Accordion>
+  <Accordion title="هل أقدر أنقل رقمي من مزوّد آخر؟">
+    نعم، بدون انقطاع. راجع [استخدام رقم من مزوّد آخر](/ar/whatsapp-api/account/existing-numbers).
+  </Accordion>
+  <Accordion title="كيف أرفع حد المراسلة؟">
+    وثّق نشاطك أو أرسل 2,000 رسالة عالية الجودة خلال 30 يوماً. بعدها ترتفع الحدود تلقائياً. راجع [حدود المراسلة](/ar/whatsapp-api/account/messaging-limits).
+  </Accordion>
+  <Accordion title="كيف أحصل على الشارة الزرقاء؟">
+    قدّم على [الحساب الرسمي](/ar/whatsapp-api/account/official-business-account). القرار لميتا وحدها.
+  </Accordion>
+  <Accordion title="الإرسال يفشل برسالة Business account has been locked">
+    راجع [قفل حساب الأعمال](/ar/whatsapp-api/account/account-status#قفل-حساب-الأعمال).
+  </Accordion>
+  <Accordion title="كم رقماً أقدر أربط؟">
+    كل حافظة أعمال تبدأ برقمين. ترفعها ميتا إلى 20 بعد توثيق النشاط، وأكثر عند الطلب.
+  </Accordion>
+</AccordionGroup>
+
+## ما زلت عالقاً؟
+
+راجع [صحة الخدمة](https://status.karzoun.chat/)، ثم [الحالة والدعم](/ar/whatsapp-api/support) لتعرف بمن تتواصل وماذا ترفق.

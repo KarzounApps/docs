@@ -1,0 +1,45 @@
+---
+title: "Status and support"
+description: "Check service status, tell a Karzoun issue from a WhatsApp one, and reach support with what it needs."
+---
+
+## Check the status first
+
+| Page | Covers |
+| --- | --- |
+| [status.karzoun.chat](https://status.karzoun.chat/) | Karzoun's services, including WhatsApp |
+| [metastatus.com](https://metastatus.com/whatsapp-business-api) | WhatsApp itself: message delivery, Meta's servers, WhatsApp Manager |
+
+If either page shows an incident, follow the updates there. You don't need to open a ticket for a known outage.
+
+## Karzoun or WhatsApp?
+
+| You see | Usually means |
+| --- | --- |
+| An error with `"type": "Karzoun"` | Karzoun: key, wallet, request format or webhook settings. See [Errors](/whatsapp-api/reference/errors#karzoun-errors) |
+| A WhatsApp error `code` (for example `131026`) | WhatsApp accepted the request and answered with a reason. See [WhatsApp errors](/whatsapp-api/reference/errors#whatsapp-errors) |
+| `502 Meta request failed` | WhatsApp couldn't be reached. Retry with backoff and check Meta's status |
+| Events retrying under **View deliveries** | Your endpoint isn't answering `2xx`. See [Delivery and retries](/whatsapp-api/webhooks/delivery) |
+
+## Contact support
+
+| You are | Contact |
+| --- | --- |
+| A developer integrating the API | [developers@karzoun.chat](mailto:developers@karzoun.chat) |
+| A business owner or operator | [Contact us](https://karzoun.chat/contact) |
+| A partner with clients | Your partner contact at Karzoun |
+
+### Include in the first message
+
+- Your workspace domain, for example `yourbrand.karzoun.chat`, and the phone number involved.
+- The request (method and path) and the full response body. For WhatsApp errors, include `fbtrace_id`.
+- The message ID (`wamid…`) or webhook event ID (`X-Karzoun-Event-Id`), if there is one.
+- When it happened, with time zone.
+
+<Warning>
+  Never send your API key, signing secret or passwords. Send the last four characters of a key if support needs to know which one.
+</Warning>
+
+## Before you write
+
+Most questions are answered in [Troubleshooting and FAQ](/whatsapp-api/guides/troubleshooting).

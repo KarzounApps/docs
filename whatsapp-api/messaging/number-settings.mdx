@@ -1,0 +1,57 @@
+---
+title: "Number settings"
+description: "Business profile, health status, blocked users and other settings of your WhatsApp number."
+---
+
+| Setting | Request |
+| --- | --- |
+| Business profile (about, address, email, websites, photo) | `GET` / `POST /whatsapp_business_profile` |
+| Health status (can this number send?) | `GET /health_status` |
+| Blocked users | `GET` / `POST` / `DELETE /block_users` |
+| Conversational components (ice breakers, commands, welcome message) | `GET` / `POST` / `DELETE /conversational_automation` |
+| Business compliance information (required in some countries) | `GET` / `POST /business_compliance_info` |
+| Business encryption public key (Flows) | `GET` / `POST /whatsapp_business_encryption` |
+
+Fields follow the standard WhatsApp Cloud API.
+
+## Health status
+
+```bash
+curl https://waba.karzoun.chat/health_status \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+```json
+{
+  "health_status": {
+    "can_send_message": "AVAILABLE",
+    "entities": [
+      { "entity_type": "PHONE_NUMBER", "id": "106540352242922", "can_send_message": "AVAILABLE" },
+      { "entity_type": "WABA", "id": "102290129340398", "can_send_message": "AVAILABLE" }
+    ]
+  },
+  "id": "106540352242922"
+}
+```
+
+`LIMITED` or `BLOCKED` comes with `errors` explaining why (for example a payment, policy or verification issue).
+
+## Update the business profile
+
+```bash
+curl -X POST https://waba.karzoun.chat/whatsapp_business_profile \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "messaging_product": "whatsapp", "about": "Open daily 9:00–22:00", "websites": ["https://example.com"] }'
+```
+
+## Block a user
+
+```bash
+curl -X POST https://waba.karzoun.chat/block_users \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "messaging_product": "whatsapp", "block_users": [{ "user": "966500000000" }] }'
+```
+
+Quality rating, messaging limit and display name status are shown on the number's **Profile** tab in your workspace.

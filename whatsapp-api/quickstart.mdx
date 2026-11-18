@@ -1,0 +1,85 @@
+---
+title: "Quickstart"
+description: "Connect a WhatsApp number, create an API key and send your first message."
+---
+
+You will connect a number, fund your wallet, create an API key, send a template message and receive the reply on your server.
+
+<Steps>
+  <Step title="Connect your WhatsApp number">
+    Sign in to your Karzoun workspace and click **Add a number**. Log in with the Meta account that administers your business and finish the Meta signup.
+
+    You need:
+    - admin access to your business's Meta Business Portfolio,
+    - a phone number that can receive an SMS or voice call, or a number already on the WhatsApp Business app (choose **Use my WhatsApp Business app**),
+    - a live business website (Meta reviews it).
+  </Step>
+  <Step title="Add funds to your wallet">
+    Open **Billing** and add credit or a card. Meta charges per message, and every billable request reserves its cost from your wallet first. A wallet that can't cover a send returns `402`. See [Pricing and wallet](/whatsapp-api/pricing-and-wallet).
+  </Step>
+  <Step title="Create an API key">
+    Open your number, go to the **API** tab and click **Create API key**. Copy the key now; it is shown once.
+
+    The key looks like `acme_9f2c…` and belongs to this one number.
+
+    <Warning>
+      Keep the key on your server. Anyone with it can send messages from your number and spend your wallet.
+    </Warning>
+  </Step>
+  <Step title="Send a template message">
+    Outside a 24-hour conversation, WhatsApp only lets you start with an approved template. Every new account has `hello_world`.
+
+    ```bash
+    curl -X POST https://waba.karzoun.chat/messages \
+      -H "Content-Type: application/json" \
+      -H "Karzoun-API-Key: YOUR_API_KEY" \
+      -d '{
+        "messaging_product": "whatsapp",
+        "to": "966500000000",
+        "type": "template",
+        "template": { "name": "hello_world", "language": { "code": "en_US" } }
+      }'
+    ```
+
+    A successful send returns:
+
+    ```json
+    {
+      "messaging_product": "whatsapp",
+      "contacts": [{ "input": "966500000000", "wa_id": "966500000000" }],
+      "messages": [{ "id": "wamid.HBgMOTY2NTAwMDAwMDAwFQIAERgS..." }]
+    }
+    ```
+  </Step>
+  <Step title="Receive the reply">
+    In the **API** tab, paste your **Webhook URL** and click **Save**. Karzoun sends a signed test event first; your endpoint must answer `2xx` within 5 seconds.
+
+    Reply to the message from your phone. Your endpoint receives the message:
+
+    ```json
+    {
+      "object": "whatsapp_business_account",
+      "entry": [{
+        "id": "102290129340398",
+        "changes": [{
+          "field": "messages",
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": { "display_phone_number": "15550783881", "phone_number_id": "106540352242922" },
+            "contacts": [{ "profile": { "name": "Sara" }, "wa_id": "966500000000" }],
+            "messages": [{ "from": "966500000000", "id": "wamid.HBgM...", "timestamp": "1731916800", "type": "text", "text": { "body": "Hi!" } }]
+          }
+        }]
+      }]
+    }
+    ```
+
+    Inside the next 24 hours you can reply with any message type, not only templates.
+  </Step>
+</Steps>
+
+## Next steps
+
+- [Verify webhook signatures](/whatsapp-api/webhooks/signature) before you trust an event.
+- [Send other message types](/whatsapp-api/messaging/send-messages).
+- [Create your own templates](/whatsapp-api/templates/manage).

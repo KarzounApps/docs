@@ -1,0 +1,119 @@
+---
+title: "Usernames and BSUID"
+description: "WhatsApp usernames hide phone numbers. Use business-scoped user IDs to identify and message people."
+---
+
+WhatsApp users can set a **username**. When they do, WhatsApp shows the username instead of the phone number, and businesses may receive a **business-scoped user ID (BSUID)** instead of the number.
+
+## Key terms
+
+| Term | Meaning |
+| --- | --- |
+| **BSUID** | A stable ID for a user, unique to your business portfolio, in `user_id`. Format: country code, a dot, then digits, for example `SA.13491208655302741918` |
+| **Parent BSUID** | One BSUID shared across several portfolios of the same enterprise, with `ENT` in it |
+| **Contact book** | Meta keeps phone ↔ BSUID pairs for people you've exchanged messages or calls with since April 2026. While a person is in it, you keep receiving their phone number |
+| **30-day cache** | If a number messaged or called a user in the last 30 days, that user's phone number keeps appearing for that number |
+| **Business username** | A handle for your business number, for search and discovery. It doesn't hide your number |
+
+## What you receive
+
+**Incoming messages**
+
+| The user | You receive |
+| --- | --- |
+| Has no username | `wa_id`, `from`, `user_id`, `from_user_id` |
+| Has a username | `user_id`, `from_user_id`, `username`. `wa_id` and `from` only if the contact book or 30-day cache has their number |
+
+**Status updates**
+
+| You sent to | You receive |
+| --- | --- |
+| A phone number | `recipient_id` (and `wa_id`) |
+| A BSUID | `recipient_user_id` (and `user_id`). The phone number only if the contact book or cache has it |
+
+Failed statuses omit the `contacts` array. `username` appears in delivered and read statuses when the user has one.
+
+<Tip>
+  Store `user_id` for every contact, next to the phone number when you have it. It's the identifier that never disappears.
+</Tip>
+
+## Message a BSUID
+
+Use `recipient` instead of `to`:
+
+```json
+{
+  "messaging_product": "whatsapp",
+  "recipient": "SA.13491208655302741918",
+  "type": "template",
+  "template": { "name": "order_shipped", "language": { "code": "ar" } }
+}
+```
+
+- Send the full BSUID, country code included.
+- If you send both `to` and `recipient`, `to` wins.
+- Outside the 24-hour window you still need a template (`131047` otherwise).
+- Authentication templates (copy code, one-tap, zero-tap) can't go to a BSUID (`131062`).
+- Always store the returned `wamid`; it's the reliable key for statuses.
+
+## Ask for the phone number
+
+When you only have a BSUID, ask the user to share their number with a **request contact info** button.
+
+In a utility or marketing template, add the button:
+
+```json
+{ "type": "BUTTONS", "buttons": [{ "type": "REQUEST_CONTACT_INFO" }] }
+```
+
+Inside a conversation, send it as an interactive message:
+
+```json
+{
+  "messaging_product": "whatsapp",
+  "recipient": "SA.13491208655302741918",
+  "type": "interactive",
+  "interactive": {
+    "type": "request_contact_info",
+    "body": { "text": "Share your number so we can send delivery updates." },
+    "action": { "name": "request_contact_info" }
+  }
+}
+```
+
+When they tap it, your webhook receives a `contacts` message with `origin: "contact_request"` and the number in `phones`. The shared number is added to the contact book, so later events include it again.
+
+## Remove a contact book entry
+
+To stop receiving a user's phone number through the contact book, delete their entry:
+
+```bash
+curl -X DELETE "https://waba.karzoun.chat/contact_book?messaging_product=whatsapp&bsuid=SA.13491208655302741918" \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+```json
+{ "messaging_product": "whatsapp", "success": true, "deleted": true }
+```
+
+`deleted` is `false` when there was no entry. The 30-day cache isn't affected, and parent BSUIDs aren't supported.
+
+## Your business username
+
+Claim or change your business username on the number's **Profile** tab, or through the API:
+
+| Action | Request |
+| --- | --- |
+| Current username and status | `GET /username` |
+| Usernames WhatsApp reserved for you | `GET /username_suggestions` |
+| Claim or change | `POST /username` with `{ "username": "acme" }` |
+| Remove | `DELETE /username` |
+
+```bash
+curl -X POST https://waba.karzoun.chat/username \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "username": "acme" }'
+```
+
+Usernames are 3 to 35 characters: letters, numbers, dots and underscores, with at least one letter. They can't start or end with a dot, contain two dots in a row, start with `www` or end with a domain such as `.com`. Username changes arrive on your webhook as business username events.

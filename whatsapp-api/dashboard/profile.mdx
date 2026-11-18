@@ -1,0 +1,49 @@
+---
+title: "Number profile"
+description: "The number's Profile tab: business profile, display name, username, health and Direct Send."
+---
+
+The **Profile** tab shows how the number looks to customers and how healthy it is.
+
+## Business phone number
+
+| Field | Meaning |
+| --- | --- |
+| **Verified Name** | The approved [display name](/whatsapp-api/account/display-names) |
+| **Quality Rating** | Green, yellow or red. See [Quality rating](/whatsapp-api/account/quality-rating) |
+| **Messaging Limit** | Unique people you can message per day. See [Messaging limits](/whatsapp-api/account/messaging-limits) |
+| **Account Mode** | Whether the number is live or still in sandbox mode |
+| **Throughput Level** | How many messages per second the number can send. Meta raises it automatically for numbers with high volume and good quality |
+| **WhatsApp username** | The number's [business username](/whatsapp-api/account/usernames-and-bsuid#your-business-username), if it has one |
+
+### Change the display name
+
+1. Click **Edit display name**, type the new name and click **Submit for review**.
+2. Wait for Meta's review. Don't submit another request meanwhile.
+3. When it's approved, click **Apply name** within 14 days. This re-registers the number with the new name.
+
+### Reserve a username
+
+Click **Reserve username**, pick an available name and submit. Change it later with **Change username**. Only the workspace owner can do this.
+
+## Business Profile
+
+What customers see when they open your business info in WhatsApp:
+
+| Field | Limit |
+| --- | --- |
+| Photo (**Change Photo**) | Square image, at least 192×192 px |
+| **About** | Up to 139 characters |
+| **Description** | Up to 512 characters |
+| **Address** | Up to 256 characters |
+| **Email** | Up to 128 characters |
+| **Category** | One of Meta's business categories |
+| Websites (**+ Add Website**) | Up to 2 |
+
+Click **Save Profile** to publish the changes. You can also manage the profile through the API: see [Number settings](/whatsapp-api/messaging/number-settings).
+
+On [coexistence](/whatsapp-api/account/coexistence) numbers, edit the profile in the WhatsApp Business app instead.
+
+## Direct Send
+
+**Direct Send** lets you send business-initiated utility messages without creating a template first. Turn it on here, then use `"category": "utility"` in your requests. See [Direct Send](/whatsapp-api/messaging/send-messages#direct-send).

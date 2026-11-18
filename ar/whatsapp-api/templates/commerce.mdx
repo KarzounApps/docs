@@ -1,0 +1,245 @@
+---
+title: "قوالب الكاروسيل والعروض والمنتجات"
+description: "قوالب تسويقية غنية: كاروسيل الوسائط، أكواد الخصم، العروض محدودة الوقت، الكتالوج، والمنتج الواحد والمنتجات المتعددة."
+---
+
+هذه الصيغ تجعل قوالبك التسويقية تبرز. كلها قوالب `MARKETING`.
+
+| الصيغة | ماذا يرى المستخدم | تحتاج كتالوج |
+| --- | --- | --- |
+| [كاروسيل الوسائط](#كاروسيل-الوسائط) | حتى 10 بطاقات قابلة للتمرير، كل بطاقة بصورة أو فيديو وأزرار | لا |
+| [كود خصم](#أكواد-الخصم) | زر ينسخ كود الخصم | لا |
+| [عرض محدود الوقت](#العروض-محدودة-الوقت) | مربع عرض مع عدّاد تنازلي لانتهائه | لا |
+| [الكتالوج](#الكتالوج) | زر يفتح كتالوجك كاملاً | نعم |
+| [منتج واحد](#منتج-واحد) | بطاقة منتج واحد | نعم |
+| [منتجات متعددة](#منتجات-متعددة) | حتى 30 منتجاً في أقسام | نعم |
+| [كاروسيل المنتجات](#كاروسيل-المنتجات) | حتى 10 بطاقات منتجات قابلة للتمرير | نعم |
+
+صيغ المنتجات تحتاج كتالوجاً فيه منتجات في Meta Commerce Manager، مربوطاً بحساب واتساب للأعمال. راجع [الكتالوج والتجارة](/ar/whatsapp-api/messaging/commerce).
+
+## كاروسيل الوسائط
+
+نص رسالة تليه من 2 إلى 10 بطاقات تتمرر أفقياً.
+
+**القواعد**
+
+- نص الرسالة: حتى 1,024 حرفاً. لا ترويسة ولا تذييل للرسالة نفسها.
+- كل بطاقة: ترويسة صورة أو فيديو، ونص اختياري حتى 160 حرفاً، وحتى زرين (رد سريع، رابط، أو رقم هاتف).
+- كل البطاقات لها نفس نوع الترويسة ونفس الأزرار.
+- تعرّف البطاقات عند إنشاء القالب، وتمرّر وسائط كل بطاقة عند الإرسال.
+
+```json
+{
+  "name": "summer_collection",
+  "language": "en",
+  "category": "MARKETING",
+  "components": [
+    { "type": "BODY", "text": "Our summer collection is here, {{1}}!", "example": { "body_text": [["Sara"]] } },
+    {
+      "type": "CAROUSEL",
+      "cards": [
+        {
+          "components": [
+            { "type": "HEADER", "format": "IMAGE", "example": { "header_handle": ["4::aW1h…"] } },
+            { "type": "BODY", "text": "Linen shirts from SAR 99" },
+            {
+              "type": "BUTTONS",
+              "buttons": [
+                { "type": "URL", "text": "Shop", "url": "https://example.com/{{1}}", "example": ["https://example.com/linen"] },
+                { "type": "QUICK_REPLY", "text": "Not interested" }
+              ]
+            }
+          ]
+        },
+        {
+          "components": [
+            { "type": "HEADER", "format": "IMAGE", "example": { "header_handle": ["4::aW1h…"] } },
+            { "type": "BODY", "text": "Sandals from SAR 149" },
+            {
+              "type": "BUTTONS",
+              "buttons": [
+                { "type": "URL", "text": "Shop", "url": "https://example.com/{{1}}", "example": ["https://example.com/sandals"] },
+                { "type": "QUICK_REPLY", "text": "Not interested" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+أرسله بمكوّن `carousel` واحد يعدّد البطاقات حسب `card_index`:
+
+```json
+{
+  "type": "template",
+  "template": {
+    "name": "summer_collection",
+    "language": { "code": "en" },
+    "components": [
+      { "type": "body", "parameters": [{ "type": "text", "text": "Sara" }] },
+      {
+        "type": "carousel",
+        "cards": [
+          {
+            "card_index": 0,
+            "components": [
+              { "type": "header", "parameters": [{ "type": "image", "image": { "id": "1234567890" } }] },
+              { "type": "button", "sub_type": "url", "index": "0", "parameters": [{ "type": "text", "text": "linen" }] }
+            ]
+          },
+          {
+            "card_index": 1,
+            "components": [
+              { "type": "header", "parameters": [{ "type": "image", "image": { "id": "1234567891" } }] },
+              { "type": "button", "sub_type": "url", "index": "0", "parameters": [{ "type": "text", "text": "sandals" }] }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+داخل نافذة خدمة العملاء المفتوحة تقدر ترسل كاروسيل بدون قالب أيضاً، كرسالة تفاعلية.
+
+## أكواد الخصم
+
+أضف زر نسخ الكود. يضغطه المستخدم لينسخ الكود.
+
+```json
+{ "type": "BUTTONS", "buttons": [
+  { "type": "QUICK_REPLY", "text": "Unsubscribe" },
+  { "type": "COPY_CODE", "example": "SUMMER25" }
+] }
+```
+
+مرّر الكود مع كل رسالة:
+
+```json
+{
+  "type": "button",
+  "sub_type": "COPY_CODE",
+  "index": "1",
+  "parameters": [{ "type": "coupon_code", "coupon_code": "SUMMER25" }]
+}
+```
+
+- الكود حتى 15 حرفاً.
+- زر نسخ واحد لكل قالب، ونصه يحدده واتساب.
+- لا يظهر على واتساب ويب.
+
+## العروض محدودة الوقت
+
+تعرض عنوان العرض، ومع خيار عدّاد تنازلي لانتهائه.
+
+```json
+{
+  "name": "flash_sale",
+  "language": "en",
+  "category": "MARKETING",
+  "components": [
+    { "type": "HEADER", "format": "IMAGE", "example": { "header_handle": ["4::aW1h…"] } },
+    { "type": "LIMITED_TIME_OFFER", "limited_time_offer": { "text": "Flash sale!", "has_expiration": true } },
+    { "type": "BODY", "text": "Hi {{1}}, everything is 30% off with code {{2}}.", "example": { "body_text": [["Sara", "FLASH30"]] } },
+    {
+      "type": "BUTTONS",
+      "buttons": [
+        { "type": "COPY_CODE", "example": "FLASH30" },
+        { "type": "URL", "text": "Shop now", "url": "https://example.com/sale?code={{1}}", "example": ["https://example.com/sale?code=FLASH30"] }
+      ]
+    }
+  ]
+}
+```
+
+- نص العرض: حتى 16 حرفاً.
+- بدون تذييل. النص حتى 600 حرف.
+- مع `has_expiration: true` لازم يكون أول زر زر نسخ كود.
+
+عند الإرسال، أضف وقت الانتهاء كـ Unix timestamp بالملي ثانية:
+
+```json
+{
+  "type": "limited_time_offer",
+  "parameters": [{ "type": "limited_time_offer", "limited_time_offer": { "expiration_time_ms": 1767225599000 } }]
+}
+```
+
+## الكتالوج
+
+نص، وتذييل اختياري، وزر **عرض الكتالوج** يفتح كتالوجك داخل واتساب.
+
+```json
+{ "type": "BUTTONS", "buttons": [{ "type": "CATALOG", "text": "View catalog" }] }
+```
+
+عند الإرسال، اختر المنتج الذي يظهر كصورة مصغّرة:
+
+```json
+{
+  "type": "button",
+  "sub_type": "CATALOG",
+  "index": "0",
+  "parameters": [{ "type": "action", "action": { "thumbnail_product_retailer_id": "SKU-1042" } }]
+}
+```
+
+## منتج واحد
+
+بطاقة منتج واحد من كتالوجك، بنص حتى 160 حرفاً وزر **عرض**.
+
+```json
+"components": [
+  { "type": "HEADER", "format": "PRODUCT" },
+  { "type": "BODY", "text": "Back in stock: {{1}}", "example": { "body_text": [["Linen shirt"]] } },
+  { "type": "BUTTONS", "buttons": [{ "type": "SPM", "text": "View" }] }
+]
+```
+
+مرّر المنتج عند الإرسال:
+
+```json
+{ "type": "header", "parameters": [{ "type": "product", "product": { "product_retailer_id": "SKU-1042", "catalog_id": "1234567890" } }] }
+```
+
+## منتجات متعددة
+
+حتى 30 منتجاً في حتى 10 أقسام، تُفتح بزر **عرض المنتجات**. الترويسة حتى 60 حرفاً، والنص حتى 1,024، والتذييل حتى 60.
+
+```json
+{ "type": "BUTTONS", "buttons": [{ "type": "MPM", "text": "View items" }] }
+```
+
+أرسل الأقسام والمنتجات:
+
+```json
+{
+  "type": "button",
+  "sub_type": "MPM",
+  "index": "0",
+  "parameters": [{
+    "type": "action",
+    "action": {
+      "thumbnail_product_retailer_id": "SKU-1042",
+      "sections": [
+        { "title": "Shirts", "product_items": [{ "product_retailer_id": "SKU-1042" }, { "product_retailer_id": "SKU-1043" }] },
+        { "title": "Sandals", "product_items": [{ "product_retailer_id": "SKU-2001" }] }
+      ]
+    }
+  }]
+}
+```
+
+## كاروسيل المنتجات
+
+مثل كاروسيل الوسائط، لكن كل بطاقة منتج من كتالوجك. لكل بطاقة ترويسة `PRODUCT` وزر واحد: **عرض** (`SPM`) أو رابط. عرّف بطاقتين عند إنشاء القالب، وتقدر ترسل حتى 10.
+
+## الطلبات
+
+عندما يضيف المستخدم منتجات لسلته ويرسلها، يصل للـ Webhook رسالة من نوع `order` فيها معرّف الكتالوج والمنتجات. ردّ داخل نافذة خدمة العملاء لتأكيد الطلب أو طلب تفاصيل الدفع.
+
+قوالب المنتج الواحد والمنتجات المتعددة لا يمكن إعادة توجيهها.

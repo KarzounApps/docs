@@ -1,0 +1,51 @@
+---
+title: "Authentication"
+description: "Authenticate WhatsApp API requests with a per-number API key."
+---
+
+Every request to `https://waba.karzoun.chat` carries one header:
+
+```
+Karzoun-API-Key: YOUR_API_KEY
+```
+
+## One key per number
+
+An API key belongs to one WhatsApp phone number. The key decides which number sends the message and which WhatsApp Business Account a template or flow belongs to, so endpoints never take a phone number ID or account ID: `POST /messages` sends from the key's number, and `GET /message_templates` lists that number's templates.
+
+To send from several numbers, create a key for each number and pick the key per request.
+
+## Create, replace and revoke
+
+Open the number in your workspace and go to the **API** tab.
+
+| Action | Effect |
+| --- | --- |
+| **Create API key** | Shows the key once. Store it in your secret manager. |
+| **Replace key** | Issues a new key and revokes the old one immediately. The webhook settings stay. |
+| **Revoke** | Requests with the key fail with `401` from that moment. |
+
+Karzoun stores only a hash of the key. If you lose it, replace it.
+
+<Info>
+  Partners can create and revoke keys for their clients' numbers with the Partner API. See [Numbers and API keys](/partners/api/numbers-and-keys).
+</Info>
+
+## Errors
+
+| Status | Meaning |
+| --- | --- |
+| `401` | Missing, malformed or revoked key. |
+| `402` | The wallet can't cover this send. See [Pricing and wallet](/whatsapp-api/pricing-and-wallet). |
+
+Karzoun errors use this body, so you can tell them apart from Meta's:
+
+```json
+{ "error": { "message": "Invalid API key", "type": "Karzoun", "code": 401 } }
+```
+
+## Security checklist
+
+- Keep keys on your server only. Never ship them in a mobile app or a browser.
+- Use a separate key per number and environment.
+- Replace a key immediately if it may have leaked.

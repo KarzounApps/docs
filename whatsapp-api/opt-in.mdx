@@ -1,0 +1,59 @@
+---
+title: "Opt-in and opt-out"
+description: "Get permission before messaging people on WhatsApp, and let them stop messages easily."
+---
+
+You may start a conversation with someone on WhatsApp only if:
+
+- they gave you their phone number, **and**
+- they agreed to receive WhatsApp messages from your business.
+
+Collecting this permission (opt-in) is your responsibility, and it must follow WhatsApp's Business Messaging Policy and the laws that apply to you. A message started without opt-in is the fastest way to get blocked, lose [quality](/whatsapp-api/account/quality-rating) and get your account restricted.
+
+## Requirements
+
+When you collect opt-in:
+
+- Say clearly that the person agrees to receive messages **on WhatsApp**.
+- Say clearly **which business** will message them.
+- Follow the laws that apply to you, such as consent and data protection rules.
+
+## Where to collect it
+
+Any channel works, as long as the consent is clear:
+
+| Channel | Example |
+| --- | --- |
+| Website or app | A checkbox at sign-up or checkout: "Send me order updates on WhatsApp" |
+| WhatsApp itself | The user messages you first, for example from a [QR code or link](/whatsapp-api/guides/bring-users-to-whatsapp), and you ask whether they want updates |
+| SMS or email | A message with a link or keyword to confirm |
+| Phone or IVR | Consent given during a call |
+| In store or on paper | A signed form or a QR code at the counter |
+
+A person messaging you first counts as opt-in for replying to that conversation. It doesn't mean they agreed to receive marketing later. Ask.
+
+## Best practice
+
+- **Be specific.** Separate opt-ins for order updates and for offers. People who only wanted shipping updates block businesses that send promotions.
+- **Set expectations.** Say what you'll send and how often.
+- **Store proof.** Keep when and where each person opted in, and for what.
+- **Send something soon.** A welcome message right after opt-in reminds people who you are.
+- **Don't buy lists.** Numbers from third parties aren't opt-in.
+
+## Opt-out
+
+People must be able to stop your messages easily, and you must respect it.
+
+- Add a **"Stop promotions"** quick-reply button to marketing templates. When it's tapped you get a [`button` event](/whatsapp-api/webhooks/events#template-button) with your payload: remove the person from marketing lists right away.
+- Recognize replies such as "STOP", "إيقاف" or "unsubscribe", and confirm the opt-out.
+- Keep sending transactional messages they still need, such as an order they placed, unless they ask you to stop those too.
+
+### Marketing preference in WhatsApp
+
+Users can also stop marketing messages from a business directly in WhatsApp. When they do:
+
+- your webhook receives a `user_preferences` event,
+- marketing templates to them fail with error `131050`,
+- utility, authentication and service messages still go through.
+
+When the user turns marketing back on, you receive another `user_preferences` event.

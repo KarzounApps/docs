@@ -1,0 +1,184 @@
+---
+title: "Template elements"
+description: "Headers, body, footer, buttons and variables: what a template can contain and the limits for each."
+---
+
+A template is a list of **components**. Only the body is required.
+
+| Component | Required | Limit |
+| --- | --- | --- |
+| `HEADER` | No | One per template: text, image, video, document or location |
+| `BODY` | Yes | 1,024 characters |
+| `FOOTER` | No | 60 characters, no variables |
+| `BUTTONS` | No | Up to 10 buttons |
+
+## Variables
+
+Variables are placeholders you fill when sending. Every variable needs a sample in `example`, or the template is rejected.
+
+<Tabs>
+  <Tab title="Positional">
+    ```json
+    {
+      "type": "BODY",
+      "text": "Hi {{1}}, your order {{2}} is ready for pickup.",
+      "example": { "body_text": [["Sara", "#1042"]] }
+    }
+    ```
+  </Tab>
+  <Tab title="Named">
+    ```json
+    {
+      "type": "BODY",
+      "text": "Hi {{first_name}}, your order {{order_id}} is ready for pickup.",
+      "example": {
+        "body_text_named_params": [
+          { "param_name": "first_name", "example": "Sara" },
+          { "param_name": "order_id", "example": "#1042" }
+        ]
+      }
+    }
+    ```
+    Add `"parameter_format": "NAMED"` at the template's top level. Named variables use lowercase letters, numbers and underscores.
+  </Tab>
+</Tabs>
+
+Use one style per template. With named variables, the example keys end in `_named_params`: `body_text_named_params`, `header_text_named_params`.
+
+Rules:
+
+- Positional variables start at `{{1}}` and go up without gaps.
+- The body can't start or end with a variable.
+- Two variables can't be next to each other.
+- Keep a reasonable ratio of fixed text to variables.
+
+## Header
+
+### Text
+
+```json
+{
+  "type": "HEADER",
+  "format": "TEXT",
+  "text": "Our {{1}} is on!",
+  "example": { "header_text": ["Summer Sale"] }
+}
+```
+
+60 characters, one variable at most.
+
+### Image, video or document
+
+```json
+{
+  "type": "HEADER",
+  "format": "IMAGE",
+  "example": { "header_handle": ["4::aW1hZ2UvanBlZw==:ARb…"] }
+}
+```
+
+`format` is `IMAGE`, `VIDEO` or `DOCUMENT`. The sample is a handle from [Upload a template sample](/whatsapp-api/messaging/media#upload-a-template-sample). When sending, you pass the actual file for each message (a media ID or link). See [supported media](/whatsapp-api/messaging/media).
+
+### Location
+
+```json
+{ "type": "HEADER", "format": "LOCATION" }
+```
+
+Shows a map. You pass the coordinates, name and address when sending. Utility and marketing templates only.
+
+## Body
+
+```json
+{
+  "type": "BODY",
+  "text": "Your appointment with {{1}} is on {{2}} at {{3}}.",
+  "example": { "body_text": [["Dr. Omar", "12 May", "10:30"]] }
+}
+```
+
+Up to 1,024 characters, with formatting: `*bold*`, `_italic_`, `~strikethrough~`, `` `code` ``. Emojis are allowed in marketing and utility templates.
+
+## Footer
+
+```json
+{ "type": "FOOTER", "text": "Reply STOP to opt out" }
+```
+
+Up to 60 characters. No variables.
+
+## Buttons
+
+A template can have up to **10 buttons** in total. Button labels are up to 25 characters.
+
+| Type | What it does | Max per template |
+| --- | --- | --- |
+| `QUICK_REPLY` | Sends the button's text back to you as a message | 10 |
+| `URL` | Opens a website. One variable allowed at the end of the URL | 2 |
+| `PHONE_NUMBER` | Calls a phone number | 1 |
+| `VOICE_CALL` | Starts a WhatsApp call to your number ([Calling](/whatsapp-api/messaging/calling)) | 1 |
+| `COPY_CODE` | Copies a coupon code ([coupon templates](/whatsapp-api/templates/commerce#coupon-codes)) | 1 |
+| `OTP` | One-time password button ([authentication](/whatsapp-api/templates/authentication)) | 1 |
+| `FLOW` | Opens a [WhatsApp Flow](/whatsapp-api/messaging/flows) | 1 |
+| `CATALOG`, `MPM`, `SPM` | Opens your catalog or products ([commerce](/whatsapp-api/templates/commerce)) | 1 |
+| `REQUEST_CONTACT_INFO` | Asks the user to share their phone number ([BSUID](/whatsapp-api/account/usernames-and-bsuid#ask-for-the-phone-number)) | 1 |
+
+When you mix quick replies with other buttons, group them: all quick replies together, then the rest. WhatsApp shows the first three buttons; the others appear under "See all options".
+
+### Quick reply
+
+```json
+{ "type": "QUICK_REPLY", "text": "Stop promotions" }
+```
+
+When tapped, your webhook gets a `button` message with the label and, if you set one when sending, your `payload`.
+
+### URL
+
+```json
+{
+  "type": "URL",
+  "text": "Track order",
+  "url": "https://example.com/track/{{1}}",
+  "example": ["https://example.com/track/1042"]
+}
+```
+
+The variable can only be at the end of the URL. Use your own domain, not a link shortener.
+
+### Phone number
+
+```json
+{ "type": "PHONE_NUMBER", "text": "Call us", "phone_number": "+966112345678" }
+```
+
+Up to 20 characters, with the country code.
+
+## Full example
+
+```json
+{
+  "name": "appointment_reminder",
+  "language": "en",
+  "category": "UTILITY",
+  "components": [
+    { "type": "HEADER", "format": "TEXT", "text": "Appointment reminder" },
+    {
+      "type": "BODY",
+      "text": "Hi {{1}}, this is a reminder of your appointment on {{2}} at {{3}}.",
+      "example": { "body_text": [["Sara", "12 May", "10:30"]] }
+    },
+    { "type": "FOOTER", "text": "Clinic Al Noor" },
+    {
+      "type": "BUTTONS",
+      "buttons": [
+        { "type": "QUICK_REPLY", "text": "Confirm" },
+        { "type": "QUICK_REPLY", "text": "Reschedule" },
+        { "type": "PHONE_NUMBER", "text": "Call clinic", "phone_number": "+966112345678" }
+      ]
+    }
+  ]
+}
+```
+
+Create it with [`POST /message_templates`](/whatsapp-api/templates/manage#create), then [send it](/whatsapp-api/templates/sending).

@@ -1,0 +1,159 @@
+---
+title: "قوالب المصادقة"
+description: "أرسل رموز التحقق (OTP) بقوالب نسخ الرمز والتعبئة بلمسة واحدة وبدون لمس."
+---
+
+قوالب المصادقة توصل رموز التحقق لمرة واحدة (OTP) لتسجيل الدخول والتسجيل واسترجاع الحساب وتأكيد العمليات. نصها ثابت من واتساب، فمراجعتها سريعة وترجمتها موحّدة.
+
+## المتطلبات
+
+قبل أن تنشئ قوالب مصادقة، لازم حافظة أعمالك:
+
+- تكمل [مسار توسّع](/ar/whatsapp-api/account/messaging-limits#رفع-الحد) مثل توثيق النشاط، و
+- يكون [حد المراسلة](/ar/whatsapp-api/account/messaging-limits) لها 2,000 على الأقل.
+
+## محتوى الرسالة
+
+أنت لا تكتب النص. واتساب يبنيه من نصوص جاهزة بلغة القالب:
+
+| الجزء | المحتوى | اختياري |
+| --- | --- | --- |
+| النص | "*{الرمز}* هو رمز التحقق الخاص بك." | لا |
+| تنبيه أمني | "لأمانك، لا تشارك هذا الرمز." | نعم، `add_security_recommendation` |
+| تذييل الانتهاء | "تنتهي صلاحية هذا الرمز خلال {N} دقائق." | نعم، `code_expiration_minutes` (من 1 إلى 90) |
+| الزر | نسخ الرمز أو التعبئة بلمسة. بدون لمس لا يحتاج زراً على أندرويد | لا |
+
+الرمز حتى 15 حرفاً. الروابط والوسائط والإيموجي غير مسموحة.
+
+## أنواع الأزرار
+
+| النوع | تجربة المستخدم | الأنظمة |
+| --- | --- | --- |
+| **نسخ الرمز** | يضغط المستخدم لنسخ الرمز ثم يلصقه في تطبيقك | الكل |
+| **التعبئة بلمسة واحدة** | يضغط المستخدم فيفتح واتساب تطبيقك والرمز معبّأ | أندرويد. ويرجع لنسخ الرمز إذا تعذر |
+| **بدون لمس** | يمرر واتساب الرمز لتطبيقك تلقائياً؛ المستخدم لا يفعل شيئاً | أندرويد. ويرجع للمسة واحدة أو النسخ |
+
+اللمسة الواحدة وبدون لمس يحتاجان اسم حزمة تطبيق أندرويد وبصمة مفتاح التوقيع، ولازم تطبيقك يستقبل بث الرمز من واتساب. إذا فشل أي فحص، مثلاً التطبيق غير مثبّت، تظهر الرسالة بزر نسخ الرمز.
+
+## الإنشاء
+
+<Tabs>
+  <Tab title="نسخ الرمز">
+    ```json
+    {
+      "name": "login_code",
+      "language": "ar",
+      "category": "AUTHENTICATION",
+      "message_send_ttl_seconds": 300,
+      "components": [
+        { "type": "BODY", "add_security_recommendation": true },
+        { "type": "FOOTER", "code_expiration_minutes": 5 },
+        {
+          "type": "BUTTONS",
+          "buttons": [{ "type": "OTP", "otp_type": "COPY_CODE", "text": "نسخ الرمز" }]
+        }
+      ]
+    }
+    ```
+  </Tab>
+  <Tab title="لمسة واحدة">
+    ```json
+    {
+      "name": "login_code_onetap",
+      "language": "ar",
+      "category": "AUTHENTICATION",
+      "components": [
+        { "type": "BODY", "add_security_recommendation": true },
+        { "type": "FOOTER", "code_expiration_minutes": 5 },
+        {
+          "type": "BUTTONS",
+          "buttons": [{
+            "type": "OTP",
+            "otp_type": "ONE_TAP",
+            "text": "نسخ الرمز",
+            "autofill_text": "تعبئة تلقائية",
+            "supported_apps": [
+              { "package_name": "com.example.app", "signature_hash": "K8a/AINcGX7" }
+            ]
+          }]
+        }
+      ]
+    }
+    ```
+  </Tab>
+  <Tab title="بدون لمس">
+    ```json
+    {
+      "name": "login_code_zerotap",
+      "language": "ar",
+      "category": "AUTHENTICATION",
+      "components": [
+        { "type": "BODY", "add_security_recommendation": true },
+        { "type": "FOOTER", "code_expiration_minutes": 5 },
+        {
+          "type": "BUTTONS",
+          "buttons": [{
+            "type": "OTP",
+            "otp_type": "ZERO_TAP",
+            "text": "نسخ الرمز",
+            "autofill_text": "تعبئة تلقائية",
+            "zero_tap_terms_accepted": true,
+            "supported_apps": [
+              { "package_name": "com.example.app", "signature_hash": "K8a/AINcGX7" }
+            ]
+          }]
+        }
+      ]
+    }
+    ```
+    `zero_tap_terms_accepted: true` يعني موافقتك على شروط واتساب لهذه الميزة: لازم تخبر المستخدمين أن الرموز ستصلهم تلقائياً.
+  </Tab>
+</Tabs>
+
+أرسله إلى [`POST /message_templates`](/ar/whatsapp-api/templates/manage#الإنشاء).
+
+### مدة الصلاحية
+
+حدد `message_send_ttl_seconds` بين `30` و`900`. بدونها يُلغى الرمز غير المسلَّم بعد 10 دقائق. خلّها مطابقة لصلاحية الرمز حتى لا يصل لأحد رمز منتهٍ. الرسائل غير المسلَّمة لا تُحتسب.
+
+## الإرسال
+
+مرّر الرمز مرتين: كمعامل للنص وكمعامل للزر.
+
+```bash
+curl -X POST https://waba.karzoun.chat/messages \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messaging_product": "whatsapp",
+    "to": "966500000000",
+    "type": "template",
+    "template": {
+      "name": "login_code",
+      "language": { "code": "ar" },
+      "components": [
+        { "type": "body", "parameters": [{ "type": "text", "text": "483920" }] },
+        {
+          "type": "button",
+          "sub_type": "url",
+          "index": "0",
+          "parameters": [{ "type": "text", "text": "483920" }]
+        }
+      ]
+    }
+  }'
+```
+
+نفس الطلب يعمل لقوالب نسخ الرمز واللمسة الواحدة وبدون لمس.
+
+## ممارسات جيدة
+
+- أرسل الرمز فقط عندما يطلبه المستخدم من تطبيقك أو موقعك.
+- خلّ صلاحية الرموز قصيرة، واقبل كل رمز مرة واحدة.
+- حدّ من عدد الطلبات لكل رقم لمنع إساءة الاستخدام.
+- قوالب المصادقة لا تُرسل إلى [BSUID](/ar/whatsapp-api/account/usernames-and-bsuid)؛ تحتاج رقم الجوال.
+- احتفظ بالرسائل النصية أو البريد كبديل لمن ليس لديه واتساب: حالة `failed` أو الخطأ `131026` تعني أن الرمز لم يصل.
+
+## سعر المصادقة الدولية
+
+بعض الدول لها سعر منفصل وأعلى لرسائل المصادقة التي ترسلها أنشطة من خارج تلك الدولة. ميتا تحدد الأنشطة التي ينطبق عليها وتبلغها مسبقاً. راجع [التسعير والمحفظة](/ar/whatsapp-api/pricing-and-wallet).

@@ -1,0 +1,38 @@
+---
+title: "Groups"
+description: "Create and manage WhatsApp groups from your business number."
+---
+
+Businesses with access to the WhatsApp Groups API can create groups and message them from the API. Group messages use the same [`POST /messages`](/whatsapp-api/messaging/send-messages) endpoint with the group as recipient.
+
+| Action | Request |
+| --- | --- |
+| List groups | `GET /groups` |
+| Create a group | `POST /groups` |
+| Read a group | `GET /groups/{group-id}` |
+| Update a group | `POST /groups/{group-id}` |
+| Delete a group | `DELETE /groups/{group-id}` |
+| Get or reset the invite link | `GET` / `POST /groups/{group-id}/invite_link` |
+| Remove participants | `DELETE /groups/{group-id}/participants` |
+| List, approve or reject join requests | `GET` / `POST` / `DELETE /groups/{group-id}/join_requests` |
+
+Fields follow the standard WhatsApp Groups API.
+
+## Create a group
+
+```bash
+curl -X POST https://waba.karzoun.chat/groups \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "messaging_product": "whatsapp", "subject": "VIP customers", "description": "Early access and offers" }'
+```
+
+Share the group's invite link with customers. People join from the link; you can't add them directly.
+
+## Group events
+
+Group creation, participant changes, join requests and settings updates arrive on your [webhook](/whatsapp-api/webhooks/events) in the group webhook fields.
+
+<Note>
+  Groups are available on numbers with an Official Business Account and Groups API access.
+</Note>

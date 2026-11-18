@@ -1,0 +1,40 @@
+---
+title: "Coexistence"
+description: "Use the WhatsApp Business app and the WhatsApp API on the same number."
+---
+
+Coexistence connects a number that's already on the **WhatsApp Business app** to the WhatsApp API, without losing the app, the number or its chat history. Send at scale through the API and keep chatting one-to-one in the app.
+
+## Connect a number with coexistence
+
+When you [connect a number](/whatsapp-api/dashboard/connect-a-number), choose **Use my WhatsApp Business app**. Meta asks you to confirm the number, then shows a QR code or an access code: open the WhatsApp Business app on your phone, tap the message from WhatsApp and scan the code.
+
+You can also sync your chat history and contacts from the app. Meta allows one sync per connection, within 24 hours of connecting, and sends it to your webhook.
+
+## How messages sync
+
+- Messages you send through the API appear in the app automatically.
+- Messages you send from the app reach your webhook as `smb_message_echoes` events, so your system stays in sync.
+- Chat history and contacts shared at connection arrive as `history` and `smb_app_state_sync` events.
+
+## Pricing
+
+Messages you send from the app stay free. Messages sent through the API are billed like any API message, and you still need a template to start a conversation through the API.
+
+## Keep it connected
+
+- Open the WhatsApp Business app at least once every **13 days**. Otherwise the connection drops.
+- Don't uninstall the app.
+- After connecting, linked devices are unlinked. Re-link only supported ones: WhatsApp for Windows and Wear OS aren't supported, and messages sent from unsupported devices don't reach your webhook.
+
+## Limitations
+
+| Not available on coexistence numbers | Alternative |
+| --- | --- |
+| Official Business Account (blue badge) | Meta Verified for Business |
+| Automatic display name review | Subscribe to Meta Verified to start it |
+| Calling API | Use a Cloud API number |
+| Disappearing, view-once and live location messages | — |
+| Broadcast lists in the app | They become read-only |
+
+If you can't open the app every 13 days, connect the number as a regular Cloud API number instead.

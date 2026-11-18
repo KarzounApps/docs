@@ -1,0 +1,65 @@
+---
+title: "Partner webhook"
+description: "Receive client and number events across all your client workspaces at one URL."
+---
+
+The partner webhook tells your platform what happens to your clients in Karzoun: new workspaces, numbers connected or removed, and low balances.
+
+It doesn't carry WhatsApp messages or Meta account events (template reviews, quality changes, restrictions). Those go to each number's own [webhook](/whatsapp-api/webhooks/overview).
+
+## Set it up
+
+Open **Partner → Settings → General → Developer**, enter the **Partner webhook URL** and click **Save**. Karzoun sends a signed test event first; your endpoint must answer `2xx` within 5 seconds.
+
+```json
+{ "object": "karzoun", "event": "webhook.test", "channel": "partner", "partner": "agency", "sent_at": "2026-11-18T10:00:00.000Z" }
+```
+
+The same URL rules apply as for number webhooks: `https`, port 443, public host.
+
+## Events
+
+| Event | When |
+| --- | --- |
+| `client.created` | A client workspace was created under your partner account (by API or signup) |
+| `channel.connected` | A WhatsApp number finished connecting in a client workspace: registered, subscribed and ready to send |
+| `channel.disconnected` | A number was removed from a client workspace |
+| `wallet.low_balance` | A client's balance dropped below $20. Sent once per drop |
+
+## Payload
+
+```json
+{
+  "event": "channel.connected",
+  "partner": "agency",
+  "organization_id": "665f1c2a9e1d4b0012a3b4c5",
+  "subdomain": "acme",
+  "integration_id": "6660a2f1c0d3e40011b2c3d4",
+  "phone_number": "+966 50 000 0000",
+  "data": { "waba_id": "102290129340398", "phone_number_id": "106540352242922", "coexistence": false },
+  "occurred_at": "2026-11-18T10:00:00.000Z"
+}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `event` | One of the events above |
+| `partner` | Your partner code |
+| `organization_id`, `subdomain` | The client workspace |
+| `integration_id`, `phone_number` | The number, for `channel.*` events. `null` otherwise |
+| `data` | Event details: Meta IDs for `channel.*`, balance for `wallet.low_balance`, workspace name for `client.created` |
+| `occurred_at` | When it happened, ISO 8601 |
+
+## Verify and deliver
+
+The partner webhook uses the same signing and delivery as number webhooks:
+
+- Signed with your **platform secret** in `X-Karzoun-Signature-256` over `"{timestamp}.{body}"`. Verify it the same way as in [Verify signatures](/whatsapp-api/webhooks/signature).
+- Retried for about 21 hours on failure. See [Delivery and retries](/whatsapp-api/webhooks/delivery).
+- Deduplicate on `X-Karzoun-Event-Id`.
+
+The **Developer** card lists your last 10 deliveries with **Resend** for failed ones. By API, use `partnerWebhookDeliveries`, `partnerTestWebhook` and `partnerWebhookResend`.
+
+## Rotate the platform secret
+
+Click **Rotate secret**. The old secret keeps signing in `X-Karzoun-Signature-256-Previous` for 24 hours, and connect links signed with it are accepted for those 24 hours too.

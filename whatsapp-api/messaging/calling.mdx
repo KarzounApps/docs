@@ -1,0 +1,32 @@
+---
+title: "Calling"
+description: "Start and manage WhatsApp voice calls with the Calling API."
+---
+
+| Action | Request |
+| --- | --- |
+| Start, accept, reject or end a call | `POST /calling/calls` |
+| Read or change calling settings | `GET` / `POST /calling/settings` |
+| Check if you may call a user | `GET /calling/permissions/{wa-id}` |
+
+Fields follow the standard WhatsApp Calling API. `POST /calling/calls` reserves its cost from your wallet like a message. See [Pricing and wallet](/whatsapp-api/pricing-and-wallet).
+
+## Turn calling on
+
+```bash
+curl -X POST https://waba.karzoun.chat/calling/settings \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "calling": { "status": "ENABLED", "call_icon_visibility": "DEFAULT" } }'
+```
+
+## Before you call a user
+
+Business-initiated calls need the user's permission. Check it first:
+
+```bash
+curl https://waba.karzoun.chat/calling/permissions/966500000000 \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+Call events (`connect`, `terminate`, permission replies) arrive on your [webhook](/whatsapp-api/webhooks/events) in the `calls` field.

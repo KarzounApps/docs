@@ -1,0 +1,130 @@
+---
+title: "روابط الربط"
+description: "دع عميلك يربط رقم واتساب من منصتك بدون تسجيل دخول إلى كرزون."
+---
+
+رابط الربط يفتح خطوات تسجيل واتساب من كرزون لأحد عملائك، على نطاقك وبعلامتك. خادمك هو من يوقّع الرابط، فلا تحتاج تسجيل دخول إلى كرزون ولا أي استدعاء API لإنشائه.
+
+## كيف يعمل
+
+<Steps>
+  <Step title="خادمك يوقّع الرابط">
+    ```
+    ts  = current Unix time in seconds
+    sig = hex( HMAC-SHA512( platform secret, "{partner}|{organization_id}|{ts}" ) )
+    ```
+
+    | القيمة | أين تجدها |
+    | --- | --- |
+    | `platform secret` | **الشريك ← الإعدادات ← عام ← المطوّرون ← مفتاح المنصّة** |
+    | `partner` | رمز الشريك، يظهر تحت **روابط الربط** في نفس البطاقة |
+    | `organization_id` | قيمة `_id` للعميل من `partnerRegisterOrganization` |
+  </Step>
+  <Step title="العميل يفتح الرابط">
+    ```
+    https://{client subdomain}.{your app domain}/connect-whatsapp?ts={ts}&sig={sig}
+    ```
+
+    مثلاً `https://acme.yourdomain.com/connect-whatsapp?ts=1731916800&sig=9b1c…`، أو `https://acme.karzoun.chat/…` إذا لم يكن عندك نطاق علامة بيضاء.
+  </Step>
+  <Step title="العميل يربط رقمه">
+    الصفحة تظهر بعلامتك. العميل يكمل عبر فيسبوك (أو عبر تطبيق واتساب للأعمال) وينهي خطوات ميتا. كرزون تسجّل الرقم، وتشترك له في الـ Webhooks، وتربطه بمحفظة العميل.
+  </Step>
+  <Step title="تصلك النتيجة">
+    راجع [النتيجة](#النتيجة).
+  </Step>
+</Steps>
+
+الرابط صالح **24 ساعة** ويعمل **مرة واحدة**، ولا يعمل إلا للعميل الذي وُقّع له. وقّع رابطاً جديداً لكل محاولة.
+
+## وقّع الرابط
+
+<CodeGroup>
+```js Node.js
+import crypto from "crypto";
+
+export function connectLink({ partner, organizationId, clientHost, secret }) {
+  const ts = Math.floor(Date.now() / 1000);
+  const sig = crypto
+    .createHmac("sha512", secret)
+    .update(`${partner}|${organizationId}|${ts}`)
+    .digest("hex");
+  return `https://${clientHost}/connect-whatsapp?ts=${ts}&sig=${sig}`;
+}
+
+// connectLink({ partner: "agency", organizationId: "665f1c…", clientHost: "acme.yourdomain.com", secret: process.env.KARZOUN_PLATFORM_SECRET })
+```
+
+```python Python
+import hashlib, hmac, os, time
+
+def connect_link(partner: str, organization_id: str, client_host: str) -> str:
+    ts = int(time.time())
+    message = f"{partner}|{organization_id}|{ts}".encode()
+    sig = hmac.new(os.environ["KARZOUN_PLATFORM_SECRET"].encode(), message, hashlib.sha512).hexdigest()
+    return f"https://{client_host}/connect-whatsapp?ts={ts}&sig={sig}"
+```
+
+```php PHP
+<?php
+function connectLink(string $partner, string $organizationId, string $clientHost): string {
+    $ts = time();
+    $sig = hash_hmac('sha512', "$partner|$organizationId|$ts", getenv('KARZOUN_PLATFORM_SECRET'));
+    return "https://$clientHost/connect-whatsapp?ts=$ts&sig=$sig";
+}
+```
+</CodeGroup>
+
+<Warning>
+  وقّع الروابط على خادمك فقط، ولعملاء يحق لمستخدمك إدارتهم. لا تضع مفتاح المنصّة أبداً في المتصفح أو في تطبيق جوال.
+</Warning>
+
+## النتيجة
+
+النتيجة فيها `status` و`organization_id` و`integration_id` (معرّف الرقم الجديد). استخدم `integration_id` مع [`partnerChannelApiKeyCreate`](/ar/partners/api/numbers-and-keys).
+
+<Tabs>
+  <Tab title="نافذة منبثقة">
+    افتح الرابط بـ `window.open`. عند اكتمال الربط ترسل الصفحة رسالة إلى نافذتك ثم تُغلق:
+
+    ```js
+    const popup = window.open(link, "karzoun_connect", "width=600,height=800");
+
+    window.addEventListener("message", (event) => {
+      if (event.data?.type !== "karzoun:whatsapp-connect") return;
+      const { status, organization_id, integration_id } = event.data;
+      // status === "connected"
+    });
+    ```
+
+    إذا ضبطت **عنوان التحويل بعد الربط**، تُرسل الرسالة إلى أصل (origin) ذلك العنوان فقط. تحقّق من `event.origin` مقابل نطاق تطبيق عميلك.
+  </Tab>
+  <Tab title="تحويل">
+    إذا فُتح الرابط في تبويب، تحوّل الصفحة العميل إلى **عنوان التحويل بعد الربط** والنتيجة في الـ query:
+
+    ```
+    https://platform.example/whatsapp/done?status=connected&organization_id=665f1c…&integration_id=6660a2…
+    ```
+
+    أي معاملات موجودة مسبقاً في عنوانك تبقى كما هي. اضبطه من **الشريك ← الإعدادات ← عام ← المطوّرون ← عنوان التحويل بعد الربط**.
+  </Tab>
+  <Tab title="Webhook">
+    بأي طريقة فُتح الرابط، يصل حدث `channel.connected` إلى [Webhook الشريك](/ar/partners/webhook) بنفس `organization_id` و`integration_id`. اعتمد عليه كمصدر الحقيقة، لأن العميل قد يغلق المتصفح قبل أن يصل إلى صفحتك.
+  </Tab>
+</Tabs>
+
+## رسائل الخطأ في الصفحة
+
+| ما يراه العميل | السبب |
+| --- | --- |
+| `This link is not valid` | توقيع خاطئ، أو عميل مختلف، أو الحساب ليس من عملائك |
+| `This link has expired` | مرّ على `ts` أكثر من 24 ساعة |
+| `This link was already used. Ask for a new one.` | الرابط فُتح سابقاً. وقّع رابطاً جديداً |
+| منع المتصفح نافذة ميتا | النوافذ المنبثقة محظورة على نطاق العميل |
+
+بعد قبول الرابط، أمام العميل 30 دقيقة لإكمال الربط في نفس الصفحة.
+
+## أرقام موجودة على واتساب
+
+- **رقم على تطبيق واتساب للأعمال:** يختار العميل **استخدام تطبيق واتساب للأعمال**، ويستمر باستخدام التطبيق جنباً إلى جنب مع الـ API (coexistence).
+- **رقم عند مزوّد آخر:** يختار العميل الرقم الموجود أثناء التسجيل، وبعدها لازم يحوّل توجيه المحادثات إلى كرزون في Meta Business Suite. راجع [مزود آخر يتحكم بالمحادثة](/ar/whatsapp-api/reference/errors#مزود-آخر-يتحكم-بالمحادثة).

@@ -1,0 +1,38 @@
+---
+title: "المجموعات"
+description: "أنشئ مجموعات واتساب وأدرها من رقم نشاطك."
+---
+
+الأنشطة التي لديها صلاحية WhatsApp Groups API تستطيع إنشاء مجموعات والمراسلة فيها عبر الـ API. رسائل المجموعات تمرّ عبر نفس [`POST /messages`](/ar/whatsapp-api/messaging/send-messages) والمستلم هو المجموعة.
+
+| الإجراء | الطلب |
+| --- | --- |
+| عرض المجموعات | `GET /groups` |
+| إنشاء مجموعة | `POST /groups` |
+| قراءة مجموعة | `GET /groups/{group-id}` |
+| تعديل مجموعة | `POST /groups/{group-id}` |
+| حذف مجموعة | `DELETE /groups/{group-id}` |
+| جلب رابط الدعوة أو تجديده | `GET` / `POST /groups/{group-id}/invite_link` |
+| إزالة أعضاء | `DELETE /groups/{group-id}/participants` |
+| عرض طلبات الانضمام أو قبولها أو رفضها | `GET` / `POST` / `DELETE /groups/{group-id}/join_requests` |
+
+الحقول بصيغة WhatsApp Groups API القياسية.
+
+## إنشاء مجموعة
+
+```bash
+curl -X POST https://waba.karzoun.chat/groups \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "messaging_product": "whatsapp", "subject": "VIP customers", "description": "Early access and offers" }'
+```
+
+شارك رابط الدعوة مع عملائك. الأعضاء ينضمّون من الرابط، ولا تستطيع إضافتهم مباشرة.
+
+## أحداث المجموعات
+
+إنشاء المجموعة، وتغيّر الأعضاء، وطلبات الانضمام، وتعديل الإعدادات، كلها تصلك على [الـ Webhook](/ar/whatsapp-api/webhooks/events) في حقول المجموعات.
+
+<Note>
+  المجموعات متاحة للأرقام التي لديها حساب أعمال رسمي (Official Business Account) وصلاحية Groups API.
+</Note>

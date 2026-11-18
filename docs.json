@@ -344,6 +344,220 @@
             }
           },
           {
+            "tab": "WhatsApp API",
+            "icon": "whatsapp",
+            "groups": [
+              {
+                "group": "البداية",
+                "pages": [
+                  "ar/whatsapp-api/index",
+                  "ar/whatsapp-api/quickstart",
+                  "ar/whatsapp-api/authentication",
+                  "ar/whatsapp-api/pricing-and-wallet",
+                  "ar/whatsapp-api/customer-service-window",
+                  "ar/whatsapp-api/opt-in"
+                ]
+              },
+              {
+                "group": "الحساب والأرقام",
+                "pages": [
+                  "ar/whatsapp-api/account/business-verification",
+                  "ar/whatsapp-api/account/phone-numbers",
+                  "ar/whatsapp-api/account/display-names",
+                  "ar/whatsapp-api/account/official-business-account",
+                  "ar/whatsapp-api/account/quality-rating",
+                  "ar/whatsapp-api/account/messaging-limits",
+                  "ar/whatsapp-api/account/account-status",
+                  "ar/whatsapp-api/account/coexistence",
+                  "ar/whatsapp-api/account/usernames-and-bsuid",
+                  "ar/whatsapp-api/account/existing-numbers"
+                ]
+              },
+              {
+                "group": "القوالب",
+                "pages": [
+                  "ar/whatsapp-api/templates/overview",
+                  "ar/whatsapp-api/templates/elements",
+                  "ar/whatsapp-api/templates/manage",
+                  "ar/whatsapp-api/templates/sending",
+                  "ar/whatsapp-api/templates/analytics",
+                  "ar/whatsapp-api/templates/utility",
+                  "ar/whatsapp-api/templates/marketing",
+                  "ar/whatsapp-api/templates/authentication",
+                  "ar/whatsapp-api/templates/commerce"
+                ]
+              },
+              {
+                "group": "المراسلة",
+                "pages": [
+                  "ar/whatsapp-api/messaging/send-messages",
+                  "ar/whatsapp-api/messaging/media",
+                  "ar/whatsapp-api/messaging/flows",
+                  "ar/whatsapp-api/messaging/groups",
+                  "ar/whatsapp-api/messaging/calling",
+                  "ar/whatsapp-api/messaging/commerce",
+                  "ar/whatsapp-api/messaging/number-settings"
+                ]
+              },
+              {
+                "group": "Webhooks",
+                "pages": [
+                  "ar/whatsapp-api/webhooks/overview",
+                  "ar/whatsapp-api/webhooks/signature",
+                  "ar/whatsapp-api/webhooks/events",
+                  "ar/whatsapp-api/webhooks/delivery",
+                  "ar/whatsapp-api/webhooks/receiving-media"
+                ]
+              },
+              {
+                "group": "لوحة التحكم",
+                "pages": [
+                  "ar/whatsapp-api/dashboard/connect-a-number",
+                  "ar/whatsapp-api/dashboard/api-tab",
+                  "ar/whatsapp-api/dashboard/profile",
+                  "ar/whatsapp-api/dashboard/templates",
+                  "ar/whatsapp-api/dashboard/insights",
+                  "ar/whatsapp-api/dashboard/billing"
+                ]
+              },
+              {
+                "group": "أدلة عملية",
+                "pages": [
+                  "ar/whatsapp-api/guides/bring-users-to-whatsapp",
+                  "ar/whatsapp-api/guides/campaign-checklist",
+                  "ar/whatsapp-api/guides/account-health",
+                  "ar/whatsapp-api/guides/troubleshooting",
+                  "ar/whatsapp-api/support"
+                ]
+              },
+              {
+                "group": "مرجع الـ API",
+                "pages": [
+                  "ar/whatsapp-api/reference/errors",
+                  {
+                    "group": "الرسائل",
+                    "pages": [
+                      "whatsapp-api/reference/send-a-message",
+                      "whatsapp-api/reference/send-a-marketing-message"
+                    ]
+                  },
+                  {
+                    "group": "الوسائط",
+                    "pages": [
+                      "whatsapp-api/reference/upload-media",
+                      "whatsapp-api/reference/retrieve-media",
+                      "whatsapp-api/reference/download-media",
+                      "whatsapp-api/reference/delete-media",
+                      "whatsapp-api/reference/start-a-resumable-upload",
+                      "whatsapp-api/reference/upload-file-bytes",
+                      "whatsapp-api/reference/read-upload-progress"
+                    ]
+                  },
+                  {
+                    "group": "القوالب",
+                    "pages": [
+                      "whatsapp-api/reference/list-templates",
+                      "whatsapp-api/reference/create-a-template",
+                      "whatsapp-api/reference/delete-a-template-by-name",
+                      "whatsapp-api/reference/get-a-template",
+                      "whatsapp-api/reference/edit-a-template",
+                      "whatsapp-api/reference/delete-a-template",
+                      "whatsapp-api/reference/browse-the-template-library",
+                      "whatsapp-api/reference/get-template-analytics",
+                      "whatsapp-api/reference/enable-template-analytics"
+                    ]
+                  },
+                  {
+                    "group": "Flows",
+                    "pages": [
+                      "whatsapp-api/reference/list-flows",
+                      "whatsapp-api/reference/create-a-flow",
+                      "whatsapp-api/reference/get-a-flow",
+                      "whatsapp-api/reference/update-a-flow",
+                      "whatsapp-api/reference/delete-a-draft-flow",
+                      "whatsapp-api/reference/list-flow-assets",
+                      "whatsapp-api/reference/upload-flow-json",
+                      "whatsapp-api/reference/publish-a-flow",
+                      "whatsapp-api/reference/deprecate-a-flow"
+                    ]
+                  },
+                  {
+                    "group": "المجموعات",
+                    "pages": [
+                      "whatsapp-api/reference/list-groups",
+                      "whatsapp-api/reference/create-a-group",
+                      "whatsapp-api/reference/get-a-group",
+                      "whatsapp-api/reference/update-a-group",
+                      "whatsapp-api/reference/delete-a-group",
+                      "whatsapp-api/reference/get-the-invite-link",
+                      "whatsapp-api/reference/reset-the-invite-link",
+                      "whatsapp-api/reference/remove-participants",
+                      "whatsapp-api/reference/list-join-requests",
+                      "whatsapp-api/reference/approve-join-requests",
+                      "whatsapp-api/reference/reject-join-requests"
+                    ]
+                  },
+                  {
+                    "group": "الاتصال",
+                    "pages": [
+                      "whatsapp-api/reference/manage-a-call",
+                      "whatsapp-api/reference/get-calling-settings",
+                      "whatsapp-api/reference/update-calling-settings",
+                      "whatsapp-api/reference/get-call-permission"
+                    ]
+                  },
+                  {
+                    "group": "إعدادات الرقم",
+                    "pages": [
+                      "whatsapp-api/reference/get-health-status",
+                      "whatsapp-api/reference/get-business-profile",
+                      "whatsapp-api/reference/update-business-profile",
+                      "whatsapp-api/reference/list-blocked-users",
+                      "whatsapp-api/reference/block-users",
+                      "whatsapp-api/reference/unblock-users",
+                      "whatsapp-api/reference/get-conversational-components",
+                      "whatsapp-api/reference/set-conversational-components",
+                      "whatsapp-api/reference/remove-conversational-components",
+                      "whatsapp-api/reference/get-business-compliance-info",
+                      "whatsapp-api/reference/set-business-compliance-info",
+                      "whatsapp-api/reference/get-encryption-public-key",
+                      "whatsapp-api/reference/set-encryption-public-key"
+                    ]
+                  },
+                  {
+                    "group": "أسماء المستخدمين",
+                    "pages": [
+                      "whatsapp-api/reference/get-the-business-username",
+                      "whatsapp-api/reference/claim-or-change-the-business-username",
+                      "whatsapp-api/reference/delete-the-business-username",
+                      "whatsapp-api/reference/list-reserved-username-suggestions",
+                      "whatsapp-api/reference/delete-a-contact-book-entry"
+                    ]
+                  },
+                  {
+                    "group": "التجارة",
+                    "pages": [
+                      "whatsapp-api/reference/get-commerce-settings",
+                      "whatsapp-api/reference/update-commerce-settings",
+                      "whatsapp-api/reference/list-catalogs",
+                      "whatsapp-api/reference/list-catalog-products"
+                    ]
+                  },
+                  {
+                    "group": "Webhooks",
+                    "pages": [
+                      "whatsapp-api/reference/get-the-webhook",
+                      "whatsapp-api/reference/set-the-webhook",
+                      "whatsapp-api/reference/send-a-test-event",
+                      "whatsapp-api/reference/list-account-webhooks",
+                      "whatsapp-api/reference/set-the-account-webhook"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
             "tab": "الشركاء",
             "icon": "handshake",
             "groups": [
@@ -353,6 +567,22 @@
                   "ar/partners/index",
                   "ar/partners/onboarding",
                   "ar/partners/whitelabel"
+                ]
+              },
+              {
+                "group": "Partner API",
+                "pages": [
+                  "ar/partners/api/overview",
+                  "ar/partners/api/clients-and-funding",
+                  "ar/partners/api/numbers-and-keys",
+                  "ar/partners/connect-links",
+                  "ar/partners/webhook"
+                ]
+              },
+              {
+                "group": "متقدّم",
+                "pages": [
+                  "ar/partners/bring-your-own-meta-app"
                 ]
               }
             ]
@@ -1241,6 +1471,220 @@
             ]
           },
           {
+            "tab": "WhatsApp API",
+            "icon": "whatsapp",
+            "groups": [
+              {
+                "group": "Get started",
+                "pages": [
+                  "whatsapp-api/index",
+                  "whatsapp-api/quickstart",
+                  "whatsapp-api/authentication",
+                  "whatsapp-api/pricing-and-wallet",
+                  "whatsapp-api/customer-service-window",
+                  "whatsapp-api/opt-in"
+                ]
+              },
+              {
+                "group": "Account and numbers",
+                "pages": [
+                  "whatsapp-api/account/business-verification",
+                  "whatsapp-api/account/phone-numbers",
+                  "whatsapp-api/account/display-names",
+                  "whatsapp-api/account/official-business-account",
+                  "whatsapp-api/account/quality-rating",
+                  "whatsapp-api/account/messaging-limits",
+                  "whatsapp-api/account/account-status",
+                  "whatsapp-api/account/coexistence",
+                  "whatsapp-api/account/usernames-and-bsuid",
+                  "whatsapp-api/account/existing-numbers"
+                ]
+              },
+              {
+                "group": "Templates",
+                "pages": [
+                  "whatsapp-api/templates/overview",
+                  "whatsapp-api/templates/elements",
+                  "whatsapp-api/templates/manage",
+                  "whatsapp-api/templates/sending",
+                  "whatsapp-api/templates/analytics",
+                  "whatsapp-api/templates/utility",
+                  "whatsapp-api/templates/marketing",
+                  "whatsapp-api/templates/authentication",
+                  "whatsapp-api/templates/commerce"
+                ]
+              },
+              {
+                "group": "Messaging",
+                "pages": [
+                  "whatsapp-api/messaging/send-messages",
+                  "whatsapp-api/messaging/media",
+                  "whatsapp-api/messaging/flows",
+                  "whatsapp-api/messaging/groups",
+                  "whatsapp-api/messaging/calling",
+                  "whatsapp-api/messaging/commerce",
+                  "whatsapp-api/messaging/number-settings"
+                ]
+              },
+              {
+                "group": "Webhooks",
+                "pages": [
+                  "whatsapp-api/webhooks/overview",
+                  "whatsapp-api/webhooks/signature",
+                  "whatsapp-api/webhooks/events",
+                  "whatsapp-api/webhooks/delivery",
+                  "whatsapp-api/webhooks/receiving-media"
+                ]
+              },
+              {
+                "group": "Dashboard",
+                "pages": [
+                  "whatsapp-api/dashboard/connect-a-number",
+                  "whatsapp-api/dashboard/api-tab",
+                  "whatsapp-api/dashboard/profile",
+                  "whatsapp-api/dashboard/templates",
+                  "whatsapp-api/dashboard/insights",
+                  "whatsapp-api/dashboard/billing"
+                ]
+              },
+              {
+                "group": "Guides",
+                "pages": [
+                  "whatsapp-api/guides/bring-users-to-whatsapp",
+                  "whatsapp-api/guides/campaign-checklist",
+                  "whatsapp-api/guides/account-health",
+                  "whatsapp-api/guides/troubleshooting",
+                  "whatsapp-api/support"
+                ]
+              },
+              {
+                "group": "API reference",
+                "pages": [
+                  "whatsapp-api/reference/errors",
+                  {
+                    "group": "Messages",
+                    "pages": [
+                      "whatsapp-api/reference/send-a-message",
+                      "whatsapp-api/reference/send-a-marketing-message"
+                    ]
+                  },
+                  {
+                    "group": "Media",
+                    "pages": [
+                      "whatsapp-api/reference/upload-media",
+                      "whatsapp-api/reference/retrieve-media",
+                      "whatsapp-api/reference/download-media",
+                      "whatsapp-api/reference/delete-media",
+                      "whatsapp-api/reference/start-a-resumable-upload",
+                      "whatsapp-api/reference/upload-file-bytes",
+                      "whatsapp-api/reference/read-upload-progress"
+                    ]
+                  },
+                  {
+                    "group": "Templates",
+                    "pages": [
+                      "whatsapp-api/reference/list-templates",
+                      "whatsapp-api/reference/create-a-template",
+                      "whatsapp-api/reference/delete-a-template-by-name",
+                      "whatsapp-api/reference/get-a-template",
+                      "whatsapp-api/reference/edit-a-template",
+                      "whatsapp-api/reference/delete-a-template",
+                      "whatsapp-api/reference/browse-the-template-library",
+                      "whatsapp-api/reference/get-template-analytics",
+                      "whatsapp-api/reference/enable-template-analytics"
+                    ]
+                  },
+                  {
+                    "group": "Flows",
+                    "pages": [
+                      "whatsapp-api/reference/list-flows",
+                      "whatsapp-api/reference/create-a-flow",
+                      "whatsapp-api/reference/get-a-flow",
+                      "whatsapp-api/reference/update-a-flow",
+                      "whatsapp-api/reference/delete-a-draft-flow",
+                      "whatsapp-api/reference/list-flow-assets",
+                      "whatsapp-api/reference/upload-flow-json",
+                      "whatsapp-api/reference/publish-a-flow",
+                      "whatsapp-api/reference/deprecate-a-flow"
+                    ]
+                  },
+                  {
+                    "group": "Groups",
+                    "pages": [
+                      "whatsapp-api/reference/list-groups",
+                      "whatsapp-api/reference/create-a-group",
+                      "whatsapp-api/reference/get-a-group",
+                      "whatsapp-api/reference/update-a-group",
+                      "whatsapp-api/reference/delete-a-group",
+                      "whatsapp-api/reference/get-the-invite-link",
+                      "whatsapp-api/reference/reset-the-invite-link",
+                      "whatsapp-api/reference/remove-participants",
+                      "whatsapp-api/reference/list-join-requests",
+                      "whatsapp-api/reference/approve-join-requests",
+                      "whatsapp-api/reference/reject-join-requests"
+                    ]
+                  },
+                  {
+                    "group": "Calling",
+                    "pages": [
+                      "whatsapp-api/reference/manage-a-call",
+                      "whatsapp-api/reference/get-calling-settings",
+                      "whatsapp-api/reference/update-calling-settings",
+                      "whatsapp-api/reference/get-call-permission"
+                    ]
+                  },
+                  {
+                    "group": "Number settings",
+                    "pages": [
+                      "whatsapp-api/reference/get-health-status",
+                      "whatsapp-api/reference/get-business-profile",
+                      "whatsapp-api/reference/update-business-profile",
+                      "whatsapp-api/reference/list-blocked-users",
+                      "whatsapp-api/reference/block-users",
+                      "whatsapp-api/reference/unblock-users",
+                      "whatsapp-api/reference/get-conversational-components",
+                      "whatsapp-api/reference/set-conversational-components",
+                      "whatsapp-api/reference/remove-conversational-components",
+                      "whatsapp-api/reference/get-business-compliance-info",
+                      "whatsapp-api/reference/set-business-compliance-info",
+                      "whatsapp-api/reference/get-encryption-public-key",
+                      "whatsapp-api/reference/set-encryption-public-key"
+                    ]
+                  },
+                  {
+                    "group": "Usernames",
+                    "pages": [
+                      "whatsapp-api/reference/get-the-business-username",
+                      "whatsapp-api/reference/claim-or-change-the-business-username",
+                      "whatsapp-api/reference/delete-the-business-username",
+                      "whatsapp-api/reference/list-reserved-username-suggestions",
+                      "whatsapp-api/reference/delete-a-contact-book-entry"
+                    ]
+                  },
+                  {
+                    "group": "Commerce",
+                    "pages": [
+                      "whatsapp-api/reference/get-commerce-settings",
+                      "whatsapp-api/reference/update-commerce-settings",
+                      "whatsapp-api/reference/list-catalogs",
+                      "whatsapp-api/reference/list-catalog-products"
+                    ]
+                  },
+                  {
+                    "group": "Webhooks",
+                    "pages": [
+                      "whatsapp-api/reference/get-the-webhook",
+                      "whatsapp-api/reference/set-the-webhook",
+                      "whatsapp-api/reference/send-a-test-event",
+                      "whatsapp-api/reference/list-account-webhooks",
+                      "whatsapp-api/reference/set-the-account-webhook"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
             "tab": "Partners",
             "icon": "handshake",
             "groups": [
@@ -1250,6 +1694,22 @@
                   "partners/index",
                   "partners/onboarding",
                   "partners/whitelabel"
+                ]
+              },
+              {
+                "group": "Partner API",
+                "pages": [
+                  "partners/api/overview",
+                  "partners/api/clients-and-funding",
+                  "partners/api/numbers-and-keys",
+                  "partners/connect-links",
+                  "partners/webhook"
+                ]
+              },
+              {
+                "group": "Advanced",
+                "pages": [
+                  "partners/bring-your-own-meta-app"
                 ]
               }
             ]

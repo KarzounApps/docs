@@ -1,0 +1,207 @@
+---
+title: "إرسال الرسائل"
+description: "أرسل النصوص والوسائط والرسائل التفاعلية والقوالب وغيرها عبر POST /messages."
+---
+
+كل الرسائل تمرّ عبر endpoint واحد:
+
+```
+POST https://waba.karzoun.chat/messages
+Karzoun-API-Key: YOUR_API_KEY
+Content-Type: application/json
+```
+
+جسم الطلب هو كائن رسالة قياسي من WhatsApp Cloud API. كل طلب فيه `"messaging_product": "whatsapp"` ومستلم و`type`.
+
+## المستلم
+
+| الحقل | متى تستخدمه |
+| --- | --- |
+| `to` | رقم الجوال بالصيغة الدولية، أرقام فقط (`966500000000`). |
+| `recipient` | المعرّف الخاص بالنشاط (BSUID)، إذا أرسله لك واتساب بدل رقم الجوال. |
+
+## ماذا تستطيع أن ترسل ومتى
+
+| الحالة | المسموح |
+| --- | --- |
+| العميل راسلك خلال آخر 24 ساعة | أي نوع رسالة |
+| لا توجد محادثة مفتوحة | القوالب فقط (أو [Direct Send](#direct-send) للرسائل الخدمية) |
+
+## أمثلة
+
+<Tabs>
+  <Tab title="نص">
+    ```json
+    {
+      "messaging_product": "whatsapp",
+      "to": "966500000000",
+      "type": "text",
+      "text": { "body": "Your order #1042 is on its way.", "preview_url": false }
+    }
+    ```
+  </Tab>
+  <Tab title="صورة">
+    استخدم رابطاً عاماً في `link`، أو الـ `id` من [رفع الوسائط](/ar/whatsapp-api/messaging/media#الرفع).
+
+    ```json
+    {
+      "messaging_product": "whatsapp",
+      "to": "966500000000",
+      "type": "image",
+      "image": { "link": "https://example.com/receipt.png", "caption": "Your receipt" }
+    }
+    ```
+
+    `document` و`audio` و`video` و`sticker` بنفس الطريقة.
+  </Tab>
+  <Tab title="أزرار">
+    ```json
+    {
+      "messaging_product": "whatsapp",
+      "to": "966500000000",
+      "type": "interactive",
+      "interactive": {
+        "type": "button",
+        "body": { "text": "Confirm your appointment on Sunday at 10:00?" },
+        "action": {
+          "buttons": [
+            { "type": "reply", "reply": { "id": "confirm", "title": "Confirm" } },
+            { "type": "reply", "reply": { "id": "reschedule", "title": "Reschedule" } }
+          ]
+        }
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="قائمة">
+    ```json
+    {
+      "messaging_product": "whatsapp",
+      "to": "966500000000",
+      "type": "interactive",
+      "interactive": {
+        "type": "list",
+        "body": { "text": "Pick a branch" },
+        "action": {
+          "button": "Branches",
+          "sections": [{
+            "title": "Riyadh",
+            "rows": [
+              { "id": "olaya", "title": "Olaya" },
+              { "id": "malqa", "title": "Al Malqa" }
+            ]
+          }]
+        }
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="قالب">
+    ```json
+    {
+      "messaging_product": "whatsapp",
+      "to": "966500000000",
+      "type": "template",
+      "template": {
+        "name": "order_shipped",
+        "language": { "code": "ar" },
+        "components": [{
+          "type": "body",
+          "parameters": [
+            { "type": "text", "text": "سارة" },
+            { "type": "text", "text": "#1042" }
+          ]
+        }]
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="موقع">
+    ```json
+    {
+      "messaging_product": "whatsapp",
+      "to": "966500000000",
+      "type": "location",
+      "location": { "latitude": 24.7136, "longitude": 46.6753, "name": "Head office", "address": "Olaya St, Riyadh" }
+    }
+    ```
+  </Tab>
+  <Tab title="تفاعل">
+    ```json
+    {
+      "messaging_product": "whatsapp",
+      "to": "966500000000",
+      "type": "reaction",
+      "reaction": { "message_id": "wamid.HBgM...", "emoji": "👍" }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+جهات الاتصال، والعنوان، وزر الرابط (CTA URL)، ورسائل المنتجات والـ Flows كلها بنفس صيغة رسائل واتساب القياسية.
+
+## الرد
+
+```json
+{
+  "messaging_product": "whatsapp",
+  "contacts": [{ "input": "966500000000", "wa_id": "966500000000" }],
+  "messages": [{ "id": "wamid.HBgMOTY2NTAwMDAwMDAwFQIAERgS..." }]
+}
+```
+
+احفظ `messages[0].id`. تحديثات حالة الرسالة (`sent`، `delivered`، `read`، `failed`) تصلك على [الـ Webhook](/ar/whatsapp-api/webhooks/events) بنفس المعرّف.
+
+## إشعار القراءة ومؤشر الكتابة
+
+علّم الرسالة الواردة كمقروءة، ويمكنك إظهار "يكتب الآن…" وأنت تجهّز الرد:
+
+```json
+{
+  "messaging_product": "whatsapp",
+  "status": "read",
+  "message_id": "wamid.HBgM...",
+  "typing_indicator": { "type": "text" }
+}
+```
+
+هذا الطلب لا يُحسب عليك.
+
+## Direct Send
+
+أرسل رسالة **خدمية (utility)** يبدأها النشاط بدون إنشاء قالب مسبقاً. أضف `"category": "utility"` لأي رسالة عادية، وواتساب ينشئ القالب المناسب ويديره.
+
+```json
+{
+  "messaging_product": "whatsapp",
+  "to": "966500000000",
+  "category": "utility",
+  "type": "text",
+  "text": { "body": "Your appointment is confirmed for Sunday at 10:00." }
+}
+```
+
+للرسائل التشغيلية فقط: تحديثات الطلب والشحن، التذكيرات، تأكيد الدفع. أي محتوى ترويجي يُرفض.
+
+## رسائل التسويق
+
+أرسل قوالب التسويق عبر Marketing Messages API لتوصيل أفضل:
+
+```
+POST https://waba.karzoun.chat/marketing_messages
+```
+
+الجسم مثل رسالة القالب، ويُحسب مثل `/messages`.
+
+## الأخطاء
+
+أخطاء واتساب تحتفظ بأكوادها. الأشهر:
+
+| الكود | المعنى |
+| --- | --- |
+| `131047` | مرّت أكثر من 24 ساعة على آخر رسالة من العميل. أرسل قالباً. |
+| `131026` | المستلم لا يستطيع استقبال الرسالة (ليس على واتساب، أو تطبيقه قديم). |
+| `131070` | مزوّد آخر يتحكم بالمحادثة. راجع [الأخطاء](/ar/whatsapp-api/reference/errors#مزود-آخر-يتحكم-بالمحادثة). |
+| `132001` | القالب غير موجود بهذه اللغة. |
+
+وإذا وصلك `402` وفيه `"type": "Karzoun"` فالمحفظة لا تكفي. راجع [الأسعار والمحفظة](/ar/whatsapp-api/pricing-and-wallet).

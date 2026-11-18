@@ -1,0 +1,130 @@
+---
+title: "Connect links"
+description: "Let a client connect a WhatsApp number from your platform without a Karzoun login."
+---
+
+A connect link opens Karzoun's WhatsApp signup for one of your clients, on your branded domain. Your server signs the link, so no Karzoun login and no API call is needed to create it.
+
+## How it works
+
+<Steps>
+  <Step title="Your server signs a link">
+    ```
+    ts  = current Unix time in seconds
+    sig = hex( HMAC-SHA512( platform secret, "{partner}|{organization_id}|{ts}" ) )
+    ```
+
+    | Value | Where to find it |
+    | --- | --- |
+    | `platform secret` | **Partner → Settings → General → Developer → Platform secret** |
+    | `partner` | Your partner code, shown under **Connect links** in the same card |
+    | `organization_id` | The client's `_id` from `partnerRegisterOrganization` |
+  </Step>
+  <Step title="The client opens it">
+    ```
+    https://{client subdomain}.{your app domain}/connect-whatsapp?ts={ts}&sig={sig}
+    ```
+
+    For example `https://acme.yourdomain.com/connect-whatsapp?ts=1731916800&sig=9b1c…`, or `https://acme.karzoun.chat/…` without a whitelabel domain.
+  </Step>
+  <Step title="The client connects a number">
+    The page shows your branding. The client continues with Facebook (or with the WhatsApp Business app) and finishes Meta's signup. Karzoun registers the number, subscribes it to webhooks and attaches it to the client's wallet.
+  </Step>
+  <Step title="You get the result">
+    See [Result](#result).
+  </Step>
+</Steps>
+
+A link is valid for **24 hours** and works **once**. It only works for the client it was signed for. Sign a new link for every attempt.
+
+## Sign a link
+
+<CodeGroup>
+```js Node.js
+import crypto from "crypto";
+
+export function connectLink({ partner, organizationId, clientHost, secret }) {
+  const ts = Math.floor(Date.now() / 1000);
+  const sig = crypto
+    .createHmac("sha512", secret)
+    .update(`${partner}|${organizationId}|${ts}`)
+    .digest("hex");
+  return `https://${clientHost}/connect-whatsapp?ts=${ts}&sig=${sig}`;
+}
+
+// connectLink({ partner: "agency", organizationId: "665f1c…", clientHost: "acme.yourdomain.com", secret: process.env.KARZOUN_PLATFORM_SECRET })
+```
+
+```python Python
+import hashlib, hmac, os, time
+
+def connect_link(partner: str, organization_id: str, client_host: str) -> str:
+    ts = int(time.time())
+    message = f"{partner}|{organization_id}|{ts}".encode()
+    sig = hmac.new(os.environ["KARZOUN_PLATFORM_SECRET"].encode(), message, hashlib.sha512).hexdigest()
+    return f"https://{client_host}/connect-whatsapp?ts={ts}&sig={sig}"
+```
+
+```php PHP
+<?php
+function connectLink(string $partner, string $organizationId, string $clientHost): string {
+    $ts = time();
+    $sig = hash_hmac('sha512', "$partner|$organizationId|$ts", getenv('KARZOUN_PLATFORM_SECRET'));
+    return "https://$clientHost/connect-whatsapp?ts=$ts&sig=$sig";
+}
+```
+</CodeGroup>
+
+<Warning>
+  Sign links on your server only, for clients your user is allowed to manage. Never put the platform secret in a browser or mobile app.
+</Warning>
+
+## Result
+
+The result has `status`, `organization_id` and `integration_id` (the new number). Use `integration_id` with [`partnerChannelApiKeyCreate`](/partners/api/numbers-and-keys).
+
+<Tabs>
+  <Tab title="Popup">
+    Open the link with `window.open`. When the number connects, the page posts a message to your window and closes:
+
+    ```js
+    const popup = window.open(link, "karzoun_connect", "width=600,height=800");
+
+    window.addEventListener("message", (event) => {
+      if (event.data?.type !== "karzoun:whatsapp-connect") return;
+      const { status, organization_id, integration_id } = event.data;
+      // status === "connected"
+    });
+    ```
+
+    When you've set a **Redirect URL**, the message is only posted to that URL's origin. Check `event.origin` against your client's app host.
+  </Tab>
+  <Tab title="Redirect">
+    Opened in a tab, the page sends the client to your **Redirect URL** with the result in the query:
+
+    ```
+    https://platform.example/whatsapp/done?status=connected&organization_id=665f1c…&integration_id=6660a2…
+    ```
+
+    Query parameters already in your Redirect URL are kept. Set it in **Partner → Settings → General → Developer → Redirect URL after connecting**.
+  </Tab>
+  <Tab title="Webhook">
+    Whichever way the link was opened, your [partner webhook](/partners/webhook) receives `channel.connected` with the same `organization_id` and `integration_id`. Use it as the source of truth: the browser can be closed before it reaches your page.
+  </Tab>
+</Tabs>
+
+## Errors on the page
+
+| The client sees | Cause |
+| --- | --- |
+| This link is not valid | Wrong signature, wrong client, or the workspace isn't one of your clients |
+| This link has expired | `ts` is more than 24 hours old |
+| This link was already used | The link was opened before. Sign a new one |
+| Your browser blocked the Meta window | Pop-ups are blocked for the client's domain |
+
+After the link is accepted, the client has 30 minutes to finish on that page.
+
+## Numbers already on WhatsApp
+
+- **Number on the WhatsApp Business app:** the client picks **Use my WhatsApp Business app** and keeps using the app alongside the API (coexistence).
+- **Number with another provider:** the client selects the existing number during signup. Afterwards, they must switch conversation routing to Karzoun in Meta Business Suite. See [Another provider controls the conversation](/whatsapp-api/reference/errors#another-provider-controls-the-conversation).

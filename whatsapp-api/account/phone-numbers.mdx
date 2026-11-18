@@ -1,0 +1,71 @@
+---
+title: "Phone numbers"
+description: "Which numbers you can use with the WhatsApp API, how many you can register, and how to remove one."
+---
+
+## Requirements
+
+A number you connect must:
+
+- belong to your business,
+- include a country code and area code (short codes aren't supported),
+- receive an SMS or a voice call for verification, unless it's already on the WhatsApp Business app and you connect it with [coexistence](/whatsapp-api/account/coexistence).
+
+Landlines and virtual numbers work if they can receive the verification call. Karzoun doesn't sell phone numbers; use one your business already owns.
+
+### Numbers already on WhatsApp
+
+| The number is on | What to do |
+| --- | --- |
+| Nothing | Connect it directly |
+| The WhatsApp Business app | Connect it with **Use my WhatsApp Business app** to keep the app ([coexistence](/whatsapp-api/account/coexistence)) |
+| Personal WhatsApp | Delete the WhatsApp account in the app first (**Settings → Account → Delete account**), then connect it |
+| Another WhatsApp API provider | Add Karzoun to it. See [Use a number from another provider](/whatsapp-api/account/existing-numbers) |
+
+A number banned on WhatsApp must be unbanned through WhatsApp's appeal before you can connect it.
+
+Once connected to the API, the number still makes normal calls and SMS, but it can't be used in the personal WhatsApp app.
+
+## How many numbers
+
+A new business portfolio can register **2** numbers. Meta raises the cap up to **20** automatically when the business is verified, or when a number reaches a 2,000 messaging limit and sends enough paid messages. You get a `business_capability_update` webhook event and a Meta Business Suite notification when it changes.
+
+Verified for more than a week and still at 2? Improve your numbers' [quality](/whatsapp-api/account/quality-rating); Meta re-evaluates the cap automatically.
+
+Each number gets its own [API key](/whatsapp-api/authentication) and [webhook](/whatsapp-api/webhooks/overview).
+
+## Phone number status
+
+| Status | Meaning |
+| --- | --- |
+| `CONNECTED` | Registered and able to send |
+| `PENDING` | Registration not finished. Finish connecting the number |
+| `FLAGGED` | Quality dropped to low. Fix it within 7 days to avoid a lower limit |
+| `RESTRICTED` | Messaging limit reached, or limited by a policy action |
+| `BANNED` / `DISCONNECTED` | Can't send. See [Account status](/whatsapp-api/account/account-status) |
+
+Check it any time with [`GET /health_status`](/whatsapp-api/messaging/number-settings#health-status) or on the number's **Profile** tab.
+
+## Two-step verification
+
+Two-step verification adds a 6-digit PIN to the number. With Meta's current account model you don't need to turn it off to connect a number or add a provider. One case still needs it: the [business account locked](/whatsapp-api/account/account-status#business-account-locked) error.
+
+To turn it off: **Meta Business Suite → WhatsApp Manager → Phone numbers →** the number **→ Settings → Two-step verification → Turn off**. Meta emails a confirmation link to the portfolio's admins.
+
+## Remove a number
+
+Deleting a number from the WhatsApp Business Platform frees it for the WhatsApp app or another account.
+
+<Steps>
+  <Step title="Check you can">
+    You need admin access to the business portfolio, and the number must not have sent paid messages in the last 30 days.
+  </Step>
+  <Step title="Delete it in WhatsApp Manager">
+    **Meta Business Suite → WhatsApp Manager → Phone numbers**, click the trash icon next to the number, pick a reason and confirm with your password.
+  </Step>
+  <Step title="Remove it from Karzoun">
+    Remove the number in your workspace so its API key and webhook stop working.
+  </Step>
+</Steps>
+
+There's no API to delete a number; it's only possible in WhatsApp Manager.

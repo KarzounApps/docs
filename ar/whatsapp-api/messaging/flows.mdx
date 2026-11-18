@@ -1,0 +1,57 @@
+---
+title: "Flows"
+description: "أنشئ WhatsApp Flows وارفعها وانشرها وأوقفها."
+---
+
+WhatsApp Flows نماذج متعددة الشاشات داخل المحادثة. الـ Flows تتبع حساب واتساب للأعمال الخاص برقمك.
+
+| الإجراء | الطلب |
+| --- | --- |
+| العرض | `GET /flows` |
+| الإنشاء | `POST /flows` |
+| القراءة | `GET /flows/{flow-id}?fields=name,status,validation_errors` |
+| تعديل البيانات | `POST /flows/{flow-id}` |
+| حذف مسودة | `DELETE /flows/{flow-id}` |
+| عرض الملفات | `GET /flows/{flow-id}/assets` |
+| رفع Flow JSON | `POST /flows/{flow-id}/assets` (multipart) |
+| النشر | `POST /flows/{flow-id}/publish` |
+| الإيقاف | `POST /flows/{flow-id}/deprecate` |
+
+## الإنشاء والنشر
+
+<Steps>
+  <Step title="أنشئ الـ Flow">
+    ```bash
+    curl -X POST https://waba.karzoun.chat/flows \
+      -H "Karzoun-API-Key: YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{ "name": "appointment_booking", "categories": ["APPOINTMENT_BOOKING"] }'
+    ```
+
+    ```json
+    { "id": "1180413179716237" }
+    ```
+  </Step>
+  <Step title="ارفع ملف Flow JSON">
+    ```bash
+    curl -X POST https://waba.karzoun.chat/flows/1180413179716237/assets \
+      -H "Karzoun-API-Key: YOUR_API_KEY" \
+      -F "name=flow.json" \
+      -F "asset_type=FLOW_JSON" \
+      -F "file=@flow.json;type=application/json"
+    ```
+
+    الرد فيه `validation_errors`. صحّحها وارفع الملف مرة ثانية.
+  </Step>
+  <Step title="انشر">
+    ```bash
+    curl -X POST https://waba.karzoun.chat/flows/1180413179716237/publish \
+      -H "Karzoun-API-Key: YOUR_API_KEY"
+    ```
+  </Step>
+  <Step title="أرسله">
+    أرسل رسالة `interactive` من نوع `flow`، أو قالباً فيه زر Flow. الجسم بصيغة رسائل الـ Flow القياسية في واتساب.
+  </Step>
+</Steps>
+
+عندما يكمل العميل الـ Flow، تصلك إجاباته على الـ Webhook كرسالة `interactive` فيها `nfm_reply`.

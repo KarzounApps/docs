@@ -1,0 +1,41 @@
+---
+title: "Templates in the dashboard"
+description: "Create, edit, delete and review templates from the number's Templates tab."
+---
+
+The **Templates** tab lists every template in the number's WhatsApp Business Account, the same ones the [API](/whatsapp-api/templates/manage) returns.
+
+## The list
+
+| Column | Meaning |
+| --- | --- |
+| Name | The template name used in API requests |
+| Category | Marketing, utility or authentication |
+| Language | One row per language |
+| Status | Approved, pending, rejected, paused or disabled. See [Statuses](/whatsapp-api/templates/overview#statuses) |
+| Quality | The template's [quality rating](/whatsapp-api/templates/overview#template-quality) |
+
+Filter by category and status, or search by name.
+
+## Create a template
+
+1. Click **Create Template**.
+2. Choose the category, name and language.
+3. Build the content: header, body with variables, footer and buttons. The preview shows how it looks in WhatsApp.
+4. Add a sample for each variable.
+5. Click **Create Template**. It goes to Meta for review.
+
+See [Template elements](/whatsapp-api/templates/elements) for what each part can contain, and [Templates overview](/whatsapp-api/templates/overview#common-rejection-reasons) for why templates get rejected.
+
+## Edit or delete
+
+Open a template's menu:
+
+- **Edit** changes an approved or rejected template and sends it back to review. Meta limits edits to once a day and 10 times in 30 days.
+- **Delete** removes the template in that language. Select several rows to delete them together.
+
+A deleted name can't be reused for 30 days.
+
+## Insights
+
+**View Insights** opens **Template Insights**: sent, delivered, read and clicked counts for the template over time, and its cost. Select several templates and click **Insights** to compare them.

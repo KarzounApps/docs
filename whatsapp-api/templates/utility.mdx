@@ -1,0 +1,65 @@
+---
+title: "Utility templates"
+description: "Transactional updates: what qualifies as utility, examples, and how to keep templates from becoming marketing."
+---
+
+Utility templates send updates about something the user already started with you: an order, a booking, a payment, an account change. They're priced lower than marketing.
+
+## What qualifies
+
+A utility template must be:
+
+- **Specific to the user.** It refers to their order, booking or account, usually through variables such as an order number.
+- **Triggered by them.** It follows an action or request the user made, or is about an agreement they have with you.
+- **Non-promotional.** No offers, discounts, upsells, cross-sells or requests to buy.
+
+| Utility | Not utility |
+| --- | --- |
+| "Order #1042 has shipped. Track it here." | "Order #1042 has shipped. Get 10% off your next order!" |
+| "Your appointment is tomorrow at 10:30." | "Book your next appointment and save 20%." |
+| "Payment of SAR 250 received. Invoice attached." | "Thanks for paying! Check out our new collection." |
+| "Your password was changed. Not you? Contact us." | "Welcome back! Here's what's new this week." |
+
+If Meta finds promotional content, it moves the template to marketing during review or later, and sends a `template_category_update` webhook event.
+
+## Common use cases
+
+- Order confirmation, shipping and delivery updates
+- Appointment and booking confirmations and reminders
+- Payment receipts, invoices, failed payments and renewals
+- Account alerts: password changes, security notices, profile updates
+- Customer feedback surveys about a specific purchase or service
+- Updates to a support request
+
+## Example
+
+```json
+{
+  "name": "delivery_update",
+  "language": "ar",
+  "category": "UTILITY",
+  "components": [
+    { "type": "HEADER", "format": "LOCATION" },
+    {
+      "type": "BODY",
+      "text": "مرحبًا {{1}}، طلبك {{2}} في الطريق ويصلك اليوم بين {{3}}.",
+      "example": { "body_text": [["سارة", "#1042", "4 و6 مساءً"]] }
+    },
+    {
+      "type": "BUTTONS",
+      "buttons": [
+        { "type": "URL", "text": "تتبع الطلب", "url": "https://example.com/track/{{1}}", "example": ["https://example.com/track/1042"] },
+        { "type": "QUICK_REPLY", "text": "تغيير موعد التوصيل" }
+      ]
+    }
+  ]
+}
+```
+
+## Without a template: Direct Send
+
+For one-off transactional messages, skip template creation. Send a normal message with `"category": "utility"` and WhatsApp creates and manages the template for you. See [Direct Send](/whatsapp-api/messaging/send-messages#direct-send).
+
+## Pacing
+
+Utility templates aren't paced by default. Once one of your utility templates is paused for low quality, new and low-rated utility templates may be [paced](/whatsapp-api/templates/sending#pacing) like marketing ones.

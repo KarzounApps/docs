@@ -1,0 +1,57 @@
+---
+title: "Flows"
+description: "Create, upload, publish and deprecate WhatsApp Flows."
+---
+
+WhatsApp Flows are multi-screen forms inside the chat. Flows belong to your number's WhatsApp Business Account.
+
+| Action | Request |
+| --- | --- |
+| List | `GET /flows` |
+| Create | `POST /flows` |
+| Read | `GET /flows/{flow-id}?fields=name,status,validation_errors` |
+| Update metadata | `POST /flows/{flow-id}` |
+| Delete a draft | `DELETE /flows/{flow-id}` |
+| List assets | `GET /flows/{flow-id}/assets` |
+| Upload Flow JSON | `POST /flows/{flow-id}/assets` (multipart) |
+| Publish | `POST /flows/{flow-id}/publish` |
+| Deprecate | `POST /flows/{flow-id}/deprecate` |
+
+## Create and publish
+
+<Steps>
+  <Step title="Create the flow">
+    ```bash
+    curl -X POST https://waba.karzoun.chat/flows \
+      -H "Karzoun-API-Key: YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{ "name": "appointment_booking", "categories": ["APPOINTMENT_BOOKING"] }'
+    ```
+
+    ```json
+    { "id": "1180413179716237" }
+    ```
+  </Step>
+  <Step title="Upload the Flow JSON">
+    ```bash
+    curl -X POST https://waba.karzoun.chat/flows/1180413179716237/assets \
+      -H "Karzoun-API-Key: YOUR_API_KEY" \
+      -F "name=flow.json" \
+      -F "asset_type=FLOW_JSON" \
+      -F "file=@flow.json;type=application/json"
+    ```
+
+    The response lists `validation_errors`. Fix them and upload again.
+  </Step>
+  <Step title="Publish">
+    ```bash
+    curl -X POST https://waba.karzoun.chat/flows/1180413179716237/publish \
+      -H "Karzoun-API-Key: YOUR_API_KEY"
+    ```
+  </Step>
+  <Step title="Send it">
+    Send an `interactive` message of type `flow`, or a template with a flow button. The body uses the standard WhatsApp flow message format.
+  </Step>
+</Steps>
+
+When a user completes a flow, the answers arrive on your webhook as a message of type `interactive` with `nfm_reply`.

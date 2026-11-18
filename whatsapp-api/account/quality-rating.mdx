@@ -1,0 +1,40 @@
+---
+title: "Quality rating"
+description: "How WhatsApp rates your number's message quality, and how to keep it high."
+---
+
+Every business number has a quality rating based on how people responded to your messages over the last 7 days. Blocks and spam reports weigh the most.
+
+| Rating | Meaning |
+| --- | --- |
+| **High** (green) | People welcome your messages. Needed to scale your messaging limit |
+| **Medium** (yellow) | Warning. Look at which messages get blocked |
+| **Low** (red) | The number is flagged. Fix it within 7 days or your limit can be lowered |
+
+## Where to see it
+
+- The number's **Profile** tab in your workspace.
+- `qualityRating` in the Partner API's [`partnerChannels`](/partners/api/numbers-and-keys).
+- **Meta Business Suite → WhatsApp Manager → Phone numbers**. Hover a yellow or red rating to see Meta's insights, including block reasons. The settings icon shows the lowest daily rating for the last 30 days.
+
+Changes arrive on your [webhook](/whatsapp-api/webhooks/events) as `phone_number_quality_update`.
+
+## Why people block
+
+When users block a business they can pick a reason: no longer needed, didn't sign up, spam, offensive messages, or none. Each points to a fix:
+
+| Reason | Usually means | Fix |
+| --- | --- | --- |
+| Didn't sign up | No clear opt-in | Message only people who [opted in](/whatsapp-api/opt-in) |
+| No longer needed | Too frequent, or stale audience | Send less, clean your list, add an easy opt-out |
+| Spam | Generic marketing | Personalize, segment, send what was promised |
+| Offensive | Content issue | Review the template's wording and media |
+
+## Keep it high
+
+- Message people who expect to hear from you, with a clear way to stop.
+- Prefer utility messages that help (order updates, reminders) over broad marketing.
+- Test new marketing templates on a small segment before a full send.
+- Watch the rating after every campaign. See [Keep your account healthy](/whatsapp-api/guides/account-health).
+
+Templates have their own quality score too. A template with low quality can be paused by Meta. See [Templates](/whatsapp-api/templates/overview#template-quality).

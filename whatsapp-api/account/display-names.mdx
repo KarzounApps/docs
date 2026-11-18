@@ -1,0 +1,45 @@
+---
+title: "Display names"
+description: "The business name customers see on WhatsApp: rules, approval and changes."
+---
+
+The display name is the business name WhatsApp shows in chats and notifications. Until it's approved and visible, customers see your phone number instead.
+
+## When it becomes visible
+
+All three must be true:
+
+1. The display name is **approved** (check the number's **Profile** tab or WhatsApp Manager).
+2. Your business is [verified](/whatsapp-api/account/business-verification).
+3. You've reached the 2,000 [messaging limit](/whatsapp-api/account/messaging-limits), or sent 2,000 delivered business-initiated messages to unique users within 30 days.
+
+Then the name appears automatically.
+
+<Note>
+  [Coexistence](/whatsapp-api/account/coexistence) numbers aren't reviewed automatically. Subscribe to Meta Verified for Business to start the review.
+</Note>
+
+## Rules
+
+- It must clearly relate to your business, and match how your brand appears on your website, including capitals and spacing. `Acme Store`, `ACME store` and `AcmeStore` count as different names.
+- It must follow WhatsApp's Commerce and Business policies: no generic words alone ("Shop", "Pizza"), no personal names unless that's the brand, no misleading claims.
+- It should match or clearly relate to the legal name in your business portfolio.
+
+## Change the display name
+
+Change it on the number's **Profile** tab in your workspace, or in WhatsApp Manager. Before registration you can change it freely; after that, wait **30 days** between change requests.
+
+<Warning>
+  Changing the name of an [Official Business Account](/whatsapp-api/account/official-business-account) sends it back to review, and the badge isn't guaranteed to stay.
+</Warning>
+
+## If it's rejected
+
+First check two things:
+
+- **Legal name:** the legal name in your business portfolio relates clearly to the display name.
+- **Website:** the display name, or a clear reference to it, appears on your website.
+
+Common reasons for rejection: no clear link between the legal entity and the name, the name isn't on the website, or branding differs across your assets.
+
+To appeal, resubmit the same or an updated name in WhatsApp Manager and explain the link when Meta asks. The result arrives on your webhook as `phone_number_name_update`.

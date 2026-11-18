@@ -1,0 +1,118 @@
+---
+title: "Marketing templates"
+description: "Send promotions with the Marketing Messages API: onboarding, sending, time to live, max price and errors."
+---
+
+Marketing templates cover everything promotional: offers, launches, reminders, newsletters and re-engagement. Send them through the **Marketing Messages API** (`POST /marketing_messages`) to get Meta's delivery optimization.
+
+## Marketing Messages API vs `/messages`
+
+| | `/marketing_messages` | `/messages` |
+| --- | --- | --- |
+| Delivery | Optimized by Meta for people most likely to engage | Standard |
+| Time to live | Configurable, 12 hours to 30 days | Fixed |
+| Max price | Supported | Not supported |
+| Benchmarks and insights | Click and read benchmarks in WhatsApp Manager | Basic |
+| Availability | Being made the default for marketing | Meta is retiring marketing templates on `/messages` |
+
+<Warning>
+  Meta will stop accepting marketing templates on `/messages` on **13 October 2027**. Build new campaigns on `/marketing_messages` now.
+</Warning>
+
+## Onboard
+
+The Marketing Messages API is enabled per Meta business portfolio, once. An admin of the portfolio accepts its terms:
+
+<Steps>
+  <Step title="Open WhatsApp Manager">
+    In Meta Business Suite, go to **WhatsApp Manager → Overview**.
+  </Step>
+  <Step title="Accept the terms">
+    In **Alerts**, click **Accept terms to get started** for the Marketing Messages API and follow the steps.
+  </Step>
+</Steps>
+
+The terms apply to every eligible WhatsApp account in the portfolio. If you have several portfolios, repeat this for each. Until the terms are accepted, `/marketing_messages` returns an error.
+
+## Send
+
+The body is a normal template message:
+
+```bash
+curl -X POST https://waba.karzoun.chat/marketing_messages \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messaging_product": "whatsapp",
+    "to": "966500000000",
+    "type": "template",
+    "template": {
+      "name": "spring_sale",
+      "language": { "code": "ar" },
+      "components": [
+        { "type": "body", "parameters": [{ "type": "text", "text": "سارة" }] }
+      ]
+    },
+    "message_activity_sharing": true
+  }'
+```
+
+| Field | Meaning |
+| --- | --- |
+| `message_activity_sharing` | Optional. `true` shares activity signals, such as whether the user clicked, with Meta to improve delivery and reporting |
+
+Statuses and incoming replies arrive on your [webhook](/whatsapp-api/webhooks/events) exactly as for `/messages`. Only `MARKETING` templates can be sent here.
+
+## Time to live
+
+Set `message_send_ttl_seconds` on the template, from `43200` (12 hours) to `2592000` (30 days, the default). A sale that ends tonight shouldn't arrive tomorrow: give it a short time to live. Undelivered messages aren't billed.
+
+## Max price
+
+Max price caps what you pay per delivered marketing message, per template. Meta charges your cap or less and optimizes delivery within it. Templates without a max price use the standard rate.
+
+Set it with `optimization_spec`, as an integer in the smallest unit of your account currency **per 1,000 deliveries**. For example, USD 0.05 per delivery is `5000`.
+
+```json
+{
+  "name": "spring_sale",
+  "language": "ar",
+  "category": "MARKETING",
+  "components": [{ "type": "BODY", "text": "تخفيضات الربيع بدأت اليوم!" }],
+  "optimization_spec": {
+    "bid_strategy": "LOWEST_COST_WITH_BID_CAP",
+    "bid_amount": 5000
+  }
+}
+```
+
+- Add it when you [create](/whatsapp-api/templates/manage#create) a template, or [edit](/whatsapp-api/templates/manage#edit) an approved one with only `optimization_spec`. Editing it doesn't trigger a new review.
+- Only `/marketing_messages` accepts these templates. On `/messages` they fail with error `131061`.
+- Eligibility depends on the recipient's country. Recipients in the EEA and the UK aren't eligible.
+- Max price is in open beta. Meta may change the details.
+
+## Availability
+
+The Marketing Messages API isn't available for every business:
+
+- Some countries are excluded from Meta's delivery optimization, including the EEA and the UK. Messages to those recipients are sent with standard delivery.
+- Businesses in some countries can't onboard yet. Meta shows this when you try to accept the terms.
+
+## Errors
+
+| Code | Meaning | What to do |
+| --- | --- | --- |
+| `131049` | Per-user marketing limit | Don't retry for 24 hours. See [per-user limits](/whatsapp-api/templates/sending#per-user-marketing-limits) |
+| `130472` | User is part of a Meta experiment | Don't retry |
+| `131061` | Template with max price sent to `/messages` | Send it to `/marketing_messages` |
+| `132001` | Template not found | Check the name and language |
+
+Requests are also rejected when the portfolio hasn't [onboarded](#onboard), or when the body isn't a `MARKETING` template (free-form messages, utility or authentication templates).
+
+## Writing marketing templates that perform
+
+- Lead with the value: what's in it for the reader, in the first line.
+- Use one clear call to action, as a button.
+- Personalize with variables, but keep it natural.
+- Add a "Stop promotions" quick reply. People who can opt out easily block less.
+- Use rich formats where they fit: [carousels, coupons and limited-time offers](/whatsapp-api/templates/commerce).

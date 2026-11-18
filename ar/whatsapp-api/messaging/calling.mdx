@@ -1,0 +1,32 @@
+---
+title: "الاتصال"
+description: "ابدأ مكالمات واتساب الصوتية وأدرها عبر Calling API."
+---
+
+| الإجراء | الطلب |
+| --- | --- |
+| بدء مكالمة، قبولها، رفضها أو إنهاؤها | `POST /calling/calls` |
+| قراءة إعدادات الاتصال أو تعديلها | `GET` / `POST /calling/settings` |
+| هل تستطيع الاتصال بهذا العميل؟ | `GET /calling/permissions/{wa-id}` |
+
+الحقول بصيغة WhatsApp Calling API القياسية. `POST /calling/calls` يحجز تكلفته من المحفظة مثل الرسائل. راجع [الأسعار والمحفظة](/ar/whatsapp-api/pricing-and-wallet).
+
+## تفعيل الاتصال
+
+```bash
+curl -X POST https://waba.karzoun.chat/calling/settings \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "calling": { "status": "ENABLED", "call_icon_visibility": "DEFAULT" } }'
+```
+
+## قبل أن تتصل بعميل
+
+المكالمات التي يبدأها النشاط تحتاج موافقة العميل. تحقّق منها أولاً:
+
+```bash
+curl https://waba.karzoun.chat/calling/permissions/966500000000 \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+أحداث المكالمات (`connect`، `terminate`، ردود الموافقة) تصلك على [الـ Webhook](/ar/whatsapp-api/webhooks/events) في الحقل `calls`.

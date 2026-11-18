@@ -1,0 +1,245 @@
+---
+title: "Carousel, offer and product templates"
+description: "Rich marketing templates: media carousels, coupon codes, limited-time offers, catalog, single and multi-product templates."
+---
+
+These formats help marketing templates stand out. All of them are `MARKETING` templates.
+
+| Format | What the user sees | Needs a catalog |
+| --- | --- | --- |
+| [Media carousel](#media-carousel) | Up to 10 scrollable cards, each with an image or video and buttons | No |
+| [Coupon code](#coupon-codes) | A button that copies a discount code | No |
+| [Limited-time offer](#limited-time-offers) | An offer box with a countdown to its expiry | No |
+| [Catalog](#catalog) | A button that opens your whole catalog | Yes |
+| [Single product](#single-product) | One product card | Yes |
+| [Multi-product](#multi-product) | Up to 30 products in sections | Yes |
+| [Product carousel](#product-carousel) | Up to 10 scrollable product cards | Yes |
+
+Product formats need an ecommerce catalog with inventory in Meta Commerce Manager, connected to your WhatsApp Business Account. See [Catalog and commerce](/whatsapp-api/messaging/commerce).
+
+## Media carousel
+
+A message body followed by 2 to 10 horizontally scrolling cards.
+
+**Rules**
+
+- Message body: up to 1,024 characters. No header or footer on the message itself.
+- Each card: an image or video header, optional body up to 160 characters, and up to 2 buttons (quick reply, URL or phone number).
+- Every card has the same header type and the same buttons.
+- You define the cards when creating the template and supply each card's media when sending.
+
+```json
+{
+  "name": "summer_collection",
+  "language": "en",
+  "category": "MARKETING",
+  "components": [
+    { "type": "BODY", "text": "Our summer collection is here, {{1}}!", "example": { "body_text": [["Sara"]] } },
+    {
+      "type": "CAROUSEL",
+      "cards": [
+        {
+          "components": [
+            { "type": "HEADER", "format": "IMAGE", "example": { "header_handle": ["4::aW1h…"] } },
+            { "type": "BODY", "text": "Linen shirts from SAR 99" },
+            {
+              "type": "BUTTONS",
+              "buttons": [
+                { "type": "URL", "text": "Shop", "url": "https://example.com/{{1}}", "example": ["https://example.com/linen"] },
+                { "type": "QUICK_REPLY", "text": "Not interested" }
+              ]
+            }
+          ]
+        },
+        {
+          "components": [
+            { "type": "HEADER", "format": "IMAGE", "example": { "header_handle": ["4::aW1h…"] } },
+            { "type": "BODY", "text": "Sandals from SAR 149" },
+            {
+              "type": "BUTTONS",
+              "buttons": [
+                { "type": "URL", "text": "Shop", "url": "https://example.com/{{1}}", "example": ["https://example.com/sandals"] },
+                { "type": "QUICK_REPLY", "text": "Not interested" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+Send it with one `carousel` component listing each card by `card_index`:
+
+```json
+{
+  "type": "template",
+  "template": {
+    "name": "summer_collection",
+    "language": { "code": "en" },
+    "components": [
+      { "type": "body", "parameters": [{ "type": "text", "text": "Sara" }] },
+      {
+        "type": "carousel",
+        "cards": [
+          {
+            "card_index": 0,
+            "components": [
+              { "type": "header", "parameters": [{ "type": "image", "image": { "id": "1234567890" } }] },
+              { "type": "button", "sub_type": "url", "index": "0", "parameters": [{ "type": "text", "text": "linen" }] }
+            ]
+          },
+          {
+            "card_index": 1,
+            "components": [
+              { "type": "header", "parameters": [{ "type": "image", "image": { "id": "1234567891" } }] },
+              { "type": "button", "sub_type": "url", "index": "0", "parameters": [{ "type": "text", "text": "sandals" }] }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Inside an open customer service window you can also send a carousel without a template, as an interactive message.
+
+## Coupon codes
+
+Add a copy code button. The user taps it to copy the code.
+
+```json
+{ "type": "BUTTONS", "buttons": [
+  { "type": "QUICK_REPLY", "text": "Unsubscribe" },
+  { "type": "COPY_CODE", "example": "SUMMER25" }
+] }
+```
+
+Send the code for each message:
+
+```json
+{
+  "type": "button",
+  "sub_type": "COPY_CODE",
+  "index": "1",
+  "parameters": [{ "type": "coupon_code", "coupon_code": "SUMMER25" }]
+}
+```
+
+- Codes are up to 15 characters.
+- One copy code button per template. Its label is set by WhatsApp.
+- Not shown on WhatsApp Web.
+
+## Limited-time offers
+
+Shows an offer title and, optionally, a countdown to when it expires.
+
+```json
+{
+  "name": "flash_sale",
+  "language": "en",
+  "category": "MARKETING",
+  "components": [
+    { "type": "HEADER", "format": "IMAGE", "example": { "header_handle": ["4::aW1h…"] } },
+    { "type": "LIMITED_TIME_OFFER", "limited_time_offer": { "text": "Flash sale!", "has_expiration": true } },
+    { "type": "BODY", "text": "Hi {{1}}, everything is 30% off with code {{2}}.", "example": { "body_text": [["Sara", "FLASH30"]] } },
+    {
+      "type": "BUTTONS",
+      "buttons": [
+        { "type": "COPY_CODE", "example": "FLASH30" },
+        { "type": "URL", "text": "Shop now", "url": "https://example.com/sale?code={{1}}", "example": ["https://example.com/sale?code=FLASH30"] }
+      ]
+    }
+  ]
+}
+```
+
+- Offer text: up to 16 characters.
+- No footer. Body up to 600 characters.
+- With `has_expiration: true`, the first button must be a copy code button.
+
+When sending, add the expiry as a Unix timestamp in milliseconds:
+
+```json
+{
+  "type": "limited_time_offer",
+  "parameters": [{ "type": "limited_time_offer", "limited_time_offer": { "expiration_time_ms": 1767225599000 } }]
+}
+```
+
+## Catalog
+
+A body, an optional footer and a **View catalog** button that opens your catalog in WhatsApp.
+
+```json
+{ "type": "BUTTONS", "buttons": [{ "type": "CATALOG", "text": "View catalog" }] }
+```
+
+When sending, pick the product shown as the thumbnail:
+
+```json
+{
+  "type": "button",
+  "sub_type": "CATALOG",
+  "index": "0",
+  "parameters": [{ "type": "action", "action": { "thumbnail_product_retailer_id": "SKU-1042" } }]
+}
+```
+
+## Single product
+
+One product card from your catalog, with a body up to 160 characters and a **View** button.
+
+```json
+"components": [
+  { "type": "HEADER", "format": "PRODUCT" },
+  { "type": "BODY", "text": "Back in stock: {{1}}", "example": { "body_text": [["Linen shirt"]] } },
+  { "type": "BUTTONS", "buttons": [{ "type": "SPM", "text": "View" }] }
+]
+```
+
+Pass the product when sending:
+
+```json
+{ "type": "header", "parameters": [{ "type": "product", "product": { "product_retailer_id": "SKU-1042", "catalog_id": "1234567890" } }] }
+```
+
+## Multi-product
+
+Up to 30 products in up to 10 sections, opened with a **View items** button. Header text up to 60 characters, body up to 1,024, footer up to 60.
+
+```json
+{ "type": "BUTTONS", "buttons": [{ "type": "MPM", "text": "View items" }] }
+```
+
+Send the sections and products:
+
+```json
+{
+  "type": "button",
+  "sub_type": "MPM",
+  "index": "0",
+  "parameters": [{
+    "type": "action",
+    "action": {
+      "thumbnail_product_retailer_id": "SKU-1042",
+      "sections": [
+        { "title": "Shirts", "product_items": [{ "product_retailer_id": "SKU-1042" }, { "product_retailer_id": "SKU-1043" }] },
+        { "title": "Sandals", "product_items": [{ "product_retailer_id": "SKU-2001" }] }
+      ]
+    }
+  }]
+}
+```
+
+## Product carousel
+
+Like a media carousel, but each card is a product from your catalog. Each card has a `PRODUCT` header and one button: **View** (`SPM`) or a URL. Define two cards when creating the template; you can send up to 10.
+
+## Orders
+
+When a user adds products to their cart and sends it, your webhook receives an `order` message with the catalog ID and the items. Reply inside the customer service window to confirm the order or ask for payment details.
+
+Single and multi-product templates can't be forwarded.

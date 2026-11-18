@@ -1,0 +1,62 @@
+---
+title: "Messaging limits"
+description: "How many people you can start conversations with per day, and how the limit grows."
+---
+
+Your messaging limit is the number of **unique people** you can send business-initiated messages to in a rolling 24-hour period. Replies inside an open [customer service window](/whatsapp-api/customer-service-window) don't count.
+
+The limit applies to your whole **business portfolio** and is shared by all its numbers. One busy number can use up the limit for the others.
+
+## Tiers
+
+| Limit | How you get there |
+| --- | --- |
+| **250** | Where every new business starts |
+| **2,000** | Complete one scaling path (below) |
+| **10,000** | Automatic |
+| **100,000** | Automatic |
+| **Unlimited** | Automatic |
+
+Only Meta raises limits. Neither Karzoun nor any other provider can request an increase.
+
+## Raise your limit
+
+### To 2,000: scaling paths
+
+Complete **one** of these:
+
+- [Verify your business](/whatsapp-api/account/business-verification), with Karzoun's partner-led verification or in Meta Business Suite.
+- Send **2,000 delivered** business-initiated messages to unique users within a rolling 30 days, using high-quality templates.
+
+Meta then reviews your message quality:
+
+| Approved | Denied |
+| --- | --- |
+| The limit rises to 2,000 at once | The limit stays the same |
+| Email and developer alert | Email with next steps: verify, improve quality, or send more qualifying messages |
+| `business_capability_update` webhook event | |
+
+### Beyond 2,000: automatic scaling
+
+From 2,000 on, Meta checks your account continuously. You move to the next tier, usually within 6 hours, when:
+
+- your numbers and templates have high [quality](/whatsapp-api/account/quality-rating), and
+- you used at least **half** of your current limit in the last 7 days.
+
+## What happens at the limit
+
+Messages to new people beyond your limit fail until the 24-hour window moves on. Replies within open conversations still go through.
+
+<Tip>
+  Planning a campaign? Count unique recipients, not messages. With a 2,000 limit, a 5,000-person send needs three days or a higher tier. See the [campaign checklist](/whatsapp-api/guides/campaign-checklist).
+</Tip>
+
+## Check your limit
+
+- The number's **Profile** tab in your workspace (messaging limit).
+- `messagingLimitTier` in the Partner API's [`partnerChannels`](/partners/api/numbers-and-keys).
+- **Meta Business Suite → WhatsApp Manager → Account tools → Messaging limits**.
+
+## Meta-provided +1 555 numbers
+
+A free US number from Meta can't send messages until your portfolio is verified or already has a limit of 2,000 or more.

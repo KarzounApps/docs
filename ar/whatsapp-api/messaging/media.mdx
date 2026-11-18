@@ -1,0 +1,100 @@
+---
+title: "الوسائط"
+description: "ارفع الوسائط واقرأها ونزّلها واحذفها، وارفع عيّنات قوالب الوسائط."
+---
+
+## الرفع
+
+ارفع الملف مرة واحدة واستخدم معرّفه في الرسائل لمدة 30 يوماً.
+
+```bash
+curl -X POST https://waba.karzoun.chat/media \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -F "messaging_product=whatsapp" \
+  -F "type=image/jpeg" \
+  -F "file=@receipt.jpg"
+```
+
+```json
+{ "id": "1037543291543636" }
+```
+
+أرسل الطلب بصيغة `multipart/form-data`. الحد الأقصى 100 ميغابايت، ولكل نوع وسائط حدّه في واتساب (مثلاً 5 ميغابايت للصور، 16 للفيديو، 100 للمستندات).
+
+## القراءة
+
+```bash
+curl https://waba.karzoun.chat/1037543291543636 \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+```json
+{
+  "messaging_product": "whatsapp",
+  "id": "1037543291543636",
+  "url": "https://waba.karzoun.chat/1037543291543636/download",
+  "mime_type": "image/jpeg",
+  "sha256": "e7b2…",
+  "file_size": 48213
+}
+```
+
+الرابط في `url` ينزّل الملف بمفتاحك. راجع [التنزيل](#التنزيل).
+
+## التنزيل
+
+```bash
+curl https://waba.karzoun.chat/1037543291543636/download \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -o receipt.jpg
+```
+
+الرد هو الملف نفسه، مع `Content-Type` و`Content-Length` الأصليين.
+
+<Tip>
+  الصور والمستندات والصوتيات والفيديو التي يرسلها العملاء تصلك على الـ Webhook كمعرّف فقط. نزّلها بهذا الـ endpoint. راجع [استقبال الوسائط](/ar/whatsapp-api/webhooks/receiving-media).
+</Tip>
+
+## الحذف
+
+```bash
+curl -X DELETE https://waba.karzoun.chat/1037543291543636 \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+## رفع عيّنة قالب
+
+القوالب التي ترويستها صورة أو فيديو أو مستند تحتاج ملف عيّنة عند الإنشاء. ميتا تستقبله برفع على مرحلتين (Resumable Upload) وترجع `h` تضعه في `example.header_handle`.
+
+<Steps>
+  <Step title="افتح جلسة رفع">
+    ```bash
+    curl -X POST "https://waba.karzoun.chat/uploads?file_name=banner.jpg&file_length=48213&file_type=image/jpeg" \
+      -H "Karzoun-API-Key: YOUR_API_KEY"
+    ```
+
+    ```json
+    { "id": "upload:MTphdHRhY2htZW50OjE4…?sig=ARZ…" }
+    ```
+  </Step>
+  <Step title="أرسل محتوى الملف">
+    استخدم المعرّف الراجع كمسار، مع الـ query string كاملة. أرسل الملف خاماً، وليس multipart.
+
+    ```bash
+    curl -X POST "https://waba.karzoun.chat/upload:MTphdHRhY2htZW50OjE4…?sig=ARZ…" \
+      -H "Karzoun-API-Key: YOUR_API_KEY" \
+      -H "file_offset: 0" \
+      -H "Content-Type: image/jpeg" \
+      --data-binary @banner.jpg
+    ```
+
+    ```json
+    { "h": "4::aW1hZ2UvanBlZw==:ARb…" }
+    ```
+
+    لاستكمال رفع انقطع، أرسل `GET` لنفس المسار لتعرف قيمة `file_offset` الحالية، ثم أكمل من عندها.
+  </Step>
+  <Step title="استخدم القيمة في القالب">
+    ضع `h` في `example.header_handle` داخل مكوّن الترويسة عند [إنشاء القالب](/ar/whatsapp-api/templates/manage#الإنشاء).
+  </Step>
+</Steps>

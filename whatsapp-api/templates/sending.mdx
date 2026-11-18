@@ -1,0 +1,168 @@
+---
+title: "Send templates"
+description: "Send approved templates, fill variables, and understand pacing, per-user marketing limits and delivery order."
+---
+
+Send a template with `POST /messages` and `"type": "template"`. Only `APPROVED` templates can be sent.
+
+## Send
+
+```bash
+curl -X POST https://waba.karzoun.chat/messages \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messaging_product": "whatsapp",
+    "to": "966500000000",
+    "type": "template",
+    "template": {
+      "name": "order_shipped",
+      "language": { "code": "ar" },
+      "components": [
+        {
+          "type": "header",
+          "parameters": [{ "type": "image", "image": { "link": "https://example.com/box.jpg" } }]
+        },
+        {
+          "type": "body",
+          "parameters": [
+            { "type": "text", "text": "سارة" },
+            { "type": "text", "text": "#1042" }
+          ]
+        },
+        {
+          "type": "button",
+          "sub_type": "url",
+          "index": "0",
+          "parameters": [{ "type": "text", "text": "1042" }]
+        }
+      ]
+    }
+  }'
+```
+
+```json
+{
+  "messaging_product": "whatsapp",
+  "contacts": [{ "input": "966500000000", "wa_id": "966500000000" }],
+  "messages": [{ "id": "wamid.HBgMOTY2NTAwMDAwMDAwFQIAERgS...", "message_status": "accepted" }]
+}
+```
+
+`components` only carries the parts that have variables or media. A template without variables needs only `name` and `language`.
+
+## Parameters
+
+| Component | Parameter types |
+| --- | --- |
+| `header` | `text`, `image`, `video`, `document`, `location` |
+| `body` | `text`, `currency`, `date_time` |
+| `button` | `text` for URL suffixes, `payload` for quick replies, `coupon_code` for copy-code buttons, `action` for flow and catalog buttons |
+
+For named variables, add `parameter_name`:
+
+```json
+{ "type": "text", "parameter_name": "first_name", "text": "Sara" }
+```
+
+Media headers take a media `id` from [upload](/whatsapp-api/messaging/media) or a public `link`. Document headers can add a `filename`.
+
+### Quick reply payloads
+
+Set a payload per quick-reply button to know which one was tapped without parsing labels:
+
+```json
+{
+  "type": "button",
+  "sub_type": "quick_reply",
+  "index": "1",
+  "parameters": [{ "type": "payload", "payload": "STOP_PROMOS" }]
+}
+```
+
+`index` is the button's position in the template, starting at `0`.
+
+## Message status
+
+`messages[0].message_status` in the response tells you what happened right away:
+
+| Value | Meaning |
+| --- | --- |
+| `accepted` | Sent normally |
+| `held_for_quality_assessment` | Held by [pacing](#pacing). It's delivered or dropped later |
+
+Then follow `sent`, `delivered`, `read` or `failed` on your [webhook](/whatsapp-api/webhooks/events#message-statuses), keyed by the message ID.
+
+## Pacing
+
+Pacing gives people time to react to a template before it reaches everyone. If early feedback is bad, Meta pauses the template before it hurts your number.
+
+**Which templates may be paced:** marketing templates that are new, just unpaused, or not rated high quality. Utility templates are paced the same way once one of your utility templates has been paused.
+
+**Which businesses:** portfolios that sent fewer than 500,000 template messages in the last 365 days, and portfolios under review for suspicious activity.
+
+**How it works:**
+
+1. Messages are sent normally up to a threshold Meta sets per template.
+2. After that, sends return `held_for_quality_assessment`.
+3. Meta watches feedback, then releases held messages in batches.
+
+| Feedback | Result |
+| --- | --- |
+| Good | Held messages are delivered, with the usual `sent` and `delivered` statuses |
+| Bad | The template is paused, and every held message fails with error `132015` |
+| Not enough within the time limit | Held messages are released normally |
+
+Meta aims to deliver even paced campaigns within about an hour. Small sends below the threshold aren't paced at all.
+
+<Tip>
+  Launching a big campaign with a new template? Send it to a smaller, engaged segment first. Good early feedback means the rest isn't held.
+</Tip>
+
+## Per-user marketing limits
+
+WhatsApp limits how many marketing templates a person receives from all businesses combined, starting with people less likely to engage. When a marketing template isn't delivered for this reason:
+
+- the message fails with error `131049` ("not delivered to maintain healthy ecosystem engagement"),
+- you aren't charged for it,
+- other recipients aren't affected.
+
+Don't retry right away: it fails again. Wait at least 24 hours, or until the person messages you.
+
+The limit only applies to marketing templates that would start a new conversation. If the person replied to you recently, your next marketing template goes through.
+
+This limit doesn't apply in the European Economic Area, the UK, Japan and South Korea.
+
+Separately, Meta holds back marketing messages from a small share of users as an ongoing experiment (error `130472`). You aren't charged for those; don't retry them.
+
+## Delivery order
+
+Messages sent one after another may arrive in a different order. When order matters, for example an image and then its caption, wait for the first message's `delivered` status before sending the next.
+
+## Time to live
+
+If a message can't be delivered right away, for example because the phone is off, WhatsApp keeps trying for up to 30 days. Templates can set a shorter time to live with `message_send_ttl_seconds` when you create them:
+
+| Category | Allowed |
+| --- | --- |
+| Authentication | 30 to 900 seconds (default 10 minutes) |
+| Utility | 30 to 43,200 seconds (12 hours) |
+| Marketing | 43,200 to 2,592,000 seconds (12 hours to 30 days), Marketing Messages API only |
+
+Messages not delivered within the time to live fail and aren't billed.
+
+## Common errors
+
+| Code | Meaning | What to do |
+| --- | --- | --- |
+| `132000` | Number of parameters doesn't match the template | Send exactly one parameter per variable |
+| `132001` | Template doesn't exist in that language | Check `name` and `language.code` |
+| `132005` | Text too long after filling variables | Shorten the variable values |
+| `132007` | Content violates policy after filling variables | Check the variable values |
+| `132012` | Parameter format doesn't match the template | For example, an image header sent as text |
+| `132015` | Template paused for low quality | Wait for the pause to end, or use another template |
+| `132016` | Template disabled | Create a new template |
+| `131049` | Per-user marketing limit | Don't retry for 24 hours |
+| `131026` | Message undeliverable | The number isn't on WhatsApp, or can't receive this message |
+
+See all codes in [Errors](/whatsapp-api/reference/errors).

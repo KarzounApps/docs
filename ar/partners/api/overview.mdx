@@ -1,0 +1,81 @@
+---
+title: "Partner API"
+description: "أنشئ حسابات عملائك، واربط أرقام واتساب، وأصدر مفاتيح API، وموّل المحافظ من منصتك."
+---
+
+تتيح لك Partner API إدارة دورة العميل كاملة من منصتك، بدون فتح لوحة تحكم كرزون:
+
+<Steps>
+  <Step title="أنشئ حساب العميل">
+    `partnerRegisterOrganization` ينشئ حساباً جديداً تحت حساب الشريك الخاص بك. راجع [العملاء والتمويل](/ar/partners/api/clients-and-funding).
+  </Step>
+  <Step title="موّله">
+    مرّر `initialBalance` عند الإنشاء، أو استدعِ `partnerTransferBalance` لاحقاً. ويمكنك أيضاً ترك العميل يدفع ببطاقته.
+  </Step>
+  <Step title="اربط رقم واتساب">
+    أرسل للعميل [رابط ربط](/ar/partners/connect-links) يوقّعه خادمك. العميل يربط رقمه على نطاقك وبعلامتك، بدون تسجيل دخول إلى كرزون.
+  </Step>
+  <Step title="أصدر مفتاح API">
+    عندما يصلك حدث `channel.connected` على [Webhook الشريك](/ar/partners/webhook)، استدعِ `partnerChannelApiKeyCreate`. راجع [الأرقام ومفاتيح API](/ar/partners/api/numbers-and-keys).
+  </Step>
+  <Step title="أرسل واستقبل">
+    استخدم المفتاح مع [WhatsApp API](/ar/whatsapp-api)، واضبط [Webhook الرقم](/ar/whatsapp-api/webhooks/overview).
+  </Step>
+</Steps>
+
+## الـ Endpoint والمصادقة
+
+Partner API جزء من واجهة GraphQL في كرزون. الطلبات تذهب إلى **حساب الشريك** الخاص بك:
+
+```
+POST https://YOUR_PARTNER_SUBDOMAIN.api.karzoun.chat/graphql
+Authorization: Bearer kz_live_YOUR_API_KEY
+```
+
+أنشئ المفتاح من حساب الشريك عبر **المطوّر ← مفاتيح API** بهذه الصلاحيات:
+
+| الصلاحية | تتيح |
+| --- | --- |
+| `partner:read` | قائمة العملاء وتفاصيلهم، المحفظة، الأرقام عبر كل العملاء، وسجل Webhook الشريك |
+| `partner:write` | إنشاء العملاء وتمويلهم وإيقافهم، إنشاء مفاتيح الأرقام وإبطالها، واختبار Webhook الشريك وإعادة إرساله |
+
+إذا عندك نطاق علامة بيضاء، الـ API متاحة أيضاً على `https://YOUR_PARTNER_SUBDOMAIN.api.yourdomain.com/graphql`.
+
+## العمليات
+
+| العملية | النوع | الاستخدام |
+| --- | --- | --- |
+| `partner` | Query | ملف الشريك، ومعه `wallet` محفظتك |
+| `partnerPlans` | Query | الباقات التي تعيّنها لعملائك (`planId`) |
+| `partnerRegisterOrganization` | Mutation | إنشاء حساب عميل |
+| `partnerOrganizationMonitor` | Query | قائمة العملاء مع الأرصدة والحالة |
+| `partnerOrganizationDetail` | Query | عميل واحد مع قراءة حية للمحفظة |
+| `partnerTransferBalance` | Mutation | تحويل رصيد من محفظتك إلى عميل |
+| `partnerSuspendOrganizations` | Mutation | إيقاف العملاء أو إعادة تفعيلهم |
+| `partnerChannels` | Query | أرقام واتساب عبر العملاء، مع الحالة والجودة والحد من ميتا مباشرة |
+| `partnerChannelApiKeyCreate` | Mutation | إنشاء مفتاح WhatsApp API لرقم عميل |
+| `partnerChannelApiKeyRevoke` | Mutation | إبطاله |
+| `partnerWebhookDeliveries` | Query | سجل إرسال Webhook الشريك |
+| `partnerTestWebhook` | Mutation | إرسال حدث تجريبي إلى Webhook الشريك |
+| `partnerWebhookResend` | Mutation | إعادة إرسال حدث فاشل |
+
+الحقول الكاملة في [مرجع GraphQL](/api-reference). وأدوات الشركاء متاحة أيضاً لوكلاء الذكاء الاصطناعي عبر [خادم MCP](/ar/mcp-server) ضمن حزمة **Partners**.
+
+## إعدادات من لوحة التحكم
+
+بعض الإعدادات من اللوحة فقط. افتح **الشريك ← الإعدادات ← عام ← المطوّرون**:
+
+- **عنوان ويب هوك الشريك**، راجع [Webhook الشريك](/ar/partners/webhook)
+- **مفتاح المنصّة**، ويوقّع Webhook الشريك و[روابط الربط](/ar/partners/connect-links)
+- **عنوان التحويل بعد الربط**
+
+## من يدفع
+
+الإعداد **الشريك ← الإعدادات ← عام ← كيف يدفع العملاء** يحدد من يموّل محافظ العملاء:
+
+| الإعداد | العملاء | أنت |
+| --- | --- | --- |
+| **يمكن للعملاء إضافة وسيلة دفع** | يضيفون بطاقتهم ويشحنون بأنفسهم | تستطيع التحويل لهم أيضاً |
+| **أنت تموّل محافظ العملاء** | لا يستطيعون إضافة بطاقة | تحوّل الرصيد من محفظتك، ويصلك تنبيه عندما يقترب رصيد عميل من النفاد |
+
+أنت تفوتر عملاءك من جهتك. كرزون تخصم استهلاك واتساب لكل عميل من محفظته.

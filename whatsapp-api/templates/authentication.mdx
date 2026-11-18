@@ -1,0 +1,159 @@
+---
+title: "Authentication templates"
+description: "Send one-time passwords with copy code, one-tap autofill and zero-tap authentication templates."
+---
+
+Authentication templates deliver one-time passwords (OTPs) for login, sign-up, account recovery and transaction confirmation. Their text is fixed by WhatsApp, so they're reviewed fast and translated consistently.
+
+## Requirements
+
+Before you can create authentication templates, your business portfolio must:
+
+- complete a [scaling path](/whatsapp-api/account/messaging-limits), such as business verification, and
+- have a [messaging limit](/whatsapp-api/account/messaging-limits) of at least 2,000.
+
+## What the message contains
+
+You don't write the text. WhatsApp builds it from presets, in the template's language:
+
+| Part | Content | Optional |
+| --- | --- | --- |
+| Body | "*{code}* is your verification code." | No |
+| Security note | "For your security, do not share this code." | Yes, `add_security_recommendation` |
+| Expiry footer | "This code expires in {N} minutes." | Yes, `code_expiration_minutes` (1–90) |
+| Button | Copy code or one-tap autofill. Zero-tap needs none on Android | No |
+
+Codes are up to 15 characters. URLs, media and emojis aren't allowed.
+
+## Button types
+
+| Type | User experience | Platforms |
+| --- | --- | --- |
+| **Copy code** | The user taps to copy the code, then pastes it into your app | All |
+| **One-tap autofill** | The user taps and WhatsApp opens your app with the code filled in | Android. Falls back to copy code |
+| **Zero-tap** | WhatsApp passes the code to your app automatically; the user does nothing | Android. Falls back to one-tap or copy code |
+
+One-tap and zero-tap need your Android app's package name and signing key hash, and your app must handle WhatsApp's code broadcast. If a check fails, for example the app isn't installed, the message shows a copy code button instead.
+
+## Create
+
+<Tabs>
+  <Tab title="Copy code">
+    ```json
+    {
+      "name": "login_code",
+      "language": "en",
+      "category": "AUTHENTICATION",
+      "message_send_ttl_seconds": 300,
+      "components": [
+        { "type": "BODY", "add_security_recommendation": true },
+        { "type": "FOOTER", "code_expiration_minutes": 5 },
+        {
+          "type": "BUTTONS",
+          "buttons": [{ "type": "OTP", "otp_type": "COPY_CODE", "text": "Copy code" }]
+        }
+      ]
+    }
+    ```
+  </Tab>
+  <Tab title="One-tap autofill">
+    ```json
+    {
+      "name": "login_code_onetap",
+      "language": "en",
+      "category": "AUTHENTICATION",
+      "components": [
+        { "type": "BODY", "add_security_recommendation": true },
+        { "type": "FOOTER", "code_expiration_minutes": 5 },
+        {
+          "type": "BUTTONS",
+          "buttons": [{
+            "type": "OTP",
+            "otp_type": "ONE_TAP",
+            "text": "Copy code",
+            "autofill_text": "Autofill",
+            "supported_apps": [
+              { "package_name": "com.example.app", "signature_hash": "K8a/AINcGX7" }
+            ]
+          }]
+        }
+      ]
+    }
+    ```
+  </Tab>
+  <Tab title="Zero-tap">
+    ```json
+    {
+      "name": "login_code_zerotap",
+      "language": "en",
+      "category": "AUTHENTICATION",
+      "components": [
+        { "type": "BODY", "add_security_recommendation": true },
+        { "type": "FOOTER", "code_expiration_minutes": 5 },
+        {
+          "type": "BUTTONS",
+          "buttons": [{
+            "type": "OTP",
+            "otp_type": "ZERO_TAP",
+            "text": "Copy code",
+            "autofill_text": "Autofill",
+            "zero_tap_terms_accepted": true,
+            "supported_apps": [
+              { "package_name": "com.example.app", "signature_hash": "K8a/AINcGX7" }
+            ]
+          }]
+        }
+      ]
+    }
+    ```
+    `zero_tap_terms_accepted: true` confirms you accept WhatsApp's zero-tap terms: you must tell users they'll receive codes automatically.
+  </Tab>
+</Tabs>
+
+Send it to [`POST /message_templates`](/whatsapp-api/templates/manage#create).
+
+### Time to live
+
+Set `message_send_ttl_seconds` between `30` and `900`. Without it, an undelivered code is dropped after 10 minutes. Match it to your code's expiry so nobody receives a code that already expired. Undelivered messages aren't billed.
+
+## Send
+
+Pass the code twice: as the body parameter and as the button parameter.
+
+```bash
+curl -X POST https://waba.karzoun.chat/messages \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messaging_product": "whatsapp",
+    "to": "966500000000",
+    "type": "template",
+    "template": {
+      "name": "login_code",
+      "language": { "code": "en" },
+      "components": [
+        { "type": "body", "parameters": [{ "type": "text", "text": "483920" }] },
+        {
+          "type": "button",
+          "sub_type": "url",
+          "index": "0",
+          "parameters": [{ "type": "text", "text": "483920" }]
+        }
+      ]
+    }
+  }'
+```
+
+The same request works for copy code, one-tap and zero-tap templates.
+
+## Good practice
+
+- Send codes only when the user asked for one, in your app or website.
+- Expire codes quickly and accept each one once.
+- Rate-limit requests per phone number to stop abuse.
+- Authentication templates can't be sent to a [BSUID](/whatsapp-api/account/usernames-and-bsuid); you need the phone number.
+- Keep SMS or email as a fallback for users who don't have WhatsApp: a `failed` status or error `131026` means the code didn't arrive.
+
+## Authentication-international rates
+
+Some countries have a separate, higher rate for authentication messages sent by businesses based outside that country. Meta decides which businesses it applies to and notifies them in advance. See [Pricing and wallet](/whatsapp-api/pricing-and-wallet).

@@ -1,0 +1,65 @@
+---
+title: "API key and webhook"
+description: "The number's API tab: create, replace and revoke the API key, set the webhook, and see webhook deliveries."
+---
+
+Each number has its own **API** tab. That's where you get the credentials to send from your server and set where events are delivered.
+
+## Switch numbers
+
+With several numbers, use **Switch number** at the top of the page. Each number has its own key and its own webhook.
+
+## Credentials
+
+| Field | What it is |
+| --- | --- |
+| **Base URL** | `https://waba.karzoun.chat`. Every request goes here |
+| **API key** | The key for this number, sent in the `Karzoun-API-Key` header |
+
+### Create a key
+
+Click **Create API key** and copy the key right away. It's shown once; Karzoun stores only a hash.
+
+### Replace a key
+
+Click **Replace key** to issue a new key. The old one stops working immediately. Your webhook settings stay the same.
+
+Replace the key if it may have leaked, when someone with access leaves the team, or as routine rotation.
+
+### Revoke a key
+
+Click **Revoke** to disable the key without issuing a new one. Requests that use it fail with `401` at once.
+
+See [Authentication](/whatsapp-api/authentication) for how to use the key.
+
+## Webhook
+
+| Field | What it is |
+| --- | --- |
+| **Endpoint URL** | Where Karzoun sends this number's events. Must be public `https` |
+| **Custom headers** | Optional headers sent with every event, for example an `Authorization` header for your gateway |
+| **Signing secret** | Used to verify the `X-Karzoun-Signature-256` header. Click **Show secret** to see it |
+
+When you click **Save**, Karzoun sends a signed test event. Your endpoint must answer `2xx` within 5 seconds or the URL isn't saved.
+
+- **Send test event** sends another test event at any time.
+- **Rotate secret** creates a new signing secret. The previous secret is still sent for 24 hours in `X-Karzoun-Signature-256-Previous`, so you can deploy the new one without missing events.
+
+See [Webhooks](/whatsapp-api/webhooks/overview) and [Verify signatures](/whatsapp-api/webhooks/signature).
+
+## Example request
+
+**Example request** builds a ready-to-copy curl for any approved template. Pick the template, fill its fields and, optionally, the number to send to. The request updates as you type and matches what Karzoun would send. Right after you create a key, the key itself is in the request; otherwise it shows `YOUR_API_KEY`.
+
+## Webhook deliveries
+
+Click **View deliveries** to see the events sent to your endpoint over the last 7 days.
+
+| Status | Meaning |
+| --- | --- |
+| **Delivered** | Your endpoint answered `2xx` |
+| **Retrying** | It failed. The next try is shown |
+| **Failed** | All retries failed |
+| **Skipped** | Not sent because no webhook was set when the event happened |
+
+Each row shows the event type, your endpoint's response and the number of attempts. Click **Resend** to deliver an event again with the same event ID. See [Delivery and retries](/whatsapp-api/webhooks/delivery).

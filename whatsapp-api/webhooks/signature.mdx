@@ -1,0 +1,99 @@
+---
+title: "Verify signatures"
+description: "Check that a webhook really comes from Karzoun and was not changed or replayed."
+---
+
+Every webhook request carries these headers:
+
+| Header | Value |
+| --- | --- |
+| `X-Karzoun-Signature-256` | `sha256=` + hex HMAC-SHA256 of `"{timestamp}.{raw body}"` with your signing secret |
+| `X-Karzoun-Timestamp` | Unix time in seconds when the request was signed |
+| `X-Karzoun-Event-Id` | Unique per event. The same on every retry and resend |
+| `X-Karzoun-Delivery-Attempt` | `1` for the first try, then `2`, `3`… |
+| `X-Karzoun-Signature-256-Previous` | Only for 24 hours after you rotate the secret: the same signature with the old secret |
+| `User-Agent` | `Karzoun-Webhooks/1.0` |
+
+## Get the signing secret
+
+Open the number's **API** tab. In the **Webhook URL** card, click the eye icon next to **Signing secret**. Secrets start with `whsec_`.
+
+## Verify a request
+
+1. Read the **raw** request body as bytes, before any JSON parsing.
+2. Compute `HMAC-SHA256(secret, timestamp + "." + rawBody)` and hex-encode it.
+3. Compare `sha256=` + that value with `X-Karzoun-Signature-256` using a constant-time comparison.
+4. Reject timestamps older than 5 minutes.
+5. Store `X-Karzoun-Event-Id` and skip events you've already processed.
+
+<CodeGroup>
+```js Node.js (Express)
+import crypto from "crypto";
+import express from "express";
+
+const app = express();
+const SECRET = process.env.KARZOUN_WEBHOOK_SECRET;
+
+app.post("/whatsapp/webhook", express.raw({ type: "application/json" }), (req, res) => {
+  const timestamp = req.get("X-Karzoun-Timestamp");
+  const signature = req.get("X-Karzoun-Signature-256") || "";
+  const expected = "sha256=" + crypto
+    .createHmac("sha256", SECRET)
+    .update(`${timestamp}.${req.body}`)
+    .digest("hex");
+
+  const fresh = Math.abs(Date.now() / 1000 - Number(timestamp)) < 300;
+  const valid = signature.length === expected.length &&
+    crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+  if (!fresh || !valid) return res.sendStatus(401);
+
+  res.sendStatus(200); // answer first, process after
+  const event = JSON.parse(req.body);
+  queue.push({ id: req.get("X-Karzoun-Event-Id"), event });
+});
+```
+
+```python Python (Flask)
+import hashlib, hmac, os, time
+from flask import Flask, request, abort
+
+app = Flask(__name__)
+SECRET = os.environ["KARZOUN_WEBHOOK_SECRET"].encode()
+
+@app.post("/whatsapp/webhook")
+def webhook():
+    timestamp = request.headers.get("X-Karzoun-Timestamp", "")
+    signature = request.headers.get("X-Karzoun-Signature-256", "")
+    raw = request.get_data()
+    expected = "sha256=" + hmac.new(SECRET, timestamp.encode() + b"." + raw, hashlib.sha256).hexdigest()
+
+    if abs(time.time() - int(timestamp or 0)) > 300 or not hmac.compare_digest(signature, expected):
+        abort(401)
+    enqueue(request.headers["X-Karzoun-Event-Id"], request.get_json())
+    return "", 200
+```
+
+```php PHP
+<?php
+$secret = getenv('KARZOUN_WEBHOOK_SECRET');
+$raw = file_get_contents('php://input');
+$timestamp = $_SERVER['HTTP_X_KARZOUN_TIMESTAMP'] ?? '';
+$signature = $_SERVER['HTTP_X_KARZOUN_SIGNATURE_256'] ?? '';
+$expected = 'sha256=' . hash_hmac('sha256', $timestamp . '.' . $raw, $secret);
+
+if (abs(time() - (int) $timestamp) > 300 || !hash_equals($expected, $signature)) {
+    http_response_code(401);
+    exit;
+}
+http_response_code(200);
+enqueue($_SERVER['HTTP_X_KARZOUN_EVENT_ID'], json_decode($raw, true));
+```
+</CodeGroup>
+
+## Rotate the secret
+
+Click **Rotate secret** in the **Webhook URL** card. The new secret signs immediately. For 24 hours the old secret also signs, in `X-Karzoun-Signature-256-Previous`, so you can deploy the new secret without dropping events. Accept either header during that window.
+
+<Warning>
+  Verify the signature on every request. Without it, anyone who learns your URL can post fake messages to it.
+</Warning>

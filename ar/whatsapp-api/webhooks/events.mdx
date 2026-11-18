@@ -1,0 +1,303 @@
+---
+title: "الأحداث"
+description: "كل أحداث واتساب على الـ Webhook: الرسائل الواردة، والحالات، والتسعير، وأحداث الرقم والحساب، مع أمثلة."
+---
+
+كل طلب يحمل حدثاً **واحداً** بصيغة Webhook القياسية من واتساب: entry واحد فيه change واحد.
+
+```json
+{
+  "object": "whatsapp_business_account",
+  "entry": [{
+    "id": "{waba-id}",
+    "changes": [{ "field": "{field}", "value": { } }]
+  }]
+}
+```
+
+`field` يخبرك ماذا حدث، و`value` فيه التفاصيل.
+
+## أحداث الرقم
+
+الأحداث الخاصة برقم واحد تحمل `value.metadata.phone_number_id` وتذهب للـ Webhook الخاص بذلك الرقم.
+
+### الرسائل الواردة
+
+```json
+{
+  "object": "whatsapp_business_account",
+  "entry": [{
+    "id": "102290129340398",
+    "changes": [{
+      "field": "messages",
+      "value": {
+        "messaging_product": "whatsapp",
+        "metadata": { "display_phone_number": "15550783881", "phone_number_id": "106540352242922" },
+        "contacts": [{ "profile": { "name": "Sara" }, "wa_id": "966500000000", "user_id": "SA.13491208655302741918" }],
+        "messages": [{
+          "from": "966500000000",
+          "id": "wamid.HBgMOTY2NTAwMDAwMDAwFQIAEhgg...",
+          "timestamp": "1731916800",
+          "type": "text",
+          "text": { "body": "Do you deliver to Jeddah?" }
+        }]
+      }
+    }]
+  }]
+}
+```
+
+`contacts` يعرّف المرسل. إذا كان يستخدم [اسم مستخدم](/ar/whatsapp-api/account/usernames-and-bsuid) قد يصلك `user_id` و`username` بدون `wa_id`.
+
+#### أنواع الرسائل
+
+كائن الرسالة فيه `type` وخاصية بنفس الاسم.
+
+| `type` | المحتوى |
+| --- | --- |
+| `text` | `text.body` |
+| `image` و`video` و`audio` و`document` و`sticker` | `id` و`mime_type` و`sha256`، و`caption` أو `filename` حسب النوع. [نزّل الملف](/ar/whatsapp-api/webhooks/receiving-media) |
+| `location` | `latitude` و`longitude`، و`name` و`address` اختيارياً |
+| `contacts` | بطاقات جهات اتصال شاركها المستخدم. و`origin: "contact_request"` إذا كانت رداً على زر [طلب معلومات الاتصال](/ar/whatsapp-api/account/usernames-and-bsuid#اطلب-رقم-الجوال) |
+| `interactive` | ردود على الرسائل التفاعلية: `button_reply` أو `list_reply`، أو `nfm_reply` لإجابات [الـ Flow](/ar/whatsapp-api/messaging/flows) |
+| `button` | ضغطة على زر رد سريع في قالب: `text` و`payload` الذي حددته |
+| `reaction` | `message_id` و`emoji`. الإيموجي الفارغ يعني إزالة التفاعل |
+| `order` | `catalog_id` و`product_items` من سلة أرسلها المستخدم |
+| `system` | إشعارات النظام، مثل تغيير المستخدم لرقمه |
+| `unsupported` | نوع لا تدعمه الواجهة بعد، مثل بعض الاستطلاعات أو وسائط العرض لمرة واحدة |
+
+#### سياق الرد
+
+عندما يرد المستخدم على رسالة معينة، أو يضغط زراً فيها، تحتوي الرسالة `context`:
+
+```json
+"context": { "from": "15550783881", "id": "wamid.HBgMOTY2NTAwMDAwMDAwFQIAERgS..." }
+```
+
+`context.id` هو معرّف الرسالة التي رد عليها.
+
+#### رد تفاعلي
+
+```json
+{
+  "from": "966500000000",
+  "id": "wamid.HBgM...",
+  "timestamp": "1731916900",
+  "type": "interactive",
+  "interactive": {
+    "type": "button_reply",
+    "button_reply": { "id": "confirm_order", "title": "Confirm" }
+  }
+}
+```
+
+#### زر القالب
+
+```json
+{
+  "type": "button",
+  "button": { "text": "Stop promotions", "payload": "STOP_PROMOS" },
+  "context": { "from": "15550783881", "id": "wamid.HBgM..." }
+}
+```
+
+#### من إعلان أو رابط
+
+عندما يراسلك شخص من إعلان Click to WhatsApp أو من منشور على فيسبوك أو إنستغرام، تحمل أول رسالة `referral`:
+
+```json
+"referral": {
+  "source_url": "https://fb.me/abc123",
+  "source_type": "ad",
+  "source_id": "120208000000000",
+  "headline": "Summer sale",
+  "body": "Up to 50% off",
+  "media_type": "image",
+  "image_url": "https://…",
+  "ctwa_clid": "ARAkLkA8rmlFeiCktEJQ-QTwRiyYHAFDLMNDBH0CD3qpjd0HR4irJ6LEkR7JwFF4XvnO2E4Nx0-eM-GABDLOPaOdRMv-_zfUQ2a"
+}
+```
+
+خزّن `ctwa_clid` لترسل التحويلات لميتا لاحقاً. والرسائل القادمة من الإعلانات تفتح [نافذة خدمة عملاء](/ar/whatsapp-api/customer-service-window#مدة-النافذة).
+
+#### أخطاء في الرسائل الواردة
+
+الرسالة التي لا تستطيع الواجهة معالجتها تصل بمصفوفة `errors` بدل المحتوى، مثل نوع غير مدعوم.
+
+```json
+{ "type": "unsupported", "errors": [{ "code": 131051, "title": "Message type unknown" }] }
+```
+
+### حالات الرسائل
+
+يصلك حدث حالة كلما تغيّرت حالة رسالة أرسلتها.
+
+```json
+{
+  "field": "messages",
+  "value": {
+    "messaging_product": "whatsapp",
+    "metadata": { "display_phone_number": "15550783881", "phone_number_id": "106540352242922" },
+    "statuses": [{
+      "id": "wamid.HBgMOTY2NTAwMDAwMDAwFQIAERgS...",
+      "status": "delivered",
+      "timestamp": "1731916805",
+      "recipient_id": "966500000000",
+      "pricing": { "billable": true, "pricing_model": "PMP", "type": "regular", "category": "utility" }
+    }]
+  }
+}
+```
+
+| `status` | المعنى |
+| --- | --- |
+| `sent` | استلمتها خوادم واتساب |
+| `delivered` | وصلت لجهاز المستخدم |
+| `read` | فتحها المستخدم. فقط إذا كان إشعار القراءة مفعّلاً عنده |
+| `failed` | تعذر إرسالها أو تسليمها. راجع `errors` |
+| `played` | تم تشغيل رسالة صوتية |
+
+طابق `id` مع المعرّف الذي رجع لك من `POST /messages`. الحالات قد تصل بغير ترتيب، مثل `read` قبل `delivered`: اعتبر الحالة الأحدث شاملة لما قبلها.
+
+#### التسعير
+
+`pricing` يخبرك كيف تُحتسب الرسالة:
+
+| الحقل | القيم |
+| --- | --- |
+| `billable` | `true` إذا كانت الرسالة مدفوعة |
+| `pricing_model` | `PMP` (تسعير لكل رسالة) |
+| `category` | `marketing`, `utility`, `authentication`, `authentication-international`, `service` |
+| `type` | كيف صنّفت ميتا الرسالة، مثل `regular` |
+
+راجع [التسعير والمحفظة](/ar/whatsapp-api/pricing-and-wallet).
+
+#### فشل الإرسال
+
+```json
+{
+  "id": "wamid.HBgM...",
+  "status": "failed",
+  "timestamp": "1731916805",
+  "recipient_id": "966500000000",
+  "errors": [{
+    "code": 131049,
+    "title": "This message was not delivered to maintain healthy ecosystem engagement.",
+    "error_data": { "details": "In order to maintain healthy ecosystem engagement, the message failed to be delivered." }
+  }]
+}
+```
+
+راجع [الأخطاء](/ar/whatsapp-api/reference/errors) لمعنى كل كود.
+
+### حقول أخرى للرقم
+
+| `field` | متى |
+| --- | --- |
+| `calls` | اتصال المكالمة أو انتهاؤها، أو رد على طلب إذن. راجع [المكالمات](/ar/whatsapp-api/messaging/calling) |
+| `smb_message_echoes` | رسائل أرسلتها من تطبيق واتساب للأعمال (أرقام [التشغيل المشترك](/ar/whatsapp-api/account/coexistence)) |
+| `history` و`smb_app_state_sync` | سجل المحادثات وجهات الاتصال المشتركة عند ربط رقم من تطبيق واتساب للأعمال |
+| `user_id_update` | تغيّر معرّف المستخدم الخاص بنشاطك، مثلاً بعد تغيير رقمه |
+| `user_preferences` | أوقف المستخدم رسائلك التسويقية أو أعاد تفعيلها |
+| حقول المجموعات | إنشاء مجموعة، تغيّر الأعضاء، طلبات الانضمام. راجع [المجموعات](/ar/whatsapp-api/messaging/groups) |
+
+## أحداث على مستوى الحساب
+
+بعض الأحداث تخص حساب واتساب للأعمال كله، فلا تحمل `phone_number_id`. تذهب لكل رقم في الحساب له رابط Webhook، **مرة واحدة لكل رابط مختلف**.
+
+| `field` | متى |
+| --- | --- |
+| `message_template_status_update` | قالب اعتُمد أو رُفض أو أُوقف أو عُطّل أو أُعيد |
+| `message_template_quality_update` | تغيّرت [جودة](/ar/whatsapp-api/templates/overview#جودة-القالب) قالب |
+| `message_template_components_update` | عُدّل محتوى قالب |
+| `template_category_update` | غيّرت ميتا فئة قالب |
+| `phone_number_quality_update` | تغيّر [تقييم جودة](/ar/whatsapp-api/account/quality-rating) رقم أو حد مراسلته |
+| `phone_number_name_update` | انتهت مراجعة [اسم عرض](/ar/whatsapp-api/account/display-names) |
+| `account_update` | تقييد الحساب أو حظره أو إعادته أو توثيقه وما شابه. راجع [حالة الحساب](/ar/whatsapp-api/account/account-status) |
+| `business_capability_update` | تغيّرت [حدود المراسلة](/ar/whatsapp-api/account/messaging-limits) للحساب |
+| `account_review_update` | انتهت مراجعة الحساب |
+| `account_alerts` | تنبيهات من ميتا للحساب |
+| `security` | تغييرات أمنية، مثل إيقاف التحقق بخطوتين |
+
+### حالة القالب
+
+```json
+{
+  "field": "message_template_status_update",
+  "value": {
+    "event": "REJECTED",
+    "message_template_id": 1689556908129832,
+    "message_template_name": "order_shipped",
+    "message_template_language": "ar",
+    "reason": "INVALID_FORMAT"
+  }
+}
+```
+
+قيمة `event` من `APPROVED` و`REJECTED` و`PAUSED` و`DISABLED` و`FLAGGED` و`REINSTATED` و`PENDING_DELETION` وغيرها. و`reason` يشرح سبب الرفض، مثل `INVALID_FORMAT` أو `TAG_CONTENT_MISMATCH` أو `ABUSIVE_CONTENT` أو `SCAM`.
+
+### جودة القالب
+
+```json
+{
+  "field": "message_template_quality_update",
+  "value": {
+    "previous_quality_score": "GREEN",
+    "new_quality_score": "YELLOW",
+    "message_template_id": 1689556908129832,
+    "message_template_name": "spring_sale",
+    "message_template_language": "ar"
+  }
+}
+```
+
+### فئة القالب
+
+```json
+{
+  "field": "template_category_update",
+  "value": {
+    "message_template_id": 1689556908129832,
+    "message_template_name": "order_shipped",
+    "message_template_language": "ar",
+    "previous_category": "UTILITY",
+    "new_category": "MARKETING"
+  }
+}
+```
+
+### جودة الرقم
+
+```json
+{
+  "field": "phone_number_quality_update",
+  "value": {
+    "display_phone_number": "15550783881",
+    "event": "DOWNGRADE",
+    "current_limit": "TIER_2K"
+  }
+}
+```
+
+قيمة `event` من `UPGRADE` أو `DOWNGRADE` أو `FLAGGED` أو `UNFLAGGED`.
+
+### تحديث الحساب
+
+```json
+{
+  "field": "account_update",
+  "value": {
+    "phone_number": "15550783881",
+    "event": "ACCOUNT_RESTRICTION",
+    "restriction_info": [{ "restriction_type": "RESTRICTED_BIZ_INITIATED_MESSAGING", "expiration": 1732521600 }]
+  }
+}
+```
+
+## عالج الأحداث بشكل موثوق
+
+- رد بـ `2xx` فوراً، ثم عالج الحدث في الخلفية.
+- امنع التكرار باستخدام `X-Karzoun-Event-Id`. الحدث المُعاد يحتفظ بنفس المعرّف.
+- الأحداث قد تصل بغير ترتيب. رتّبها حسب `timestamp` داخل الحدث، لا حسب وقت الوصول.
+- تجاهل الحقول والأنواع التي لا تعرفها. واتساب يضيف الجديد باستمرار.
+- توقع حوالي 3 أحداث حالة لكل رسالة ترسلها، بالإضافة للرسائل الواردة.

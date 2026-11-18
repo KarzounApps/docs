@@ -1,0 +1,141 @@
+---
+title: "الكتالوج والتجارة"
+description: "اربط كتالوج منتجات، وتحكّم بالسلة وزر الكتالوج، واعرض المنتجات، وأرسل رسائل المنتجات."
+---
+
+عندما يكون كتالوج المنتجات مربوطاً بحساب واتساب للأعمال، يقدر العملاء يتصفحون المنتجات داخل واتساب، ويضيفونها للسلة، ويرسلون لك الطلب.
+
+## ربط الكتالوج
+
+أنشئ الكتالوج في **Meta Commerce Manager** واربطه بحساب واتساب من **WhatsApp Manager → Account tools → Catalog**. يُربط كتالوج واحد لكل حساب واتساب للأعمال.
+
+اعرض الكتالوج المربوط:
+
+```bash
+curl "https://waba.karzoun.chat/product_catalogs?fields=id,name,product_count" \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+```json
+{ "data": [{ "id": "1234567890", "name": "Acme Store", "product_count": 128 }] }
+```
+
+## عرض المنتجات
+
+```bash
+curl "https://waba.karzoun.chat/product_catalogs/1234567890/products?fields=retailer_id,name,price,availability&limit=50" \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+```json
+{
+  "data": [
+    { "id": "8001", "retailer_id": "SKU-1042", "name": "Linen shirt", "price": "SAR 99.00", "availability": "in stock" }
+  ],
+  "paging": { "cursors": { "after": "…" } }
+}
+```
+
+استخدم `retailer_id` كقيمة `product_retailer_id` عند إرسال المنتجات. يدعم `fields` و`limit` و`after` و`filter`. فقط الكتالوجات المربوطة بحسابك متاحة، والبقية ترجع `404`.
+
+## إعدادات التجارة
+
+تحكّم في ظهور زر الكتالوج للعملاء وإمكانية استخدام السلة:
+
+```bash
+curl https://waba.karzoun.chat/whatsapp_commerce_settings \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+```json
+{ "data": [{ "id": "…", "is_cart_enabled": true, "is_catalog_visible": true }] }
+```
+
+غيّرها بمعاملات الرابط:
+
+```bash
+curl -X POST "https://waba.karzoun.chat/whatsapp_commerce_settings?is_cart_enabled=true&is_catalog_visible=true" \
+  -H "Karzoun-API-Key: YOUR_API_KEY"
+```
+
+| الإعداد | عندما يكون `true` |
+| --- | --- |
+| `is_catalog_visible` | يظهر زر المتجر في المحادثة وفي ملفك التجاري |
+| `is_cart_enabled` | يقدر العملاء يضيفون منتجات للسلة ويرسلونها لك كطلب |
+
+## إرسال المنتجات
+
+داخل [نافذة خدمة العملاء](/ar/whatsapp-api/customer-service-window) المفتوحة، أرسل المنتجات كرسائل تفاعلية:
+
+<Tabs>
+  <Tab title="منتج واحد">
+    ```json
+    {
+      "messaging_product": "whatsapp",
+      "to": "966500000000",
+      "type": "interactive",
+      "interactive": {
+        "type": "product",
+        "body": { "text": "عاد للمخزون" },
+        "action": { "catalog_id": "1234567890", "product_retailer_id": "SKU-1042" }
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="عدة منتجات">
+    ```json
+    {
+      "messaging_product": "whatsapp",
+      "to": "966500000000",
+      "type": "interactive",
+      "interactive": {
+        "type": "product_list",
+        "header": { "type": "text", "text": "مختارات الصيف" },
+        "body": { "text": "الأكثر مبيعاً هذا الأسبوع" },
+        "action": {
+          "catalog_id": "1234567890",
+          "sections": [
+            { "title": "Shirts", "product_items": [{ "product_retailer_id": "SKU-1042" }, { "product_retailer_id": "SKU-1043" }] }
+          ]
+        }
+      }
+    }
+    ```
+    حتى 30 منتجاً في حتى 10 أقسام.
+  </Tab>
+  <Tab title="الكتالوج كاملاً">
+    ```json
+    {
+      "messaging_product": "whatsapp",
+      "to": "966500000000",
+      "type": "interactive",
+      "interactive": {
+        "type": "catalog_message",
+        "body": { "text": "تصفح كل منتجاتنا" },
+        "action": { "name": "catalog_message", "parameters": { "thumbnail_product_retailer_id": "SKU-1042" } }
+      }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+للوصول للعملاء خارج النافذة، استخدم [قوالب الكتالوج والمنتجات](/ar/whatsapp-api/templates/commerce).
+
+## الطلبات
+
+عندما يرسل العميل سلته، يصل للـ Webhook رسالة من نوع `order`:
+
+```json
+{
+  "type": "order",
+  "order": {
+    "catalog_id": "1234567890",
+    "text": "التوصيل بعد الخامسة مساءً لو سمحت",
+    "product_items": [
+      { "product_retailer_id": "SKU-1042", "quantity": 2, "item_price": 99, "currency": "SAR" }
+    ]
+  }
+}
+```
+
+رد في نفس المحادثة لتأكيد الطلب، أو إرسال الإجمالي، أو طلب تفاصيل التوصيل.

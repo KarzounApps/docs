@@ -1,0 +1,91 @@
+---
+title: "Webhooks"
+description: "استقبل رسائل رقمك وتحديثات حالتها على خادمك."
+---
+
+كرزون توصل كل أحداث رقمك إلى رابط الـ Webhook عندك، موقّعة بمفتاح رقمك، وتعيد المحاولة إذا كان خادمك متوقفاً.
+
+## ضبط رابط الـ Webhook
+
+<Tabs>
+  <Tab title="من لوحة التحكم">
+    افتح الرقم، ثم تبويب **واجهة API**، وفي بطاقة **عنوان الويب هوك** املأ **عنوان نقطة الاستقبال**. يمكنك إضافة حتى 5 ترويسات مخصصة (مثلاً `Authorization` لبوابة الـ API عندك)، ثم اضغط **حفظ**.
+  </Tab>
+  <Tab title="عبر الـ API">
+    ```bash
+    curl -X POST https://waba.karzoun.chat/webhook \
+      -H "Karzoun-API-Key: YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "url": "https://example.com/whatsapp/webhook",
+        "headers": [{ "name": "Authorization", "value": "Bearer my-gateway-token" }]
+      }'
+    ```
+
+    ```json
+    { "url": "https://example.com/whatsapp/webhook", "headers": [{ "name": "Authorization", "value": "Bea••••••••••••" }] }
+    ```
+
+    إذا لم ترسل `headers` تبقى الترويسات الحالية، وإذا أرسلت `[]` تُحذف. و`GET /webhook` يرجع الإعدادات الحالية.
+  </Tab>
+</Tabs>
+
+قبل الحفظ، ترسل كرزون حدثاً تجريبياً موقّعاً إلى الرابط:
+
+```json
+{ "object": "karzoun", "event": "webhook.test", "channel": "whatsapp", "sent_at": "2026-11-18T10:00:00.000Z" }
+```
+
+لازم يرد خادمك بـ `2xx` خلال 5 ثوانٍ، وإلا لا يُحفظ الرابط وتظهر لك سبب الرفض.
+
+## شروط الرابط
+
+| الشرط | التفاصيل |
+| --- | --- |
+| البروتوكول | `https` فقط، على المنفذ 443 |
+| الخادم | اسم نطاق عام. العناوين الخاصة والمحلية (loopback، link-local) مرفوضة |
+| بيانات الدخول | ممنوع `user:password@` داخل الرابط. استخدم ترويسة مخصصة |
+| الترويسات المخصصة | حتى 5. لا يمكن ضبط `Host` و`Content-Type` و`Content-Length` و`User-Agent` وترويسات hop-by-hop وأي اسم يبدأ بـ `X-Karzoun-` |
+
+## إيقاف الإرسال
+
+احفظ رابطاً فارغاً (`{ "url": "" }`). بعدها تتوقف كرزون عن إرسال أحداث هذا الرقم.
+
+<Note>
+  طالما للرقم رابط Webhook، رسائله تصلك أنت فقط ولا تظهر في صندوق الوارد في كرزون.
+</Note>
+
+## رابط واحد لعدة أرقام
+
+لكل رقم رابطه ومفتاح توقيعه. لضبط رابط واحد على كل أرقام نفس حساب واتساب للأعمال:
+
+```bash
+curl -X POST https://waba.karzoun.chat/waba_webhook \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "url": "https://example.com/whatsapp/webhook", "override_all": true }'
+```
+
+| `override_all` | النتيجة |
+| --- | --- |
+| `false` (الافتراضي) | يضبط الرابط على الأرقام التي ليس لها رابط بعد (وعلى رقم هذا المفتاح). |
+| `true` | يضبط الرابط على كل أرقام الحساب ويستبدل الروابط الموجودة. |
+
+`GET /waba_webhook` يعرض أرقام الحساب وروابطها.
+
+## الاختبار والمتابعة
+
+- زر **إرسال حدث تجريبي** في اللوحة، أو `POST /webhook/test`، يرسل حدثاً تجريبياً موقّعاً ويرجع النتيجة:
+
+  ```json
+  { "success": true, "status_code": 200, "latency_ms": 142, "error": null }
+  ```
+
+- بطاقة **عنوان الويب هوك** تعرض آخر إرسال ناجح وعدد النجاح والفشل خلال 24 ساعة. و**عرض سجل الإرسال** يعرض كل أحداث آخر 7 أيام وحالتها، ويمكنك إعادة إرسال الفاشل منها. راجع [الإرسال وإعادة المحاولة](/ar/whatsapp-api/webhooks/delivery).
+
+## التالي
+
+<CardGroup cols={2}>
+  <Card title="التحقق من التوقيع" icon="shield-check" href="/ar/whatsapp-api/webhooks/signature" />
+  <Card title="شكل الأحداث" icon="brackets-curly" href="/ar/whatsapp-api/webhooks/events" />
+</CardGroup>

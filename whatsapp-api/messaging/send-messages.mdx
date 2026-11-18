@@ -1,0 +1,207 @@
+---
+title: "Send messages"
+description: "Send text, media, interactive, template and other WhatsApp messages with POST /messages."
+---
+
+All messages go through one endpoint:
+
+```
+POST https://waba.karzoun.chat/messages
+Karzoun-API-Key: YOUR_API_KEY
+Content-Type: application/json
+```
+
+The body is a standard WhatsApp Cloud API message object. Every body has `"messaging_product": "whatsapp"`, a recipient and a `type`.
+
+## Recipients
+
+| Field | Use |
+| --- | --- |
+| `to` | Phone number in international format, digits only (`966500000000`). |
+| `recipient` | A business-scoped user ID (BSUID), when WhatsApp sent you that instead of a phone number. |
+
+## When you can send what
+
+| Situation | Allowed |
+| --- | --- |
+| The user messaged you in the last 24 hours | Any message type |
+| No conversation open | Templates only (or utility [Direct Send](#direct-send)) |
+
+## Examples
+
+<Tabs>
+  <Tab title="Text">
+    ```json
+    {
+      "messaging_product": "whatsapp",
+      "to": "966500000000",
+      "type": "text",
+      "text": { "body": "Your order #1042 is on its way.", "preview_url": false }
+    }
+    ```
+  </Tab>
+  <Tab title="Image">
+    Use a public `link`, or the `id` from [Upload media](/whatsapp-api/messaging/media#upload).
+
+    ```json
+    {
+      "messaging_product": "whatsapp",
+      "to": "966500000000",
+      "type": "image",
+      "image": { "link": "https://example.com/receipt.png", "caption": "Your receipt" }
+    }
+    ```
+
+    `document`, `audio`, `video` and `sticker` work the same way.
+  </Tab>
+  <Tab title="Buttons">
+    ```json
+    {
+      "messaging_product": "whatsapp",
+      "to": "966500000000",
+      "type": "interactive",
+      "interactive": {
+        "type": "button",
+        "body": { "text": "Confirm your appointment on Sunday at 10:00?" },
+        "action": {
+          "buttons": [
+            { "type": "reply", "reply": { "id": "confirm", "title": "Confirm" } },
+            { "type": "reply", "reply": { "id": "reschedule", "title": "Reschedule" } }
+          ]
+        }
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="List">
+    ```json
+    {
+      "messaging_product": "whatsapp",
+      "to": "966500000000",
+      "type": "interactive",
+      "interactive": {
+        "type": "list",
+        "body": { "text": "Pick a branch" },
+        "action": {
+          "button": "Branches",
+          "sections": [{
+            "title": "Riyadh",
+            "rows": [
+              { "id": "olaya", "title": "Olaya" },
+              { "id": "malqa", "title": "Al Malqa" }
+            ]
+          }]
+        }
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="Template">
+    ```json
+    {
+      "messaging_product": "whatsapp",
+      "to": "966500000000",
+      "type": "template",
+      "template": {
+        "name": "order_shipped",
+        "language": { "code": "ar" },
+        "components": [{
+          "type": "body",
+          "parameters": [
+            { "type": "text", "text": "Sara" },
+            { "type": "text", "text": "#1042" }
+          ]
+        }]
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="Location">
+    ```json
+    {
+      "messaging_product": "whatsapp",
+      "to": "966500000000",
+      "type": "location",
+      "location": { "latitude": 24.7136, "longitude": 46.6753, "name": "Head office", "address": "Olaya St, Riyadh" }
+    }
+    ```
+  </Tab>
+  <Tab title="Reaction">
+    ```json
+    {
+      "messaging_product": "whatsapp",
+      "to": "966500000000",
+      "type": "reaction",
+      "reaction": { "message_id": "wamid.HBgM...", "emoji": "👍" }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+Contacts, address, call-to-action URL, product and flow messages use the standard WhatsApp message format the same way.
+
+## Response
+
+```json
+{
+  "messaging_product": "whatsapp",
+  "contacts": [{ "input": "966500000000", "wa_id": "966500000000" }],
+  "messages": [{ "id": "wamid.HBgMOTY2NTAwMDAwMDAwFQIAERgS..." }]
+}
+```
+
+Keep `messages[0].id`. Status updates for this message (`sent`, `delivered`, `read`, `failed`) arrive on your [webhook](/whatsapp-api/webhooks/events) with the same ID.
+
+## Read receipts and typing indicator
+
+Mark an incoming message as read, and optionally show "typing…" while you prepare the answer:
+
+```json
+{
+  "messaging_product": "whatsapp",
+  "status": "read",
+  "message_id": "wamid.HBgM...",
+  "typing_indicator": { "type": "text" }
+}
+```
+
+This request is not billed.
+
+## Direct Send
+
+Send a business-initiated **utility** message without creating a template first. Add `"category": "utility"` to a normal message; WhatsApp creates and manages the matching template.
+
+```json
+{
+  "messaging_product": "whatsapp",
+  "to": "966500000000",
+  "category": "utility",
+  "type": "text",
+  "text": { "body": "Your appointment is confirmed for Sunday at 10:00." }
+}
+```
+
+Use it for transactional updates only: order and shipping updates, reminders, payment confirmations. Promotional content is rejected.
+
+## Marketing Messages
+
+Send marketing templates through the Marketing Messages API for better delivery:
+
+```
+POST https://waba.karzoun.chat/marketing_messages
+```
+
+The body is the same as a template message. The request is billed like `/messages`.
+
+## Errors
+
+WhatsApp errors keep WhatsApp's error codes. Common ones:
+
+| Code | Meaning |
+| --- | --- |
+| `131047` | More than 24 hours since the user's last message. Send a template. |
+| `131026` | The recipient can't receive this message (not on WhatsApp, old app version). |
+| `131070` | Another provider controls this conversation. See [Errors](/whatsapp-api/reference/errors#another-provider-controls-the-conversation). |
+| `132001` | Template doesn't exist in this language. |
+
+A `402` with `"type": "Karzoun"` means your wallet can't cover the send. See [Pricing and wallet](/whatsapp-api/pricing-and-wallet).

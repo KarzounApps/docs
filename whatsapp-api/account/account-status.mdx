@@ -1,0 +1,74 @@
+---
+title: "Account status"
+description: "WhatsApp Business Account statuses, policy enforcement, appeals and common lock-ups."
+---
+
+Your WhatsApp Business Account has a status that decides what you can send. It applies to every number in the account.
+
+| Status | Meaning |
+| --- | --- |
+| **Approved** | No restrictions |
+| **Review in progress** | Meta is reviewing the account. You can't message until it's approved |
+| **Not approved** | The account doesn't meet policy. Fix the cause and it can be approved |
+| **Disabled** | Disabled for policy violations. Appeal to restore it |
+
+See it in Meta Business Suite on the WhatsApp account. Changes arrive on your [webhook](/whatsapp-api/webhooks/events) as `account_update`.
+
+## Review in progress
+
+New accounts are reviewed against the WhatsApp Business Messaging Policy. Most reviews finish within hours. Speed it up by making sure:
+
+- Business Info in your portfolio is complete (legal name, address, website, phone).
+- Your website is live on `https` and clearly describes what you sell or do.
+- Nothing you sell is on WhatsApp's prohibited list.
+
+## Policy enforcement
+
+When Meta finds a policy violation, enforcement escalates:
+
+1. **Warning** about the violated policy.
+2. **1 or 3-day block** on business-initiated messages and on adding numbers.
+3. **5 or 7-day block** on all messages, including replies, and on adding numbers.
+4. **Permanent disable** if violations continue.
+
+Severe violations (for example child exploitation, terrorism, illegal drugs) disable the account immediately. High-risk categories such as adult content, alcohol, tobacco, gambling and unsafe supplements escalate faster.
+
+### Where warnings arrive
+
+- `account_update` webhook events, with the restriction type and duration.
+- WhatsApp Manager and the Meta Business Suite notification center.
+- Email to the portfolio's admins ("Your WhatsApp Business account is violating policy").
+
+Act on the first warning. Ignored warnings lead to longer blocks.
+
+## Appeal
+
+You can appeal any violation within **90 days**, in **Meta Business Suite → Business Support Home**. Explain what you changed.
+
+## Prevent violations
+
+- [ ] Your catalog contains no prohibited items and complete product information.
+- [ ] Your website is live on `https` and shows the same address and phone number as your portfolio.
+- [ ] Your templates follow the policy.
+- [ ] Your portfolio and WhatsApp profile describe the business clearly.
+- [ ] You watch `account_update` events and react the same day.
+
+## Business account locked
+
+Sends can fail with "Business account has been locked", often after an account was restricted and then reinstated.
+
+<Steps>
+  <Step title="Turn off two-step verification">
+    See [Two-step verification](/whatsapp-api/account/phone-numbers#two-step-verification).
+  </Step>
+  <Step title="Reconnect the number">
+    Connect the number again in your workspace. In Meta's signup, select the **existing** WhatsApp account and the **same** number. Don't create new ones.
+  </Step>
+  <Step title="Turn two-step verification back on">
+    Then check [`GET /health_status`](/whatsapp-api/messaging/number-settings#health-status) shows the number as available.
+  </Step>
+</Steps>
+
+## Karzoun's access to your account
+
+Karzoun needs full control of your WhatsApp account as your provider. If someone removes Karzoun as a partner in Meta Business Suite, the number stops sending. To restore it, reconnect the number in your workspace and select the existing account.

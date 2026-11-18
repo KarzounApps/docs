@@ -1,0 +1,91 @@
+---
+title: "Webhooks"
+description: "Receive your number's WhatsApp messages and status updates on your own server."
+---
+
+Karzoun delivers every event for your number to your webhook URL, signed with your number's secret, and retries when your endpoint is down.
+
+## Set your webhook URL
+
+<Tabs>
+  <Tab title="Dashboard">
+    Open the number, go to the **API** tab and fill **Endpoint URL** in the **Webhook URL** card. Optionally add up to 5 custom headers (for example `Authorization` for your API gateway), then click **Save**.
+  </Tab>
+  <Tab title="API">
+    ```bash
+    curl -X POST https://waba.karzoun.chat/webhook \
+      -H "Karzoun-API-Key: YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "url": "https://example.com/whatsapp/webhook",
+        "headers": [{ "name": "Authorization", "value": "Bearer my-gateway-token" }]
+      }'
+    ```
+
+    ```json
+    { "url": "https://example.com/whatsapp/webhook", "headers": [{ "name": "Authorization", "value": "Bea••••••••••••" }] }
+    ```
+
+    Omit `headers` to keep the current ones; send `[]` to remove them. `GET /webhook` returns the current settings.
+  </Tab>
+</Tabs>
+
+Before saving, Karzoun sends a signed test event to the URL:
+
+```json
+{ "object": "karzoun", "event": "webhook.test", "channel": "whatsapp", "sent_at": "2026-11-18T10:00:00.000Z" }
+```
+
+Your endpoint must answer `2xx` within 5 seconds, or the URL is not saved and you see the reason.
+
+## URL rules
+
+| Rule | Detail |
+| --- | --- |
+| Protocol | `https` only, port 443 |
+| Host | Public hostname. Private, loopback and link-local addresses are refused |
+| Credentials | No `user:password@` in the URL. Use a custom header |
+| Custom headers | Up to 5. `Host`, `Content-Type`, `Content-Length`, `User-Agent`, hop-by-hop headers and any `X-Karzoun-*` name can't be set |
+
+## Stop receiving events
+
+Save an empty URL (`{ "url": "" }`). Events for this number then stop being forwarded.
+
+<Note>
+  While a number has a webhook URL, its messages are delivered to you only. They don't appear in the Karzoun inbox.
+</Note>
+
+## Several numbers, one URL
+
+Each number has its own URL and secret. To set one URL on every number of the same WhatsApp Business Account:
+
+```bash
+curl -X POST https://waba.karzoun.chat/waba_webhook \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "url": "https://example.com/whatsapp/webhook", "override_all": true }'
+```
+
+| `override_all` | Effect |
+| --- | --- |
+| `false` (default) | Sets the URL on numbers that don't have one yet (and on this key's number). |
+| `true` | Sets the URL on every number of the account, replacing existing URLs. |
+
+`GET /waba_webhook` lists the account's numbers and their URLs.
+
+## Test and monitor
+
+- **Send test event** (dashboard) or `POST /webhook/test` sends a signed test event and returns the result:
+
+  ```json
+  { "success": true, "status_code": 200, "latency_ms": 142, "error": null }
+  ```
+
+- The **Webhook URL** card shows the last delivery and the 24-hour success and failure counts. **View deliveries** lists every event of the last 7 days with its status. You can resend failed ones. See [Delivery and retries](/whatsapp-api/webhooks/delivery).
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="Verify signatures" icon="shield-check" href="/whatsapp-api/webhooks/signature" />
+  <Card title="Payloads" icon="brackets-curly" href="/whatsapp-api/webhooks/events" />
+</CardGroup>

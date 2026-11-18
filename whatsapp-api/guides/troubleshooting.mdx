@@ -1,0 +1,84 @@
+---
+title: "Troubleshooting and FAQ"
+description: "Fixes for the most common WhatsApp API problems, and answers to frequent questions."
+---
+
+## Messages
+
+<AccordionGroup>
+  <Accordion title="The API returned a message ID, but the user didn't get the message">
+    A message ID means WhatsApp accepted the request, not that it was delivered. Check the status events on your [webhook](/whatsapp-api/webhooks/events#message-statuses) for that ID. A `failed` status includes an error code: see [Errors](/whatsapp-api/reference/errors). Common causes: the number isn't on WhatsApp (`131026`), the per-user marketing limit (`131049`), or the user stopped your marketing (`131050`).
+  </Accordion>
+  <Accordion title="I get 131047 when replying">
+    More than 24 hours passed since the user's last message, so the [customer service window](/whatsapp-api/customer-service-window) is closed. Send a template.
+  </Accordion>
+  <Accordion title="Messages arrive in the wrong order">
+    WhatsApp doesn't guarantee order. Wait for the first message's `delivered` status before sending the next one when order matters.
+  </Accordion>
+  <Accordion title="I get 402">
+    Your wallet's available balance can't cover the send. Add balance in **Billing**. Open reservations from recent sends count against the balance until they're charged. See [Pricing and wallet](/whatsapp-api/pricing-and-wallet).
+  </Accordion>
+  <Accordion title="I get 130429">
+    You're sending faster than the number's throughput. Retry with exponential backoff and spread your sends out.
+  </Accordion>
+</AccordionGroup>
+
+## Webhooks
+
+<AccordionGroup>
+  <Accordion title="I don't receive any events">
+    1. Check the **Endpoint URL** on the number's **API** tab and click **Send test event**.
+    2. Open **View deliveries** to see whether events are retrying or failing, and your endpoint's response.
+    3. If the number was used with another provider, Meta may still route conversations there. See [Use a number from another provider](/whatsapp-api/account/existing-numbers#route-conversations-to-karzoun).
+  </Accordion>
+  <Accordion title="The URL can't be saved">
+    Saving sends a test event. Your endpoint must be public `https` and answer `2xx` within 5 seconds. See [Webhooks](/whatsapp-api/webhooks/overview).
+  </Accordion>
+  <Accordion title="I receive the same event twice">
+    Retries and resends keep the same `X-Karzoun-Event-Id`. Deduplicate on it.
+  </Accordion>
+  <Accordion title="Signature verification fails">
+    Compute the HMAC over `timestamp.body` using the raw request body, before any JSON parsing. Right after a secret rotation, also try `X-Karzoun-Signature-256-Previous`. See [Verify signatures](/whatsapp-api/webhooks/signature).
+  </Accordion>
+</AccordionGroup>
+
+## Templates
+
+<AccordionGroup>
+  <Accordion title="My template was rejected">
+    The reason is in the `message_template_status_update` event and on the **Templates** tab. See [common rejection reasons](/whatsapp-api/templates/overview#common-rejection-reasons).
+  </Accordion>
+  <Accordion title="Meta changed my template to marketing">
+    It contained promotional content. Remove it and create a new utility template, or keep it as marketing. See [Utility templates](/whatsapp-api/templates/utility).
+  </Accordion>
+  <Accordion title="Sends return held_for_quality_assessment">
+    The template is being [paced](/whatsapp-api/templates/sending#pacing). Held messages are delivered or dropped within about an hour.
+  </Accordion>
+</AccordionGroup>
+
+## Numbers and accounts
+
+<AccordionGroup>
+  <Accordion title="Can I use my number on the WhatsApp app and the API?">
+    Yes, if it's on the WhatsApp Business app: connect it with [coexistence](/whatsapp-api/account/coexistence). A personal WhatsApp number must be removed from the app first.
+  </Accordion>
+  <Accordion title="Can I move my number from another provider?">
+    Yes, without downtime. See [Use a number from another provider](/whatsapp-api/account/existing-numbers).
+  </Accordion>
+  <Accordion title="How do I raise my messaging limit?">
+    Verify your business or send 2,000 high-quality messages in 30 days. After that, limits grow automatically. See [Messaging limits](/whatsapp-api/account/messaging-limits).
+  </Accordion>
+  <Accordion title="How do I get the green badge?">
+    Request an [Official Business Account](/whatsapp-api/account/official-business-account). Only Meta decides.
+  </Accordion>
+  <Accordion title="Sends fail with 'Business account has been locked'">
+    See [Business account locked](/whatsapp-api/account/account-status#business-account-locked).
+  </Accordion>
+  <Accordion title="How many numbers can I connect?">
+    Each business portfolio can have up to 2 numbers at first. Meta raises it to 20 after business verification, and more on request.
+  </Accordion>
+</AccordionGroup>
+
+## Still stuck?
+
+Check [service status](https://status.karzoun.chat/), then see [Status and support](/whatsapp-api/support) for who to contact and what to include.

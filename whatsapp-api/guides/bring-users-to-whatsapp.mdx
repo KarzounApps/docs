@@ -1,0 +1,66 @@
+---
+title: "Bring users to WhatsApp"
+description: "Get people to message you first with QR codes, links, Click to WhatsApp ads, your Facebook Page and Google ads."
+---
+
+When a user messages you first, a [customer service window](/whatsapp-api/customer-service-window) opens and you can reply with any message, no template needed. It's also the clearest form of [opt-in](/whatsapp-api/opt-in). These are the easiest ways to start those conversations.
+
+## QR codes and short links
+
+Create them on the number's **QR Codes** tab:
+
+1. Click **Create QR Code**.
+2. Optionally add a **Prefilled Message**: text the user sees in the chat box, ready to send, for example "Hi, I'd like to know about the summer offer".
+3. Save, then **Download QR** for print or **Copy Link** for the short link.
+
+Use a different prefilled message per placement (store counter, packaging, flyer) to see which one brings conversations.
+
+## wa.me links
+
+Anyone can open a chat with your number through a link:
+
+```
+https://wa.me/966500000000?text=Hi%2C%20I%27d%20like%20to%20order
+```
+
+- Use the full number with country code, without `+`, spaces or leading zeros.
+- `text` is optional and must be URL-encoded.
+- Put it on your website as a "Chat on WhatsApp" button, in emails and SMS, or in your social media bios.
+
+## Click to WhatsApp ads
+
+Ads on Facebook and Instagram can open a WhatsApp chat instead of a website.
+
+1. [Link your number to your Facebook Page](#link-your-facebook-page).
+2. In Meta Ads Manager, create a campaign with the **Engagement** or **Sales** objective and choose **WhatsApp** as the conversion location.
+3. Pick your number and write a greeting and quick-reply questions.
+
+The first message from an ad carries a [`referral` object](/whatsapp-api/webhooks/events#from-an-ad-or-link) with the ad ID and a `ctwa_clid`. Store them to measure which ads bring customers.
+
+## Link your Facebook Page
+
+Linking your number to your Facebook Page lets you run Click to WhatsApp ads and add a WhatsApp button to the Page.
+
+1. In your Facebook Page, open **Settings → Linked accounts → WhatsApp**.
+2. Click **Connect WhatsApp number** and enter your number.
+3. If the number and the Page are in the same business portfolio, it connects right away. Otherwise WhatsApp sends a code to the number to confirm.
+
+You must be an admin, editor, moderator or advertiser of the Page. A Page can have several numbers; you choose one per ad.
+
+To add a button, open the Page, click **Add Action Button** and choose **WhatsApp**.
+
+## Google ads
+
+Google's message assets add a "Chat on WhatsApp" button to search ads.
+
+1. In Google Ads, open your campaign and go to **Assets → Message**.
+2. Choose **WhatsApp**, enter your number with country code and a welcome message.
+3. Add the asset to your campaigns.
+
+When people tap the button, WhatsApp opens with your welcome message ready to send.
+
+## Your website and app
+
+- Add a floating "Chat on WhatsApp" button with a wa.me link.
+- At checkout, add an opt-in checkbox for order updates on WhatsApp.
+- In your app, use the link to open WhatsApp directly to your number.

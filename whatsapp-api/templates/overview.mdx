@@ -1,0 +1,123 @@
+---
+title: "Templates overview"
+description: "What message templates are, their categories, review, statuses, quality and limits."
+---
+
+A **template** is a pre-approved message you use to start a conversation, or to message someone whose [customer service window](/whatsapp-api/customer-service-window) is closed. Inside an open window you can send any message type freely; outside it, only templates.
+
+Templates belong to the number's WhatsApp Business Account, so every number in the account can use them.
+
+## Categories
+
+Every template has one category. It decides what the template may contain, how it's priced and which rules apply.
+
+| Category | Use it for | Examples |
+| --- | --- | --- |
+| [`MARKETING`](/whatsapp-api/templates/marketing) | Promotions, offers, announcements, re-engagement, anything not strictly transactional | Sales, new products, abandoned-cart reminders, newsletters |
+| [`UTILITY`](/whatsapp-api/templates/utility) | Updates about a transaction or account the user already started | Order confirmations, shipping updates, appointment reminders, invoices |
+| [`AUTHENTICATION`](/whatsapp-api/templates/authentication) | One-time passwords only | Login codes, account verification, transaction confirmation codes |
+
+Meta checks the category during review. If a template submitted as `UTILITY` or `AUTHENTICATION` contains marketing content, Meta changes its category to `MARKETING` automatically and notifies you with a `template_category_update` webhook event. Pricing follows the category at the time each message is sent.
+
+<Tip>
+  Mixed content counts as marketing. A shipping update that adds "Use code SAVE10 on your next order" is a marketing template.
+</Tip>
+
+## Review
+
+Every new or edited template goes to Meta for review. Most reviews finish within minutes; some take up to 48 hours. You can't send a template until it's approved.
+
+Track the result with the `message_template_status_update` webhook event, the template list in your workspace, or [`GET /message_templates`](/whatsapp-api/templates/manage#list).
+
+### Common rejection reasons
+
+- **Variables without samples.** Every variable needs an `example` value.
+- **Badly placed variables.** A template can't start or end with a variable, and variables can't sit next to each other (`{{1}} {{2}}`).
+- **Too many variables for the text.** Meta rejects templates that are mostly variables with little fixed text.
+- **Wrong or malformed variables.** Use `{{1}}`, `{{2}}` in order, or [named variables](/whatsapp-api/templates/elements#variables). Characters such as `#`, `$` or `%` inside the braces aren't allowed.
+- **Wrong category.** For example, a promotion submitted as utility.
+- **Policy violations.** Content that breaks the WhatsApp Business or Commerce policy, or asks for sensitive data such as full card numbers or national IDs.
+- **Duplicate content.** The same wording as an existing template in another name.
+- **Misleading links.** Shortened URLs or links to domains that don't belong to the business.
+- **Language mismatch.** The text isn't in the language you selected.
+
+If you believe a rejection is wrong, request a review in **Meta Business Suite → Business Support Home**, or fix the template and submit it again.
+
+## Statuses
+
+| Status | Meaning | Can you send it? |
+| --- | --- | --- |
+| `PENDING` | Under review | No |
+| `APPROVED` | Ready to use | Yes |
+| `REJECTED` | Failed review. The reason is in the status webhook and the template list | No |
+| `PAUSED` | Paused for low quality (see [Pausing](#pausing)) | No |
+| `DISABLED` | Disabled after repeated pauses | No |
+| `IN_APPEAL` | An appeal is under review | No |
+| `PENDING_DELETION` | Deleted, waiting to be removed | No |
+| `LIMIT_EXCEEDED` | The account went over its template limit | No |
+
+## Template quality
+
+Each approved template has a quality rating based on how people react to it: blocks, reports, mutes, archives, and the reasons users give when they block.
+
+| Rating | Meaning |
+| --- | --- |
+| **High** (green) | Few or no negative signals |
+| **Medium** (yellow) | Negative signals are growing. Review the template before it gets paused |
+| **Low** (red) | Many negative signals. The template is close to being paused |
+| **Quality pending** | Not enough sends yet to rate it |
+
+Changes arrive as `message_template_quality_update` webhook events. Template quality feeds into your number's [quality rating](/whatsapp-api/account/quality-rating).
+
+### Pausing
+
+When a template's rating drops to low, Meta pauses it to protect your number:
+
+| Pause | Duration |
+| --- | --- |
+| First | 3 hours |
+| Second | 6 hours |
+| Third | Disabled permanently |
+
+While a template is paused, sends fail with error `132015`. After the pause ends, the template is approved again with its previous rating, and new sends may be [paced](/whatsapp-api/templates/sending#pacing). A disabled template can't be re-enabled: create a new one with improved content.
+
+### Keep quality high
+
+- Message only people who [opted in](/whatsapp-api/opt-in), and only about what they opted in to.
+- Make the sender obvious in the first line.
+- Send at sensible times in the recipient's time zone.
+- Don't send the same marketing template to the same person over and over.
+- Offer a clear way to stop messages, such as a "Stop promotions" quick reply.
+- Watch read rates. A template with a low read rate is usually one people don't want.
+
+## Limits
+
+| Limit | Value |
+| --- | --- |
+| Templates per WhatsApp Business Account | 250 names, each in any number of languages. Accounts of verified businesses with an approved display name can have up to 6,000 |
+| New templates per hour | 100 per account |
+| Edits to an approved template | Once per day, up to 10 times in 30 days |
+| Template name | Lowercase letters, numbers and underscores, up to 512 characters |
+
+Editing an approved template sends it back to review, and its category can't be changed. To change category, create a new template.
+
+## Languages
+
+A template name can have one version per language, for example `order_shipped` in `ar` and `en`. Each language is reviewed on its own. When you send, pick the language in `template.language.code`. Keep every language of a template the same structure: the same variables, header type and buttons.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Template elements" icon="shapes" href="/whatsapp-api/templates/elements">
+    Headers, body, footer, buttons and variables.
+  </Card>
+  <Card title="Manage templates" icon="list" href="/whatsapp-api/templates/manage">
+    Create, list, edit and delete through the API.
+  </Card>
+  <Card title="Send templates" icon="paper-plane" href="/whatsapp-api/templates/sending">
+    Send, pacing and per-user limits.
+  </Card>
+  <Card title="Authentication templates" icon="key" href="/whatsapp-api/templates/authentication">
+    One-time passwords with copy code, one-tap and zero-tap.
+  </Card>
+</CardGroup>

@@ -1,0 +1,39 @@
+---
+title: "استقبال الوسائط"
+description: "نزّل الصور والمستندات والصوتيات والفيديو التي يرسلها لك العملاء."
+---
+
+رسالة الوسائط الواردة تحمل معرّف الملف وليس الملف نفسه:
+
+```json
+{
+  "from": "966500000000",
+  "id": "wamid.HBgM...",
+  "timestamp": "1731916800",
+  "type": "image",
+  "image": {
+    "id": "1037543291543636",
+    "mime_type": "image/jpeg",
+    "sha256": "e7b2…",
+    "caption": "Damaged box"
+  }
+}
+```
+
+نزّل الملف بمفتاحك:
+
+```bash
+curl https://waba.karzoun.chat/1037543291543636/download \
+  -H "Karzoun-API-Key: YOUR_API_KEY" \
+  -o damaged-box.jpg
+```
+
+الرد هو الملف مع `Content-Type` الأصلي.
+
+<Tip>
+  نزّل الملف فوراً واحفظه عندك. ميتا تحتفظ بالوسائط الواردة لفترة محدودة فقط.
+</Tip>
+
+رسائل `document` و`audio` و`video` و`sticker` بنفس الطريقة: خذ `id` من الكائن الذي يحمل اسم النوع.
+
+لقراءة بيانات الملف (الحجم، النوع، الـ hash) بدون تنزيله، استدعِ `GET /{media-id}`. راجع [الوسائط](/ar/whatsapp-api/messaging/media#القراءة).

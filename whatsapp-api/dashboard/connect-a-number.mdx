@@ -1,0 +1,65 @@
+---
+title: "Connect a number"
+description: "Connect a WhatsApp number to Karzoun with Meta's signup: new numbers, WhatsApp Business app numbers and numbers from another provider."
+---
+
+You connect numbers from your workspace through Meta's signup window. It creates or picks your Meta business portfolio, WhatsApp Business Account and number, and gives Karzoun access to them.
+
+## Before you start
+
+- **Meta admin access.** Log in with a Facebook account that's an admin of your business portfolio, or can create one.
+- **A phone number** that can receive an SMS or voice call for verification, or a number already on the WhatsApp Business app.
+- **A live website** on `https` that describes your business. Meta reviews it.
+- **A display name** that matches your business. See [Display names](/whatsapp-api/account/display-names).
+
+## Connect
+
+<Steps>
+  <Step title="Open the signup">
+    In your workspace, open **WhatsApp** and click **Add a number** (or **Connect number** during onboarding). Allow pop-ups if your browser blocks the Meta window.
+  </Step>
+  <Step title="Log in to Meta">
+    Log in with your Facebook account and accept the permissions Karzoun requests.
+  </Step>
+  <Step title="Choose your business">
+    Pick your business portfolio or create one. Fill in your business name, website and country as they appear on official documents.
+  </Step>
+  <Step title="Choose a WhatsApp account">
+    Pick an existing WhatsApp Business Account or create a new one. Choose the display name and category shown to customers.
+  </Step>
+  <Step title="Add the number">
+    Enter the number and verify it with the code Meta sends by SMS or voice call.
+  </Step>
+  <Step title="Finish">
+    Back in Karzoun, the number appears in your workspace. Create an [API key](/whatsapp-api/dashboard/api-tab) and start sending.
+  </Step>
+</Steps>
+
+## Which option to pick
+
+| Your number today | What to choose |
+| --- | --- |
+| Not on WhatsApp | Add it as a new number |
+| On the **WhatsApp Business app**, and you want to keep using the app | **Use my WhatsApp Business app** ([coexistence](/whatsapp-api/account/coexistence)) |
+| On the WhatsApp Business app, and you don't need the app anymore | Delete the WhatsApp account in the app, then add it as a new number |
+| On personal WhatsApp | Delete the WhatsApp account in the app, then add it as a new number |
+| With another WhatsApp API provider | Select it in Meta's signup. See [Use a number from another provider](/whatsapp-api/account/existing-numbers) |
+
+## After connecting
+
+- **Account review.** Meta reviews new WhatsApp accounts, usually within hours. See [Account status](/whatsapp-api/account/account-status).
+- **Display name review.** The name is reviewed separately. You can send before it's approved, with some limits.
+- **Messaging limit.** New accounts start at 250 unique people per day. See [Messaging limits](/whatsapp-api/account/messaging-limits).
+- **Wallet.** Add balance in [Billing](/whatsapp-api/dashboard/billing). Sends are refused until the wallet can cover them.
+
+## Signup problems
+
+| Problem | Fix |
+| --- | --- |
+| The Meta window doesn't open | Allow pop-ups for the Karzoun site and try again |
+| "The number is already registered" | It's on a WhatsApp app. Delete the account in the app, or choose **Use my WhatsApp Business app** |
+| No verification code arrives | Try the voice call option. Check that the number can receive international calls |
+| The portfolio or WhatsApp account can't be changed | Meta pre-selects the ones that already hold the number. That's expected |
+| You don't see your portfolio | Your Facebook account isn't an admin of it. Ask an admin to connect, or to make you admin |
+
+For a partner connecting a client's number, see [Connect links](/partners/connect-links).

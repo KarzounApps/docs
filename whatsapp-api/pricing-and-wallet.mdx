@@ -1,0 +1,51 @@
+---
+title: "Pricing and wallet"
+description: "How WhatsApp messages are charged to your Karzoun wallet, and what a 402 means."
+---
+
+WhatsApp messages are charged per message, at WhatsApp's rate for the recipient's country and the message category. The cost is deducted from your workspace wallet.
+
+## Reservation before each send
+
+Every billable request reserves its expected cost from your wallet before the message is sent:
+
+| Request | Reserves |
+| --- | --- |
+| `POST /messages` | Yes |
+| `POST /marketing_messages` | Yes |
+| `POST /calling/calls` | Yes |
+| Everything else (templates, media, profile…) | No |
+
+- The amount is based on the recipient's country (`to`, or the country of `recipient`).
+- If WhatsApp rejects the message, the reservation is released at once.
+- If it's accepted, the reservation stays until the final charge reaches your wallet, then the final charge replaces it.
+
+Your **available balance** is the wallet balance minus open reservations.
+
+## 402 Payment Required
+
+When the available balance can't cover a send, the API answers `402` and nothing is sent:
+
+```json
+{
+  "error": {
+    "message": "Wallet can cover 120 cents, 300 cents are already held, this send needs 45",
+    "type": "Karzoun",
+    "code": 402
+  }
+}
+```
+
+Add funds in **Billing**, or turn on auto top-up, then retry.
+
+<Tip>
+  Sending a campaign? Check the available balance first and send in batches. Each request reserves its own cost, so a large burst can reach the limit partway through.
+</Tip>
+
+## Spend
+
+**Billing → WhatsApp spend** shows what your numbers cost per day or week, compared with the previous period.
+
+## Partners
+
+A partner can fund a client's wallet from its own wallet and is notified when a client runs low. See [Clients and funding](/partners/api/clients-and-funding).

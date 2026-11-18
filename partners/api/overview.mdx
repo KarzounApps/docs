@@ -1,0 +1,81 @@
+---
+title: "Partner API"
+description: "Create client workspaces, connect their WhatsApp numbers, issue API keys and fund wallets from your own platform."
+---
+
+The Partner API lets your platform run the whole client lifecycle without opening the Karzoun dashboard:
+
+<Steps>
+  <Step title="Create the client">
+    `partnerRegisterOrganization` creates a workspace under your partner account. See [Clients and funding](/partners/api/clients-and-funding).
+  </Step>
+  <Step title="Fund it">
+    Pass `initialBalance` when you create it, or call `partnerTransferBalance` later. You can also let the client pay by card.
+  </Step>
+  <Step title="Connect a WhatsApp number">
+    Send the client a [connect link](/partners/connect-links) signed by your server. The client connects the number on your branded domain without a Karzoun login.
+  </Step>
+  <Step title="Issue an API key">
+    When the `channel.connected` [partner webhook](/partners/webhook) arrives, call `partnerChannelApiKeyCreate`. See [Numbers and API keys](/partners/api/numbers-and-keys).
+  </Step>
+  <Step title="Send and receive">
+    Use the key with the [WhatsApp API](/whatsapp-api), and set the number's [webhook](/whatsapp-api/webhooks/overview).
+  </Step>
+</Steps>
+
+## Endpoint and authentication
+
+The Partner API is part of the Karzoun GraphQL API. Call your **partner workspace**:
+
+```
+POST https://YOUR_PARTNER_SUBDOMAIN.api.karzoun.chat/graphql
+Authorization: Bearer kz_live_YOUR_API_KEY
+```
+
+Create the key in your partner workspace under **Developer → API keys** with these scopes:
+
+| Scope | Grants |
+| --- | --- |
+| `partner:read` | Client list and details, wallet, numbers across clients, partner webhook deliveries |
+| `partner:write` | Create, fund and suspend clients, create and revoke number API keys, test and resend the partner webhook |
+
+If you use a whitelabel domain, the API is also on `https://YOUR_PARTNER_SUBDOMAIN.api.yourdomain.com/graphql`.
+
+## Operations
+
+| Operation | Type | Use |
+| --- | --- | --- |
+| `partner` | Query | Your partner profile, including your own `wallet` |
+| `partnerPlans` | Query | Plans you can assign to clients (`planId`) |
+| `partnerRegisterOrganization` | Mutation | Create a client workspace |
+| `partnerOrganizationMonitor` | Query | List clients with balances and status |
+| `partnerOrganizationDetail` | Query | One client, with a live wallet read |
+| `partnerTransferBalance` | Mutation | Move credit from your wallet to a client |
+| `partnerSuspendOrganizations` | Mutation | Suspend or unsuspend clients |
+| `partnerChannels` | Query | WhatsApp numbers across clients, with live status, quality and tier |
+| `partnerChannelApiKeyCreate` | Mutation | Create the WhatsApp API key for a client's number |
+| `partnerChannelApiKeyRevoke` | Mutation | Revoke it |
+| `partnerWebhookDeliveries` | Query | Partner webhook delivery log |
+| `partnerTestWebhook` | Mutation | Send a test event to your partner webhook |
+| `partnerWebhookResend` | Mutation | Resend a failed partner webhook event |
+
+Full fields are in the [GraphQL reference](/api-reference). The Partner tools are also available to AI agents through the [MCP server](/mcp-server) in the **Partners** pack.
+
+## Settings in the dashboard
+
+Some settings are dashboard-only. Open **Partner → Settings → General → Developer**:
+
+- **Partner webhook URL**, see [Partner webhook](/partners/webhook)
+- **Platform secret**, which signs the partner webhook and your [connect links](/partners/connect-links)
+- **Redirect URL** after a client connects a number
+
+## How clients pay
+
+**Partner → Settings → General → How customers pay** decides who funds client wallets:
+
+| Setting | Clients | You |
+| --- | --- | --- |
+| **Customers can add a payment method** | Add their own card and top up | Can still transfer credit |
+| **You fund customer wallets** | Can't add a card | Transfer credit from your wallet; you're notified when a client runs low |
+
+You bill your clients on your side. Karzoun charges each client's wallet for its own WhatsApp usage.

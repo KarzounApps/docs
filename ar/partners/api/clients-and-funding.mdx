@@ -1,0 +1,126 @@
+---
+title: "العملاء والتمويل"
+description: "أنشئ حسابات العملاء، واقرأ أرصدتهم، وحوّل لهم من محفظة الشريك."
+---
+
+## اختر الباقة
+
+```graphql
+query {
+  partnerPlans {
+    _id
+    name
+    type
+  }
+}
+```
+
+للعملاء الذين يستخدمون WhatsApp API فقط، اختر باقة من نوع `api`.
+
+## أنشئ حساب عميل
+
+```graphql
+mutation {
+  partnerRegisterOrganization(input: {
+    name: "Acme Trading"
+    email: "owner@acme.example"
+    subdomain: "acme"
+    planId: "PLAN_ID"
+    initialBalance: 50
+  }) {
+    _id
+    subdomain
+    name
+  }
+}
+```
+
+| الحقل | ملاحظات |
+| --- | --- |
+| `name`، `email` | اسم الحساب ومالكه. المالك تصله دعوة |
+| `subdomain` | عنوان العميل: `acme.karzoun.chat`، أو `acme.yourdomain.com` على نطاقك |
+| `planId` | من `partnerPlans` |
+| `initialBalance` | اختياري. مبلغ بالدولار يُحوّل من محفظتك بعد الإنشاء مباشرة. يُرفض الطلب من البداية إذا لم تكفِ محفظتك |
+| `phone`، `source`، `customFields` | اختيارية |
+
+احفظ `_id`، فهو `organizationId` في كل عمليات الشريك الأخرى. ويصل حدث `client.created` إلى [Webhook الشريك](/ar/partners/webhook).
+
+## اقرأ الأرصدة
+
+```graphql
+query {
+  partnerOrganizationMonitor(page: 1, perPage: 50, sortBy: "spendableBalanceCents", sortOrder: "asc") {
+    data {
+      _id
+      name
+      subdomain
+      spendableBalanceCents
+      isRestricted
+      isSuspended
+      balanceCheckedAt
+    }
+    pagination { totalCount }
+  }
+}
+```
+
+`spendableBalanceCents` هو ما يستطيع العميل صرفه الآن. القائمة تقرأ أرصدة محفوظة مؤقتاً (انظر `balanceCheckedAt`). لقراءة حية لعميل واحد استخدم `partnerOrganizationDetail(organizationId: …)`.
+
+ومحفظتك أنت:
+
+```graphql
+query {
+  partner {
+    wallet { availableBalance currency }
+  }
+}
+```
+
+## اشحن رصيد عميل
+
+```graphql
+mutation {
+  partnerTransferBalance(input: {
+    organizationId: "ORG_ID"
+    amount: 25
+    description: "November top-up"
+  }) {
+    success
+    transferredAmount
+    partnerBalanceAfter
+    organizationBalanceAfter
+  }
+}
+```
+
+`amount` بالدولار، ولازم تغطيه محفظتك. اشحن محفظتك أنت بالبطاقة من **الشريك ← المحفظة**.
+
+## اعرف متى يقترب الرصيد من النفاد
+
+عندما ينزل رصيد عميل تحت 20 دولاراً، يصل حدث `wallet.low_balance` إلى [Webhook الشريك](/ar/partners/webhook) مرة واحدة. ولا يتكرر إلا بعد أن يرتفع الرصيد وينزل من جديد.
+
+```json
+{
+  "event": "wallet.low_balance",
+  "partner": "agency",
+  "organization_id": "665f1c…",
+  "subdomain": "acme",
+  "data": { "available_balance": 14.2, "threshold": 20, "currency": "usd" },
+  "occurred_at": "2026-11-18T10:00:00.000Z"
+}
+```
+
+وإذا كنت أنت من يموّل المحافظ (**أنت تموّل محافظ العملاء**)، يصل تنبيه أيضاً إلى بريد الدعم الخاص بك.
+
+## أوقف حساب عميل
+
+```graphql
+mutation {
+  partnerSuspendOrganizations(input: { organizationIds: ["ORG_ID"], suspend: true }) {
+    successCount
+    errorCount
+  }
+}
+```
+
+مرّر `suspend: false` لإعادة التفعيل. الحساب الموقوف لا يستطيع إرسال الرسائل.
