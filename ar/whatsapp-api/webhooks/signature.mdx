@@ -1,30 +1,30 @@
 ---
 title: "التحقق من التوقيع"
-description: "تأكّد أن الـ Webhook جاء فعلاً من كرزون، ولم يُعدَّل أو يُعَد إرساله."
+description: "تأكّد أن الـ Webhook وصلك فعلاً من كرزون ولم يتغيّر في الطريق."
 ---
 
 كل طلب Webhook يحمل هذه الترويسات:
 
 | الترويسة | القيمة |
 | --- | --- |
-| `X-Karzoun-Signature-256` | `sha256=` + قيمة HMAC-SHA256 بصيغة hex لـ `"{timestamp}.{raw body}"` بمفتاح التوقيع |
-| `X-Karzoun-Timestamp` | وقت التوقيع بالثواني (Unix time) |
-| `X-Karzoun-Event-Id` | معرّف فريد لكل حدث، ثابت في كل إعادة محاولة أو إعادة إرسال |
-| `X-Karzoun-Delivery-Attempt` | `1` في أول محاولة، ثم `2`، `3`… |
-| `X-Karzoun-Signature-256-Previous` | لمدة 24 ساعة بعد تغيير المفتاح فقط: نفس التوقيع بالمفتاح القديم |
+| `X-Karzoun-Signature-256` | `sha256=` + قيمة HMAC-SHA256 بصيغة hex لجسم الطلب الخام بمفتاح التوقيع |
+| `X-Karzoun-Event-Id` | فريد لكل حدث، ويبقى نفسه في كل إعادة محاولة أو إعادة إرسال |
+| `X-Karzoun-Delivery-Attempt` | `1` للمحاولة الأولى، ثم `2`، `3`… |
+| `X-Karzoun-Signature-256-Previous` | لمدة 24 ساعة فقط بعد تغيير المفتاح: نفس التوقيع بالمفتاح القديم |
 | `User-Agent` | `Karzoun-Webhooks/1.0` |
 
-## أين تجد مفتاح التوقيع
+هذه نفس طريقة `X-Hub-Signature-256` عند Meta، ونفس طريقة كل Webhooks كرزون الأخرى.
 
-افتح تبويب **واجهة API** للرقم. في بطاقة **عنوان الويب هوك**، اضغط أيقونة العين بجانب **مفتاح التوقيع**. المفاتيح تبدأ بـ `whsec_`.
+## مفتاح التوقيع
 
-## خطوات التحقق
+افتح تبويب **واجهة API** للرقم. في بطاقة **عنوان الويب هوك**، اضغط أيقونة العين بجانب **مفتاح التوقيع**.
 
-1. اقرأ جسم الطلب **الخام** كـ bytes، قبل أي تحويل لـ JSON.
-2. احسب `HMAC-SHA256(secret, timestamp + "." + rawBody)` وحوّله إلى hex.
-3. قارن `sha256=` + القيمة مع `X-Karzoun-Signature-256` بمقارنة ثابتة الزمن (constant-time).
-4. ارفض أي timestamp أقدم من 5 دقائق.
-5. احفظ `X-Karzoun-Event-Id` وتجاهل الأحداث التي عالجتها قبل ذلك.
+## التحقق من الطلب
+
+1. اقرأ جسم الطلب **الخام** كـ bytes قبل أي تحليل للـ JSON.
+2. احسب `HMAC-SHA256(secret, rawBody)` وحوّله إلى hex.
+3. قارن `sha256=` + الناتج مع `X-Karzoun-Signature-256` بمقارنة ثابتة الزمن (constant-time).
+4. خزّن `X-Karzoun-Event-Id` وتجاهل الأحداث التي عالجتها من قبل. هذا يمنع أيضاً إعادة استخدام طلب ملتقَط.
 
 <CodeGroup>
 ```js Node.js (Express)
@@ -35,26 +35,21 @@ const app = express();
 const SECRET = process.env.KARZOUN_WEBHOOK_SECRET;
 
 app.post("/whatsapp/webhook", express.raw({ type: "application/json" }), (req, res) => {
-  const timestamp = req.get("X-Karzoun-Timestamp");
   const signature = req.get("X-Karzoun-Signature-256") || "";
-  const expected = "sha256=" + crypto
-    .createHmac("sha256", SECRET)
-    .update(`${timestamp}.${req.body}`)
-    .digest("hex");
+  const expected = "sha256=" + crypto.createHmac("sha256", SECRET).update(req.body).digest("hex");
 
-  const fresh = Math.abs(Date.now() / 1000 - Number(timestamp)) < 300;
   const valid = signature.length === expected.length &&
     crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
-  if (!fresh || !valid) return res.sendStatus(401);
+  if (!valid) return res.sendStatus(401);
 
-  res.sendStatus(200); // answer first, process after
+  res.sendStatus(200); // رد أولاً ثم عالج
   const event = JSON.parse(req.body);
   queue.push({ id: req.get("X-Karzoun-Event-Id"), event });
 });
 ```
 
 ```python Python (Flask)
-import hashlib, hmac, os, time
+import hashlib, hmac, os
 from flask import Flask, request, abort
 
 app = Flask(__name__)
@@ -62,12 +57,10 @@ SECRET = os.environ["KARZOUN_WEBHOOK_SECRET"].encode()
 
 @app.post("/whatsapp/webhook")
 def webhook():
-    timestamp = request.headers.get("X-Karzoun-Timestamp", "")
     signature = request.headers.get("X-Karzoun-Signature-256", "")
-    raw = request.get_data()
-    expected = "sha256=" + hmac.new(SECRET, timestamp.encode() + b"." + raw, hashlib.sha256).hexdigest()
+    expected = "sha256=" + hmac.new(SECRET, request.get_data(), hashlib.sha256).hexdigest()
 
-    if abs(time.time() - int(timestamp or 0)) > 300 or not hmac.compare_digest(signature, expected):
+    if not hmac.compare_digest(signature, expected):
         abort(401)
     enqueue(request.headers["X-Karzoun-Event-Id"], request.get_json())
     return "", 200
@@ -77,11 +70,10 @@ def webhook():
 <?php
 $secret = getenv('KARZOUN_WEBHOOK_SECRET');
 $raw = file_get_contents('php://input');
-$timestamp = $_SERVER['HTTP_X_KARZOUN_TIMESTAMP'] ?? '';
 $signature = $_SERVER['HTTP_X_KARZOUN_SIGNATURE_256'] ?? '';
-$expected = 'sha256=' . hash_hmac('sha256', $timestamp . '.' . $raw, $secret);
+$expected = 'sha256=' . hash_hmac('sha256', $raw, $secret);
 
-if (abs(time() - (int) $timestamp) > 300 || !hash_equals($expected, $signature)) {
+if (!hash_equals($expected, $signature)) {
     http_response_code(401);
     exit;
 }

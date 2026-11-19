@@ -122,7 +122,7 @@ ROUTES = [
 
     ('Webhooks', 'get', '/webhook', 'Get the webhook', 'This number\'s webhook URL and masked custom headers.', {'karzoun': 'webhookView'}),
     ('Webhooks', 'post', '/webhook', 'Set the webhook',
-     'Set or clear (empty `url`) this number\'s webhook. The URL must accept a signed test event (2xx within 5 seconds). Omit `headers` to keep them; `[]` removes them.',
+     'Set or clear (empty `url`) this number\'s webhook. The URL must accept a signed test event (2xx within 10 seconds). Omit `headers` to keep them; `[]` removes them.',
      {'karzoun': 'webhookView', 'body': 'webhook'}),
     ('Webhooks', 'post', '/webhook/test', 'Send a test event', 'Send a signed test event to this number\'s webhook URL.', {'karzoun': 'webhookTest'}),
     ('Webhooks', 'get', '/waba_webhook', 'List account webhooks', 'Webhook URLs of every number in this WhatsApp Business Account.', {'karzoun': 'wabaWebhook'}),
@@ -233,7 +233,7 @@ def build():
                       'wabaWebhook': 'WabaWebhookList', 'wabaWebhookSet': 'WabaWebhookSetResult'}[karzoun]
             op['responses']['200'] = {'description': 'OK', 'content': {'application/json': {'schema': {'$ref': f'#/components/schemas/{schema}'}}}}
             if body in ('webhook', 'wabaWebhook'):
-                op['responses']['400'] = error_response('400 Invalid webhook', 'Your endpoint did not accept the test event (HTTP 500). It must answer 2xx within 5 seconds.')
+                op['responses']['400'] = error_response('400 Invalid webhook', 'Your endpoint did not accept the test event (HTTP 500). It must answer 2xx within 10 seconds.')
         if opts.get('billable'):
             op['responses']['402'] = error_response('402 Wallet can\'t cover this send',
                                                     'Wallet can cover 120 cents, 300 cents are already held, this send needs 45')

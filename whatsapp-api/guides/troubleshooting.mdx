@@ -32,13 +32,13 @@ description: "Fixes for the most common WhatsApp API problems, and answers to fr
     3. If the number was used with another provider, Meta may still route conversations there. See [Use a number from another provider](/whatsapp-api/account/existing-numbers#route-conversations-to-karzoun).
   </Accordion>
   <Accordion title="The URL can't be saved">
-    Saving sends a test event. Your endpoint must be public `https` and answer `2xx` within 5 seconds. See [Webhooks](/whatsapp-api/webhooks/overview).
+    Saving sends a test event. Your endpoint must be public `https` and answer `2xx` within 10 seconds. See [Webhooks](/whatsapp-api/webhooks/overview).
   </Accordion>
   <Accordion title="I receive the same event twice">
     Retries and resends keep the same `X-Karzoun-Event-Id`. Deduplicate on it.
   </Accordion>
   <Accordion title="Signature verification fails">
-    Compute the HMAC over `timestamp.body` using the raw request body, before any JSON parsing. Right after a secret rotation, also try `X-Karzoun-Signature-256-Previous`. See [Verify signatures](/whatsapp-api/webhooks/signature).
+    Compute the HMAC over the raw request body, before any JSON parsing. Right after a secret rotation, also try `X-Karzoun-Signature-256-Previous`. See [Verify signatures](/whatsapp-api/webhooks/signature).
   </Accordion>
 </AccordionGroup>
 

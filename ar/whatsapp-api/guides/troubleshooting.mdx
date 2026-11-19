@@ -32,13 +32,13 @@ description: "حلول لأشهر مشاكل واجهة واتساب، وإجا�
     3. إذا كان الرقم مستخدماً مع مزوّد آخر، قد تكون ميتا ما زالت توجّه المحادثات له. راجع [استخدام رقم من مزوّد آخر](/ar/whatsapp-api/account/existing-numbers#توجيه-المحادثات-إلى-كرزون).
   </Accordion>
   <Accordion title="الرابط لا يُحفظ">
-    الحفظ يرسل حدثاً تجريبياً. لازم يكون خادمك `https` عاماً ويرد بـ `2xx` خلال 5 ثوانٍ. راجع [الـ Webhooks](/ar/whatsapp-api/webhooks/overview).
+    الحفظ يرسل حدثاً تجريبياً. لازم يكون خادمك `https` عاماً ويرد بـ `2xx` خلال 10 ثوانٍ. راجع [الـ Webhooks](/ar/whatsapp-api/webhooks/overview).
   </Accordion>
   <Accordion title="يصلني نفس الحدث مرتين">
     إعادة المحاولة وإعادة الإرسال تحتفظان بنفس `X-Karzoun-Event-Id`. امنع التكرار به.
   </Accordion>
   <Accordion title="التحقق من التوقيع يفشل">
-    احسب الـ HMAC على `timestamp.body` باستخدام جسم الطلب الخام قبل تحليل الـ JSON. وبعد تغيير المفتاح مباشرة جرّب أيضاً `X-Karzoun-Signature-256-Previous`. راجع [التحقق من التوقيع](/ar/whatsapp-api/webhooks/signature).
+    احسب الـ HMAC على جسم الطلب الخام قبل تحليل الـ JSON. وبعد تغيير المفتاح مباشرة جرّب أيضاً `X-Karzoun-Signature-256-Previous`. راجع [التحقق من التوقيع](/ar/whatsapp-api/webhooks/signature).
   </Accordion>
 </AccordionGroup>
 

@@ -5,7 +5,7 @@ description: "How Karzoun delivers, retries and logs WhatsApp webhook events."
 
 ## Success
 
-A delivery succeeds when your endpoint answers with any `2xx` status within **5 seconds**. Redirects (`3xx`) are not followed and count as failures.
+A delivery succeeds when your endpoint answers with any `2xx` status within **10 seconds**. Redirects (`3xx`) are not followed and count as failures.
 
 ## Retries
 
@@ -23,23 +23,23 @@ A failed delivery is retried on this schedule:
 
 After 8 attempts (about 21 hours) the event is marked **failed**. Retries survive restarts on Karzoun's side.
 
-If an endpoint fails 50 times in a row, Karzoun pauses deliveries to it for 5 minutes, then tries again. Events keep queueing during the pause, and the pause doesn't use up attempts.
+If an endpoint fails 20 times in a row, Karzoun pauses deliveries to it for 5 minutes, then tries again. Events keep queueing during the pause, and the pause doesn't use up attempts.
 
 ## Delivery log
 
-Open the number's **API** tab and click **View deliveries** in the **Webhook URL** card. Each event of the last 7 days shows:
+Open the number's **API** tab and click **View deliveries** in the **Webhook URL** card. Each event of the last 30 days shows:
 
 | Column | Shows |
 | --- | --- |
 | Event | Message (with its type), status (with its value) or the account-level field |
-| Status | **Delivered**, **Retrying** (with the next try), **Failed** or **Skipped** |
+| Status | **Delivered**, **Retrying** (with the next try) or **Failed** |
 | Response | Your endpoint's HTTP status, the response time, and the first 300 characters of an error response |
-
-**Skipped** means the number had no webhook URL when the event was due.
 
 ## Resend
 
-Click **Resend** on a failed or skipped event to queue it again. It keeps its `X-Karzoun-Event-Id`, so your deduplication still works. Failed events can be resent for 7 days.
+Click **Resend** on a failed event to send it again, with a fresh round of retries. It keeps its `X-Karzoun-Event-Id`, so your deduplication still works. Failed events can be resent for 30 days.
+
+Events that happen while a number has no webhook URL are not kept, so they can't be sent later.
 
 ## Design a stable endpoint
 

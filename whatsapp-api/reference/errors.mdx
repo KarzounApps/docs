@@ -21,7 +21,7 @@ The WhatsApp API returns two kinds of errors.
 | `400` | `Upload body was not received. Send multipart/form-data.` | Send `/media` and flow assets as `multipart/form-data`. |
 | `400` | `Upload body was not received. Send the file bytes with its Content-Type.` | Send the raw file to `/upload:{id}`, not multipart. |
 | `400` | Webhook URL or header message | Fix the URL or headers. See [URL rules](/whatsapp-api/webhooks/overview#url-rules). |
-| `400` | `Your endpoint did not accept the test event (…)` | Make your endpoint answer `2xx` within 5 seconds, then save again. |
+| `400` | `Your endpoint did not accept the test event (…)` | Make your endpoint answer `2xx` within 10 seconds, then save again. |
 | `401` | `Invalid API key` | The key is missing, malformed or revoked. |
 | `402` | `Wallet can cover … cents, … cents are already held, this send needs …` | Add funds. See [Pricing and wallet](/whatsapp-api/pricing-and-wallet). |
 | `404` | `No such path {METHOD} {path}` | The endpoint or method isn't available. Check the [API reference](/whatsapp-api/reference/send-a-message). |
