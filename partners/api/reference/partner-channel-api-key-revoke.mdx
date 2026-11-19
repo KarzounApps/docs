@@ -1,0 +1,27 @@
+---
+title: "partnerChannelApiKeyRevoke"
+description: "Revoke the WhatsApp API key of a client's number."
+---
+
+Mutation · Scope `partner:write`
+
+Requests with the key fail with `401` from that moment.
+
+## Arguments
+
+| Argument | Type | Notes |
+| --- | --- | --- |
+| `organizationId` | `ID!` | The client |
+| `integrationId` | `String!` | The number |
+
+## Example
+
+```graphql
+mutation {
+  partnerChannelApiKeyRevoke(organizationId: "665f1c…", integrationId: "6660a2f1c0d3e40011b2c3d4")
+}
+```
+
+```json
+{ "data": { "partnerChannelApiKeyRevoke": true } }
+```

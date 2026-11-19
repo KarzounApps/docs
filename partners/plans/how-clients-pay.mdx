@@ -1,0 +1,32 @@
+---
+title: "How clients pay"
+description: "Who pays for subscriptions and usage, and how client wallets are funded."
+---
+
+## What a client pays for
+
+| | How it's billed |
+| --- | --- |
+| **Subscription** | The price of the client's plan, monthly or yearly, as an invoice |
+| **Usage** | WhatsApp messages, AI credits and other metered products, charged to the client's wallet |
+
+## Who funds client wallets
+
+Open **Partner → Settings → General → How customers pay**:
+
+| Setting | Clients | You |
+| --- | --- | --- |
+| **Customers can add a payment method** | Add their own card, top up their wallet and pay their invoices | Can still move credit to any client |
+| **You fund customer wallets** | Don't see "add a card". A card already on file is still charged | [Move credit](/partners/money/funding-clients) from your wallet. You're notified when a client runs low |
+
+Choose **You fund customer wallets** when you bill your clients yourself and only want Karzoun to charge you.
+
+## When a client runs low
+
+When a client's balance drops below $20, Karzoun sends one `wallet.low_balance` event to your [partner webhook](/partners/webhook). If you fund client wallets, your support email gets a notice too.
+
+A client that runs out can't use paid features, such as sending WhatsApp messages, until its wallet is topped up.
+
+## Unpaid invoices
+
+A client's open invoices show on its [detail page](/partners/clients/client-detail). You can [cover one from your wallet](/partners/money/funding-clients#cover-an-open-invoice).

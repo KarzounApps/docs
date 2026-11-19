@@ -1,0 +1,53 @@
+---
+title: "partnerWebhookDeliveries"
+description: "سجل Webhook الشريك."
+---
+
+Query · الصلاحية `partner:read`
+
+الأحداث المرسلة إلى [Webhook الشريك](/ar/partners/webhook) خلال آخر 30 يوماً، الأحدث أولاً.
+
+## الوسائط
+
+| الوسيط | النوع | ملاحظات |
+| --- | --- | --- |
+| `state` | `String` | `pending` أو `success` أو `failed` |
+| `page` | `Int` | الافتراضي 1 |
+| `perPage` | `Int` | الافتراضي 20، وبحد أقصى 100 |
+
+## مثال
+
+```graphql
+query {
+  partnerWebhookDeliveries(state: "failed") {
+    list { eventId event subdomain state attempts lastStatus lastError nextAttemptAt canResend createdAt }
+    totalCount
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "partnerWebhookDeliveries": {
+      "list": [
+        {
+          "eventId": "3f2b8c1e-…",
+          "event": "channel.connected",
+          "subdomain": "acme",
+          "state": "failed",
+          "attempts": 8,
+          "lastStatus": 503,
+          "lastError": "HTTP 503",
+          "nextAttemptAt": null,
+          "canResend": true,
+          "createdAt": "2026-11-18T10:00:00.000Z"
+        }
+      ],
+      "totalCount": 1
+    }
+  }
+}
+```
+
+أعد إرسال الفاشل عبر [`partnerWebhookResend`](/ar/partners/api/reference/partner-webhook-resend).

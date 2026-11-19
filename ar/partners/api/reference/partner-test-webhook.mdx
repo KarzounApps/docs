@@ -1,0 +1,26 @@
+---
+title: "partnerTestWebhook"
+description: "إرسال حدث تجريبي موقّع إلى Webhook الشريك."
+---
+
+Mutation · الصلاحية `partner:write`
+
+مفيد بعد تغيير خادمك أو تغيير مفتاح المنصّة. راجع [Webhook الشريك](/ar/partners/webhook).
+
+بدون وسائط.
+
+## مثال
+
+```graphql
+mutation {
+  partnerTestWebhook { success statusCode latencyMs error }
+}
+```
+
+```json
+{
+  "data": {
+    "partnerTestWebhook": { "success": true, "statusCode": 200, "latencyMs": 184, "error": null }
+  }
+}
+```

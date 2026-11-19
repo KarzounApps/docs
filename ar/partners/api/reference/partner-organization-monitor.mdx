@@ -1,0 +1,76 @@
+---
+title: "partnerOrganizationMonitor"
+description: "عملاؤك مع الأرصدة والاستهلاك والحالة."
+---
+
+Query · الصلاحية `partner:read`
+
+القائمة نفسها في **المؤسسات**. الأرصدة من آخر فحص (`balanceCheckedAt`)، وللقراءة المباشرة لعميل واحد استخدم [`partnerOrganizationDetail`](/ar/partners/api/reference/partner-organization-detail). راجع [الأرصدة](/ar/partners/clients/organizations#الأرصدة) لمعنى كل مبلغ.
+
+## الوسائط
+
+| الوسيط | النوع | ملاحظات |
+| --- | --- | --- |
+| `page` | `Int` | الافتراضي 1 |
+| `perPage` | `Int` | الافتراضي 20 |
+| `search` | `String` | الاسم أو النطاق الفرعي أو البريد |
+| `sortBy` | `String` | اسم حقل، مثل `spendableBalanceCents` أو `createdAt` |
+| `sortOrder` | `String` | `asc` أو `desc` |
+| `subscriptionStatus` | `String` | تصفية حسب حالة الاشتراك |
+| `isSuspended` | `Boolean` |  |
+| `isRestricted` | `Boolean` | العملاء المقيّدون لانخفاض الرصيد |
+| `planId` | `String` |  |
+| `missingActivationStep` | `String` | عملاء لم ينجزوا خطوة إعداد معينة |
+| `minLifetimePaidCents` | `Int` | عملاء دفعوا هذا المبلغ على الأقل |
+
+## مثال
+
+```graphql
+query {
+  partnerOrganizationMonitor(sortBy: "spendableBalanceCents", sortOrder: "asc", perPage: 50) {
+    data {
+      _id
+      name
+      subdomain
+      planId
+      subscriptionStatus
+      isSuspended
+      spendableBalanceCents
+      openInvoiceCents
+      isRestricted
+      activationSteps
+      counts { channels seats whatsapp }
+      balanceCheckedAt
+    }
+    pagination { totalCount hasNextPage }
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "partnerOrganizationMonitor": {
+      "data": [
+        {
+          "_id": "665f1c…",
+          "name": "Acme Trading",
+          "subdomain": "acme",
+          "planId": "6651bb…",
+          "subscriptionStatus": "active",
+          "isSuspended": false,
+          "spendableBalanceCents": 1420,
+          "openInvoiceCents": 0,
+          "isRestricted": false,
+          "activationSteps": ["setup.connect_channel", "setup.invite_team"],
+          "counts": { "channels": 1, "seats": 3, "whatsapp": 1840 },
+          "balanceCheckedAt": "2026-11-19T08:00:00.000Z"
+        }
+      ],
+      "pagination": { "totalCount": 37, "hasNextPage": false }
+    }
+  }
+}
+```
+
+المبالغ التي تنتهي بـ `Cents` بالسنت.

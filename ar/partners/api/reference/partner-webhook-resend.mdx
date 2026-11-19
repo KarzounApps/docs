@@ -1,0 +1,26 @@
+---
+title: "partnerWebhookResend"
+description: "إعادة إرسال حدث فاشل في Webhook الشريك."
+---
+
+Mutation · الصلاحية `partner:write`
+
+يبدأ جولة محاولات جديدة لإرسال فاشل. يحتفظ الحدث بنفس `X-Karzoun-Event-Id`، فمنع التكرار عندك يبقى سليماً.
+
+## الوسائط
+
+| الوسيط | النوع | ملاحظات |
+| --- | --- | --- |
+| `eventId` | `String!` | من [`partnerWebhookDeliveries`](/ar/partners/api/reference/partner-webhook-deliveries) حيث `canResend` تساوي `true` |
+
+## مثال
+
+```graphql
+mutation {
+  partnerWebhookResend(eventId: "3f2b8c1e-…")
+}
+```
+
+```json
+{ "data": { "partnerWebhookResend": true } }
+```

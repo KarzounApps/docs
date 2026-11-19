@@ -12,10 +12,10 @@ It doesn't carry WhatsApp messages or Meta account events (template reviews, qua
 Open **Partner → Settings → General → Developer**, enter the **Partner webhook URL** and click **Save**. Karzoun sends a signed test event first; your endpoint must answer `2xx` within 10 seconds.
 
 ```json
-{ "object": "karzoun", "event": "webhook.test", "channel": "partner", "partner": "agency", "sent_at": "2026-11-18T10:00:00.000Z" }
+{ "object": "karzoun", "event": "webhook.test", "scope": "partner", "sent_at": "2026-11-18T10:00:00.000Z" }
 ```
 
-The same URL rules apply as for number webhooks: `https`, port 443, public host.
+The URL must be `https` on a public host.
 
 ## Events
 
@@ -58,7 +58,7 @@ The partner webhook uses the same signing and delivery as number webhooks:
 - Retried for about 21 hours on failure. See [Delivery and retries](/whatsapp-api/webhooks/delivery).
 - Deduplicate on `X-Karzoun-Event-Id`.
 
-The **Developer** card lists your last 10 deliveries with **Resend** for failed ones. By API, use `partnerWebhookDeliveries`, `partnerTestWebhook` and `partnerWebhookResend`.
+The **Developer** card lists your latest deliveries with **Resend** for failed ones. Deliveries are kept for 30 days. By API, use [`partnerWebhookDeliveries`](/partners/api/reference/partner-webhook-deliveries), [`partnerTestWebhook`](/partners/api/reference/partner-test-webhook) and [`partnerWebhookResend`](/partners/api/reference/partner-webhook-resend).
 
 ## Rotate the platform secret
 

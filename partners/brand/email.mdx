@@ -1,0 +1,20 @@
+---
+title: "Email"
+description: "Send invitations, password resets and notices to your clients from your own email address."
+---
+
+By default, emails to your clients' users come from Karzoun's address with your [branding](/partners/brand/branding). To send them from your own domain, connect your SMTP server.
+
+Open **Partner → Settings → Email**.
+
+| Field | Notes |
+| --- | --- |
+| **SMTP Host**, **Port**, **Username**, **Password** | From your email provider |
+| **Use SSL/TLS** | On for port 465. Off for STARTTLS on port 587 |
+| **Sender Name**, **Sender Email** | What recipients see. The sender email only applies once an SMTP server is set |
+
+Click **Test Connection** to check that Karzoun can reach your server. The password is stored encrypted and never shown again; enter a new value to replace it.
+
+<Tip>
+  Set up SPF and DKIM for your sending domain at your email provider, so emails don't land in spam.
+</Tip>

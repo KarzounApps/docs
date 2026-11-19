@@ -1,0 +1,53 @@
+---
+title: "partnerWebhookDeliveries"
+description: "Your partner webhook delivery log."
+---
+
+Query · Scope `partner:read`
+
+Events sent to your [partner webhook](/partners/webhook) in the last 30 days, newest first.
+
+## Arguments
+
+| Argument | Type | Notes |
+| --- | --- | --- |
+| `state` | `String` | `pending`, `success` or `failed` |
+| `page` | `Int` | Default 1 |
+| `perPage` | `Int` | Default 20, at most 100 |
+
+## Example
+
+```graphql
+query {
+  partnerWebhookDeliveries(state: "failed") {
+    list { eventId event subdomain state attempts lastStatus lastError nextAttemptAt canResend createdAt }
+    totalCount
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "partnerWebhookDeliveries": {
+      "list": [
+        {
+          "eventId": "3f2b8c1e-…",
+          "event": "channel.connected",
+          "subdomain": "acme",
+          "state": "failed",
+          "attempts": 8,
+          "lastStatus": 503,
+          "lastError": "HTTP 503",
+          "nextAttemptAt": null,
+          "canResend": true,
+          "createdAt": "2026-11-18T10:00:00.000Z"
+        }
+      ],
+      "totalCount": 1
+    }
+  }
+}
+```
+
+Resend a failed one with [`partnerWebhookResend`](/partners/api/reference/partner-webhook-resend).

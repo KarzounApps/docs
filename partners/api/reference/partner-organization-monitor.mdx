@@ -1,0 +1,76 @@
+---
+title: "partnerOrganizationMonitor"
+description: "Your clients with balances, usage and status."
+---
+
+Query · Scope `partner:read`
+
+The list behind **Partner → Organizations**. Balances come from the last check (`balanceCheckedAt`); for a live read of one client, use [`partnerOrganizationDetail`](/partners/api/reference/partner-organization-detail). See [Balances](/partners/clients/organizations#balances) for what each amount means.
+
+## Arguments
+
+| Argument | Type | Notes |
+| --- | --- | --- |
+| `page` | `Int` | Default 1 |
+| `perPage` | `Int` | Default 20 |
+| `search` | `String` | Name, subdomain or email |
+| `sortBy` | `String` | A field name, for example `spendableBalanceCents` or `createdAt` |
+| `sortOrder` | `String` | `asc` or `desc` |
+| `subscriptionStatus` | `String` | Filter by subscription status |
+| `isSuspended` | `Boolean` |  |
+| `isRestricted` | `Boolean` | Clients restricted for low balance |
+| `planId` | `String` |  |
+| `missingActivationStep` | `String` | Clients that haven't done a setup step |
+| `minLifetimePaidCents` | `Int` | Clients that paid at least this much |
+
+## Example
+
+```graphql
+query {
+  partnerOrganizationMonitor(sortBy: "spendableBalanceCents", sortOrder: "asc", perPage: 50) {
+    data {
+      _id
+      name
+      subdomain
+      planId
+      subscriptionStatus
+      isSuspended
+      spendableBalanceCents
+      openInvoiceCents
+      isRestricted
+      activationSteps
+      counts { channels seats whatsapp }
+      balanceCheckedAt
+    }
+    pagination { totalCount hasNextPage }
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "partnerOrganizationMonitor": {
+      "data": [
+        {
+          "_id": "665f1c…",
+          "name": "Acme Trading",
+          "subdomain": "acme",
+          "planId": "6651bb…",
+          "subscriptionStatus": "active",
+          "isSuspended": false,
+          "spendableBalanceCents": 1420,
+          "openInvoiceCents": 0,
+          "isRestricted": false,
+          "activationSteps": ["setup.connect_channel", "setup.invite_team"],
+          "counts": { "channels": 1, "seats": 3, "whatsapp": 1840 },
+          "balanceCheckedAt": "2026-11-19T08:00:00.000Z"
+        }
+      ],
+      "pagination": { "totalCount": 37, "hasNextPage": false }
+    }
+  }
+}
+```
+
+Amounts ending in `Cents` are in cents.

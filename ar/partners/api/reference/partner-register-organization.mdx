@@ -1,0 +1,53 @@
+---
+title: "partnerRegisterOrganization"
+description: "إنشاء مساحة عميل تحت حساب الشريك."
+---
+
+Mutation · الصلاحية `partner:write`
+
+تُنشئ المساحة بعلامتك، وتشتركها في الخطة، وتدعو المالك. راجع [إضافة عميل](/ar/partners/clients/add-a-client).
+
+## الوسائط
+
+| الوسيط | النوع | ملاحظات |
+| --- | --- | --- |
+| `input.email` | `String!` | المالك، وتصله دعوة |
+| `input.name` | `String!` | اسم المساحة |
+| `input.subdomain` | `String!` | عنوان العميل، مثلاً `acme` ليصبح `acme.karzoun.chat` |
+| `input.planId` | `ID!` | من [`partnerPlans`](/ar/partners/api/reference/partner-plans) |
+| `input.phone` | `String` | اختياري |
+| `input.initialBalance` | `Float` | اختياري. دولارات تُحوَّل من محفظتك بعد الإنشاء، ويُرفض الطلب مسبقاً إذا لم تكفِ محفظتك |
+| `input.billingCycle` | `String` | `monthly` (الافتراضي) أو `yearly` إذا كان للخطة سعر سنوي |
+| `input.basePriceOverrideCents` | `Int` | اختياري. سعر أساسي مخصص لهذا العميل بالسنت |
+| `input.deferFirstInvoiceDays` | `Int` | اختياري. من 0 إلى 30 يوماً قبل أول خصم. الافتراضي من الخطة |
+| `input.backdateStartDate` | `Int` | اختياري. وقت Unix في الماضي، بحد أقصى سنة. لعملاء دفعوا في مكان آخر |
+| `input.source` | `String` | اختياري. مصدر العميل |
+| `input.customFields` | `JSON` | اختياري |
+
+## مثال
+
+```graphql
+mutation {
+  partnerRegisterOrganization(input: {
+    name: "Acme Trading"
+    email: "owner@acme.example"
+    subdomain: "acme"
+    planId: "6651bb…"
+    initialBalance: 50
+  }) {
+    _id
+    subdomain
+    name
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "partnerRegisterOrganization": { "_id": "665f1c…", "subdomain": "acme", "name": "Acme Trading" }
+  }
+}
+```
+
+احفظ `_id`: هو `organizationId` في كل الاستدعاءات الأخرى. ويصل `client.created` إلى [Webhook الشريك](/ar/partners/webhook). إذا فشل تحويل الرصيد الابتدائي بعد الإنشاء، تبقى المساحة موجودة وتضيف الرصيد لاحقاً.

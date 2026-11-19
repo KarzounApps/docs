@@ -1,0 +1,45 @@
+---
+title: "AI agents"
+description: "Let Claude and other AI agents work with your clients through the Karzoun MCP server."
+---
+
+The Karzoun [MCP server](/mcp-server) has a **Partners** pack with the [Partner API](/partners/api/overview) operations: client workspaces, their WhatsApp numbers and API keys, wallet transfers and partner webhook deliveries.
+
+## Connect
+
+Use an API key from your **partner workspace** with the `partner:read` scope, and `partner:write` if the agent should act.
+
+Hosted:
+
+```
+https://YOUR_PARTNER_SUBDOMAIN.api.karzoun.chat/mcp/partner
+```
+
+On your computer:
+
+```json
+{
+  "mcpServers": {
+    "karzoun-partner": {
+      "command": "npx",
+      "args": ["-y", "@karzounchat/mcp-server"],
+      "env": {
+        "KARZOUN_API_URL": "https://YOUR_PARTNER_SUBDOMAIN.api.karzoun.chat/graphql",
+        "KARZOUN_API_KEY": "kz_live_YOUR_API_KEY",
+        "KARZOUN_MCP_PACK": "partner"
+      }
+    }
+  }
+}
+```
+
+## Things to ask
+
+- "Which of my clients have less than $20 left?"
+- "List the WhatsApp numbers with a red quality rating."
+- "Move $50 to the Acme workspace."
+- "Show failed partner webhook deliveries from today."
+
+<Warning>
+  With `partner:write`, the agent can move money and suspend clients. Give that scope only to agents you trust, and review what they do.
+</Warning>

@@ -1,0 +1,36 @@
+---
+title: "partnerChannelApiKeyCreate"
+description: "Issue the WhatsApp API key for a client's number."
+---
+
+Mutation · Scope `partner:write`
+
+See [API keys for client numbers](/partners/whatsapp/api-keys).
+
+## Arguments
+
+| Argument | Type | Notes |
+| --- | --- | --- |
+| `organizationId` | `ID!` | The client |
+| `integrationId` | `String!` | The number, from [`partnerChannels`](/partners/api/reference/partner-channels) or the `channel.connected` event |
+
+## Example
+
+```graphql
+mutation {
+  partnerChannelApiKeyCreate(organizationId: "665f1c…", integrationId: "6660a2f1c0d3e40011b2c3d4") {
+    token
+    hint
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "partnerChannelApiKeyCreate": { "token": "acme_9f3a1c…", "hint": "9f3a1c" }
+  }
+}
+```
+
+`token` is the full key, returned **once**. Use it as `Karzoun-API-Key` with the [WhatsApp API](/whatsapp-api/authentication). Creating a key replaces the number's previous key.

@@ -1,0 +1,22 @@
+---
+title: "Custom domains"
+description: "Serve your partner portal, login and signup pages on your own domain."
+---
+
+With a custom domain, your partner workspace, its login page and your [signup page](/partners/plans/self-signup) open on an address you own, such as `app.yourdomain.com`, instead of a `karzoun.chat` address.
+
+Client workspaces keep their own addresses, like `acme.karzoun.chat`, and show [your brand](/partners/brand/branding) there.
+
+<Note>
+  Custom domains are opened per partner account. Until then, **Settings → Domains** shows **Ask to open this feature**.
+</Note>
+
+## Add a domain
+
+1. Open **Partner → Settings → Domains** and add the hostname, for example `app.yourdomain.com`.
+2. At your DNS provider, create the CNAME record shown next to it. It points to your partner address on `app.karzoun.com`. A TXT record with the verification token is optional.
+3. Click **Verify**. If the record isn't found yet, the domain stays **pending**. DNS can take a while to update; try again later.
+
+The first domain you add becomes the primary domain. A domain can belong to one partner only.
+
+Remove a domain from the same screen. Your workspace is then only on its `karzoun.chat` address.

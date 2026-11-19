@@ -18,14 +18,14 @@ description: "دع عميلك يربط رقم واتساب من منصتك بد�
     | --- | --- |
     | `platform secret` | **الشريك ← الإعدادات ← عام ← المطوّرون ← مفتاح المنصّة** |
     | `partner` | رمز الشريك، يظهر تحت **روابط الربط** في نفس البطاقة |
-    | `organization_id` | قيمة `_id` للعميل من `partnerRegisterOrganization` |
+    | `organization_id` | قيمة `_id` للعميل، تظهر في [صفحة تفاصيله](/ar/partners/clients/client-detail) أو يرجعها [`partnerRegisterOrganization`](/ar/partners/api/reference/partner-register-organization) |
   </Step>
   <Step title="العميل يفتح الرابط">
     ```
-    https://{client subdomain}.{your app domain}/connect-whatsapp?ts={ts}&sig={sig}
+    https://{client subdomain}.karzoun.chat/connect-whatsapp?ts={ts}&sig={sig}
     ```
 
-    مثلاً `https://acme.yourdomain.com/connect-whatsapp?ts=1731916800&sig=9b1c…`، أو `https://acme.karzoun.chat/…` إذا لم يكن عندك نطاق علامة بيضاء.
+    مثلاً `https://acme.karzoun.chat/connect-whatsapp?ts=1731916800&sig=9b1c…`. الصفحة تظهر بعلامتك.
   </Step>
   <Step title="العميل يربط رقمه">
     الصفحة تظهر بعلامتك. العميل يكمل عبر فيسبوك (أو عبر تطبيق واتساب للأعمال) وينهي خطوات ميتا. كرزون تسجّل الرقم، وتشترك له في الـ Webhooks، وتربطه بمحفظة العميل.
@@ -52,7 +52,7 @@ export function connectLink({ partner, organizationId, clientHost, secret }) {
   return `https://${clientHost}/connect-whatsapp?ts=${ts}&sig=${sig}`;
 }
 
-// connectLink({ partner: "agency", organizationId: "665f1c…", clientHost: "acme.yourdomain.com", secret: process.env.KARZOUN_PLATFORM_SECRET })
+// connectLink({ partner: "agency", organizationId: "665f1c…", clientHost: "acme.karzoun.chat", secret: process.env.KARZOUN_PLATFORM_SECRET })
 ```
 
 ```python Python
@@ -81,7 +81,7 @@ function connectLink(string $partner, string $organizationId, string $clientHost
 
 ## النتيجة
 
-النتيجة فيها `status` و`organization_id` و`integration_id` (معرّف الرقم الجديد). استخدم `integration_id` مع [`partnerChannelApiKeyCreate`](/ar/partners/api/numbers-and-keys).
+النتيجة فيها `status` و`organization_id` و`integration_id` (معرّف الرقم الجديد). استخدم `integration_id` مع [`partnerChannelApiKeyCreate`](/ar/partners/api/reference/partner-channel-api-key-create).
 
 <Tabs>
   <Tab title="نافذة منبثقة">

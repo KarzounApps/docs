@@ -1,0 +1,37 @@
+---
+title: "مفاتيح API لأرقام العملاء"
+description: "أصدر مفاتيح WhatsApp API لأرقام عملائك وأبطلها."
+---
+
+العميل الذي تشمل خطته WhatsApp API يستخدم مفتاحاً لكل رقم للإرسال والاستقبال عبر [WhatsApp API](/ar/whatsapp-api). يستطيع العميل إنشاءه من مساحته، وتستطيع أنت إصداره بنفسك حتى يكتمل الإعداد بدون أن يفتح أحد لوحة التحكم.
+
+## إصدار مفتاح
+
+استدعِ [`partnerChannelApiKeyCreate`](/ar/partners/api/reference/partner-channel-api-key-create) مع `organizationId` الخاص بالعميل و`integrationId` الخاص بالرقم. المفتاح الكامل يظهر **مرة واحدة**، فاحفظه في مدير الأسرار عندك.
+
+إنشاء مفتاح يستبدل المفتاح السابق للرقم.
+
+أنسب وقت لإصداره عندما يصل حدث `channel.connected` إلى [Webhook الشريك](/ar/partners/webhook):
+
+<Steps>
+  <Step title="يصل channel.connected">
+    ومعه `organization_id` و`integration_id`.
+  </Step>
+  <Step title="أصدر المفتاح">
+    استدعِ `partnerChannelApiKeyCreate` بهما.
+  </Step>
+  <Step title="وجّه أحداث الرقم لنظامك">
+    ```bash
+    curl -X POST https://waba.karzoun.chat/webhook \
+      -H "Karzoun-API-Key: THE_NEW_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{ "url": "https://platform.example/whatsapp/acme" }'
+    ```
+
+    راجع [الـ Webhooks](/ar/whatsapp-api/webhooks/overview).
+  </Step>
+</Steps>
+
+## إبطال مفتاح
+
+استدعِ [`partnerChannelApiKeyRevoke`](/ar/partners/api/reference/partner-channel-api-key-revoke). الطلبات التي تستخدم المفتاح تفشل بـ `401` من تلك اللحظة.

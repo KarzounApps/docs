@@ -1,0 +1,27 @@
+---
+title: "partnerChannelApiKeyRevoke"
+description: "إبطال مفتاح WhatsApp API لرقم عميل."
+---
+
+Mutation · الصلاحية `partner:write`
+
+الطلبات التي تستخدم المفتاح تفشل بـ `401` من تلك اللحظة.
+
+## الوسائط
+
+| الوسيط | النوع | ملاحظات |
+| --- | --- | --- |
+| `organizationId` | `ID!` | العميل |
+| `integrationId` | `String!` | الرقم |
+
+## مثال
+
+```graphql
+mutation {
+  partnerChannelApiKeyRevoke(organizationId: "665f1c…", integrationId: "6660a2f1c0d3e40011b2c3d4")
+}
+```
+
+```json
+{ "data": { "partnerChannelApiKeyRevoke": true } }
+```

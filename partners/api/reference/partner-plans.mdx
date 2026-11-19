@@ -1,0 +1,45 @@
+---
+title: "partnerPlans"
+description: "The plans you can assign to clients."
+---
+
+Query · Scope `partner:read`
+
+Lists [your plans](/partners/plans/plans). Use a plan's `_id` as `planId` when you [create a client](/partners/api/reference/partner-register-organization).
+
+## Arguments
+
+| Argument | Type | Notes |
+| --- | --- | --- |
+| `page` | `Int` | Default 1 |
+| `perPage` | `Int` | Default 20 |
+| `status` | `PlanStatus` | Filter by status |
+| `type` | `PlanType` | `API`, `BASIC`, `PRO`, `BUSINESS`, `ENTERPRISE`… |
+| `billingCycle` | `BillingCycle` | Filter by cycle |
+| `search` | `String` | Match the name |
+
+## Example
+
+```graphql
+query {
+  partnerPlans(type: API) {
+    data { _id name type amount currency billingCycle features }
+    pagination { totalCount }
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "partnerPlans": {
+      "data": [
+        { "_id": "6651bb…", "name": "WhatsApp API", "type": "API", "amount": 49, "currency": "usd", "billingCycle": "MONTHLY", "features": ["API keys per number", "Webhooks"] }
+      ],
+      "pagination": { "totalCount": 1 }
+    }
+  }
+}
+```
+
+Use a plan of type `API` for clients that only use the WhatsApp API.

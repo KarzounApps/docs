@@ -1,0 +1,26 @@
+---
+title: "partnerTestWebhook"
+description: "Send a signed test event to your partner webhook."
+---
+
+Mutation · Scope `partner:write`
+
+Useful after changing your endpoint or rotating your platform secret. See [Partner webhook](/partners/webhook).
+
+No arguments.
+
+## Example
+
+```graphql
+mutation {
+  partnerTestWebhook { success statusCode latencyMs error }
+}
+```
+
+```json
+{
+  "data": {
+    "partnerTestWebhook": { "success": true, "statusCode": 200, "latencyMs": 184, "error": null }
+  }
+}
+```

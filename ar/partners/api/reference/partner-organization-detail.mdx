@@ -1,0 +1,42 @@
+---
+title: "partnerOrganizationDetail"
+description: "عميل واحد مع قراءة مباشرة للمحفظة والفواتير والاستهلاك."
+---
+
+Query · الصلاحية `partner:read`
+
+كل ما في صفحة [تفاصيل العميل](/ar/partners/clients/client-detail). المحفظة تُقرأ مباشرة.
+
+## الوسائط
+
+| الوسيط | النوع | ملاحظات |
+| --- | --- | --- |
+| `organizationId` | `ID!` | `_id` العميل |
+
+## مثال
+
+```graphql
+query {
+  partnerOrganizationDetail(organizationId: "665f1c…") {
+    planName
+    organization { name spendableBalanceCents meteredCents pendingItemsCents }
+    openInvoices { id amountRemaining dueDate hostedInvoiceUrl }
+    upcomingLines { description amountCents }
+    usageRecords { meterName quantity }
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "partnerOrganizationDetail": {
+      "planName": "Pro",
+      "organization": { "name": "Acme Trading", "spendableBalanceCents": 1388, "meteredCents": 212, "pendingItemsCents": 0 },
+      "openInvoices": [],
+      "upcomingLines": [{ "description": "Pro (monthly)", "amountCents": 9900 }],
+      "usageRecords": [{ "meterName": "whatsapp", "quantity": 1840 }]
+    }
+  }
+}
+```
