@@ -40,7 +40,7 @@ See [Authentication](/whatsapp-api/authentication) for how to use the key.
 | **Custom headers** | Optional headers sent with every event, for example an `Authorization` header for your gateway |
 | **Signing secret** | Used to verify the `X-Karzoun-Signature-256` header. Click **Show secret** to see it |
 
-When you click **Save**, Karzoun sends a signed test event. Your endpoint must answer `2xx` within 5 seconds or the URL isn't saved.
+When you click **Save**, Karzoun sends a signed test event. Your endpoint must answer `2xx` within 10 seconds or the URL isn't saved.
 
 - **Send test event** sends another test event at any time.
 - **Rotate secret** creates a new signing secret. The previous secret is still sent for 24 hours in `X-Karzoun-Signature-256-Previous`, so you can deploy the new one without missing events.
@@ -53,13 +53,12 @@ See [Webhooks](/whatsapp-api/webhooks/overview) and [Verify signatures](/whatsap
 
 ## Webhook deliveries
 
-Click **View deliveries** to see the events sent to your endpoint over the last 7 days.
+Click **View deliveries** to see the events sent to your endpoint over the last 30 days.
 
 | Status | Meaning |
 | --- | --- |
 | **Delivered** | Your endpoint answered `2xx` |
 | **Retrying** | It failed. The next try is shown |
 | **Failed** | All retries failed |
-| **Skipped** | Not sent because no webhook was set when the event happened |
 
 Each row shows the event type, your endpoint's response and the number of attempts. Click **Resend** to deliver an event again with the same event ID. See [Delivery and retries](/whatsapp-api/webhooks/delivery).

@@ -22,8 +22,8 @@ When an event occurs, Karzoun:
 1. Finds every **active** webhook subscribed to that `type` + `action` pair
 2. Builds a versioned JSON envelope (see [Payload format](#payload-format))
 3. Signs the raw body and attaches auth headers
-4. POSTs to your URL with up to **3 retry attempts** on failure
-5. Records every attempt in **delivery logs** for debugging
+4. POSTs to your URL and retries failures for about **21 hours** (8 attempts)
+5. Records each delivery and its latest attempt in **delivery logs** for debugging
 
 Your endpoint should return any **2xx** status within the connection timeout. Non-2xx responses and network errors trigger automatic retries with exponential backoff.
 
@@ -103,8 +103,8 @@ Register subscriptions with `webhooksAdd`. Karzoun generates a unique `token` an
 | `name` | string | Human-readable label |
 | `description` | string | What this webhook is used for |
 | `actions` | array | Action subscriptions — each entry has `type`, `action`, and optional `label` |
-| `retryPolicy.maxAttempts` | int | Max delivery attempts (default: **3**) |
-| `retryPolicy.backoffMs` | int[] | Delay between retries in ms (default: **5000, 30000, 120000**) |
+| `retryPolicy.maxAttempts` | int | Max delivery attempts (default: **8**) |
+| `retryPolicy.backoffMs` | int[] | Delay before each retry in ms (default: **10000, 60000, 300000, 1800000, 7200000, 21600000, 43200000**) |
 | `rateLimitPerMinute` | int | Max deliveries per minute per webhook (default: **100**) |
 
 <Info>
@@ -125,7 +125,7 @@ mutation {
       { type: "inbox:conversation", action: "assign" }
       { type: "whatsapp:flow", action: "completed" }
     ]
-    retryPolicy: { maxAttempts: 3, backoffMs: [5000, 30000, 120000] }
+    retryPolicy: { maxAttempts: 5, backoffMs: [10000, 60000, 300000, 1800000] }
   ) {
     _id
     url
@@ -215,16 +215,16 @@ Connectivity pings use `event: "system.ping"` with a short test message in `data
 | Setting | Default | Behavior |
 | --- | --- | --- |
 | **HTTP timeout** | 10 seconds | Karzoun waits up to 10s for your server to respond |
-| **Max attempts** | 3 | Failed deliveries retry with backoff: 5s → 30s → 2min |
-| **Circuit breaker** | 5 failures | After 5 consecutive failures, deliveries pause until cooldown (5 min) or you call `webhooksReset` |
-| **Rate limit** | 100/min | Per-webhook cap; excess events are logged as skipped |
+| **Max attempts** | 8 | Retries after 10s → 1m → 5m → 30m → 2h → 6h → 12h (about 21 hours). Retries survive restarts |
+| **Circuit breaker** | 20 failures | After 20 failed attempts in a row, deliveries wait 5 minutes, then resume. Nothing is dropped |
+| **Rate limit** | 100/min | Per-webhook cap; excess events wait a few seconds and are sent, not dropped |
 
 <Warning>
   Return `2xx` as soon as you have accepted the payload. Offload heavy work to a background queue — slow handlers risk timeouts and retries.
 </Warning>
 
 <Tip>
-  The same logical event may arrive more than once (`id` stays the same across retries; `metadata.deliveryId` changes per attempt). Design handlers to tolerate duplicates.
+  The same logical event may arrive more than once (`id` and the `X-Karzoun-Event-Id` header stay the same across retries and resends). Design handlers to tolerate duplicates.
 </Tip>
 
 ## Event catalog
@@ -318,8 +318,7 @@ Query `webhooksGetActions` for the live list. Subscriptions below are grouped by
 | No requests at all | Webhook paused (`isActive: false`), circuit open, or wrong event subscription |
 | `401` on your side | Token/signature verification failing — compare raw body, not parsed JSON |
 | Timeouts | Handler too slow; Karzoun aborts after **10 seconds** |
-| `circuit-open` status | Five consecutive failures — fix the endpoint, then `webhooksReset` |
-| Skipped deliveries | Rate limit exceeded for that webhook |
+| `circuit-open` status | 20 failed attempts in a row — deliveries resume after 5 minutes, or fix the endpoint and call `webhooksReset` |
 
 ### Validate URL requirements
 

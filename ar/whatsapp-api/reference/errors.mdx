@@ -21,7 +21,7 @@ description: "الأخطاء التي ترجعها WhatsApp API، وكيف تت�
 | `400` | `Upload body was not received. Send multipart/form-data.` | أرسل `/media` وملفات الـ Flows بصيغة `multipart/form-data`. |
 | `400` | `Upload body was not received. Send the file bytes with its Content-Type.` | أرسل الملف خاماً إلى `/upload:{id}`، وليس multipart. |
 | `400` | رسالة عن رابط الـ Webhook أو الترويسات | صحّح الرابط أو الترويسات. راجع [شروط الرابط](/ar/whatsapp-api/webhooks/overview#شروط-الرابط). |
-| `400` | `Your endpoint did not accept the test event (…)` | اجعل خادمك يرد بـ `2xx` خلال 5 ثوانٍ، ثم احفظ مرة ثانية. |
+| `400` | `Your endpoint did not accept the test event (…)` | اجعل خادمك يرد بـ `2xx` خلال 10 ثوانٍ، ثم احفظ مرة ثانية. |
 | `401` | `Invalid API key` | المفتاح غير موجود، أو بصيغة خاطئة، أو مُبطل. |
 | `402` | `Wallet can cover … cents, … cents are already held, this send needs …` | اشحن المحفظة. راجع [الأسعار والمحفظة](/ar/whatsapp-api/pricing-and-wallet). |
 | `404` | `No such path {METHOD} {path}` | الـ endpoint أو الـ method غير متوفر. راجع [مرجع الـ API](/whatsapp-api/reference/send-a-message). |

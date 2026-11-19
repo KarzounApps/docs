@@ -5623,7 +5623,7 @@
           "Webhooks"
         ],
         "summary": "Set the webhook",
-        "description": "Set or clear (empty `url`) this number's webhook. The URL must accept a signed test event (2xx within 5 seconds). Omit `headers` to keep them; `[]` removes them.",
+        "description": "Set or clear (empty `url`) this number's webhook. The URL must accept a signed test event (2xx within 10 seconds). Omit `headers` to keep them; `[]` removes them.",
         "operationId": "set_the_webhook",
         "responses": {
           "200": {
@@ -5679,7 +5679,7 @@
                 },
                 "example": {
                   "error": {
-                    "message": "Your endpoint did not accept the test event (HTTP 500). It must answer 2xx within 5 seconds.",
+                    "message": "Your endpoint did not accept the test event (HTTP 500). It must answer 2xx within 10 seconds.",
                     "type": "Karzoun",
                     "code": 400
                   }
@@ -5950,7 +5950,7 @@
                 },
                 "example": {
                   "error": {
-                    "message": "Your endpoint did not accept the test event (HTTP 500). It must answer 2xx within 5 seconds.",
+                    "message": "Your endpoint did not accept the test event (HTTP 500). It must answer 2xx within 10 seconds.",
                     "type": "Karzoun",
                     "code": 400
                   }
