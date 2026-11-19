@@ -6,9 +6,6 @@
 drafts/
 *.draft.mdx
 
-# Help Center leftover quarantine (redirected; not in nav)
-ar/help-center/_legacy/
-
 # Internal production checklists (not Help articles)
 ar/help-center/_MEDIA_INVENTORY.md
 ar/help-center/_DOCS_VS_UI_GAPS.md
