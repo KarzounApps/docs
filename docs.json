@@ -417,6 +417,7 @@
                   "ar/whatsapp-api/dashboard/profile",
                   "ar/whatsapp-api/dashboard/templates",
                   "ar/whatsapp-api/dashboard/insights",
+                  "ar/whatsapp-api/dashboard/business-verification",
                   "ar/whatsapp-api/dashboard/billing"
                 ]
               },
@@ -1576,6 +1577,7 @@
                   "whatsapp-api/dashboard/profile",
                   "whatsapp-api/dashboard/templates",
                   "whatsapp-api/dashboard/insights",
+                  "whatsapp-api/dashboard/business-verification",
                   "whatsapp-api/dashboard/billing"
                 ]
               },
