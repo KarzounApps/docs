@@ -1,0 +1,36 @@
+---
+title: "partnerChannelApiKeyCreate"
+description: "إصدار مفتاح WhatsApp API لرقم عميل."
+---
+
+Mutation · الصلاحية `partner:write`
+
+راجع [مفاتيح API لأرقام العملاء](/ar/partners/whatsapp/api-keys).
+
+## الوسائط
+
+| الوسيط | النوع | ملاحظات |
+| --- | --- | --- |
+| `organizationId` | `ID!` | العميل |
+| `integrationId` | `String!` | الرقم، من [`partnerChannels`](/ar/partners/api/reference/partner-channels) أو من حدث `channel.connected` |
+
+## مثال
+
+```graphql
+mutation {
+  partnerChannelApiKeyCreate(organizationId: "665f1c…", integrationId: "6660a2f1c0d3e40011b2c3d4") {
+    token
+    hint
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "partnerChannelApiKeyCreate": { "token": "acme_9f3a1c…", "hint": "9f3a1c" }
+  }
+}
+```
+
+`token` هو المفتاح الكامل ويظهر **مرة واحدة**. استخدمه في ترويسة `Karzoun-API-Key` مع [WhatsApp API](/ar/whatsapp-api/authentication). وإنشاء مفتاح يستبدل المفتاح السابق للرقم.

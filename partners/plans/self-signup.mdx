@@ -1,0 +1,28 @@
+---
+title: "Self-signup"
+description: "Let new clients sign up on your domain and pick one of your plans."
+---
+
+With self-signup on, new clients create their own workspace from your signup page, on your brand, and land in your **Organizations** list.
+
+## Turn it on
+
+Open **Partner → Settings → General** and turn on **Enable Public Registration**.
+
+Your signup page is `/register` on your partner address, or on your [custom domain](/partners/brand/domains), for example `https://app.yourdomain.com/register`. It shows your visible [plans](/partners/plans/plans) with their feature bullets, and your [terms and privacy links](/partners/brand/resources).
+
+## Signup without a card
+
+Some plans start with a delay before the first invoice. Turn on **Allow trial signup without a card** to let clients on those plans sign up without entering a card. Leave it off to require a card on every signup.
+
+## Phone verification
+
+Ask new clients to confirm their phone number with a WhatsApp code from your own number. See [WhatsApp verification at signup](/partners/brand/whatsapp-verification).
+
+## After signup
+
+Each new client:
+
+- appears in **Partner → Organizations**, with where it came from (UTM, referrer) when captured
+- triggers `client.created` on your [partner webhook](/partners/webhook)
+- counts in [Reports](/partners/money/reports)

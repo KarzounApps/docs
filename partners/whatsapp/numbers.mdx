@@ -1,0 +1,27 @@
+---
+title: "Your clients' numbers"
+description: "Every WhatsApp number across your clients, with live status, quality and messaging limit."
+---
+
+Each number lives in its client's workspace. You can see all of them at once with the Partner API: [`partnerChannels`](/partners/api/reference/partner-channels). Pass an `organizationId` to list one client's numbers.
+
+For each number you get:
+
+| Field | Meaning |
+| --- | --- |
+| `integrationId` | The number's ID in Karzoun. Use it to [issue an API key](/partners/whatsapp/api-keys) |
+| `phoneNumber`, `phoneNumberId`, `wabaId` | The number, and Meta's IDs for it |
+| `status`, `qualityRating`, `messagingLimitTier`, `nameStatus` | Read live from Meta, for example `CONNECTED`, `GREEN`, `TIER_1K` |
+| `accountMode` | `cloud_api`, or `coexistence` when the number is also used in the WhatsApp Business app |
+| `apiKeyHint` | First characters of the active API key, or `null` |
+| `webhookUrl` | The number's webhook URL, or `null` |
+| `error` | Set when Meta couldn't be reached for this number |
+
+Use it to spot numbers that need attention: a `FLAGGED` or `RESTRICTED` status, a `RED` quality rating, or a display name that wasn't approved. See [Quality rating](/whatsapp-api/account/quality-rating) and [Account status](/whatsapp-api/account/account-status).
+
+## How numbers get connected
+
+- The client connects from **Channels** in their workspace, or
+- from a [connect link](/partners/connect-links) you send, without a Karzoun login.
+
+Either way, your [partner webhook](/partners/webhook) receives `channel.connected` when the number is ready to send, and `channel.disconnected` when it's removed.

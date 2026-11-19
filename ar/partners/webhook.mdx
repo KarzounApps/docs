@@ -12,10 +12,10 @@ Webhook الشريك يخبر منصتك بما يحدث لعملائك في ك�
 افتح **الشريك ← الإعدادات ← عام ← المطوّرون**، ضع **عنوان ويب هوك الشريك** واضغط **حفظ**. كرزون ترسل حدثاً تجريبياً موقّعاً أولاً، ولازم يرد خادمك بـ `2xx` خلال 10 ثوانٍ.
 
 ```json
-{ "object": "karzoun", "event": "webhook.test", "channel": "partner", "partner": "agency", "sent_at": "2026-11-18T10:00:00.000Z" }
+{ "object": "karzoun", "event": "webhook.test", "scope": "partner", "sent_at": "2026-11-18T10:00:00.000Z" }
 ```
 
-نفس شروط رابط Webhook الرقم: `https`، المنفذ 443، ونطاق عام.
+يجب أن يكون الرابط `https` على نطاق عام.
 
 ## الأحداث
 
@@ -58,7 +58,7 @@ Webhook الشريك يستخدم نفس التوقيع والإرسال الخ�
 - يُعاد عند الفشل لمدة 21 ساعة تقريباً. راجع [الإرسال وإعادة المحاولة](/ar/whatsapp-api/webhooks/delivery).
 - امنع التكرار حسب `X-Karzoun-Event-Id`.
 
-بطاقة **المطوّرون** تعرض آخر 10 عمليات إرسال مع زر **إعادة الإرسال** للفاشلة. وعبر الـ API استخدم `partnerWebhookDeliveries` و`partnerTestWebhook` و`partnerWebhookResend`.
+بطاقة **المطوّرون** تعرض أحدث عمليات الإرسال مع زر **إعادة الإرسال** للفاشلة، والسجل يُحفظ 30 يوماً. وعبر الـ API استخدم [`partnerWebhookDeliveries`](/ar/partners/api/reference/partner-webhook-deliveries) و[`partnerTestWebhook`](/ar/partners/api/reference/partner-test-webhook) و[`partnerWebhookResend`](/ar/partners/api/reference/partner-webhook-resend).
 
 ## تغيير مفتاح المنصّة
 

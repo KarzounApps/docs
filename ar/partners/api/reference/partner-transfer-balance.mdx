@@ -1,0 +1,46 @@
+---
+title: "partnerTransferBalance"
+description: "تحويل رصيد من محفظتك لعميل."
+---
+
+Mutation · الصلاحية `partner:write`
+
+راجع [تمويل العملاء](/ar/partners/money/funding-clients).
+
+## الوسائط
+
+| الوسيط | النوع | ملاحظات |
+| --- | --- | --- |
+| `input.organizationId` | `ID!` | العميل |
+| `input.amount` | `Float!` | بالدولار، ويجب أن تغطيه محفظتك |
+| `input.description` | `String` | ملاحظة اختيارية تظهر في طرفي التحويل |
+
+## مثال
+
+```graphql
+mutation {
+  partnerTransferBalance(input: {
+    organizationId: "665f1c…"
+    amount: 25
+    description: "November top-up"
+  }) {
+    success
+    transferredAmount
+    partnerBalanceAfter
+    organizationBalanceAfter
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "partnerTransferBalance": {
+      "success": true,
+      "transferredAmount": 25,
+      "partnerBalanceAfter": 395.5,
+      "organizationBalanceAfter": 39.2
+    }
+  }
+}
+```

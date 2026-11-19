@@ -1,0 +1,37 @@
+---
+title: "API keys for client numbers"
+description: "Issue and revoke WhatsApp API keys for your clients' numbers."
+---
+
+A client on a plan with the WhatsApp API uses an API key per number to send and receive through the [WhatsApp API](/whatsapp-api). The client can create it in its own workspace. You can also issue it yourself, so onboarding finishes without anyone opening the dashboard.
+
+## Issue a key
+
+Call [`partnerChannelApiKeyCreate`](/partners/api/reference/partner-channel-api-key-create) with the client's `organizationId` and the number's `integrationId`. The full key is returned **once**. Store it in your secret manager.
+
+Creating a key replaces the number's previous key.
+
+A good moment to issue it is when your [partner webhook](/partners/webhook) receives `channel.connected`:
+
+<Steps>
+  <Step title="channel.connected arrives">
+    It carries `organization_id` and `integration_id`.
+  </Step>
+  <Step title="Issue the key">
+    Call `partnerChannelApiKeyCreate` with them.
+  </Step>
+  <Step title="Point the number's events at your platform">
+    ```bash
+    curl -X POST https://waba.karzoun.chat/webhook \
+      -H "Karzoun-API-Key: THE_NEW_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{ "url": "https://platform.example/whatsapp/acme" }'
+    ```
+
+    See [Webhooks](/whatsapp-api/webhooks/overview).
+  </Step>
+</Steps>
+
+## Revoke a key
+
+Call [`partnerChannelApiKeyRevoke`](/partners/api/reference/partner-channel-api-key-revoke). Requests with the key fail with `401` from that moment.

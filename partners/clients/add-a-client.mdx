@@ -1,0 +1,34 @@
+---
+title: "Add a client"
+description: "Create a client workspace, put it on a plan and give it starting credit."
+---
+
+Open **Partner → Organizations** and click **Register Organization**. To do it from your own system, use [`partnerRegisterOrganization`](/partners/api/reference/partner-register-organization).
+
+## Fields
+
+| Field | Notes |
+| --- | --- |
+| **Admin Email** | The owner. They get an invitation to set their password |
+| Workspace name | Shown in the app and on invoices |
+| Address | The subdomain, for example `acme` for `acme.karzoun.chat` |
+| Plan | One of [your plans](/partners/plans/plans) |
+| **Billing Cycle** | Monthly, or yearly if the plan has a yearly price |
+| **Initial balance (USD)** | Optional. Moved from your wallet right after the workspace is created. It can't be more than your available balance |
+
+### Advanced
+
+| Field | When to use it |
+| --- | --- |
+| **Custom Base Price ($)** | A negotiated price for this client. Leave empty for the plan price |
+| **Defer First Invoice (days)** | Delay the first charge by up to 30 days, for example when the client already paid you. Empty uses the plan's default |
+| **Original Start Date** | For clients moving from another system who already paid. The subscription is backdated (up to one year) so the next renewal lines up |
+
+## What happens next
+
+- The workspace is created on your brand and appears in your list.
+- The owner receives the invitation.
+- `client.created` goes to your [partner webhook](/partners/webhook).
+- If you set an initial balance, it's in the client's wallet. If that transfer fails, the workspace is still created and you can [add balance](/partners/money/funding-clients) later.
+
+Next, the client connects WhatsApp in their workspace or from a [connect link](/partners/connect-links).

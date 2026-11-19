@@ -1,0 +1,46 @@
+---
+title: "partnerTransferBalance"
+description: "Move credit from your wallet to a client."
+---
+
+Mutation · Scope `partner:write`
+
+See [Funding clients](/partners/money/funding-clients).
+
+## Arguments
+
+| Argument | Type | Notes |
+| --- | --- | --- |
+| `input.organizationId` | `ID!` | The client |
+| `input.amount` | `Float!` | Dollars. Must be covered by your wallet |
+| `input.description` | `String` | Optional note, shown on both sides of the transfer |
+
+## Example
+
+```graphql
+mutation {
+  partnerTransferBalance(input: {
+    organizationId: "665f1c…"
+    amount: 25
+    description: "November top-up"
+  }) {
+    success
+    transferredAmount
+    partnerBalanceAfter
+    organizationBalanceAfter
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "partnerTransferBalance": {
+      "success": true,
+      "transferredAmount": 25,
+      "partnerBalanceAfter": 395.5,
+      "organizationBalanceAfter": 39.2
+    }
+  }
+}
+```

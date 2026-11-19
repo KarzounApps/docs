@@ -1,0 +1,35 @@
+---
+title: "Quickstart"
+description: "From a new partner account to your first client connected to WhatsApp."
+---
+
+<Steps>
+  <Step title="Brand your portal">
+    Open **Partner → Settings → Branding**. Add your logo and colors, and set the login page text. See [Branding](/partners/brand/branding).
+
+    If custom domains are open for your account, add yours under **Settings → Domains**. See [Custom domains](/partners/brand/domains).
+  </Step>
+  <Step title="Create a plan">
+    Open **Partner → Plans → Create Plan**. Pick a Karzoun plan to start from, set your price and save. See [Plans](/partners/plans/plans).
+  </Step>
+  <Step title="Choose how clients pay">
+    In **Settings → General → How customers pay**, choose whether clients add their own card or you fund their wallets. See [How clients pay](/partners/plans/how-clients-pay).
+  </Step>
+  <Step title="Add your first client">
+    Open **Partner → Organizations** and click **Register Organization**. Enter the owner's email, the workspace name and address, and the plan. You can give an initial balance from your wallet. See [Add a client](/partners/clients/add-a-client).
+
+    The owner gets an invitation and signs in to their workspace on your brand.
+  </Step>
+  <Step title="Connect their WhatsApp number">
+    The client connects a number from their workspace, or from a [connect link](/partners/connect-links) you send them, without a Karzoun login.
+  </Step>
+  <Step title="Follow up">
+    The client appears in **Organizations** with its balance, usage and setup progress. When a number connects, the number shows under the client, and your [partner webhook](/partners/webhook) receives `channel.connected` if you set one.
+  </Step>
+</Steps>
+
+## Selling the WhatsApp API
+
+For clients that only use the WhatsApp API, pick a plan based on Karzoun's **API** plan, then [issue an API key](/partners/whatsapp/api-keys) for their number once it's connected. The client, or your platform, uses that key with the [WhatsApp API](/whatsapp-api).
+
+To do all of this from your own system, see the [Partner API](/partners/api/overview).

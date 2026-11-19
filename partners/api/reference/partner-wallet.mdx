@@ -1,0 +1,26 @@
+---
+title: "partnerWallet"
+description: "Your earnings balance."
+---
+
+Query · Scope `partner:read`
+
+Your commission earnings, the same totals as **Partner → Earnings**. For the credit you fund clients with, use `wallet` on [`partner`](/partners/api/reference/partner). See [Earnings](/partners/money/earnings).
+
+No arguments.
+
+## Example
+
+```graphql
+query {
+  partnerWallet { availableBalance pendingBalance totalPaidOut currency }
+}
+```
+
+```json
+{
+  "data": {
+    "partnerWallet": { "availableBalance": 310.4, "pendingBalance": 95, "totalPaidOut": 1200, "currency": "usd" }
+  }
+}
+```

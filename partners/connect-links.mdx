@@ -18,14 +18,14 @@ A connect link opens Karzoun's WhatsApp signup for one of your clients, on your 
     | --- | --- |
     | `platform secret` | **Partner → Settings → General → Developer → Platform secret** |
     | `partner` | Your partner code, shown under **Connect links** in the same card |
-    | `organization_id` | The client's `_id` from `partnerRegisterOrganization` |
+    | `organization_id` | The client's `_id`, shown on its [detail page](/partners/clients/client-detail) or returned by [`partnerRegisterOrganization`](/partners/api/reference/partner-register-organization) |
   </Step>
   <Step title="The client opens it">
     ```
-    https://{client subdomain}.{your app domain}/connect-whatsapp?ts={ts}&sig={sig}
+    https://{client subdomain}.karzoun.chat/connect-whatsapp?ts={ts}&sig={sig}
     ```
 
-    For example `https://acme.yourdomain.com/connect-whatsapp?ts=1731916800&sig=9b1c…`, or `https://acme.karzoun.chat/…` without a whitelabel domain.
+    For example `https://acme.karzoun.chat/connect-whatsapp?ts=1731916800&sig=9b1c…`. The page shows your brand.
   </Step>
   <Step title="The client connects a number">
     The page shows your branding. The client continues with Facebook (or with the WhatsApp Business app) and finishes Meta's signup. Karzoun registers the number, subscribes it to webhooks and attaches it to the client's wallet.
@@ -52,7 +52,7 @@ export function connectLink({ partner, organizationId, clientHost, secret }) {
   return `https://${clientHost}/connect-whatsapp?ts=${ts}&sig=${sig}`;
 }
 
-// connectLink({ partner: "agency", organizationId: "665f1c…", clientHost: "acme.yourdomain.com", secret: process.env.KARZOUN_PLATFORM_SECRET })
+// connectLink({ partner: "agency", organizationId: "665f1c…", clientHost: "acme.karzoun.chat", secret: process.env.KARZOUN_PLATFORM_SECRET })
 ```
 
 ```python Python
@@ -81,7 +81,7 @@ function connectLink(string $partner, string $organizationId, string $clientHost
 
 ## Result
 
-The result has `status`, `organization_id` and `integration_id` (the new number). Use `integration_id` with [`partnerChannelApiKeyCreate`](/partners/api/numbers-and-keys).
+The result has `status`, `organization_id` and `integration_id` (the new number). Use `integration_id` with [`partnerChannelApiKeyCreate`](/partners/api/reference/partner-channel-api-key-create).
 
 <Tabs>
   <Tab title="Popup">

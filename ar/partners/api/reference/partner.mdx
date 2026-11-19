@@ -1,0 +1,38 @@
+---
+title: "partner"
+description: "ملف الشريك ومحفظة المساحة."
+---
+
+Query · الصلاحية `partner:read`
+
+يرجع حساب الشريك، ومعه `wallet` محفظة مساحتك: الرصيد الذي تموّل به عملاءك. راجع [محفظتك](/ar/partners/money/wallet).
+
+بدون وسائط.
+
+## مثال
+
+```graphql
+query {
+  partner {
+    _id
+    title
+    subdomain
+    isActive
+    wallet { availableBalance currency isRestricted }
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "partner": {
+      "_id": "6650aa…",
+      "title": "Agency Co",
+      "subdomain": "agency",
+      "isActive": true,
+      "wallet": { "availableBalance": 420.5, "currency": "usd", "isRestricted": false }
+    }
+  }
+}
+```

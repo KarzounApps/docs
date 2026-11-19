@@ -1,0 +1,26 @@
+---
+title: "partnerWebhookResend"
+description: "Send a failed partner webhook event again."
+---
+
+Mutation · Scope `partner:write`
+
+Starts a new round of retries for a failed delivery. The event keeps its `X-Karzoun-Event-Id`, so your deduplication still works.
+
+## Arguments
+
+| Argument | Type | Notes |
+| --- | --- | --- |
+| `eventId` | `String!` | From [`partnerWebhookDeliveries`](/partners/api/reference/partner-webhook-deliveries), where `canResend` is `true` |
+
+## Example
+
+```graphql
+mutation {
+  partnerWebhookResend(eventId: "3f2b8c1e-…")
+}
+```
+
+```json
+{ "data": { "partnerWebhookResend": true } }
+```

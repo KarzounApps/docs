@@ -1,0 +1,27 @@
+---
+title: "أرقام عملائك"
+description: "كل أرقام واتساب عبر عملائك، مع الحالة والجودة وحد المراسلة مباشرة من ميتا."
+---
+
+كل رقم موجود في مساحة عميله. وتستطيع رؤيتها كلها مرة واحدة عبر Partner API: [`partnerChannels`](/ar/partners/api/reference/partner-channels). مرّر `organizationId` لترى أرقام عميل واحد.
+
+لكل رقم تحصل على:
+
+| الحقل | المعنى |
+| --- | --- |
+| `integrationId` | معرّف الرقم في كرزون. تستخدمه [لإصدار مفتاح API](/ar/partners/whatsapp/api-keys) |
+| `phoneNumber`، `phoneNumberId`، `wabaId` | الرقم، ومعرّفاته في ميتا |
+| `status`، `qualityRating`، `messagingLimitTier`، `nameStatus` | تُقرأ مباشرة من ميتا، مثل `CONNECTED` و`GREEN` و`TIER_1K` |
+| `accountMode` | `cloud_api`، أو `coexistence` إذا كان الرقم يُستخدم أيضاً في تطبيق واتساب للأعمال |
+| `apiKeyHint` | أول أحرف مفتاح API الفعّال، أو `null` |
+| `webhookUrl` | رابط Webhook الرقم، أو `null` |
+| `error` | يظهر إذا تعذّر الوصول لميتا لهذا الرقم |
+
+استخدمه لاكتشاف الأرقام التي تحتاج متابعة: حالة `FLAGGED` أو `RESTRICTED`، أو تقييم جودة `RED`، أو اسم عرض لم يُعتمد. راجع [تقييم الجودة](/ar/whatsapp-api/account/quality-rating) و[حالة الحساب](/ar/whatsapp-api/account/account-status).
+
+## كيف تُربط الأرقام
+
+- يربطها العميل من **القنوات** في مساحته، أو
+- من [رابط ربط](/ar/partners/connect-links) ترسله له، بدون تسجيل دخول إلى كرزون.
+
+وفي الحالتين يصل حدث `channel.connected` إلى [Webhook الشريك](/ar/partners/webhook) عندما يصبح الرقم جاهزاً للإرسال، وحدث `channel.disconnected` عند حذفه.

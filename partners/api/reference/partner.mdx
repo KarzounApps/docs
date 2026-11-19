@@ -1,0 +1,38 @@
+---
+title: "partner"
+description: "Your partner profile and workspace wallet."
+---
+
+Query · Scope `partner:read`
+
+Returns your partner account, including your workspace `wallet`: the credit you use to fund clients. See [Your wallet](/partners/money/wallet).
+
+No arguments.
+
+## Example
+
+```graphql
+query {
+  partner {
+    _id
+    title
+    subdomain
+    isActive
+    wallet { availableBalance currency isRestricted }
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "partner": {
+      "_id": "6650aa…",
+      "title": "Agency Co",
+      "subdomain": "agency",
+      "isActive": true,
+      "wallet": { "availableBalance": 420.5, "currency": "usd", "isRestricted": false }
+    }
+  }
+}
+```

@@ -562,27 +562,93 @@
             "icon": "handshake",
             "groups": [
               {
-                "group": "الشركاء",
+                "group": "البداية",
                 "pages": [
                   "ar/partners/index",
-                  "ar/partners/onboarding",
-                  "ar/partners/whitelabel"
+                  "ar/partners/how-it-works",
+                  "ar/partners/become-a-partner",
+                  "ar/partners/quickstart"
+                ]
+              },
+              {
+                "group": "علامتك التجارية",
+                "pages": [
+                  "ar/partners/brand/branding",
+                  "ar/partners/brand/domains",
+                  "ar/partners/brand/email",
+                  "ar/partners/brand/resources",
+                  "ar/partners/brand/whatsapp-verification"
+                ]
+              },
+              {
+                "group": "بيع الباقات",
+                "pages": [
+                  "ar/partners/plans/plans",
+                  "ar/partners/plans/how-clients-pay",
+                  "ar/partners/plans/self-signup"
+                ]
+              },
+              {
+                "group": "إدارة العملاء",
+                "pages": [
+                  "ar/partners/clients/organizations",
+                  "ar/partners/clients/client-detail",
+                  "ar/partners/clients/add-a-client",
+                  "ar/partners/clients/suspend-and-cancel",
+                  "ar/partners/clients/log-in-as-a-user",
+                  "ar/partners/clients/business-verification"
+                ]
+              },
+              {
+                "group": "المال",
+                "pages": [
+                  "ar/partners/money/wallet",
+                  "ar/partners/money/funding-clients",
+                  "ar/partners/money/earnings",
+                  "ar/partners/money/reports"
+                ]
+              },
+              {
+                "group": "واتساب لعملائك",
+                "pages": [
+                  "ar/partners/connect-links",
+                  "ar/partners/whatsapp/numbers",
+                  "ar/partners/whatsapp/api-keys",
+                  "ar/partners/bring-your-own-meta-app"
                 ]
               },
               {
                 "group": "Partner API",
                 "pages": [
                   "ar/partners/api/overview",
-                  "ar/partners/api/clients-and-funding",
-                  "ar/partners/api/numbers-and-keys",
-                  "ar/partners/connect-links",
-                  "ar/partners/webhook"
+                  "ar/partners/webhook",
+                  {
+                    "group": "المرجع",
+                    "pages": [
+                      "ar/partners/api/reference/partner",
+                      "ar/partners/api/reference/partner-plans",
+                      "ar/partners/api/reference/partner-organization-monitor",
+                      "ar/partners/api/reference/partner-organization-detail",
+                      "ar/partners/api/reference/partner-channels",
+                      "ar/partners/api/reference/partner-wallet",
+                      "ar/partners/api/reference/partner-webhook-deliveries",
+                      "ar/partners/api/reference/partner-register-organization",
+                      "ar/partners/api/reference/partner-transfer-balance",
+                      "ar/partners/api/reference/partner-suspend-organizations",
+                      "ar/partners/api/reference/partner-channel-api-key-create",
+                      "ar/partners/api/reference/partner-channel-api-key-revoke",
+                      "ar/partners/api/reference/partner-test-webhook",
+                      "ar/partners/api/reference/partner-webhook-resend"
+                    ]
+                  },
+                  "ar/partners/api/ai-agents"
                 ]
               },
               {
-                "group": "متقدّم",
+                "group": "المساعدة",
                 "pages": [
-                  "ar/partners/bring-your-own-meta-app"
+                  "ar/partners/faq",
+                  "ar/partners/troubleshooting"
                 ]
               }
             ]
@@ -1655,27 +1721,93 @@
             "icon": "handshake",
             "groups": [
               {
-                "group": "Partners",
+                "group": "Get started",
                 "pages": [
                   "partners/index",
-                  "partners/onboarding",
-                  "partners/whitelabel"
+                  "partners/how-it-works",
+                  "partners/become-a-partner",
+                  "partners/quickstart"
+                ]
+              },
+              {
+                "group": "Your brand",
+                "pages": [
+                  "partners/brand/branding",
+                  "partners/brand/domains",
+                  "partners/brand/email",
+                  "partners/brand/resources",
+                  "partners/brand/whatsapp-verification"
+                ]
+              },
+              {
+                "group": "Sell plans",
+                "pages": [
+                  "partners/plans/plans",
+                  "partners/plans/how-clients-pay",
+                  "partners/plans/self-signup"
+                ]
+              },
+              {
+                "group": "Manage clients",
+                "pages": [
+                  "partners/clients/organizations",
+                  "partners/clients/client-detail",
+                  "partners/clients/add-a-client",
+                  "partners/clients/suspend-and-cancel",
+                  "partners/clients/log-in-as-a-user",
+                  "partners/clients/business-verification"
+                ]
+              },
+              {
+                "group": "Money",
+                "pages": [
+                  "partners/money/wallet",
+                  "partners/money/funding-clients",
+                  "partners/money/earnings",
+                  "partners/money/reports"
+                ]
+              },
+              {
+                "group": "WhatsApp for your clients",
+                "pages": [
+                  "partners/connect-links",
+                  "partners/whatsapp/numbers",
+                  "partners/whatsapp/api-keys",
+                  "partners/bring-your-own-meta-app"
                 ]
               },
               {
                 "group": "Partner API",
                 "pages": [
                   "partners/api/overview",
-                  "partners/api/clients-and-funding",
-                  "partners/api/numbers-and-keys",
-                  "partners/connect-links",
-                  "partners/webhook"
+                  "partners/webhook",
+                  {
+                    "group": "Reference",
+                    "pages": [
+                      "partners/api/reference/partner",
+                      "partners/api/reference/partner-plans",
+                      "partners/api/reference/partner-organization-monitor",
+                      "partners/api/reference/partner-organization-detail",
+                      "partners/api/reference/partner-channels",
+                      "partners/api/reference/partner-wallet",
+                      "partners/api/reference/partner-webhook-deliveries",
+                      "partners/api/reference/partner-register-organization",
+                      "partners/api/reference/partner-transfer-balance",
+                      "partners/api/reference/partner-suspend-organizations",
+                      "partners/api/reference/partner-channel-api-key-create",
+                      "partners/api/reference/partner-channel-api-key-revoke",
+                      "partners/api/reference/partner-test-webhook",
+                      "partners/api/reference/partner-webhook-resend"
+                    ]
+                  },
+                  "partners/api/ai-agents"
                 ]
               },
               {
-                "group": "Advanced",
+                "group": "Help",
                 "pages": [
-                  "partners/bring-your-own-meta-app"
+                  "partners/faq",
+                  "partners/troubleshooting"
                 ]
               }
             ]
@@ -2503,51 +2635,51 @@
     },
     {
       "source": "/ar/help-center/guides/partners/whitelabel/doc-1890590",
-      "destination": "/ar/partners/whitelabel"
+      "destination": "/ar/partners/brand/branding"
     },
     {
       "source": "/ar/help-center/guides/partners/whitelabel/doc-1890598",
-      "destination": "/ar/partners/whitelabel"
+      "destination": "/ar/partners/brand/branding"
     },
     {
       "source": "/ar/help-center/guides/partners/whitelabel/doc-1890600",
-      "destination": "/ar/partners/whitelabel"
+      "destination": "/ar/partners/brand/branding"
     },
     {
       "source": "/ar/help-center/guides/partners/whitelabel/doc-1890604",
-      "destination": "/ar/partners/whitelabel"
+      "destination": "/ar/partners/brand/branding"
     },
     {
       "source": "/ar/help-center/guides/partners/whitelabel/partner-settings/doc-1890601",
-      "destination": "/ar/partners/whitelabel"
+      "destination": "/ar/partners/brand/branding"
     },
     {
       "source": "/ar/help-center/guides/partners/whitelabel/partner-settings/doc-1890602",
-      "destination": "/ar/partners/whitelabel"
+      "destination": "/ar/partners/brand/branding"
     },
     {
       "source": "/ar/help-center/guides/partners/whitelabel/partner-settings/doc-1890603",
-      "destination": "/ar/partners/whitelabel"
+      "destination": "/ar/partners/brand/branding"
     },
     {
       "source": "/ar/help-center/guides/partners/whitelabel/system-settings/doc-1890593",
-      "destination": "/ar/partners/whitelabel"
+      "destination": "/ar/partners/brand/branding"
     },
     {
       "source": "/ar/help-center/guides/partners/whitelabel/system-settings/doc-1890594",
-      "destination": "/ar/partners/whitelabel"
+      "destination": "/ar/partners/brand/branding"
     },
     {
       "source": "/ar/help-center/guides/partners/whitelabel/system-settings/doc-1890595",
-      "destination": "/ar/partners/whitelabel"
+      "destination": "/ar/partners/brand/branding"
     },
     {
       "source": "/ar/help-center/guides/partners/whitelabel/system-settings/doc-1890596",
-      "destination": "/ar/partners/whitelabel"
+      "destination": "/ar/partners/brand/branding"
     },
     {
       "source": "/ar/help-center/guides/partners/whitelabel/system-settings/doc-1890597",
-      "destination": "/ar/partners/whitelabel"
+      "destination": "/ar/partners/brand/branding"
     },
     {
       "source": "/ar/help-center/guides/popups/doc-1890615",
@@ -2676,6 +2808,38 @@
     {
       "source": "/ar/help-center/guides/getting-started/quick-start",
       "destination": "/ar/help-center/guides/getting-started/overview"
+    },
+    {
+      "source": "/partners/onboarding",
+      "destination": "/partners/become-a-partner"
+    },
+    {
+      "source": "/ar/partners/onboarding",
+      "destination": "/ar/partners/become-a-partner"
+    },
+    {
+      "source": "/partners/whitelabel",
+      "destination": "/partners/brand/branding"
+    },
+    {
+      "source": "/ar/partners/whitelabel",
+      "destination": "/ar/partners/brand/branding"
+    },
+    {
+      "source": "/partners/api/clients-and-funding",
+      "destination": "/partners/clients/add-a-client"
+    },
+    {
+      "source": "/ar/partners/api/clients-and-funding",
+      "destination": "/ar/partners/clients/add-a-client"
+    },
+    {
+      "source": "/partners/api/numbers-and-keys",
+      "destination": "/partners/whatsapp/api-keys"
+    },
+    {
+      "source": "/ar/partners/api/numbers-and-keys",
+      "destination": "/ar/partners/whatsapp/api-keys"
     }
   ],
   "interaction": {

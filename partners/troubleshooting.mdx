@@ -1,0 +1,24 @@
+---
+title: "Troubleshooting"
+description: "Fixes for common problems in the Partner portal and the Partner API."
+---
+
+| Problem | Fix |
+| --- | --- |
+| **Can't save branding** | Custom branding isn't open for your account. Ask your account manager |
+| **Domains screen says "Ask to open this feature"** | Custom domains aren't open for your account. Ask your account manager |
+| **Domain stays pending** | The CNAME record isn't visible yet. Check it at your DNS provider, wait for DNS to update, then click **Verify** again |
+| **"Partner price cannot be below system cost"** | Raise the price to at least the cost shown for the base plan |
+| **"Only one … plan is allowed per partner"** | You already have a plan on that base plan. Edit it instead |
+| **"Feature overrides cannot grant features…"** | You tried to turn on a feature the base plan doesn't include. Pick a higher base plan |
+| **Initial balance or transfer rejected** | Your workspace wallet doesn't cover the amount. Top it up in **Billing** first |
+| **Client can't send WhatsApp messages** | Its wallet is empty or restricted. Check **Spendable** on its detail page and add balance |
+| **Client didn't get the invitation** | Check the email address. If you use your own SMTP, run **Test Connection** in **Settings → Email** |
+| **Sender email isn't used** | A custom sender only works with your own SMTP server. Set it up in **Settings → Email** |
+| **Connect link says "not valid"** | Check the partner code, the client's `organization_id` and that you sign with your current platform secret |
+| **Partner webhook not saving** | Your endpoint must be public `https` and answer `2xx` within 10 seconds |
+| **API returns a permission error** | Your API key needs the `partner:read` or `partner:write` scope, and the client must be yours |
+
+## Still stuck
+
+Contact your Karzoun account manager. Include the client's workspace address and what you tried.

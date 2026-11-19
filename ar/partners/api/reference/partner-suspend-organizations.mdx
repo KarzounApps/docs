@@ -1,0 +1,39 @@
+---
+title: "partnerSuspendOrganizations"
+description: "تعليق العملاء أو إعادة تفعيلهم."
+---
+
+Mutation · الصلاحية `partner:write`
+
+المساحات المعلّقة لا تستطيع الدخول ولا الإرسال، وبياناتها تبقى. راجع [التعليق والإلغاء](/ar/partners/clients/suspend-and-cancel).
+
+## الوسائط
+
+| الوسيط | النوع | ملاحظات |
+| --- | --- | --- |
+| `input.organizationIds` | `[ID!]!` | عميل أو أكثر |
+| `input.suspend` | `Boolean!` | `true` للتعليق، `false` لإعادة التفعيل |
+
+## مثال
+
+```graphql
+mutation {
+  partnerSuspendOrganizations(input: { organizationIds: ["665f1c…"], suspend: true }) {
+    successCount
+    errorCount
+    results { id success error }
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "partnerSuspendOrganizations": {
+      "successCount": 1,
+      "errorCount": 0,
+      "results": [{ "id": "665f1c…", "success": true, "error": null }]
+    }
+  }
+}
+```

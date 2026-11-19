@@ -1,0 +1,45 @@
+---
+title: "وكلاء الذكاء الاصطناعي"
+description: "دع Claude ووكلاء الذكاء الاصطناعي الآخرين يعملون مع عملائك عبر خادم MCP من كرزون."
+---
+
+في [خادم MCP](/ar/mcp-server) من كرزون حزمة **Partners** فيها عمليات [Partner API](/ar/partners/api/overview): مساحات العملاء، وأرقام واتساب ومفاتيحها، وتحويلات المحفظة، وسجل Webhook الشريك.
+
+## الربط
+
+استخدم مفتاح API من **مساحة الشريك** بصلاحية `partner:read`، ومعها `partner:write` إذا كان الوكيل سينفّذ إجراءات.
+
+الخادم المستضاف:
+
+```
+https://YOUR_PARTNER_SUBDOMAIN.api.karzoun.chat/mcp/partner
+```
+
+على جهازك:
+
+```json
+{
+  "mcpServers": {
+    "karzoun-partner": {
+      "command": "npx",
+      "args": ["-y", "@karzounchat/mcp-server"],
+      "env": {
+        "KARZOUN_API_URL": "https://YOUR_PARTNER_SUBDOMAIN.api.karzoun.chat/graphql",
+        "KARZOUN_API_KEY": "kz_live_YOUR_API_KEY",
+        "KARZOUN_MCP_PACK": "partner"
+      }
+    }
+  }
+}
+```
+
+## أمثلة لما تطلبه
+
+- "من من عملائي رصيده أقل من 20 دولاراً؟"
+- "اعرض أرقام واتساب التي تقييم جودتها أحمر."
+- "حوّل 50 دولاراً لمساحة Acme."
+- "اعرض عمليات Webhook الشريك الفاشلة اليوم."
+
+<Warning>
+  مع صلاحية `partner:write` يستطيع الوكيل تحويل المال وتعليق العملاء. أعطها فقط لوكلاء تثق بهم، وراجع ما ينفّذونه.
+</Warning>

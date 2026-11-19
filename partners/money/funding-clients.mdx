@@ -1,0 +1,26 @@
+---
+title: "Funding clients"
+description: "Move credit from your wallet to a client, or pay a client's open invoice."
+---
+
+Both actions take money from your [workspace wallet](/partners/money/wallet). They can't be more than its available balance.
+
+## Add balance
+
+On the [client detail](/partners/clients/client-detail) or in the list, click **Add Balance**, enter an amount in USD and confirm. The credit is in the client's wallet right away.
+
+By API: [`partnerTransferBalance`](/partners/api/reference/partner-transfer-balance). You can add a note that shows on both sides of the transfer.
+
+Use it to:
+
+- give a new client starting credit (or set **Initial balance** when you [add the client](/partners/clients/add-a-client))
+- top up clients when [you fund customer wallets](/partners/plans/how-clients-pay)
+- respond to a `wallet.low_balance` event on your [partner webhook](/partners/webhook)
+
+## Cover an open invoice
+
+When a client has an unpaid invoice, click **Cover open invoice from wallet** on its detail page. Karzoun moves the invoice amount from your wallet to the client and retries the payment immediately, so the subscription becomes active again.
+
+## Credit for trusted clients
+
+Some clients can be allowed to keep using paid features when their balance runs low, instead of being restricted. This is set by Karzoun on request. Ask your account manager. The **Trusted and low** queue in [your clients](/partners/clients/organizations#queues) shows these clients when they run low.

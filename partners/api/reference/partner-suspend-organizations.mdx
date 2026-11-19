@@ -1,0 +1,39 @@
+---
+title: "partnerSuspendOrganizations"
+description: "Suspend or reactivate clients."
+---
+
+Mutation · Scope `partner:write`
+
+Suspended workspaces can't sign in or send messages. Their data stays. See [Suspend and cancel](/partners/clients/suspend-and-cancel).
+
+## Arguments
+
+| Argument | Type | Notes |
+| --- | --- | --- |
+| `input.organizationIds` | `[ID!]!` | One or more clients |
+| `input.suspend` | `Boolean!` | `true` to suspend, `false` to reactivate |
+
+## Example
+
+```graphql
+mutation {
+  partnerSuspendOrganizations(input: { organizationIds: ["665f1c…"], suspend: true }) {
+    successCount
+    errorCount
+    results { id success error }
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "partnerSuspendOrganizations": {
+      "successCount": 1,
+      "errorCount": 0,
+      "results": [{ "id": "665f1c…", "success": true, "error": null }]
+    }
+  }
+}
+```

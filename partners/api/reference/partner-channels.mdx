@@ -1,0 +1,54 @@
+---
+title: "partnerChannels"
+description: "WhatsApp numbers across your clients, with live status from Meta."
+---
+
+Query · Scope `partner:read`
+
+See [Your clients' numbers](/partners/whatsapp/numbers) for every field.
+
+## Arguments
+
+| Argument | Type | Notes |
+| --- | --- | --- |
+| `organizationId` | `ID` | Optional. Only this client's numbers |
+
+## Example
+
+```graphql
+query {
+  partnerChannels {
+    organizationId
+    subdomain
+    integrationId
+    phoneNumber
+    status
+    qualityRating
+    messagingLimitTier
+    apiKeyHint
+    error
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "partnerChannels": [
+      {
+        "organizationId": "665f1c…",
+        "subdomain": "acme",
+        "integrationId": "6660a2f1c0d3e40011b2c3d4",
+        "phoneNumber": "+966 50 000 0000",
+        "status": "CONNECTED",
+        "qualityRating": "GREEN",
+        "messagingLimitTier": "TIER_1K",
+        "apiKeyHint": "9f3a1c",
+        "error": null
+      }
+    ]
+  }
+}
+```
+
+Status, quality and tier are read from Meta for each call. `error` is set for a number Meta couldn't be reached for.

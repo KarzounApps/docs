@@ -1,0 +1,20 @@
+---
+title: "Suspend and cancel"
+description: "Stop a client's access for a while, or end its subscription at the end of the period."
+---
+
+## Suspend
+
+Suspending blocks the workspace right away: its users can't sign in and it can't send messages. Its data stays.
+
+- In **Partner → Organizations**, select one or more clients and click **Suspend**.
+- Click **Activate** to lift it.
+- By API: [`partnerSuspendOrganizations`](/partners/api/reference/partner-suspend-organizations).
+
+Use it for unpaid accounts or a client that asked to pause.
+
+## Cancel at period end
+
+On the [client detail](/partners/clients/client-detail), click **Cancel at period end**. The client keeps using its plan until the current period ends, then the subscription stops. Nothing is charged for the next period.
+
+You can undo it before the period ends. Cancelling doesn't pause billing for the current period.

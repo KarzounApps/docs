@@ -1,0 +1,53 @@
+---
+title: "partnerRegisterOrganization"
+description: "Create a client workspace under your partner account."
+---
+
+Mutation · Scope `partner:write`
+
+Creates the workspace on your brand, subscribes it to the plan and invites the owner. See [Add a client](/partners/clients/add-a-client).
+
+## Arguments
+
+| Argument | Type | Notes |
+| --- | --- | --- |
+| `input.email` | `String!` | The owner. They get an invitation |
+| `input.name` | `String!` | Workspace name |
+| `input.subdomain` | `String!` | The client's address, for example `acme` for `acme.karzoun.chat` |
+| `input.planId` | `ID!` | From [`partnerPlans`](/partners/api/reference/partner-plans) |
+| `input.phone` | `String` | Optional |
+| `input.initialBalance` | `Float` | Optional. Dollars moved from your wallet after creation. Rejected up front if your wallet can't cover it |
+| `input.billingCycle` | `String` | `monthly` (default) or `yearly` if the plan has a yearly price |
+| `input.basePriceOverrideCents` | `Int` | Optional. A custom base price for this client, in cents |
+| `input.deferFirstInvoiceDays` | `Int` | Optional. 0–30 days before the first charge. Default from the plan |
+| `input.backdateStartDate` | `Int` | Optional. Unix time, in the past, at most one year ago. For clients who already paid elsewhere |
+| `input.source` | `String` | Optional. Where the client came from |
+| `input.customFields` | `JSON` | Optional |
+
+## Example
+
+```graphql
+mutation {
+  partnerRegisterOrganization(input: {
+    name: "Acme Trading"
+    email: "owner@acme.example"
+    subdomain: "acme"
+    planId: "6651bb…"
+    initialBalance: 50
+  }) {
+    _id
+    subdomain
+    name
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "partnerRegisterOrganization": { "_id": "665f1c…", "subdomain": "acme", "name": "Acme Trading" }
+  }
+}
+```
+
+Store `_id`: it's the `organizationId` for every other call. `client.created` also goes to your [partner webhook](/partners/webhook). If the initial balance transfer fails after creation, the workspace still exists; add balance later.

@@ -1,0 +1,54 @@
+---
+title: "partnerChannels"
+description: "أرقام واتساب عبر عملائك مع الحالة مباشرة من ميتا."
+---
+
+Query · الصلاحية `partner:read`
+
+راجع [أرقام عملائك](/ar/partners/whatsapp/numbers) لمعنى كل حقل.
+
+## الوسائط
+
+| الوسيط | النوع | ملاحظات |
+| --- | --- | --- |
+| `organizationId` | `ID` | اختياري. أرقام هذا العميل فقط |
+
+## مثال
+
+```graphql
+query {
+  partnerChannels {
+    organizationId
+    subdomain
+    integrationId
+    phoneNumber
+    status
+    qualityRating
+    messagingLimitTier
+    apiKeyHint
+    error
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "partnerChannels": [
+      {
+        "organizationId": "665f1c…",
+        "subdomain": "acme",
+        "integrationId": "6660a2f1c0d3e40011b2c3d4",
+        "phoneNumber": "+966 50 000 0000",
+        "status": "CONNECTED",
+        "qualityRating": "GREEN",
+        "messagingLimitTier": "TIER_1K",
+        "apiKeyHint": "9f3a1c",
+        "error": null
+      }
+    ]
+  }
+}
+```
+
+الحالة والجودة والحد تُقرأ من ميتا في كل استدعاء. و`error` يظهر لرقم تعذّر الوصول لميتا بشأنه.
